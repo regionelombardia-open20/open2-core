@@ -1,0 +1,144 @@
+//-----------------------------------------------
+// ICON PLUGINS
+//-----------------------------------------------
+.plugin-list, .bk-menuPlugin {
+  float: left;
+  width: 100%;
+  list-style: none;
+  padding: 0;
+
+  .item-widget {
+    font-size: 0.80em;
+    text-transform: uppercase;
+    padding: 0 5px;
+    margin-bottom: 15px;
+    text-align: center;
+    float: left;
+    width: 100%;
+
+    a{
+      position: relative;
+      color: #fff;
+      display: block;
+      clear: both;
+      display: block;
+      height: 120px;
+      padding: 0;
+      width: 100%;
+      text-decoration: none !important;
+
+      &:hover, &:focus{
+        text-decoration: none !important;
+      }
+
+      .svg-container {
+        width: 100%;
+        height: 80%;
+        svg{
+          width: 100%;
+        }
+      }
+
+      &:hover{
+        opacity: @hover-opacity;
+      }
+      @media (min-width: 320px) and (max-width: 420px) {
+        height: 110px;
+      }
+    }
+
+    span.plugin-list{
+      width: 100%;
+      display: block;
+      padding: 10px;
+      clear: both;
+      height: 120px;
+      border: none;
+      background-color: @default-plugin-color;
+    }
+
+    //TODO - CLASSE PIU GENERALE
+    span.dash,
+    span.am {
+      font-size: 3.2em;
+    }
+
+    .icon-dashboard-name{
+      background: #fff;
+      color: #000;
+      position: absolute;
+      z-index: 1;
+      left: 0;
+      bottom: 0;
+      padding: 5px 5px;
+      width: 100%;
+      min-height: 34px;
+      font-weight: 700;
+      font-size: 1.05em;
+      line-height: 13px;
+      text-transform: uppercase;
+      display: block;
+      font-family: 'Roboto', sans-serif;
+        @media (min-width: 320px) and (max-width: 420px) {
+          font-size: 0.85em;
+          line-height: 10px;
+          padding: 5px 2px;
+        }
+    }
+    .badge span{
+      font-size: 1.15em;
+    }
+  }
+}
+.plugin-list .bk-backgroundIcon,
+.bk-menuPlugin .bk-backgroundIcon {
+   position: relative;
+   width: 100%;
+   display: block;
+   padding: 0;
+   clear: both;
+   height: 120px;
+   border: none;
+   text-transform: uppercase;
+   color: #fff !important;
+   padding-top: 15px;
+
+   &.color-disabled {
+     border: none;
+     background: #ffffff;
+     color: #d9534f;
+     cursor: not-allowed !important;
+   }
+  @media (min-width: 320px) and (max-width: 420px) {
+    height: 110px;
+  }
+}
+
+.plugin-list table .bk-backgroundIcon,
+.bk-menuPlugin table .bk-backgroundIco {
+  height: 50px;
+}
+
+.actions-dashboard-container{
+  .col-custom{
+    position: relative;
+    width: 50%;
+
+    @media (min-width: 320px) and (max-width: 767px) {
+      width: 33.33%;
+    }
+
+    @media (min-width: 768px){
+      width: 20%;
+    }
+
+    @media(min-width: 992px){
+      width: 16.66666667%;
+    }
+
+    @media  (min-width: 1200px){
+      width: 12.5%;
+    }
+  }
+}
+

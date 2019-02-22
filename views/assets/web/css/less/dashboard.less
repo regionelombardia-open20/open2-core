@@ -1,0 +1,161 @@
+//-----------------------------------------------
+// DASHBOARD - retrocompatibilità plugin dashbord -- TODO DA RIMUOVERE
+//-----------------------------------------------
+//-----------------------------------------------
+// ICON PLUGINS
+//-----------------------------------------------
+.bk-menuPlugin {
+  list-style: none;
+  padding: 0;
+
+  li.col-lg-1 {
+    font-size: 0.80em;
+    text-transform: uppercase;
+    padding: 0 5px;
+    margin-bottom: 15px;
+    text-align: center;
+
+
+    @media (min-width: 1200px) {
+      width: 12.5%;
+    }
+    @media (min-width: 1200px) and (max-width: 1400px) {
+      width: 12.5%;
+    }
+    @media (min-width: 500px) and (max-width: 764px) {
+      width: 33.33%;
+    }
+
+
+    a{
+      text-decoration: none;
+      position: relative;
+      color: #fff;
+      display: block;
+      clear: both;
+      display: block;
+      height: 120px;
+      padding: 0;
+      width: 100%;
+
+      &:hover, &:focus{
+        text-decoration: none;
+      }
+
+      .svg-container {
+        width: 100%;
+        height: 80%;
+        svg{
+          width: 100%;
+        }
+      }
+
+      span.bk-menuPlugin{
+        width: 100%;
+        display: block;
+        padding: 10px;
+        clear: both;
+        height: 120px;
+        border: none;
+        background-color: @default-plugin-color;
+      }
+
+      //TODO - CLASSE PIU GENERALE
+      span.dash,
+      span.am {
+        font-size: 3.2em;
+      }
+
+      .icon-dashboard-name{
+        background: #fff;
+        color: #000;
+        position: absolute;
+        z-index: 1;
+        left: 0;
+        bottom: 0;
+        padding: 5px 5px;
+        width: 100%;
+        min-height: 34px;
+        font-weight: 700;
+        font-size: 1.05em;
+        line-height: 13px;
+        text-transform: uppercase;
+        display: block;
+        font-family: 'Roboto', sans-serif;
+      }
+
+      &:hover{
+        opacity: @hover-opacity;
+      }
+
+    }
+  }
+}
+
+.bk-menuPlugin .bk-backgroundIcon {
+  position: relative;
+  width: 100%;
+  display: block;
+  padding: 0;
+  clear: both;
+  height: 120px;
+  border: none;
+  text-transform: uppercase;
+  color: #fff !important;
+  padding-top: 15px;
+
+  &.color-disabled {
+    border: none;
+    background: #ffffff;
+    color: #d9534f;
+    cursor: not-allowed !important;
+  }
+}
+
+
+//-----------------------------------------------
+// DASHBOARD
+//-----------------------------------------------
+.dashboard-content {
+  .plugin {
+    margin: 0;
+  }
+
+  > .container {
+    padding-bottom: 60px;
+    padding-top: 10px;
+  }
+
+  .container>div:not(#dashboard-edit-toolbar):not(#bk-pluginGrafici) {
+    p{
+      background: #ffffff;
+      padding: 10px;
+      border-radius: 0;
+      margin-top: 0;
+    }
+
+  }
+
+  nav {
+    padding-top: 50px;
+    background-color: transparent;
+  }
+}
+
+.breadcrumb-tools{
+  text-align: right;
+
+  a{
+    display: inline-block;
+  }
+
+  button{
+    display: inline-block;
+    border: 0 none;
+  }
+}
+
+.navbar-default {
+  background-color: @custom-color;
+  border: none;
+}

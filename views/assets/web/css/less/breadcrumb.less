@@ -1,0 +1,35 @@
+//-----------------------------------------------
+// BREADCRUMB
+//-----------------------------------------------
+.breadcrumb {
+  background: transparent;
+  margin:0;
+  padding: 0;
+  text-transform: uppercase;
+
+  > .active {
+    color: @breadcrumb-color;
+  }
+
+  a {
+    color: @primary-color;
+    text-decoration: @link-default-effect-hover;
+
+    &:hover{
+      color: @primary-color;
+      //opacity: @hover-opacity;
+    }
+  }
+}
+
+//-----------------------------------------------
+//   DASHBOARD
+//-----------------------------------------------
+.dashboard {
+  .breadcrumb{
+    background: #fff;
+    padding: 10px;
+    border-radius: 0;
+    margin-top: 9px;
+  }
+}

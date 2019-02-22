@@ -1,0 +1,67 @@
+.steps {
+  color: @disabled-color;
+
+  .step-wrap{
+    border-bottom: 3px solid @border-color-default;
+    margin-bottom: 25px;
+    padding-bottom: 25px;
+
+    .title{
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    P{
+      text-align: center;
+    }
+
+    .form-group{
+      margin-top: 40px;
+
+      .btn-primary{
+        background-color: @disabled-color;
+      }
+    }
+
+    a{
+      color: @disabled-color;
+    }
+
+    .step-number {
+      font-size: 52px;
+      color: @disabled-color;
+      border: 5px solid @disabled-color;
+      border-radius: 50%;
+      font-weight: bold;
+      float: left;
+      width: 95px;
+      height: 95px;
+      margin-right: 10px;
+
+      @media(max-width: 560px){
+        float: none;
+        margin: 0 auto;
+      }
+    }
+
+    &.active {
+      color: @color-text-default;
+
+      .form-group{
+        .btn-primary{
+          background-color: @primary-color;
+        }
+      }
+
+      a{
+        color: @link-default-color;
+      }
+
+      .step-number {
+        color: @primary-color;
+        border-color: @primary-color;
+      }
+
+    }
+  }
+}

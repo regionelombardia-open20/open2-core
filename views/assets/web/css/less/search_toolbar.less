@@ -1,0 +1,84 @@
+//-----------------------------------------------
+// SEARCH TOOLBAR - LISTS
+//-----------------------------------------------
+.container-tools {
+    float: left;
+    width: 100%;
+}
+.container-tools > .btn {
+  margin-left: @margin-medium;
+}
+.container-change-view, .container-tools {
+  background-color: @primary-color50;
+  padding-top: @padding-medium;
+  padding-bottom: @padding-medium;
+  margin-bottom: @margin-default;
+
+  #change-view-dropdown-download {
+    .caret {
+      display: none;
+    }
+
+    .btn-tools-primary {
+      padding-top: 3px;
+    }
+  }
+
+  &+ div[class$="-index"]{
+    float: left;
+    width: 100%;
+
+    [data-toggle-element^="form"] {
+      padding: @padding-default 0;
+      border: 2px solid @primary-color50;
+      background-color:  #ffffff;
+      margin-top: -@margin-default;
+      margin-bottom: @margin-default;
+
+      h2{
+        text-transform: uppercase;
+        color: @primary-color;
+      }
+    }
+  }
+
+  .btn-group div.btn-tools-primary{
+    padding-bottom: 0;
+    padding-top: 6px;
+    height: 32px;
+
+    span {
+      &:first-child {
+        font-size: @btn-tools-font-size;
+        float: left;
+        line-height: 0.9;
+      }
+    }
+
+    p{
+      font-size: calc(@btn-font-size - 0.20em);
+      float: right;
+      margin: 0 0 0 6px;
+      padding-bottom: 4px;
+    }
+  }
+
+  .dropdown-menu-change-view li {
+    a, a:hover{
+      text-decoration: none;
+    }
+    p {
+      display: inline;
+    }
+  }
+}
+
+.btn-tools-container{
+  .show-hide-element.active{
+    .modified;
+  }
+
+  .ui-button-text-only .ui-button-text {
+    padding: 3px 0;
+  }
+}

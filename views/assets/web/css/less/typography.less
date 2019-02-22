@@ -1,0 +1,67 @@
+// Typography
+/* --------------------------------------------------
+.fontface(@path-fonts, @family, @filename-base, @style, @weight){
+  font-family: @family;
+  src:  url('@{path-fonts}/@{filename-base}.eot'),
+        url('@{path-fonts}/@{filename-base}.eot?#iefix') format('embedded-opentype'),
+        url('@{path-fonts}/@{filename-base}.woff') format('woff'),
+        url('@{path-fonts}/@{filename-base}.ttf') format('truetype');
+  font-weight: @weight;
+  font-style: @style;
+}
+@font-face {
+  .fontface(@path-fonts, @family, @filename-base, @style, @weight);
+}
+*/
+// Body
+// ------------------------
+body{
+  font-family:    @font-main;
+  font-size:      @font-size-base;
+  color:          @main-text-color;
+  line-height:    @main-line-height;
+}
+// Headings
+// -------------------------
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: @headings-font-family;
+  font-weight: @headings-font-weight;
+  line-height: @headings-line-height;
+  color:       @headings-color;
+  margin:      @headings-margin-top 0 @headings-margin-bottom 0;
+}
+h1, .h1 { font-size: @font-size-h1; }
+h2, .h2 { font-size: @font-size-h2; }
+h3, .h3 { font-size: @font-size-h3; }
+h4, .h4 { font-size: @font-size-h4; }
+h5, .h5 { font-size: @font-size-h5; }
+h6, .h6 { font-size: @font-size-h6; }
+
+// Body text
+// -------------------------
+p {
+  margin: @font-margin;
+}
+
+a:not(.btn){
+  text-decoration: underline;
+}
+
+a {
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+//== Alignment
+.text-left           { text-align: left; }
+.text-right          { text-align: right; }
+.text-center         { text-align: center; }
+.text-justify        { text-align: justify; }
+.text-nowrap         { white-space: nowrap; }
+
+//== Transformation
+.text-lowercase      { text-transform: lowercase; }
+.text-uppercase      { text-transform: uppercase; }
+.text-capitalize     { text-transform: capitalize; }

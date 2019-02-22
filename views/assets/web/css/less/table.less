@@ -1,0 +1,263 @@
+//-----------------------------------------------
+//  VIEWS - TABLE
+//-----------------------------------------------
+div[class*="-view "]:not(.container-change-view){
+  padding: 0;
+
+  table{
+    margin-top: @margin-default;
+
+    th{
+      width: 13%;
+    }
+  }
+}
+.fc-row  table,
+.fc-body table{
+  margin-top: 0 !important;
+}
+.fc-month-view .fc-row th {
+  width: auto !important;
+}
+.fc-agendaWeek-view {
+  overflow-y: scroll;
+}
+.fc-scroller {
+  clear: both;
+}
+th.fc-axis {
+  padding: 2px !important;
+}
+.kv-expand-icon {
+  font-size: 25px;
+}
+
+table{
+  tr{
+    td{
+      vertical-align: middle !important;
+    }
+  }
+}
+
+.grid-view {
+  table{
+    th{
+      color: #04592E;
+      font-size: 13px;
+
+      &.input_element{
+        //width: 50px;
+      }
+      a{
+        &:after{
+          content: '\f312';
+          font-family: Amos-font;
+          margin-left: 5px
+        }
+
+        &.asc::after{
+          content: '\f2fc';
+          font-family: Amos-font;
+          margin-left: 5px
+        }
+        &.desc::after{
+          content: '\f2f9';
+          font-family: Amos-font;
+          margin-left: 5px
+        }
+      }
+    }
+
+    td{
+      padding: @padding-medium;
+    }
+
+    .container-action{
+      font-size: 1.2em;
+      .modal-content{
+        font-size: small;
+      }
+      a{
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+td:last-child .bk-elementActions{
+  white-space: nowrap !important;
+  .modal-body{
+      white-space: normal !important;
+  }
+}
+
+/*RESPONSIVE TABLE - layout*/
+.table_switch {
+
+  td:last-child .bk-elementActions{
+    white-space: nowrap !important;
+    .modal-body{
+      white-space: normal !important;
+    }
+  }
+
+  @media (max-width: 767px) {
+    td, th {
+      white-space: normal !important;
+    }
+
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+      display: block;
+      float: left;
+      width: 100%;
+    }
+
+    /*----hide header if not filter or input_element(select/deselect all) class----*/
+    thead tr:not(.filters) {
+      display: none;
+    }
+
+    tr.filters th:not(.input_element) {
+      display: none;
+      border-bottom: 0;
+    }
+
+    /*---- end ----*/
+    tr {
+      border: 1px solid #ccc;
+      &.filters td[title=''] {
+        display: none;
+      }
+    }
+
+    input[type=checkbox] {
+      float: right;
+    }
+
+    /*Label the data
+     * General Rule: add content by title of TD before it
+     * If is image no label
+     * If is heder-checkbox (select/deselect all) fix label
+    * */
+    th.input_element {
+      position: relative;
+      border-width: 0;
+
+      input[type=checkbox] {
+        margin-left: 30%;
+
+        &:before {
+          content: "Seleziona tutto";
+          font-weight: bold;
+          position: absolute;
+          left: 5px;
+        }
+      }
+    }
+
+    td {
+      border: none;
+      border-bottom: 1px solid #eee;
+      position: relative;
+      padding-left: 30% !important;
+      min-height: 40px;
+      &:before {
+        /* like a table header */
+        position: absolute;
+        top: 6px;
+        left: 6px;
+        width: 45%;
+        padding-right: 10px;
+
+        content: attr(title);
+        font-weight: bold;
+      }
+
+      &:checked:before {
+        content: "Deseleziona tutto";
+        font-weight: bold;
+      }
+
+      [title="Immagine"]:before,
+      [title="immagine"]:before,
+      [title="Foto"]:before,
+      [title="foto"]:before,
+      [title="Logo"]:before,
+      [title="logo"]:before,
+      [title="Avatar"]:before,
+      [title="avatar"]:before {
+        display: none;
+      }
+
+      td[title="Immagine"],
+      [title="immagine"],
+      [title="Foto"],
+      [title="foto"],
+      [title="Logo"],
+      [title="logo"],
+      [title="Avatar"],
+      [title="avatar"],
+      [title=''] {
+        padding-left: 10px !important;
+      }
+
+    }
+  }
+
+  @media (max-width: 500px) {
+      td:not(:last-child){
+        padding-left: 48% !important;
+        white-space: normal !important;
+      }
+  }
+}
+
+/*RESPONSIVE INFO - layout*/
+.container-general-info{
+  .title{
+    text-align: center;
+    margin-bottom: @margin-default;
+  }
+  .more-info{
+    width: 100%;
+    float: left;
+    text-align: center;
+    margin: @margin-default auto;
+    text-decoration: underline;
+  }
+}
+.table-info{
+  width: 100%;
+  tr{
+    border-bottom: 1px solid @primary-color;
+  }
+
+  th {
+    width: 50%;
+    text-align: right;
+    padding-right: 25px;
+  }
+
+  td {
+    width: 50%;
+    text-align: left;
+    padding-left: 25px;
+    border-bottom: 1px solid @primary-color;
+  }
+}
+
+.plugin-list table{
+  td.icona > p{
+    padding: 5px;
+    color: #fff;
+    font-size: 2em;
+    width: 50px;
+    text-align: center;
+  }
+}

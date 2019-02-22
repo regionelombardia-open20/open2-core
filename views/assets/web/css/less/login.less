@@ -1,0 +1,323 @@
+//-----------------------------------------------
+// LOGIN FORM
+//-----------------------------------------------
+
+.bk-loginContainer {
+  width: 100%;
+  float: left;
+  background: #fff;
+
+  .default-form .form-group button {
+    float: left;
+    margin: 0;
+  }
+
+  .form-control {
+    border: none;
+    border-bottom: 1px solid #cccccc;
+    background-color: #eeeeee;
+    font-size: 0.9em;
+  }
+
+  .bk-hrLogin {
+    border: 0;
+    border-top: 4px solid @secondary-color30;
+    margin: 0;
+    padding: 0;
+  }
+  h2, h4 {
+    text-align: center;
+  }
+  p {
+    margin-top: @margin-default;
+    margin-bottom: 20px;
+  }
+  .bk-askPassword {
+    padding: 10px 0;
+    //text-decoration: underline;
+  }
+}
+
+.login-logo-text {
+  margin: 25px auto;
+  a {
+    margin: 0 auto;
+    text-align: center;
+    width: auto;
+    display: inline-flex;
+    background-color: #fff;
+    padding: 5px 20px;
+  }
+}
+
+.logo-login {
+  //margin-top: 20px;
+  padding-top: 15px;
+  width: 100%;
+  background-color: #fff;
+  //padding-bottom: 3px;
+  .img-logo img {
+    display: inline-block;
+    width: 100%;
+  }
+}
+
+.header {
+  @media (max-width: 400px) {
+    padding: 20px 25px;
+  }
+}
+
+.body {
+  padding: 0 20px 15px 20px;
+
+  @media (max-width: 400px) {
+    padding: 20px 25px;
+  }
+  .row {
+    margin: 0;
+  }
+}
+
+.title-login {
+  text-transform: uppercase;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #000;
+  margin-top: 30px;
+  font-size: 2.4em;
+  line-height: 1em;
+}
+
+.subtitle-login {
+  text-align: center;
+  margin-top: 0px;
+  font-size: 1.2em;
+  line-height: normal;
+  span{
+    color:@primary-color;
+  }
+}
+
+.social-buttons {
+  text-align: center;
+  padding: 0 15px;
+
+  display: inline-flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  @media(max-width: 480px){
+    flex-wrap: wrap;
+  }
+
+  .btn + .btn {
+    margin-left: 0;
+  }
+  > div {
+    line-height: 0;
+  }
+  a {
+    //line-height: 1.8em;
+  }
+  .btn {
+    border-radius: 0%;
+    padding: 5px;
+    margin-bottom: 0;
+    font-weight: normal;
+    font-size: 1.1em;
+    line-height: 1.2em;
+    width: 95%;
+
+    &.btn-facebook {
+      background-color: #13449E;
+      color: #ffffff;
+    }
+    &.btn-google {
+      background-color: #EE4412;
+      color: #ffffff;
+      .am.am-google-plus {
+        font-size: 1.2em;
+      }
+    }
+    &.btn-twitter {
+      background-color: #28C4FF;
+      color: #ffffff;
+    }
+    &.btn-linkedin {
+      background-color: #0078CA;
+      color: #ffffff;
+    }
+    span.am {
+      padding-right: 5px;
+    }
+    span.text {
+      text-align: center;
+    }
+  }
+
+}
+
+.or-login {
+  background-color: #000000;
+  margin-top: 30px;
+  text-align: center;
+  span {
+    color: #ffffff;
+    text-transform: uppercase;
+    font-size: 1.2em;
+    line-height: 2em;
+  }
+}
+
+.required-field {
+  text-align: right;
+  color: #9d0202;
+  margin-top: 5px;
+}
+
+.field-loginform-username .control-label::after,
+.field-loginform-password .control-label::after,
+.field-firstaccessform-password .control-label::after,
+.field-firstaccessform-ripetipassword .control-label::after,
+.field-registerform-privacy .control-label::after,
+.field-firstaccessform-privacy .control-label::after,
+.field-firstaccessform-username .control-label::after{
+  display: none; /* by TASK CHANGE-REQUEST */
+}
+
+
+.form-group.field-registerform-recaptcha {
+  float: right;
+  margin-top: -15px;
+  & > label.control-label {
+    height: 0;
+  }
+}
+
+.text-bottom {
+  margin: 30px 0;
+  font-size: 0.9em;
+  line-height: 1.2em;
+  > p {
+    margin: 5px 0;
+  }
+  > .field-registerform-privacy {
+    margin-left: 0;
+  }
+}
+
+.reactive {
+  text-align: right;
+}
+
+.footer-link {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  .subtitle-login {
+    text-transform: none;
+    border: 1px solid #cccccc;
+    padding: 15px;
+  }
+}
+
+.btn-register-now {
+  margin-top: 5px;
+}
+
+.level-security { //reset password view
+  position: absolute;
+  top: 21px;
+  right: 19px;
+  @media (max-width: 767px) {
+    top: 40px;
+  }
+}
+
+.level-security-fa { //reset password view
+  position: absolute;
+  top: 63px;
+  right: 18px;
+  @media (max-width: 767px) {
+    top: 80px;
+  }
+}
+
+.forgot-password {
+  padding: 5px 0;
+}
+
+form .form-group {
+  margin: 0;
+  padding: 0;
+}
+
+form .form-group:first-child {
+  padding: 0px; // override form.less
+}
+
+form .btn + .btn {
+  margin-left: 0;
+}
+.btn.btn-primary.btn-administration-primary{
+  margin-bottom: 15px;
+}
+
+.field-registerform-privacy,
+.field-firstaccessform-privacy{
+  .control-label{
+    display: none;
+  }
+  input[type="radio"] {
+    top: -4px;
+  }
+  label::after {
+    display: none;
+  }
+  .radio {
+    display: inline-block;
+    margin: 0;
+  }
+  .radio label{
+    //line-height: 1.8em;
+  }
+  .radio + .radio {
+    margin-left: 15px;
+  }
+}
+
+/* modal for social registration privacy */
+#modal-privacy {
+  .radio {
+    display: inline-block;
+    input[type="radio"] {
+      top: -4px;
+    }
+    label::after {
+      display: none;
+    }
+    label + label {
+      margin-left: 15px;
+    }
+  }
+}
+
+.dropdown-languages{
+  float: right;
+  margin: 15px 0;
+  > .dropdown{
+    float: right;
+    > .dropdown-toggle .am{
+      position: relative;
+      top: 2px;
+      padding: 0 5px;
+    }
+    > .dropdown-menu{
+      min-width: auto; //bootstrap override
+    }
+  }
+}
+
+.login-page{
+  margin-top: 20px;
+  background: #ffffff;
+}

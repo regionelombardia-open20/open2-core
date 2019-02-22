@@ -1,0 +1,63 @@
+//-----------------------------------------------
+// FOOTER
+//-----------------------------------------------
+.col-md-4.col-sm-6.col-xs-10.col-md-push-4.col-sm-push-3.col-xs-push-1 + footer { //TOD to remove, fix login
+  position: absolute;
+}
+
+footer {
+  padding: 0px 0;
+  /*position: absolute;*/
+  position: relative;
+  bottom: 0px;
+  width: 100%;
+  text-align: center;
+
+  .footer {
+    background-color: @footer-color;
+    height: 30px;
+  }
+
+  .footer-pagination {
+    background-color: @footer-color;
+    padding: 0;
+    text-align: left;
+
+    .dashboard-pagination {
+      display: table;
+      margin: 0 auto;
+
+      li {
+        background-color: @color-bullet;
+        margin: 0 5px;
+        display: inline-block;
+        cursor: pointer;
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+
+        &:hover{
+          opacity: 0.8;
+        }
+        
+        &.add{
+          background-color: transparent;
+
+          a{
+            color: #fff;
+            font-size: 20px;
+          }
+        }
+
+        &.active {
+          background-color: @color-bullet-active;
+        }
+      }
+    }
+  }
+
+  img {
+    margin-right: 25px;
+    margin-bottom: 10px;
+  }
+}

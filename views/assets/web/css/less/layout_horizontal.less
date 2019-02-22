@@ -1,0 +1,132 @@
+//-----------------------------------------------
+// LIST VIEW - HORIZONTAL ELEMENTS
+// icon list
+//-----------------------------------------------
+.list-horizontal-element{
+  padding: 0;
+  margin: @margin-medium 0;
+  list-style: none;
+  border: solid @border-color-default 0.3px;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+
+  .list-element-left{
+    padding: 0;
+    background-color: @primary-color;
+    position: relative;
+    width: 125px;
+    min-height: 145px;
+
+    @media(max-width: 767px){
+      width: 100%;
+    }
+
+    .container-round-img-lg{
+      position: absolute;
+      top: 8%;
+      left: 25%;
+
+      @media(max-width: 767px){
+        position: relative;
+        top: 0;
+        left: 0;
+        margin: @margin-medium auto;
+      }
+    }
+
+    .img-round img{
+      position: absolute;
+      top: 8%;
+      left: 25%;
+      width: auto;
+      z-index: 100;
+
+      @media(max-width: 767px){
+        position: relative;
+        margin: @margin-medium auto;
+        top: 0;
+        left: auto;
+        transform: none;
+      }
+    }
+  }
+
+  .foot-bar{
+    margin: 0;
+    padding-left: 30px;
+    background-color: @light-background-color;
+
+    @media (max-width: 767px) {
+      padding: @padding-default;
+      padding-bottom: @padding-min;
+    }
+    .foot-bar-right{
+      text-align: right;
+    }
+    .foot-bar-left, .foot-bar-right{
+      @media (max-width: 767px) {
+        padding: 0;
+      }
+    }
+    .btn{
+      padding: 0 @padding-min;
+      .btn-info-action{
+        padding: 0;
+      }
+    }
+  }
+
+  .list-element-body {
+    margin: 0;
+    margin-bottom: @margin-default;
+    padding-left: 45px;
+    padding-bottom: @padding-min;
+    h3{
+      margin-bottom: @margin-default;
+    }
+    p{
+      margin: 0;
+      line-height:  1.4em;
+    }
+
+    @media (max-width: 767px) {
+      margin: @margin-default;
+      padding-left: @padding-default;
+    }
+
+    img {
+      float: left;
+      max-width: 150px;
+      left: -25px;
+      top: @margin-default;
+
+      @media(max-width: 767px){
+        top: -110px;
+        left: 50%;
+        margin-left: -65px;
+        position: absolute;
+      }
+    }
+  }
+  .list-element-right{
+    width: 88%;
+
+    @media(max-width: 767px){
+      width: 100%;
+    }
+
+    .container-btn{
+      float: right;
+    }
+    button{
+      margin: @margin-default;
+    }
+  }
+
+  @media(max-width: 767px) {
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+  }
+}

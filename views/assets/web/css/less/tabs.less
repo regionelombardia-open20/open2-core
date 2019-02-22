@@ -1,0 +1,73 @@
+//-----------------------------------------------
+// TABS
+//-----------------------------------------------
+.nav-tabs{
+
+  .dropdown-menu {
+    li{
+      a{
+        position: relative;
+      }
+    }
+  }
+
+  .caret {
+    border-top: 8px dashed !important;
+    border-right: 5px solid transparent !important;
+    border-left: 5px solid transparent !important;
+  }
+
+  /* if there is only one tab, hide it. Not for mobile */
+  @media(min-width: 420px){
+    .dropdown + li:last-child {
+      display: none;
+    }
+  }
+
+  > li{
+    > a{
+      text-decoration: none;
+      position: relative;
+      padding: @nav-tabs-padding;
+      text-transform: uppercase;
+      font-size: @font-size-tabs;
+      font-weight: @font-weight-tabs;
+      border-radius: 0;
+
+      &:focus, &:hover{
+        background-color: transparent;
+        border-color: transparent;
+        color: @nav-tabs-underline-no-active-color;
+        //border-bottom: 2px solid @nav-tabs-underline-no-active-border-color;
+        border-bottom: 0;
+      }
+    }
+
+    &.active{
+      > a, >a:focus,>a:hover{
+        border: 0;
+        color: @nav-tabs-underline-active-color;
+        border-bottom: 2px solid @nav-tabs-underline-active-color;
+      }
+    }
+  }
+}
+
+.tab-content{
+  width: 100%;
+  float: left;
+  padding: @padding-default 0;
+  background: #fff;
+
+  .tab-pane{
+    .icon-view,.grid-view,.list-view{
+      /*padding: 0;*/
+    }
+    .body{
+      padding: 0px;
+    }
+  }
+  &+.btnViewContainer{
+    margin: 0 @margin-default 0 0;
+  }
+}

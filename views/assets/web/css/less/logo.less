@@ -1,0 +1,66 @@
+.container-logo{
+  border-bottom: 3px solid @custom-color;
+  background-color: #ffffff;
+  padding: @padding-min 0;
+
+  a:first-child{
+    float:left;
+    margin: 0 5px;
+  }
+  a + a:last-child{
+    float: right;
+    margin: 0 5px;
+  }
+
+  &.logo-background-right{
+    background-image: url(/img/logo-right.png);
+    background-repeat: no-repeat;
+    background-position: right;
+    background-size: auto 118px;
+  }
+
+  .title-text{
+    font-size: 2.36em;
+    margin: 18px 0 9px 0;
+    font-weight: 500;
+    line-height: 1.1;
+    float: left;
+  }
+
+  .logo-text{
+    font-size: 1.93em;
+    line-height: 1.1;
+    float: left !Important;
+    margin: 17px 0 0 19px;
+    color: @primary-color;
+    float: left;
+
+    &:hover{
+      text-decoration: none;
+      opacity: @hover-opacity;
+    }
+
+    @media(max-width: 351px){
+      font-size: 11px;
+    }
+  }
+
+  @media(max-width: 767px){
+    &.logo-background-right{
+      background-image: none;
+    }
+  }
+}
+
+.container-bordo-logo{
+  background-color: @primary-color;
+  text-align: center;
+}
+
+/* fix logo height login and dashboard */
+.logo-login .img-logo img.logo-amos,
+.container-logo .logo-amos,
+.container-logo .signature{
+  max-height: 80px;
+  width: auto;
+}

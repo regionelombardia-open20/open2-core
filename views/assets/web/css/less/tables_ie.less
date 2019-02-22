@@ -1,0 +1,102 @@
+/*RESPONSIVE TABLE IE - layout*/
+.table_switch{
+  @media(max-width: 767px) {
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+      display: block;
+      float: left;
+      width: 100%;
+    }
+    /*----hide header if not filter or input_element(select/deselect all) class----*/
+    thead{
+      tr{
+        display: none;
+      }
+      tr.filters{
+         display: block;
+        th{
+          display: none;
+        }
+        th.input_element{
+          display: block;
+        }
+       }
+    }
+    /*---- end ----*/
+    tr {
+      border: 1px solid #ccc;
+    }
+
+    td{
+       border: none;
+       border-bottom: 1px solid #eee;
+       position: relative;
+       padding-left: 30% !important;
+       min-height: 40px;
+
+      &:before{
+        /* like a table header */
+        position: absolute;
+        top: 6px;
+        left: 6px;
+        width: 45%;
+        padding-right: 10px;
+        content: attr(title);
+        font-weight: bold;
+      }
+    }
+
+    th.input_element{
+      position: relative;
+      border-width: 0;
+
+      &:before{
+        content: "Seleziona/Deseleziona tutto";
+        font-weight: bold;
+        position: absolute;
+        left: 5px;
+      }
+
+      input[type=checkbox]{
+        margin-left: 30%;
+      }
+    }
+
+    td[title="Immagine"]:before,
+    td[title="immagine"]:before,
+    td[title="Foto"]:before,
+    td[title="foto"]:before,
+    td[title="Logo"]:before,
+    td[title="logo"]:before,
+    td[title="Avatar"]:before,
+    td[title="avatar"]:before,
+    tr.filters td[title='']{
+      display: none;
+    }
+    td[title="Immagine"],
+    td[title="immagine"],
+    td[title="Foto"],
+    td[title="foto"],
+    td[title="Logo"],
+    td[title="logo"],
+    td[title="Avatar"],
+    td[title="avatar"],
+    td[title='']{
+      padding-left: 10px !important;
+    }
+  }
+
+  @media (max-width: 500px) {
+    td {
+      padding-left: 48% !important;
+      white-space: normal !important;
+    }
+    th.input_element input[type=checkbox]{
+       float: right;
+    }
+  }
+}

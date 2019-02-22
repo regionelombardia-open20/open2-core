@@ -1,0 +1,64 @@
+//-----------------------------------------------
+// PAGINATOR
+//-----------------------------------------------
+
+.pagination {
+  display: table;
+  margin: @margin-default auto;
+}
+.pagination>li:first-child>a,
+.pagination>li:first-child>span{
+  border-top-left-radius: 50%;
+  border-bottom-left-radius: 50%;
+}
+.pagination>li:last-child>a,
+.pagination>li:last-child>span {
+  border-top-right-radius: 50%;
+  border-bottom-right-radius: 50%;
+}
+.lg-pagination {
+  width: 100%;
+  text-align: center;
+  padding: 40px 0;
+  margin: 0;
+}
+.pagination>li {
+  margin: 0 2px;
+  display: inline-block;
+  vertical-align: top;
+  cursor: pointer;
+}
+.pagination>.active>a,
+.pagination>.active>a:focus,
+.pagination>.active>a:hover,
+.pagination>.active>span,
+.pagination>.active>span:focus,
+.pagination>.active>span:hover {
+  z-index: 3;
+  cursor: default;
+  .btn(@paginator-active-color; @paginator-active-background-color; @btn-shadow; solid; @paginator-active-border-color; 1px; 50%);
+}
+.pagination>li>a,
+.pagination>li>span {
+  .btn(@paginator-color; @paginator-background-color; @btn-shadow; solid; @paginator-border-color; 1px; 50%);
+  padding: 0;
+  width: 34px;
+  height: 34px;
+  line-height: 34px;
+  text-align: center;
+  font-size: 14px;
+  z-index: 1;
+  position: relative;
+  cursor: pointer;
+  background-clip: padding-box;
+  float: left;
+  text-decoration: none;
+  margin-left: -1px;
+}
+.pagination>li>a>.am, .pagination>li>span>.am {
+  font-size: 22px;
+  line-height: 39px;
+}
+.pagination-details{
+  margin-top:10px;
+}

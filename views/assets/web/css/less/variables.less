@@ -1,0 +1,241 @@
+//
+// THEME COLORS
+// --------------------------------------------------
+@regione-color:             #04592E;
+
+//@primary-color:             #009788;
+@primary-color:             #006057;
+@primary-color50:           lighten(desaturate(@primary-color, 50%), 50%);
+@primary-color25:           lighten(@primary-color, 20%);
+@primary-color-darken:      darken(@primary-color, 50%);
+
+@secondary-color:           #888787;
+@secondary-color30:         lighten(@secondary-color, 30%);
+
+@custom-color:              @regione-color;
+
+@main-background-color:     @secondary-color;
+@light-background-color:    #F0F0F0;
+//default background image
+@image-background-default:  url(/img/background.jpg);
+
+@footer-color:               rgba(0, 0, 0, 0.5);
+
+//== Utility
+@utility-clear:             #fff;
+@utility-color:             @secondary-color30;
+
+@disabled-color:            @secondary-color;
+@disabled-background-color: @secondary-color30;
+
+@border-color-default:      @secondary-color30;
+
+@success-color:             @primary-color;
+@success-alert:             #2B552C;
+@danger-color:              #d9534f;
+@warning-color:             #f0ad4e;
+@info-color:                #5bc0de;
+
+@sucess-form-color:              @success-alert;
+@error-form-color:               #903A38;
+
+//== Badge
+@color-badge: #cd3a28;
+@text-color-badge: #fff;
+
+//== Typography
+@link-default-color:        @primary-color;
+@link-default-effect-hover: underline;
+@hover-opacity:             0.8;
+
+@family:                    'Roboto';
+@style:                     'normal';
+@weight:                    'normal';
+@font-main:                 @family, sans-serif;
+@headings-font-family:      @family, sans-serif;
+
+@color-text-default:        #000;
+@color-text-general:        @main-text-color;
+@main-text-color:           #514B4B;
+@second-text-color:         darken(@main-text-color, 10%);
+@secondary-info-color:      #999;
+@main-line-height:          1.63;
+@font-size-base:            1.3em;
+@font-size-large:           ceil((@font-size-base * 1.25));
+@font-size-small:           ceil((@font-size-base * 0.85));
+@font-size-h1:              2.36em;
+@font-size-h2:              1.93em;
+@font-size-h3:              1.645em;
+@font-size-h4:              1.215em;
+@font-size-h5:              0.93em;
+@font-size-h6:              0.852em;
+
+@line-height-base:          1.42857143;
+@font-margin:               5px 0;
+
+//== Headings
+@headings-font-family:    inherit;
+@headings-font-weight:    500;
+@headings-line-height:    1.1;
+@headings-margin-top:     18px;
+@headings-margin-bottom:  @margin-default;
+@headings-color:          inherit;
+
+//== Breadcrumb
+@breadcrumb-color:         #514B4B;
+
+//== Padding
+@padding-element-default:     20px;
+@padding-default:             15px;
+@padding-medium:              10px;
+@padding-min:                 5px;
+
+@padding-base-vertical:       6px;
+@padding-base-horizontal:     12px;
+
+@padding-large-vertical:      10px;
+@padding-large-horizontal:    16px;
+
+@padding-small-vertical:      5px;
+@padding-small-horizontal:    10px;
+
+@padding-xs-vertical:         1px;
+@padding-xs-horizontal:       5px;
+
+//== Margin
+@margin-default:             15px; // = padding default
+@margin-medium:              10px; // = padding medium
+@margin-min:                 5px;  // = padding min
+
+//
+// DASHBOARD
+// --------------------------------------------------
+@default-plugin-color:        #77a3f5;
+@font-size-dashboard:         1.25em;
+@line-height-dashboard:       1.3;
+@letter-spacing-dashboard:    1.25px;
+
+//== COLORS ICONS
+@setting-color-icons:         #fff;       //color-admin
+@primary-color-icons:         #009788;    //color-primary
+@secondary-color-icons:       #338d45;    //color-secondary
+@third-color-icons:           #0A6B73;    //color-third
+@light-primary-color-icons:   #74BFBA;    //color-lightPrimary
+@dark-primary-color-icons:    #0A6B73;    //color-darkPrimary
+@admin-color-icons:           #bbbbbb;    //color-grey
+@dark-admin-color-icons:      #888787;    //color-darkGrey
+
+//== WIDGET GRAFICI
+//@bck-color-bk-toolbarBox:     @primary-color50;
+@bck-color-bk-toolbarBox:     #b1e5e0;
+
+//== BULLETS PAGINATION
+@color-bullet-active:         #1A946F;
+@color-bullet:                lighten(@color-bullet-active, 50%);
+
+//
+// BUTTONS
+// --------------------------------------------------
+@btn-border-size:             1px;
+@btn-border-radius:           5px;
+@btn-border-style:            solid;
+@btn-shadow:                  0 2px 5px rgba(0,0,0,.16),0 2px 10px rgba(0,0,0,.12);
+@btn-link-disabled-color:     #8da9b9;
+@btn-font-weight:             bold;
+@btn-border-radius-base:      5px;
+@btn-border-size:             1px;
+@btn-font-size:               1em;
+
+@btn-default-background:         @primary-color;
+@btn-default-color:              contrast(@primary-color);
+@btn-default-border-color:       darken(@primary-color, 10%);
+
+@btn-primary-background:         @primary-color;
+@btn-primary-color:              contrast(@primary-color);
+@btn-primary-border-color:       darken(@primary-color, 10%);
+
+@btn-secondary-background:         contrast(@secondary-color);
+@btn-secondary-color:              @secondary-color;
+@btn-secondary-border-color:       @btn-secondary-color;
+
+//== NAVIGATION
+@btn-navigation-primary-background:         @btn-primary-background;
+@btn-navigation-primary-color:              @btn-primary-color;
+@btn-navigation-primary-border-color:       @btn-primary-border-color;
+
+@btn-navigation-secondary-background:       @btn-secondary-color;
+@btn-navigation-secondary-color:            @btn-secondary-background;
+@btn-navigation-secondary-border-color:     darken(@btn-navigation-secondary-background, 10%);
+
+//== AMMINISTRATION
+@btn-amministration-primary-background:         @btn-primary-background;
+@btn-amministration-primary-color:              @btn-primary-color;
+@btn-amministration-primary-border-color:       @btn-primary-border-color;
+
+@btn-amministration-secondary-color:            @btn-secondary-color;
+@btn-amministration-secondary-background:       @btn-secondary-background;
+@btn-amministration-secondary-border-color:     darken(@btn-amministration-secondary-background, 10%);
+
+//== ACTION
+@btn-action-primary-background:         @secondary-color;
+@btn-action-primary-color:              contrast(@btn-action-primary-background);
+@btn-action-primary-border-color:       darken(@btn-action-primary-background, 10%);
+@btn-action-secondary-background:       contrast(@secondary-color);
+@btn-action-secondary-color:            @secondary-color;
+@btn-action-secondary-border-color:     darken(@btn-action-secondary-background, 10%);
+
+//== INFO
+@btn-info-primary-color:              @primary-color;
+@btn-info-primary-backgound:          #fff;
+@btn-info-border-style:               solid;
+@btn-info-border-size:                1px;
+@btn-info-border-radius:              5px;
+@btn-info-border-color:               @btn-info-primary-color;
+@btn-info-font-size:                  20.15px;
+@margin-right-btn-info:               5px;
+@btn-info-padding:                    5px;
+
+//== TOOLS
+@btn-tools-primary-backgound:         #fff;        //TO CHANGE
+@btn-tools-secondary-backgound:         transparent;        //TO CHANGE
+@btn-tools-primary-color:              #4F4F4F;       //TO CHANGE
+@btn-tools-secondary-color:            @main-text-color;
+@btn-tools-primary-border-color:       @btn-tools-primary-color;
+@btn-tools-secondary-border-color:     @btn-tools-secondary-color;
+@btn-tools-font-size:                   @font-size-base;
+@btn-tools-border-style:               solid;
+@btn-tools-border-size:                 1px;
+@btn-tools-border-radius:               @btn-border-radius;
+
+//
+// TABS
+// --------------------------------------------------
+@nav-tabs-padding: 15px;
+@nav-tabs-padding: 15px;
+@nav-tabs-underline-active-color: @primary-color;
+@nav-tabs-underline-no-active-color: #7a7a7a;
+@nav-tabs-underline-no-active-border-color: #eeee;
+@font-size-tabs: 1em;
+@font-weight-tabs: 500;
+
+//
+// PAGINATOR
+// --------------------------------------------------
+@paginator-color:             @disabled-color;
+@paginator-background-color:  @disabled-background-color;
+@paginator-border-color:      #fff;
+
+@paginator-active-color:             contrast(@primary-color);
+@paginator-active-background-color:  @primary-color;
+@paginator-active-border-color:      #fff;
+
+//== MASONRY
+@masonry-width:               31.9%;
+@masonry-medium-width:        48.5%;
+@masonry-full-width:          100%;
+
+//== MASONRY DASH
+@masonry-dash-width:               33%;
+@masonry-dash-medium-width:        48.5%;
+@masonry-dash-full-width:          100%;
+

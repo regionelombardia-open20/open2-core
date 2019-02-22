@@ -1,0 +1,130 @@
+//TODO
+#amos-chat>div>div>h3{
+  margin-top: @margin-min;
+}
+
+#amos-chat{
+  float: left;
+  width: 100%;
+
+  textarea{
+    resize: none;
+  }
+
+  .left-column{
+    .manage{
+      padding-right: 0;
+    }
+
+    input[type=text]{
+      padding-left: 30px;
+    }
+
+    .icon-search{
+      position: absolute;
+      top: 8px;
+      font-size: 20px;
+      left: 9px;
+    }
+  }
+
+  .right-column{
+    padding: @padding-element-default;
+
+    .user-details{
+      .media-heading{
+        margin-top: 15px;
+      }
+    }
+
+    .container-action{
+      @media(max-width:550px){
+        clear: both;
+        width: 100%;
+        text-align: right;
+      }
+    }
+
+    .item-chat{
+      padding: @padding-default;
+
+      &.mine{
+        p {
+          &:first-child{
+            background-color: @primary-color;
+            border-radius: 5px;
+            color: contrast(@primary-color);
+            padding: @padding-default;
+            float: left;
+          }
+
+          &:last-child {
+            text-align: left;
+          }
+        }
+      }
+
+      &.others{
+        p:first-child{
+          background-color: @secondary-color;
+          border-radius: 5px;
+          color: contrast(@secondary-color);
+          padding: @padding-default;
+          float: right;
+        }
+
+        p:last-child{
+           text-align: right;
+        }
+      }
+
+      /*p{
+        &:last-child{
+          clear: both;
+        }
+
+      }*/
+
+    }
+
+  }
+
+  .media{
+    margin-bottom:20px;
+
+    .datetime {
+      float: right;
+
+      @media (min-width: 768px) and (max-width:991px) {
+        float: left;
+      }
+
+      @media (max-width:550px) {
+        clear: both;
+      }
+    }
+
+    .avatar{
+      width: 50px;
+      height: 50px;
+    }
+
+    .media-heading{
+       float: left;
+    }
+    .media-body {
+      p{
+        clear: both;
+      }
+
+      /* TODO
+      .manage{
+        float: right;
+        @media (max-width: 480px) {
+          padding: inherit;
+        }
+      }*/
+    }
+
+  }
+}

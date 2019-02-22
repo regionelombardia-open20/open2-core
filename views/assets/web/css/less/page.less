@@ -1,0 +1,374 @@
+//-----------------------------------------------
+// PAGE CONTENT
+//-----------------------------------------------
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  background-color: @main-background-color;
+  background-image: @image-background-default;
+  //background: linear-gradient( rgba(26, 148, 111, 0.45), rgba(26, 148, 111, 0.45) );
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: top;
+  background-size: cover;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  padding: 0;
+  margin: 0;
+  overflow-x: hidden;
+
+  width: 100%;
+  height: 100%;
+  float: left;
+  //padding-bottom: 50px;
+
+  #bk-page {
+    > .container {
+      padding-bottom: 60px;
+      padding-top: 10px;
+    }
+  }
+}
+a{
+  color: @link-default-color;
+  &:hover{
+    color: @link-default-color;
+    text-decoration: @link-default-effect-hover;
+  }
+
+  &:focus{
+    outline-color: darken(@primary-color, 10%);
+  }
+}
+.page-content{
+  background-color: #fff;
+  padding: @padding-element-default;
+  float: left;
+  width: 100%;
+}
+
+.page-header{
+  margin: 30px 0 0 0;
+  color: @color-text-general;
+  border-bottom: 1px solid @color-text-general;
+
+  h1, .title{
+    color: @color-text-general;
+    margin: 0;
+    font-weight: 200;
+    font-size: 2.36em;
+    line-height: 1.1;
+  }
+}
+
+//--------------- TODO verificare se serve ancora per il problema
+// -------- grafico dei margini del container
+//----- una volta integrata la grafica
+.row.bk-btnContainer{
+  margin-right: 0;
+  margin-left: 0;
+}
+//----------
+.bk-btnContainer {
+  padding: 10px 0;
+}
+.bk-btnContainer {
+  border-bottom: 1px dashed #dce6e6;
+  margin-bottom: 15px;
+}
+
+//-----------------------------------------------
+// CONTAINER LISTVIEW
+//-----------------------------------------------
+.container_listview{
+  border: 2px dashed #e1e1e1;
+  border-radius: 10px;
+  padding: 10px 20px;
+  margin: 20px 0;
+}
+
+//-----------------------------------------------
+// TABEL VIEW
+//-----------------------------------------------
+.table{
+  .bk-elementActions{
+    text-align: right;
+
+    a{
+      &:hover{
+        text-decoration: none;
+      }
+      &:focus{
+        text-decoration: none;
+        outline:none;
+        outline-offset: 0;
+      }
+    }
+  }
+}
+
+//-----------------------------------------------
+// SEARCH TOOLBAR
+//-----------------------------------------------
+.action-header {
+  padding: 15px 30px;
+  line-height: 100%;
+  position: relative;
+  z-index: 1;
+  min-height: 65px;
+  background-color: @utility-color;
+  border-bottom: 2px solid @secondary-color30;
+
+  .actions{
+    list-style-type: none;
+    float: right;
+    width: auto;
+
+    >li {
+      display: inline-block;
+      vertical-align: baseline;
+
+      >a {
+        display: inline-block;
+        padding-top: 5px;
+      }
+    }
+    @media (max-width: 440px) {
+      padding-left:0;
+    }
+  }
+}
+
+//-----------------------------------------------
+// PRIVACY
+//-----------------------------------------------
+#bk-formDefaultPrivacy {
+  margin: 0 auto;
+  text-align: center;
+  //padding: auto;
+}
+
+.privacy{
+  margin-top:15px;
+}
+
+.informativa{
+  text-align:justify;
+}
+
+//-----------------------------------------------
+//  TAGS
+//-----------------------------------------------
+.tags-title {
+  border-bottom: 2px solid @primary-color;
+  padding-bottom: @padding-min;
+  text-transform: capitalize;
+}
+.tag-form{
+  padding-top: @padding-default;
+}
+.tree-tags {
+  margin: 20px 0;
+  padding: 20px 0;
+  border-top: 2px dashed @border-color-default;
+}
+
+.tag {
+  padding: 0px 5px;
+  margin: 2px;
+  text-align: center;
+  border-radius: 5px;
+  font-size: 1.15em;
+  font-weight: normal;
+  float: left;
+  background: @secondary-color30;
+  color: contrast(@secondary-color30);
+}
+
+.taglist {
+  list-style: none;
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+
+  li {
+    float: left;
+  }
+  .tag-item {
+    //background: @light-background-color;
+    //border-radius: 3px 0 0 3px;
+    //color: @main-text-color;
+    display: inline-block;
+    //height: 48px;
+    line-height: 26px;
+    //padding: 3px 20px 3px 23px;
+    position: relative;
+    margin: 0 10px 10px 0;
+    text-decoration: none;
+    //-webkit-transition: color 0.2s;
+    //width: 48%;
+    //border: 1px solid @border-color-default;
+    width: auto;
+    padding: 1px 15px 5px 15px;
+    background-color: #efefef;
+
+    @media (min-width: 768px) and (max-width: 991px){
+      width: 95%;
+    }
+
+    @media (min-width: 500px) and (max-width: 767px){
+      width: 48%;
+    }
+    @media (max-width: 499px) {
+      width: 95%;
+    }
+
+    > div{
+      //truncate
+      width: 100%;
+      //white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 0;
+
+      > .am-label {
+        margin-right: @margin-min;
+      }
+
+      p {
+        font-size: 0.95em;
+        margin: 0;
+        line-height: 10px;
+      }
+
+      .tag-label:only-child{
+        display: inline;
+        margin-top: 11px;
+      }
+    }
+
+    //&::before {
+    //  background: #fff;
+    //  border-radius: 10px;
+    //  box-shadow: inset 0 1px rgba(0, 0, 0, 0.25);
+    //  content: '';
+    //  height: 6px;
+    //  left: 10px;
+    //  position: absolute;
+    //  width: 6px;
+    //  top: 22px;
+    //}
+
+    //&:after {
+    //  background: #fff;
+    //  border-bottom: 24px solid transparent;
+    //  border-left: 15px solid @light-background-color;
+    //  border-top: 24px solid transparent;
+    //  content: '';
+    //  position: absolute;
+    //  right: 0;
+    //  top: 0;
+    //}
+
+    //&:hover{
+    //    background-color: @main-text-color;
+    //    color: @light-background-color;
+    //    cursor: pointer;
+    //
+    //  &::after {
+    //      border-left-color: @main-text-color;
+    //    }
+    //}
+   }
+}
+
+//MASONRY
+.listview-container.grid-item {
+  border: 1px solid @border-color-default;
+}
+.grid-item {
+  margin-bottom: @margin-default;
+}
+.grid .grid-item, .grid .grid-sizer{
+  width: @masonry-width !important;
+  //border-bottom: none;
+
+  @media(max-width: 992px){
+      width: @masonry-medium-width !important;
+  }
+
+  @media(max-width: 768px){
+      width: @masonry-full-width !important;
+  }
+}
+
+//-----------------------------------------------
+//  alert - flashMessage
+//-----------------------------------------------
+.container-messages{
+  .alert{
+    margin-top: 20px;
+  }
+}
+//-----------------------------------------------
+//  VIEWS - COMMON ELEMENTS
+//-----------------------------------------------
+.btnViewContainer{
+  margin : @margin-default 0 0 0;
+}
+
+.icon-view, .grid-view, .list-view {
+  @media(min-width: 420px){
+    float: left;
+    width: 100%;
+  }
+}
+.allegati {
+  h3{
+    float: left;
+  }
+  .btn-download-tutti{
+    margin: 18px 0 9px 0;
+    text-decoration: underline;
+    text-transform: uppercase;
+    color: @primary-color;
+  }
+  .icon-view, .grid-view, .list-view {
+   /* padding: 0;*/
+  }
+  table tbody td:first-child{
+    min-width: 215px;
+  }
+}
+
+.manage{
+
+  li.no-action {
+    margin: 0 @margin-min;
+    width: 150px;
+  }
+}
+
+.sidebar{
+  padding-top: @padding-min;
+
+  @media(min-width: 768px){
+      padding-right: 0;
+  }
+
+  @media(max-width: 767px){
+      padding: 0;
+  }
+
+  .h4{
+    margin-top: @padding-default;
+  }
+}
+
+.gantt_container {
+  z-index: 999;
+  background-color: #fff;
+}

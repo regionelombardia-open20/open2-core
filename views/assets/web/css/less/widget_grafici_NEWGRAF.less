@@ -1,0 +1,654 @@
+//-----------------------------------------------
+// WIDGET BASE GRAPHIC
+//-----------------------------------------------
+
+* {
+  box-sizing: border-box !important;
+}
+
+.clearfixplus:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+/* ---- grid for Masonry ---- */
+
+.grid {
+  //background: #EEE;
+  max-width: 100%;
+}
+
+/* clearfix */
+.grid:after {
+  content: '';
+  display: block;
+  clear: both;
+}
+/* ---- grid-item NEWS for Masonry ---- */
+.news-index{
+  .list-view{
+    .grid-sizer,
+    .grid-item {
+      width: 31.8%;
+      @media screen and (min-width: 320px) and (max-width: 639px) {
+        width:100%;
+      }
+      @media screen and (min-width: 640px) and (max-width: 939px) {
+        width:48.5%;
+      }
+    }
+
+    .grid-item {
+      /*  height: 165px;*/
+      margin-bottom:10px;
+      float: left;
+      background-color: #fff;
+      border: 1px solid #ccc;
+    }
+  }
+}
+
+
+
+
+/* ---- grid-item for Masonry ---- */
+
+.graphics-dashboard-container{
+  margin-top: 60px;
+}
+
+.grid-sizer,
+.grid-item {
+  width: 32.5%;
+  @media screen and (min-width: 320px) and (max-width: 639px) {
+    width:100%;
+  }
+  @media screen and (min-width: 640px) and (max-width: 939px) {
+    width:49%;
+  }
+}
+
+.grid-item {
+/*  height: 165px;*/
+  margin-bottom:10px;
+  float: left;
+  background-color: #fff;
+}
+
+.grid-item--width2 {
+  width:  65.8%;
+  @media screen and (min-width: 320px) and (max-width: 693px) {
+    width:99%;
+  }
+  @media screen and (min-width: 640px) and (max-width: 939px) {
+    width:99%;
+  }
+}
+
+.grid-item--height2 {
+  height: 340px;
+  @media screen and (min-width: 320px) and (max-width: 639px) {
+    height:auto;
+  }
+}
+
+
+.box-widget {
+  section {
+    .read-item {
+      a {
+        color: @primary-color;
+        font-weight: bold;
+
+        &:hover {
+          text-decoration: none;
+        }
+      }
+    }
+  }
+  .read-all{
+    text-transform: uppercase;
+    text-decoration: underline;
+    padding: 0 @padding-default;
+    font-size: 0.9em;
+    color: @secondary-info-color;
+    position: relative;
+    bottom:5px;
+  }
+
+  .box-widget-title {
+    font-size: 1.15em;
+    text-transform: uppercase;
+    margin: 9px auto;
+    font-weight: bold;
+    float: left;
+    text-align: left;
+    font-weight: bold;
+  }
+
+  .box-widget-subtitle{
+    margin: 0;
+    font-size: 1.1em;
+    color: #000;
+  }
+
+  .box-widget-text{
+    margin-top: @margin-medium;
+    line-height: 1.35em;
+  }
+
+  .box-widget-toolbar {
+    height: 35px;
+    text-align: right;
+    background-color: #fff;
+    color: @primary-color-icons;
+    padding-left: @padding-default;
+    border-bottom: 1px solid @primary-color-icons;
+
+    .manage{
+      margin-top: 7px;
+      .manage-menu{
+        color: @secondary-info-color;
+      }
+    }
+
+    .dropdown-menu {
+      li, li a {
+        color: @main-text-color;
+        margin: 0;
+        text-decoration: none;
+      }
+    }
+  }
+
+  .widget-listbox-option {
+    margin: 5px 0;
+    /*&:not(:last-child) {
+      border-bottom: 1px solid @border-color-default;
+    }*/
+    .btn {
+      padding: 3px 10px;
+      font-size: 0.9em;
+      margin-bottom: 0;
+      border-radius: 0;
+      border: none;
+      box-shadow: none;
+      //margin-top: @margin-medium;
+    }
+    article {
+      .container-img {
+        min-width: 55px;
+        float: left;
+        width: 25%;
+        max-height: 100px;
+        overflow: hidden;
+        img {
+          width: 100%;
+        }
+      }
+      .container-img + .container-text {
+        float: right;
+        width: 80%;
+      }
+      .container-icon + .container-text {
+        float: right;
+        width: 85%;
+      }
+      .container-text p{
+        font-size: 1em;
+        margin: @margin-min 0;
+        line-height: 1.4em;
+      }
+      .listbox-date p{
+        font-size: 0.8em;
+      }
+      .footer-listbox {
+        text-align: right;
+        position: relative;
+        bottom: 0px;
+        a{
+          margin: 0;
+          border: none;
+          border-radius: 0px;
+          box-shadow:none;
+        }
+      }
+    }
+  }
+
+  .user-id-icon {
+    background-color: @dark-admin-color-icons !important;
+  }
+
+  .container-text {
+    //margin-bottom: 0px;
+
+    h2 {
+      line-height: 1.15;
+      // height: 42px;
+    }
+
+    .members {
+      margin-bottom: 0;
+      font-size: 0.93em;
+    }
+
+    p {line-height: normal; font-size: 0.8em;}
+  }
+
+  @media (min-width: 992px) {
+    //height: 100%;
+
+    section {
+      //height: 100%;
+    }
+  }
+}
+
+@media (min-width: 992px) {
+  //  display: -webkit-box;
+  //  display: -webkit-flex;
+  //  display: -ms-flexbox;
+  //  display: flex;
+  width: 100%;
+  //  flex-wrap: wrap;
+}
+
+//-----------------------------------------------
+// DOCUMENT WIDGET GRAPHIC
+//-----------------------------------------------
+
+.latest-documents {
+/*  overflow: hidden;*/
+  display: flex;
+  flex-direction: row;
+/*  background-color: #fff;*/
+
+  .box-widget-toolbar{
+    display: flex;
+    flex-direction: column;
+    height: 165px;
+    text-align: -webkit-right;
+    border-bottom:none;
+    border-right: 1px solid @primary-color-icons;
+    width:20%;
+    float:left;
+    h1{
+      position: relative;
+      top: 20%;
+    }
+  }
+  .read-all{
+    position:absolute;
+    bottom:5px;
+  }
+  section{
+    .list-items{
+      display: flex;
+      height: 165px;
+      align-items: center;
+    }
+    .box-widget-title{
+      text-align: right;
+      position: relative;
+      top: 20%;
+    }
+    .container-icon{
+      margin: 0 auto;
+    }
+    .container-text{
+      width: 100% !important;
+      text-align:center;
+      border-top:1px solid @secondary-info-color;
+      margin-bottom: @margin-min;
+    }
+
+    .widget-listbox-option {
+      //width: 33.33%;
+      margin: 0 10px;
+      height: 150px;
+      article {
+        display: flex;
+        flex-direction: column;
+        padding: 5px;
+        background-color: #eee;
+        height: 150px;
+        .container-icon {
+          /*text-align: center;
+          color: #fff;
+          float: left;
+          width: 50px;
+          height: 50px;
+          border-radius:50%;
+          color: @primary-color-icons;*/
+          .dash {
+            font-size: 3em;
+            color: @primary-color-icons;
+          }
+        }
+        .footer-listbox{
+          position: absolute;
+          text-align: center;
+          bottom:5px;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 939px) and (min-width: 640px){
+  .document.grid-item--width2{
+    width:49%;
+    height: 340px;
+
+    .latest-documents{
+      flex-direction:column;
+
+      .box-widget-toolbar{
+        flex-direction: row-reverse;
+        border-right: none;
+        border-bottom: 1px solid @primary-color-icons;
+        height: 35px;
+        width: 100%;
+        h1{
+          position: relative;
+          top: 0;
+          padding-left: 0;
+        }
+      }
+
+      section{
+        height: 285px;
+
+        .list-items{
+          flex-direction: column;
+          height: auto;
+
+          .widget-listbox-option{
+            width: 96%;
+            margin: 5px 0;
+            height: 80px;
+
+            article{
+              flex-direction: row;
+              height: 100%;
+              .footer-listbox{
+                position: absolute;
+                text-align: right;
+                bottom:0px;
+                right: 5px;
+              }
+
+            }
+          }
+        }
+        .container-text{
+          border: none;
+          text-align: left;
+          padding-left: 10px;
+          .listbox-date p{
+            margin: 0;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 639px) and (min-width: 320px){
+  .document.grid-item--width2{
+    width:100%;
+    height: 250px;
+
+    .latest-documents{
+      flex-direction:column;
+      height: 100%;
+
+      .box-widget-toolbar{
+        flex-direction: row-reverse;
+        border-right: none;
+        border-bottom: 1px solid @primary-color-icons;
+        height: 35px;
+        width: 100%;
+        h1{
+          position: relative;
+          top: 0;
+          padding-left: 0;
+        }
+      }
+
+      section{
+        height: 285px;
+
+        .list-items{
+          flex-direction: column;
+          height: auto;
+
+          .widget-listbox-option{
+            width: 96%;
+            margin: 5px 0;
+            height: 55px;
+
+            article{
+              flex-direction: row;
+              height: 100%;
+              .footer-listbox{
+                position: absolute;
+                text-align: right;
+                bottom:0px;
+                right: 5px;
+              }
+
+            }
+          }
+        }
+        .container-text{
+          border: none;
+          text-align: left;
+          padding-left: 10px;
+          .listbox-date p{
+            margin: 0;
+          }
+        }
+      }
+    }
+  }
+}
+
+//-----------------------------------------------
+// ADMIN WIDGET GRAPHIC
+//-----------------------------------------------
+
+.myprofile {
+/*  display: block;
+  overflow: hidden;*/
+  background-color: lighten(desaturate(@primary-color, 50%), 60%);
+  height: 165px;
+
+  section{
+    padding: 0 @padding-medium;
+    .widget-listbox-option {
+      margin: 0;
+      article{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+      }
+    }
+  }
+
+  .dark-toolbar {
+    background-color: @primary-color;
+    color: #fff;
+    height: 35px;
+    .manage{
+      .manage-menu{
+        color: #fff;
+      }
+    }
+  }
+  .box-widget-subtitle{
+    //margin-top: @margin-medium;
+    font-size: 1.5em;
+  }
+  p.box-widget-text {
+    a{
+      color:#000;
+      line-height: normal;
+    }
+  }
+}
+
+.container-square-img-sm {
+  overflow: hidden;
+  width: 130px;
+  height: auto;
+  background-color: #ffffff;
+  margin: 0 auto;
+  position: relative;
+  display: block;
+  left: -10px;
+}
+
+@media screen and (max-width: 639px) and (min-width: 320px) {
+    .grid-item {
+      height: auto;
+    }
+    .myprofile{
+      .container-square-img-sm{
+        width: 100px;
+      }
+    }
+}
+
+//-----------------------------------------------
+// COMMUNITY WIDGET GRAPHIC
+//-----------------------------------------------
+
+.my-community {
+  overflow: hidden;
+  display: block;
+  background-color: #fff;
+  height: 165px;
+  .widget-listbox-option {
+    article {
+      display:flex;
+      flex-direction:row;
+    }
+    .footer-listbox {
+      position: relative !important;
+      border-bottom: 1px solid @secondary-info-color;
+      p {
+        margin: 0;
+        font-size: 0.8em;
+        position: absolute;
+        bottom: 0;
+      }
+    }
+  }
+  .read-all{
+    bottom:0;
+  }
+}
+
+//-----------------------------------------------
+// NEWS WIDGET GRAPHIC
+//-----------------------------------------------
+.latest-news {
+  overflow: hidden;
+  display: block;
+  background-color: #fff;
+  section{
+    padding: 0;
+    .list-items{
+      display: flex;
+    }
+  }
+  .widget-listbox-option{
+    margin: @margin-medium;
+    article{
+      padding: 0;
+      border: 1px solid @secondary-info-color;
+      .container-img {
+        float: none;
+        width: 100%;
+        overflow: hidden;
+        img {
+          width: 100%;
+        }
+      }
+      .container-text{
+        float: none !important;
+        width: 100% !important;
+        padding: 0 5px;
+        height: 110px;
+      }
+    }
+  }
+  .read-all{
+    bottom: 0;
+  }
+  @media screen and (max-width: 639px) and (min-width: 320px) {
+      section{
+        .list-items{
+          flex-direction: column;
+          .widget-listbox-option article {
+            .container-text {
+              width: 30% !important;
+              float: left!important;
+              height: auto;
+            }
+            .container-img{
+              width: 70% !important;
+              float: left!important;
+            }
+          }
+        }
+      }
+  }
+}
+
+//-----------------------------------------------
+// DISCUSSION WIDGET GRAPHIC
+//-----------------------------------------------
+
+.latest-discussions {
+  /*  overflow: hidden;
+    display: block;
+    background-color: #fff;*/
+  section{
+    height:285px;
+    overflow:hidden;
+  }
+  .widget-listbox-option {
+    article {
+      display:flex;
+      flex-direction: row;
+      .listbox-date{
+        p {
+          margin: 0;
+        }
+      }
+      .container-img {
+        width: 15%;
+        margin-right:10px;
+      }
+    }
+    .footer-listbox {
+      position: relative !important;
+      border-bottom: 1px solid @secondary-info-color;
+      p {
+        margin: 0;
+        font-size: 0.8em;
+        position: absolute;
+        bottom: 0;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 939px) and (min-width: 320px) {
+  .latest-discussions .widget-listbox-option article .container-img{
+    width: 11%;
+  }
+}

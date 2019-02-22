@@ -1,0 +1,713 @@
+//-----------------------------------------------
+// LIST VIEW
+// POST: Header, title, content, footer
+//-----------------------------------------------
+.grid{
+  .post-image{
+    padding: 0;
+    height: 150px;
+    overflow: hidden;
+    margin: @margin-min 0;
+
+    img{
+      width: 100%;
+      max-width:100%;
+      margin: 0 auto;
+
+      &.full-height {
+        height: auto;
+      }
+    }
+  }
+}
+
+.post-details {
+  padding: 0 !important;
+}
+
+//-----------------------------------------------
+// POST-HEADER - bootstrap media
+//-----------------------------------------------
+.post-header{
+  overflow: visible;
+  margin-bottom: @margin-default;
+
+  //TODO delete 'creatore'
+  .creatore,
+  .creator {
+    font-size: 1.215em;
+    font-family: inherit;
+    font-weight: 500;
+    line-height: 1.1;
+    color: inherit;
+    margin: 18px 0 9px 0;
+    color: #000;
+
+    float: left;
+    max-width: 50%;
+
+    @media(min-width: 1200px){
+      max-width: 62%;
+    }
+    @media(max-width: 1199px) and (min-width: 993px){
+      max-width: 50%;
+    }
+    @media(max-width: 992px) and (min-width: 769px){
+      max-width: 58%;
+    }
+    @media(max-width: 768px){
+      max-width: 49%;
+    }
+  }
+
+  .post-header-left {
+    padding: 0;
+    color: @color-text-default;
+
+    > a {
+      display: flex;
+      width: 50px;
+      height: 50px;
+      overflow: hidden;
+      border-radius: 50%;
+      margin-top: @margin-default;
+      margin-right: @margin-default;
+    }
+    p {
+      margin-top: @margin-min;
+      color: @secondary-info-color;
+    }
+  }
+  .media-body{
+    padding-left: @padding-min;
+  }
+}
+.icon-tools{
+  max-width: 51%;
+  cursor: pointer;
+  float: right;
+
+  a{
+    color: @main-text-color;
+    text-decoration: none;
+    .am-2 {
+      padding: @margin-medium 0 0 @margin-medium;
+    }
+
+    &:hover{
+      opacity: @hover-opacity;
+    }
+  }
+  + p {
+    clear: both;
+  }
+
+  @media(min-width: 1200px){
+    max-width: 38%;
+  }
+  @media(max-width: 1199px) and (min-width: 993px){
+    max-width: 50%;
+  }
+  @media(max-width: 992px) and (min-width: 769px){
+    max-width: 42%;
+  }
+  @media(max-width: 768px){
+    max-width: 51%;
+  }
+}
+
+//-----------------------------------------------
+// POST-CONTENT
+//-----------------------------------------------
+.post-content {
+  .badge.new-badge {
+    top: -16px;
+  }
+
+  .post-title {
+    color: @color-text-default;
+    float: left;
+    padding: 0;
+
+    h2{
+      font-size: 1.645em;
+      line-height: 1.25em;
+      margin: @margin-default 0 @margin-medium 0;
+    }
+    a {
+      padding-top: @padding-default;
+      color: @color-text-default;
+    }
+    @media(max-width: 480px){
+      width: 78%;
+      padding: 0;
+    }
+  }
+  .social {
+    float: right;
+    text-align: right;
+  }
+
+  .post-image{
+    border: 1px solid @border-color-default;
+    width: 100%;
+  }
+
+  .post-image-left + .post-text {
+    padding: 0;
+
+    ul {
+      list-style-position: inside;
+    }
+  }
+
+  .post-text {
+    padding: 0;
+
+    h3 {
+      padding-bottom: @padding-min;
+    }
+
+    .subtitle{
+      margin-bottom: 10px;
+      margin-top: @margin-min;
+      font-size: 1.3em;
+      font-weight: 400;
+    }
+    .subtitle, a{
+      color: @color-text-default;
+    }
+
+    p{
+      margin: 0;
+    }
+
+    .subtitle + p{
+      margin: @margin-default 0;
+    }
+  }
+}
+
+//-----------------------------------------------
+// POST-FOOTER
+//-----------------------------------------------
+.post-footer {
+  margin: @margin-default 0 30px 0;
+}
+
+//-----------------------------------------------
+// COMMON PARTS
+//-----------------------------------------------
+.post-info{
+  //padding: @padding-min @padding-default;
+  background-color: @light-background-color;
+  padding: @padding-min;
+
+  .item {
+    margin: 2px 0;
+
+    &:last-child {
+      margin: 0;
+    }
+
+    label {
+      margin: 0;
+    }
+  }
+
+  > span {
+    margin-left: @margin-medium;
+
+    > label {
+      margin: 2px 0;
+
+      &:last-child {
+        margin: 0;
+      }
+    }
+  }
+
+  p{
+    margin: 0;
+  }
+}
+
+.shared{
+  float: left;
+  font-size: 14px;
+  table {
+    margin: @margin-medium 0;
+    td {
+      margin: 0;
+      border: 1px solid @border-color-default;
+
+      a:hover {
+        background-color: @bck-color-bk-toolbarBox;
+      }
+
+      a, a:visited, a:focus{
+        text-decoration: none !important;
+        color: @main-text-color;
+        display: block;
+        padding:  @padding-min @padding-medium;
+        width: 100%;
+        background-color: #FFFFFF;
+      }
+
+      /*a:hover{
+        span {
+          opacity: @hover-opacity;
+        }*/
+      span {
+        padding-right: @padding-min;
+      }
+    }
+  }
+}
+
+.people{
+  text-align: right;
+  margin-bottom: @margin-min;
+  float: right;
+
+  a{
+    border-radius: 50%;
+    border: 1px solid @border-color-default;
+    width: 35px;
+    height: 35px;
+    display: inline-block;
+    margin-left: 8px;
+    margin-bottom: @margin-min;
+    overflow: hidden;
+
+    .avatar{
+
+    }
+  }
+}
+
+@media(max-width: 600px){
+  .post-footer {
+    .shared, .people {
+      width: 100%;
+    }
+  }
+  .shared {
+    margin-top: @margin-default;
+    font-size: 16px;
+    table {
+      margin: @margin-default auto;
+    }
+  }
+  .people{
+    text-align: center;
+  }
+}
+
+//-----------------------------------------------
+// LIST VIEW
+// 2 COLUMNS (with sidebar)
+//-----------------------------------------------
+.listview-container:not(.grid-item){
+  width: 100%;
+}
+
+.listview-container {
+  float: left;
+  //width: 100%;
+  border-bottom: 1px solid @main-text-color;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+}
+
+
+.post-horizonatal {
+  float: left;
+  width: 100%;
+
+  @media (max-width:419px) {
+    padding: @padding-default 0;
+  }
+
+  &:not(:last-child){
+    border-bottom: 1px solid @border-color-default ;
+  }
+
+  @media(min-width: 768px){
+    .post-details{
+      padding-left: 0;
+    }
+  }
+
+  @media(max-width: 767px){
+    .post-details{
+      padding: 0;
+    }
+  }
+  .post-wrap{
+    >div:first-child{
+      @media(min-width: 768px){
+        padding-left: 0;
+      }
+
+      img{
+        width: 100%;
+        max-width: 100%;
+        margin: 0 auto;
+        /*text-align: center;
+        margin: @margin-default auto;
+        max-width: 100%;*/
+
+        /*@media(max-width: 767px){
+          max-height: 260px;
+        }*/
+      }
+    }
+  }
+
+  textarea{
+    width: 90%;
+    margin: @padding-default 5%;
+  }
+}
+
+//== sidebar
+
+.sidebar-actions {
+  ul {
+    display: flex;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+
+    li {
+      width: 16.6%;
+      list-style: none;
+      text-align: center;
+      font-size: 18px;
+    }
+  }
+  .btn {
+    margin: 0 !important;
+    line-height: normal;
+  }
+}
+
+.list-primary-btn {
+  padding: 10px 0 5px 0;
+  text-align: center;
+}
+
+.container-sidebar .box{
+  background-color: @light-background-color;
+  padding: @padding-default;
+  border-bottom: 3px solid #fff;
+
+  .avatar {
+    float: left;
+    margin-right: @margin-medium;
+  }
+
+  p{
+    margin-top: 0;
+    line-height: normal;
+  }
+
+  .answer_details{
+      .answer_name{
+        font-size: 1.215em;
+        color: @color-text-default;
+        margin: 0;
+      }
+  }
+  .title-sidebar-list{
+    color: @primary-color;
+    padding: @padding-min;
+    margin-bottom: @margin-min;
+    background-color: #fff;
+  }
+}
+.container-sidebar, .comment_content{
+  background-color: @light-background-color;
+
+  .btn{
+    margin: @margin-medium 0;
+  }
+  h4 {
+    margin: 0 0 0 0;
+    color: @color-text-default;
+    float: left;
+    padding-right: @padding-default;
+    width: 100%;
+  }
+  .data{
+    margin-top: @margin-medium;
+    color: @secondary-info-color;
+  }
+  .img-left{
+    margin:0;
+
+    .avatar{
+      position: absolute;
+      top: @margin-min;
+      right: 0;
+    }
+  }
+
+  .commento .img-left .avatar{
+    margin: auto;
+  }
+
+  .risposta .img-left .avatar{
+    margin-left: auto;
+  }
+
+  .comment-body{
+    padding-left: @margin-default;
+    padding-right: @margin-default;
+
+    textarea{
+      width: 100%;
+      margin: 0;
+    }
+  }
+
+  .collapse{
+    width: 100%;
+    height: 130px;
+    border-bottom: 1px solid @border-color-default;
+  }
+  .contributo-container, //TODO TO REMOVE
+  .contribute-container {
+    .btn{
+      margin: 0 5%;
+    }
+  }
+  .footer{
+    border: 1px solid @border-color-default;
+    height: 60px;
+    .buttons{
+      font-size: 20px;
+      padding: @padding-default;
+      float: left;
+    }
+    .btn{
+      margin-right: @margin-default;
+    }
+  }
+
+  @media(max-width: 768px){
+    .answer-body h4,
+    .comment-body h4{
+      float: none;
+      margin: 0;
+    }
+
+    .answer-body .data,
+    .comment-body .data{
+      margin: 0;
+    }
+  }
+
+  .footer_sidebar{
+    background-color: @light-background-color;
+    //margin-top: @margin-min;
+    padding: 0 @padding-medium;
+  }
+}
+
+.contributo-container textarea,  //TODO TO REMOVE
+.contribute-container textarea{
+  width: 100%;
+  height: 120px;
+  margin: @padding-default 0;
+}
+
+@media(max-width: 480px){
+  //.commento .img-left{
+  //  width: 100%;
+  //}
+  .comment-body.media-body{
+       width: 100%;
+       display: block;
+     }
+  .risposta .img-left{
+    width: 30%;
+  }
+  .answer-body{
+    width: 60%;
+  }
+}
+
+//-----------------------------------------------
+// DETAILS VIEW
+// image (not required) + text
+// more content
+//-----------------------------------------------
+.post-details {
+  .post {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin: @margin-default;
+
+    .post-info {
+      @media (min-width: 768px) {
+        margin: @margin-default 0;
+      }
+    }
+
+    .post-text {
+      @media (max-width: 768px) {
+        margin-bottom: @margin-default;
+      }
+    }
+
+/*    .post-image-left{
+      margin: @margin-min @margin-default 0 0;
+
+      @media(max-width: 767px){
+        padding: @padding-min 0;
+        margin-bottom: @margin-medium;
+
+        img{
+          @media(max-width: 767px) {
+            max-height: 260px;
+            margin: 0 auto;
+          }
+        }
+      }
+
+      p {
+        float:left;
+        margin: @margin-medium 0 0 0;
+      }
+    }*/
+
+    .post-image{
+      @media(min-width: 420px){
+        margin: 5px 5px 0 15px;
+        float: right;
+      }
+
+      img{
+        @media (max-width: 419px) {
+          margin: 0 auto;
+        }
+      }
+    }
+  }
+}
+
+.first-document{
+  margin: @margin-default 0 @margin-default 0;
+  padding: 0 @padding-default;
+  background-color: @primary-color50;
+
+  @media(max-width: 767px){
+    padding: @padding-min @padding-default;
+    margin-bottom: @margin-medium;
+  }
+
+  .btn{
+    margin:0;
+    .btn-tool-secondary {
+      padding: @padding-min 0;
+    }
+  }
+  p {
+    float:left;
+    margin: 8px 0 0 0;
+  }
+}
+
+//-----------------------------------------------
+// more content
+// answer
+//-----------------------------------------------
+.comment_content{
+  .answer{
+    margin-top: 0;
+    margin-bottom: @margin-default;
+  }
+  
+  .answer-action{
+    color: @color-text-default;
+  }
+  
+  .comment-body p,
+  .answer-body p {
+    margin: @margin-min 0;
+    line-height: 1.3;
+  }
+
+  .footer {
+    border: 0;
+
+    .btn {
+      margin:0;
+    }
+  }
+
+  .commento{
+    margin: @margin-default 0;
+  }
+
+  textarea {
+    width: 100%;
+    margin: 0 0 15px 0;
+  }
+}
+
+//-----------------------------------------------
+// PROGETTI E PROPOSTE COLLABORAZIONE
+// DETAILS VIEW - 2 COLUMNS
+// image (not required) + text + SIDEBAR
+// more content
+//-----------------------------------------------
+.media {
+  .media-left {
+    .number-participants,
+    .number-partecipanti {
+      font-size: 1.5em;
+      background: @primary-color50;
+      padding: @padding-min @padding-medium;
+      margin: 0;
+      min-width: 40px;
+      text-align: center;
+    }
+  }
+}
+
+.bordered-box-details {
+  float: left;
+  border: 1px solid grey;
+  margin-left: 8px;
+
+  span{
+    &:first-child {
+      background-color: lighten(@primary-color, 60%);
+      border-right: 1px solid grey;
+      padding: 3px 5px;
+    }
+
+    &:last-child {
+      padding: 5px;
+    }
+  }
+}
+
+.sidebar{
+  .title{
+    font-size: 1.215em;
+    margin: 18px 0 9px 0;
+  }
+  .btn-primary{
+    //margin-top: @margin-min;
+  }
+}
+
+@media(max-width: 767px){
+  .progetti-view .shared, .progetti-view .people{
+    width: 100%;
+  }
+}

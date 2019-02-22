@@ -1,0 +1,381 @@
+//-----------------------------------------------
+// CARD VIEW
+// used in USER PROFILE
+// view with tabs
+// - layouts 1 column -->  .right_column in div.col-xs-12
+// - layouts 2 column -->  .left-column + .right_column in bootstrap columns
+//-----------------------------------------------
+//CONTAINER_COLUMNS
+
+.details_card {
+  //box-shadow: 0 1px 1px rgba(0, 0, 0, .15);
+  background: @light-background-color;
+  float: left;
+  width: 100%;
+}
+
+.profile .default-form{
+  background-color: @light-background-color;
+}
+
+//LEFT COLUMN
+.left-column{
+  padding: @padding-element-default;
+
+  .img-profile{
+    margin: auto;
+
+    //TODO DA SISTEMARE - per errore di upload formato immagine
+    .col-xs-12{
+      width: 100%;
+    }
+
+    /*@media(max-width:767px){
+      background-color: @primary-color;
+    }*/
+
+    @media(max-width:767px){
+      text-align: center;
+      padding-top: @padding-element-default;
+    }
+
+    img{
+      margin: 0 auto;
+      //max-height: 250px;
+
+      @media(min-width: 768px){
+        width: 100%;
+      }
+
+      @media(max-width:767px) {
+        display: inline-block;
+        height: auto;
+        //border-radius: 50%;
+        border: 4px solid #fff;
+        //box-shadow: 0 8px 17px rgba(0, 0, 0, .2), 0 6px 20px rgba(0, 0, 0, .19);
+      }
+    }
+  }
+  .fileinput .container-btn .fileinput-new{
+    max-width: 100%;
+  }
+
+  .under-img{
+    position: relative;
+    text-align: center;
+    vertical-align: center;
+    background-color: @primary-color;
+    padding: @padding-default @padding-min;
+    min-height: 70px;
+
+    .btn{
+      top: -@margin-medium;
+      right: 0;
+      left: 0;
+      position: absolute;
+      font-size: 1em;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 170px;
+    }
+
+    h2{
+      color: contrast(@primary-color);
+      margin-top: @margin-default;
+      font-size: 1.5em;
+    }
+  }
+  .container-info-icons {
+    max-width: 100%;
+    @media(max-width:767px) {
+      text-align: center;
+    }
+    p.title{
+      font-size:1.25em;
+      color: #000;
+    }
+    p {
+      width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      .am {
+        margin-right: @margin-min;
+      }
+    }
+  }
+  .container-info-icons{
+    margin-top: 18px;
+
+    label{
+      cursor: pointer;
+    }
+  }
+}
+
+//RIGHT COLUMN
+.left-column + .right-column{
+  @media(min-width: 768px){
+    border-left: 1px solid @border-color-default;
+  }
+}
+
+.right-column {
+  background: #fff;
+  min-height: 550px;
+  padding-right: 0px;
+  @media(max-width:767px) {
+    min-height: 0;
+  }
+  .btn-associa{
+    margin: 0 0 @margin-min 0;
+    width:100%;
+  }
+}
+
+.section-data {
+  float: left;
+  width: 100%;
+  padding: @padding-min 0;
+
+  > .row{
+    margin-top: @margin-min;
+    padding-left: 25px;
+  }
+
+  h1 {
+    color: #000000;
+    margin-top: 0;
+    margin-bottom: @margin-default;
+    font-weight: 100;
+    font-size: 1.55em;
+    clear: both;
+
+    span {
+      margin-right: @margin-min;
+    }
+  }
+
+  dl{
+    float: left;
+  }
+
+  dl, p {
+    padding-left: 25px;
+    width: 100%;
+    clear: both;
+  }
+  dt {
+    @media (min-width: 768px) {
+      float: left;
+      width: 30%;
+      margin-bottom: @margin-min;
+    }
+    dd {
+      margin-bottom: 20px;
+      width: 65%;
+    }
+  }
+  &.edit{
+    dl {
+      padding: 0;
+    }
+  }
+}
+
+//fix error in image profile
+.details_card .img-profile .has-error .col-xs-6{
+  width: 100% !important;
+}
+
+@media(max-width: 767px){
+  .left-column, .right-column{
+    padding:0;
+  }
+
+  .details_card{
+    .img-profile{
+      .has-error{
+        .fileinput-preview.fileinput-exists.thumbnail,
+        span.tooltip-error-field > span{
+          color: contrast(@primary-color);
+        }
+      }
+    }
+  }
+}
+
+//-----------------------------------------------
+// TAB NETWORK
+// used in contact - community add
+// btn fix responsive
+//-----------------------------------------------
+
+.btn-search-admin{
+  display: flex;
+}
+
+//-----------------------------------------------
+// VIEW
+// used in EVENTS
+// 2 columns view
+//-----------------------------------------------
+.box-background {
+  background-color: @primary-color50;
+  padding: @padding-min 0;
+  color: @primary-color;
+
+  label {
+    margin-bottom: 0;
+  }
+}
+
+.boxed-data {
+  background-color: #fff;
+  color: @main-text-color;
+  padding: 0 @padding-min;
+  line-height: 25px !important;
+}
+
+.event-view {
+  .media {
+    width: 100%;
+    float: left;
+    padding-bottom: @padding-medium;
+
+    @media(max-width: 767px){
+      .media-body > div,
+      .media-body > div > div{
+        padding: 0;
+      }
+      img {
+        margin: auto;
+      }
+    }
+
+
+  }
+  .container-sidebar {
+    .box {
+      padding: @padding-default 0;
+
+      > div {
+        margin-bottom: @padding-default;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+
+  .sidebar {
+    @media(max-width: 767px){
+      margin-top: @margin-default * 2;
+    }
+  }
+}
+
+//-----------------------------------------------
+// VIEW
+// used in EVENTS
+// 2 columns view
+//-----------------------------------------------
+.box-background {
+  background-color: @primary-color50;
+  padding: @padding-min 0;
+  color: @primary-color;
+
+  label {
+    margin-bottom: 0;
+  }
+}
+
+.boxed-data {
+  background-color: #fff;
+  color: @main-text-color;
+  padding: 0 @padding-min;
+  line-height: 25px !important;
+}
+
+.event-view {
+  .media {
+    width: 100%;
+    float: left;
+    padding-bottom: @padding-medium;
+
+    @media(max-width: 767px){
+      .media-body > div,
+      .media-body > div > div{
+        padding: 0;
+      }
+      img {
+        margin: auto;
+      }
+    }
+
+
+  }
+  .container-sidebar {
+    .box {
+      padding: @padding-default 0;
+
+      > div {
+        margin-bottom: @padding-default;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+
+  .sidebar {
+    @media(max-width: 767px){
+      margin-top: @margin-default * 2;
+    }
+  }
+}
+
+
+//-----------------------------------------------
+// VIEW
+// DD DT
+// CENTERED
+//-----------------------------------------------
+.centered-details {
+  section {
+    margin: 25px 0px;
+
+    h2 {
+      border-bottom: 1px solid @primary-color;
+      padding-bottom: 8px;
+    }
+
+    h3 {
+      color: @primary-color;
+      border-bottom: 2px solid @border-color-default;
+      margin-bottom: 20px;
+    }
+    dl {
+      width: 100%;
+      clear: both;
+      text-align: center;
+      margin-bottom:  0;
+    }
+    dt {
+      font-weight: normal;
+      float: left;
+      width: 40%;
+      margin-bottom: @margin-min;
+      text-align: right;
+    }
+
+    dd {
+      font-weight: bold;
+      float: left;
+      text-align: left;
+      margin-left: 20px;
+    }
+  }
+}
