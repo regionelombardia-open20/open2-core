@@ -248,7 +248,7 @@
   top: 3px;
   right: 0;
   left: auto;
-  z-index: 10;
+  //z-index: 10;
   background-color: @color-badge;
   color: @text-color-badge;
   -webkit-border-radius: 21px;
@@ -287,5 +287,13 @@
 
   .btn-left {
     float: left !important;
+  }
+}
+
+
+.btn-tools-secondary.dropdown-toggle{
+  margin: 0 5px;
+  > .caret {
+    display: none;
   }
 }

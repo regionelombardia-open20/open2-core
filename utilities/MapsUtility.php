@@ -11,9 +11,8 @@
 
 namespace lispa\amos\core\utilities;
 
-
 use lispa\amos\core\module\BaseAmosModule;
-use yii\base\Object;
+use yii\base\BaseObject;
 use Yii;
 use yii\helpers\Json;
 
@@ -21,7 +20,7 @@ use yii\helpers\Json;
  * Class MapsUtility
  * @package lispa\amos\core\utilities
  */
-class MapsUtility extends Object
+class MapsUtility extends BaseObject
 {
 
     /**

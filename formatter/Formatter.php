@@ -162,7 +162,7 @@ class Formatter extends YiiFormatter
      * @param null $end
      * @return string
      */
-    private function formatDateDiff($start, $end = null)
+    private function formatDateDiff($start, $end = null, $bypassFormat = false)
     {
         if (!($start instanceof \DateTime)) {
             $start = new \DateTime($start);
@@ -212,7 +212,7 @@ class Formatter extends YiiFormatter
           }
          */
 
-        if (($interval->m !== 0) || ($interval->y !== 0)) {
+        if ($bypassFormat || ($interval->m !== 0) || ($interval->y !== 0)) {
             return $start->format('d/m/Y') . ' ' . BaseAmosModule::t('amoscore', '#formatdatediff_at') . ' ' . $start->format('H:i');
         }
 
@@ -295,6 +295,13 @@ class Formatter extends YiiFormatter
                 $dStart = new \DateTime($value);
                 $dEnd = new \DateTime();
                 return $this->formatDateDiff($dStart, $dEnd);
+            } elseif ($format == 'humanalwaysdatetime') {
+                if ($this->isValidTimeStamp($value)) {
+                    $value = date('Y-m-d H:i:s', $value);
+                }
+                $dStart = new \DateTime($value);
+                $dEnd = new \DateTime();
+                return $this->formatDateDiff($dStart, $dEnd, true);
             } else {
                 return parent::asDatetime($value, $format);
             }

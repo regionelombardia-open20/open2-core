@@ -78,6 +78,8 @@ class ItemAndCardHeaderWidget extends Widget
     public $customContent = null;
 
     public $truncateLongWords = false;
+    
+    public $absoluteUrlAvatar = false;
 
     /**
      * @inheritdoc
@@ -97,6 +99,10 @@ class ItemAndCardHeaderWidget extends Widget
         }
 
         $this->_contentCreator = $this->_model->createdUserProfile;
+        if(is_null($this->_contentCreator))
+        {
+            $this->_contentCreator = UserProfile::findOne(['user_id' => 1]);
+        }
     }
 
     /**
@@ -319,13 +325,16 @@ class ItemAndCardHeaderWidget extends Widget
             $moduleAdmin = \Yii::$app->getModule('admin');
             if (!empty($moduleAdmin)) {
                 if (property_exists(UserCardWidget::className(), 'enableLink')) {
-                    $html = UserCardWidget::widget(['model' => $this->_contentCreator, 'enableLink' => true]);
+                    $html = UserCardWidget::widget(['model' => $this->_contentCreator, 'enableLink' => true, 'absoluteUrl' => $this->absoluteUrlAvatar]);
                 } else {
-                    $html = UserCardWidget::widget(['model' => $this->_contentCreator]);
+                    $html = UserCardWidget::widget(['model' => $this->_contentCreator, 'absoluteUrl' => $this->absoluteUrlAvatar]);
                 }
             } else {
                 $html .= Html::a(
-                    Html::img($this->_contentCreator->getAvatarUrl(), ['width' => '50', 'class' => 'avatar']),
+                        $this->absoluteUrlAvatar ?
+                        Html::img($this->_contentCreator->getAvatarWebUrl(), ['width' => '50', 'class' => 'avatar'])
+                        :
+                        Html::img($this->_contentCreator->getAvatarUrl(), ['width' => '50', 'class' => 'avatar']) ,
                     $this->_contentCreator->getFullViewUrl(),
                     ['title' => $this->getContentCreatorLinkTitle()]
                 );

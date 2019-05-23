@@ -22,7 +22,11 @@ use yii\base\Module as BaseModule;
 abstract class BaseAmosModule extends BaseModule implements ModuleInterface
 {
     private $rbacEnabled = true;
-    
+
+    /**
+     * @var array The plugin metas eg Icons, Colors, Etc
+     */
+    public $pluginMetadata = [];
     
     /**
      * 

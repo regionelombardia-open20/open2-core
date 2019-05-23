@@ -14,10 +14,12 @@
  * @var $widget \lispa\amos\core\widget\WidgetIcon
  * @var $asset \yii\web\AssetBundle
  */
-$classSpanStr = implode(' ', $widget->classSpan);
-$classSpanLi = implode(' ', $widget->classLi);
-$classSpanA = implode(' ', $widget->classA);
+
+$classSpanStr = @join(' ', $widget->classSpan);
+$classSpanLi = @join(' ', $widget->classLi);
+$classSpanA = @join(' ', $widget->classA);
 $className = $widget::className();
+
 $userAgent = (strpos($_SERVER['HTTP_USER_AGENT'], 'Trident/') > -1 || strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE')) ? 'ie' : '';
 
 $url = is_array($widget->url) ? \yii\helpers\Url::to($widget->url) : $widget->url;

@@ -22,6 +22,7 @@ class AmosIcons extends Icon
      */
     const AM   = 'am';
     const DASH = 'dash';
+    const IC = 'ic';
 
     /**
      * Icon framework configurations
@@ -29,9 +30,15 @@ class AmosIcons extends Icon
     public static $_custom_frameworks = [
         self::AM => ['prefix' => 'am am-', 'class' => '\\lispa\\amos\\layout\\assets\\BaseAsset'],
         self::DASH => ['prefix' => 'dash dash-', 'class' => '\\lispa\\amos\\layout\\assets\\BaseAsset'],
+        self::IC => ['prefix' => 'ic ic-', 'class' => '\\lispa\\amos\\layout\\assets\\BaseAsset'],
     ];
 
-    public static function getIconFramework($iconFramework = NULL)
+    /**
+     * 
+     * @param type $iconFramework
+     * @return string
+     */
+    public static function getIconFramework($iconFramework = null)
     {
         if (empty($iconFramework)) {
             if (isset(Yii::$app->params['icon-framework'])) {
@@ -39,24 +46,42 @@ class AmosIcons extends Icon
                     $iconFramework = Yii::$app->params['icon-framework'];
                 }
             } else {
-                $iconFramework = 'am';
+                $iconFramework = self::AM;
             }
         }
+        
         return $iconFramework;
     }
 
+    /**
+     * 
+     * @param type $name
+     * @param type $options
+     * @param type $framework
+     * @param type $space
+     * @param type $tag
+     * @param type $value
+     * @return type
+     */
     public static function show($name, $options = [], $framework = null, $space = true, $tag = 'span', $value = '')
     {
         $key = self::getFramework($framework);
         if (in_array($key, array_keys(self::$_custom_frameworks))) {
-            $class = self::$_custom_frameworks[$key]['prefix'].$name;
+            $class = self::$_custom_frameworks[$key]['prefix'] . $name;
             Html::addCssClass($options, $class);
-            return Html::tag($tag, " ".$value, $options).($space ? ' ' : '');
-        } else {
-            return parent::show($name, $options, $framework, $space, $tag);
+            
+            return Html::tag($tag, ' ' . $value, $options) . ($space ? ' ' : '');
         }
+        
+        return parent::show($name, $options, $framework, $space, $tag);
     }
 
+    /**
+     * 
+     * @param type $framework
+     * @param type $method
+     * @return type
+     */
     protected static function getFramework($framework = null, $method = 'show')
     {
         self::setFramework();
@@ -76,15 +101,19 @@ class AmosIcons extends Icon
         return parent::getFramework($framework, $method);
     }
 
+    /**
+     * 
+     * @param type $view
+     * @param type $framework
+     */
     public static function map($view, $framework = null)
     {
         $key = self::getFramework($framework, 'map');
 
         if (in_array($key, array_keys(self::$_custom_frameworks))) {
-
             $class = self::$_custom_frameworks[$key]['class'];
             if (substr($class, 0, 1) != '\\') {
-                $class = self::NS.$class;
+                $class = self::NS . $class;
             }
 
             $class::register($view);
@@ -93,6 +122,9 @@ class AmosIcons extends Icon
         }
     }
 
+    /**
+     * 
+     */
     public static function setFramework()
     {
         $moduleL = \Yii::$app->getModule('layout');

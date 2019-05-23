@@ -37,6 +37,7 @@ class User extends Record implements IdentityInterface
     const STATUS_ACTIVE = 10;
 
     protected $adminInstalled = NULL;
+    protected $userProfile = null;
 
     /**
      * @inheritdoc
@@ -293,7 +294,11 @@ class User extends Record implements IdentityInterface
     public function getProfile()
     {
         if ($this->adminInstalled) {
-            return $this->getUserProfile()->one();
+            if(is_null($this->userProfile))
+            {
+                $this->userProfile = $this->getUserProfile()->one();
+            }
+            return $this->userProfile;
         } else {
             return null;
         }

@@ -227,8 +227,10 @@ class BreadcrumbHelper extends Component
                         $last_crumb = end($trail);
                         if($last_crumb && count($trail) > 1)
                         {
+//                            $params = $last_crumb->params;
+//                            $params = $last_crumb->asArray();
                             $params = $last_crumb->params;
-                            if(sizeof($params))
+                            if (is_array($params) && sizeof($params))
                             {
                                 foreach($params as $key_param => $value_param)
                                 {
@@ -350,7 +352,9 @@ class BreadcrumbHelper extends Component
     {
         $ret = false;
 
-        $params = $crumb->params;
+        // $params = $crumb->params;
+        $params = $crumb->asArray();
+        
         if(sizeof($params))
         {
             foreach($params as $key_param => $value_param)

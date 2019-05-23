@@ -26,7 +26,7 @@ use yii\helpers\Url;
  */
 class CloseSaveButtonWidget extends Widget
 {
-    public $layout = "<div id=\"form-actions\" class=\"bk-btnFormContainer\">{buttonSubmit}{buttonClose}</div>";
+    public $layout = "<div id=\"form-actions\" class=\"wrap-button\">{buttonSubmit}{buttonClose}</div>";
     public $buttonSaveLabel;
     public $buttonNewSaveLabel;
     public $buttonTitleSave = '';

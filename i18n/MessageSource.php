@@ -46,7 +46,9 @@ class MessageSource extends DbMessageSource
     /**
      * @var array application's modules
      */
-    private static $modules = null; //Singleton pattern
+    private static $modules; //Singleton pattern
+    
+    private static $languages;//Singleton pattern
 
 
     public function init()
@@ -181,7 +183,9 @@ class MessageSource extends DbMessageSource
         /**
          * Active languages
          */
-        $languages = Language::findAll(['status' => true]);
+        if(is_null(static::$languages)){
+            static::$languages = Language::findAll(['status' => true]);
+        }
 
         /**
          * Find for existing source text
@@ -213,7 +217,7 @@ class MessageSource extends DbMessageSource
         /**
          * Parse enabled languages
          */
-        foreach ($languages as $singleLanguage) {
+        foreach (static::$languages as $singleLanguage) {
             /**
              * @var $translatedTexts array With translations in file
              */

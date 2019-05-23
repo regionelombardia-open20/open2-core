@@ -14,7 +14,7 @@ namespace lispa\amos\core\views\common;
 use lispa\amos\core\icons\AmosIcons;
 use lispa\amos\core\utilities\CurrentUser;
 use Yii;
-use yii\base\Object;
+use yii\base\BaseObject;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -24,7 +24,7 @@ use yii\helpers\Url;
  * Class Buttons
  * @package lispa\amos\core\views\common
  */
-class Buttons extends Object
+class Buttons extends BaseObject
 {
     /**
      * @var \Closure|null $urlCreator

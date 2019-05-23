@@ -50,13 +50,13 @@ class ConfiguratorSocialShare extends Configurator
     public function initDeafaultOption(){
         if(empty($this->socialNetworks)) {
             $this->socialNetworks = [
-//                'facebook' => [
-//                    'class' => \lispa\amos\core\forms\editors\socialShareWidget\drivers\Facebook::class,
-//                    'label' => \yii\helpers\Html::tag('span', '', ['class' => 'am am-facebook-box']),
-//                ],
+                'facebook' => [
+                    'class' => \lispa\amos\core\forms\editors\socialShareWidget\drivers\Facebook::class,
+                    'label' => \yii\helpers\Html::tag('span', '', ['class' => 'am am-facebook-box', 'title' => \Yii::t('amoscore','Share with facebook')]),
+                ],
                     'twitter' => [
                     'class' => \ymaker\social\share\drivers\Twitter::class,
-                    'label' => \yii\helpers\Html::tag('span', '', ['class' => 'am am-twitter-box']),
+                    'label' => \yii\helpers\Html::tag('span', '', ['class' => 'am am-twitter-box', 'title' => \Yii::t('amoscore','Share with twitter')]),
                     'options' => ['class' => 'tw'],
                     'visibility' => ConfiguratorSocialShare::VISIBILITY_ONLY_PUBLIC_CONTENT
                     ],
@@ -67,13 +67,13 @@ class ConfiguratorSocialShare extends Configurator
 //                ],
                 'linkedIn' => [
                     'class' => \ymaker\social\share\drivers\LinkedIn::class,
-                    'label' => \yii\helpers\Html::tag('span', '', ['class' => 'am am-linkedin-box']),
+                    'label' => \yii\helpers\Html::tag('span', '', ['class' => 'am am-linkedin-box', 'title' => \Yii::t('amoscore','Share with linkedin')]),
                     'options' => ['class' => 'gp'],
                     'visibility' => ConfiguratorSocialShare::VISIBILITY_ONLY_PUBLIC_CONTENT
                 ],
                 'email' => [
                     'class' => \lispa\amos\core\forms\editors\socialShareWidget\drivers\Email::class,
-                    'label' => \yii\helpers\Html::tag('span', '', ['class' => 'am am-email']),
+                    'label' => \yii\helpers\Html::tag('span', '', ['class' => 'am am-email', 'title' => \Yii::t('amoscore','Share with email')]),
                     'options' => ['class' => 'email-btn'],
                     'visibility' => ConfiguratorSocialShare::VISIBILITY_ONLY_PUBLIC_CONTENT
                 ],

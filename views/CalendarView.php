@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Lombardia Informatica S.p.A.
  * OPEN 2.0
@@ -17,24 +16,19 @@ use yii\helpers\Html;
 
 class CalendarView extends BaseListView
 {
-
-    public $events = [];
-    public $titolo = null;
-    public $intestazione = null; //contenuti html caricati ad inizio pagina prima del calendario - intestazioni o altro
-    public $replace = [];
-    public $array = false;//se array è settato verrà ignorato $eventConfig e si userà solo $getEventi
-    public $getEventi = 'getEvents';
-    public $layout = "{summary}\n{items}\n{pager}";
-
+    public $events               = [];
+    public $titolo               = null;
+    public $intestazione         = null; //contenuti html caricati ad inizio pagina prima del calendario - intestazioni o altro
+    public $replace              = [];
+    public $array                = false; //se array è settato verrà ignorato $eventConfig e si userà solo $getEventi
+    public $getEventi            = 'getEvents';
+    public $layout               = "{summary}\n{items}\n{pager}";
+    public $disablePagination    = true;
     public $defaultClientOptions = [
-
     ];
-
-    public $clientOptions = [
-
+    public $clientOptions        = [
     ];
-
-    public $eventConfig = [
+    public $eventConfig          = [
         'id' => 'id',
         'title' => 'titolo',
         'start' => 'data_inizio',
@@ -52,9 +46,11 @@ class CalendarView extends BaseListView
         ];
 
         $this->setClientOptions(\yii\helpers\ArrayHelper::merge($this->defaultClientOptions, $this->getClientOptions()));
-
+        if ($this->disablePagination == true) {
+            $this->dataProvider->setPagination(false);
+        }
         $models = $this->dataProvider->getModels();
-        $keys = $this->dataProvider->getKeys();
+        $keys   = $this->dataProvider->getKeys();
 
         $this->setEvents($this->initEvents($models));
     }
@@ -94,13 +90,13 @@ class CalendarView extends BaseListView
     public function run()
     {
         $intestazione = $this->intestazione; //contenuti html caricati ad inizio pagina prima del calendario
-        $content = $this->renderItems(); //contenuti caricati in fondo alla pagina legati al model come la legenda per esempio
-        $options = $this->itemOptions;
-        return Html::tag('div', $intestazione) . AmosFullCalendar::widget([
+        $content      = $this->renderItems(); //contenuti caricati in fondo alla pagina legati al model come la legenda per esempio
+        $options      = $this->itemOptions;
+        return Html::tag('div', $intestazione).AmosFullCalendar::widget([
                 'options' => $this->getClientOptions(),
                 'clientOptions' => $this->getClientOptions(),
                 'events' => $this->getEvents(),
-            ]) . Html::tag('div', $content, $options);
+            ]).Html::tag('div', $content, $options);
     }
 
     /**
@@ -109,8 +105,11 @@ class CalendarView extends BaseListView
      */
     public function renderItems()
     {
-        $models = $this->dataProvider->getModels();
-        $keys = $this->dataProvider->getKeys();
+        if ($this->disablePagination == true) {
+            $this->dataProvider->setPagination(false);
+        }
+        $models  = $this->dataProvider->getModels();
+        $keys    = $this->dataProvider->getKeys();
         $content = [];
         foreach (array_values($models) as $index => $model) {
             $content[] = $this->renderItem($model, $keys[$index], $index);
@@ -128,5 +127,4 @@ class CalendarView extends BaseListView
     {
         $this->events = $events;
     }
-
 }

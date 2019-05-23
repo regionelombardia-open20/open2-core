@@ -12,6 +12,7 @@ namespace lispa\amos\core\module;
 
 use ReflectionClass;
 use yii\helpers\ArrayHelper;
+use lispa\amos\core\widget\WidgetAbstract;
 
 /**
  * Class AmosModule
@@ -59,6 +60,12 @@ abstract class AmosModule extends \lispa\amos\core\module\BaseAmosModule impleme
      */
     public $db_fields_translation;
 
+
+    /**
+     * @var bool $hideWidgetGraphicsActions
+     */
+    public $hideWidgetGraphicsActions = false;
+
     /**
      * Return an instance of module
      *
@@ -91,6 +98,10 @@ abstract class AmosModule extends \lispa\amos\core\module\BaseAmosModule impleme
         }
 
         $this->defineModelClasses();
+
+        if (!empty(\Yii::$app->params['dashboardEngine']) && \Yii::$app->params['dashboardEngine'] == WidgetAbstract::ENGINE_ROWS) {
+            $this->hideWidgetGraphicsActions = true;
+        }
     }
 
     /**

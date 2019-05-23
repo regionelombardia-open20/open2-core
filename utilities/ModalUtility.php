@@ -16,7 +16,7 @@ use lispa\amos\core\interfaces\WorkflowModelInterface;
 use lispa\amos\core\module\BaseAmosModule;
 use lispa\amos\core\record\Record;
 use Yii;
-use yii\base\Object;
+use yii\base\BaseObject;
 use yii\bootstrap\Modal;
 use yii\helpers\ArrayHelper;
 
@@ -24,7 +24,7 @@ use yii\helpers\ArrayHelper;
  * Class ModalUtility
  * @package lispa\amos\core\utilities
  */
-class ModalUtility extends Object
+class ModalUtility extends BaseObject
 {
     /**
      * When user clicks on edit button:

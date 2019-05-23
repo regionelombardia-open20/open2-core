@@ -4,7 +4,9 @@
 
 namespace lispa\amos\core\forms\editors\socialShareWidget\drivers;
 
+use lispa\amos\core\module\BaseAmosModule;
 use ymaker\social\share\base\Driver;
+use yii\helpers\Html;
 
 /**
  * Driver for Facebook.
@@ -19,8 +21,8 @@ class Email extends Driver
      */
     protected function processShareData()
     {
-        $this->url = static::encodeData($this->url);
-        $this->title = static::encodeData($this->title);
+        $this->url =BaseAmosModule::t('amoscore', '#share_body_message') .static::encodeData($this->url);
+        $this->title = \Yii::$app->name.': '.rawurlencode($this->title);
     }
 
     /**

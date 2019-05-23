@@ -11,6 +11,7 @@
 
 namespace lispa\amos\core\helpers;
 
+use lispa\amos\core\module\BaseAmosModule;
 use yii\base\InvalidConfigException;
 use yii\helpers\ArrayHelper;
 use yii\helpers\StringHelper;
@@ -26,6 +27,20 @@ class Html extends \yii\helpers\Html {
         'DOWNLOAD' => 'READ',
     ];
 
+    const 
+        BOOLEAN_FIELDS_VALUE_NO = 0,
+        BOOLEAN_FIELDS_VALUE_YES = 1
+    ;
+    
+    /**
+     * 
+     * @param type $content
+     * @param type $options
+     * @param type $permissions
+     * @param type $permissionsParams
+     * @return string
+     * @throws InvalidConfigException
+     */
     public static function submitButton($content = 'Submit', $options = [], $permissions = null, $permissionsParams = []) {
         if (\Yii::$app->getAuthManager()) {
             if (isset($permissions)) {
@@ -43,6 +58,15 @@ class Html extends \yii\helpers\Html {
         return parent::submitButton($content, $options);
     }
 
+    /**
+     * 
+     * @param type $content
+     * @param type $options
+     * @param type $permissions
+     * @param type $permissionsParams
+     * @return string
+     * @throws InvalidConfigException
+     */
     public static function button($content = 'Button', $options = [], $permissions = null, $permissionsParams = []) {
         if (\Yii::$app->getAuthManager()) {
             if (isset($permissions)) {
@@ -60,26 +84,34 @@ class Html extends \yii\helpers\Html {
         return parent::button($content, $options);
     }
 
+    /**
+     * 
+     * @param type $text
+     * @param type $url
+     * @param type $options
+     * @param type $checkPermNew
+     * @return string
+     */
     public static function a($text, $url = null, $options = [], $checkPermNew = false) {
         if (\Yii::$app->getAuthManager()) {
             if (isset($url)) {
-                $safeUrl = '';
-                $safeUrlParams = [];
-                if (is_array($url)) {
-                    $tempUrl = $url;
-                    $safeUrl = $url[0];
-                    unset($tempUrl[0]);
-                    $safeUrlParams = $tempUrl;
-                } else {
-                    $parsedUrl = parse_url($url);
-                    if (isset($parsedUrl['path'])) {
-                        $safeUrl = $parsedUrl['path'];
-                        parse_str(isset($parsedUrl['query']) ? $parsedUrl['query'] : NULL, $safeUrlParams);
-                    }
-                }
-
-                // Vecchia maniera con le route
-                $isValidPermission = \Yii::$app->getAuthManager()->getPermission($safeUrl);
+//                $safeUrl = '';
+//                $safeUrlParams = [];
+//                if (is_array($url)) {
+//                    $tempUrl = $url;
+//                    $safeUrl = $url[0];
+//                    unset($tempUrl[0]);
+//                    $safeUrlParams = $tempUrl;
+//                } else {
+//                    $parsedUrl = parse_url($url);
+//                    if (isset($parsedUrl['path'])) {
+//                        $safeUrl = $parsedUrl['path'];
+//                        parse_str(isset($parsedUrl['query']) ? $parsedUrl['query'] : NULL, $safeUrlParams);
+//                    }
+//                }
+//
+//                // Vecchia maniera con le route
+//                $isValidPermission = \Yii::$app->getAuthManager()->getPermission($safeUrl);
 
                 // Nuovo metodo che verifica i permessi
                 $isValidPermissionNew = true;
@@ -87,16 +119,17 @@ class Html extends \yii\helpers\Html {
                     $isValidPermissionNew = self::checkPermissionByUrl($url, $options);
                 }
 
-                if ($isValidPermission) {
-                    if (\Yii::$app->getUser()->can($safeUrl)) {
-
-                        $paramsUrl = ArrayHelper::merge([0 => $safeUrl], $safeUrlParams);
-
-                        return parent:: a($text, $paramsUrl, $options);
-                    } else {
-                        return '';
-                    }
-                } elseif ($checkPermNew && !$isValidPermissionNew) {
+//                if ($isValidPermission) {
+//                    if (\Yii::$app->getUser()->can($safeUrl)) {
+//
+//                        $paramsUrl = ArrayHelper::merge([0 => $safeUrl], $safeUrlParams);
+//
+//                        return parent:: a($text, $paramsUrl, $options);
+//                    } else {
+//                        return '';
+//                    }
+//                } else
+               if ($checkPermNew && !$isValidPermissionNew) {
                     return '';
                 } else {
                     return parent:: a($text, $url, $options);
@@ -342,4 +375,16 @@ class Html extends \yii\helpers\Html {
         return '<fieldset><legend class="sr-only">' . \yii\helpers\Inflector::camel2words($name) . '</legend>' . $hidden . static::tag($tag, $visibleContent, $options) . '</fieldset>';
     }
 
+    /**
+     * Return an array with the values used in boolean fields.
+     * @return array
+     */
+    public static function getBooleanFieldsValues()
+    {
+        return [
+            Html::BOOLEAN_FIELDS_VALUE_NO => BaseAmosModule::t('amoscore', 'No'),
+            Html::BOOLEAN_FIELDS_VALUE_YES => BaseAmosModule::t('amoscore', 'Yes')
+        ];
+    }
+    
 }

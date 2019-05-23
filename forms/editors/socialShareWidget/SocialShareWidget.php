@@ -1,22 +1,30 @@
 <?php
 
+/**
+ * Lombardia Informatica S.p.A.
+ * OPEN 2.0
+ *
+ *
+ * @package    lispa\amos\core\forms\editors\socialShareWidget
+ * @category   CategoryName
+ */
+
 namespace lispa\amos\core\forms\editors\socialShareWidget;
 
-
 use lispa\amos\core\components\ConfiguratorSocialShare;
-use lispa\amos\core\exceptions\AmosException;
 use lispa\amos\core\icons\AmosIcons;
 use lispa\amos\core\interfaces\ContentModelInterface;
-use yii\base\Exception;
-use yii\base\Widget;
 use yii\bootstrap\Modal;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use ymaker\social\share\widgets\SocialShare;
 
+/**
+ * Class SocialShareWidget
+ * @package lispa\amos\core\forms\editors\socialShareWidget
+ */
 class SocialShareWidget extends SocialShare
 {
-
 //    public $containerOptions = [
 //        'tag' => 'div',
 //        'class' => 'container-social-share'
@@ -42,12 +50,12 @@ class SocialShareWidget extends SocialShare
     public $enableModalShare = true;
     public $mode = self::MODE_NORMAL;
 
-
-
-
+    /**
+     * @inheritdoc
+     */
     public function init()
     {
-        if(!empty(\Yii::$app->components[$this->configuratorId])) {
+        if (!empty(\Yii::$app->components[$this->configuratorId])) {
             parent::init();
             if (empty($this->imageUrl)) {
                 $this->imageUrl = \yii\helpers\Url::to(\Yii::$app->params['platform']['backendUrl'] . "/img/img_default.jpg");
@@ -56,27 +64,35 @@ class SocialShareWidget extends SocialShare
     }
 
     /**
-     *
+     * @inheritdoc
      */
     public function run()
     {
-        if(!empty(\Yii::$app->components[$this->configuratorId])) {
-            $this->setVisibleSocialNetwork();
-            $this->renderModalAjax(); //used for share on your own network
+        if (isset(\Yii::$app->params['disableSocialShare']) && (\Yii::$app->params['disableSocialShare'] === true)) {
+            return '';
+        }
 
-            if (!$this->isSocialNetworkEmpty()) {
-                $this->renderModal();
-                if ($this->mode == self::MODE_NORMAL) {
-                    parent::run();
-                } else {
-                    // SHARE INSIDE A DROPDOWN
-                    echo "<div class=\"dropdown socialshared-dropdown\">
-                    <a class=\"btn dropdown-toggle\" data-toggle=\"dropdown\" href=\"\" aria-expanded=\"true\" title=\"" . \Yii::t('amoscore', 'Social share') . " \">"
-                        . AmosIcons::show('share', ['class' => ''])
-                        . Html::tag('b', '', ['class' => 'caret'])
-                        . "</a><ul class=\"dropdown-menu\"> ";
-                    parent::run();
-                    echo "</ul></div>";
+        $content_id = $this->model->id;
+        if($this->model->getValidatedOnce()) {
+            if (!empty(\Yii::$app->components[$this->configuratorId])) {
+                $this->setVisibleSocialNetwork();
+                $this->renderModalAjax(); //used for share on your own network
+
+                if (!$this->isSocialNetworkEmpty()) {
+                    $this->renderModal();
+                    if ($this->mode == self::MODE_NORMAL) {
+                        parent::run();
+                    } else {
+                        // SHARE INSIDE A DROPDOWN
+                        echo "<div class=\"dropdown socialshared-dropdown\">
+                    <a class=\"btn dropdown-toggle\" data-toggle=\"dropdown\" href=\"\" aria-expanded=\"true\" title=\"" . \Yii::t('amoscore', 'Share') . " \">"
+                            . AmosIcons::show('share', ['class' => ''])
+                            . Html::tag('b', '', ['class' => 'caret'])
+                            . "</a><ul class=\"dropdown-menu\"> ";
+                        parent::run();
+                        echo "</ul></div>"
+                            . "<div hidden id='social-share-model' data-classname='' data-key='$content_id'></div>";
+                    }
                 }
             }
         }
@@ -91,14 +107,25 @@ class SocialShareWidget extends SocialShare
             $view = $this->getView();
             $view->registerJs("$(document).ready(function() {
             $('.social-network').click(function(e) {
+                e.preventDefault();
                 var icon = $(this).find('span');
-
-                if($(icon).attr('class') != 'am am-email' && !$(icon).hasClass( 'open-modal' )) {
-                    e.preventDefault();
-                    window.open($(this).attr('href'), 'share', 'height=450, width=550, top=' + ($(window).height() / 2 - 275) + ', left=' + ($(window).width() / 2 - 225) + ', toolbar=0, location=0, menubar=0, directories=0, scrollbars=0');
-                    return false;
-                }
-                $(this).removeAttr('target');
+                var href = $(this).attr('href');
+                var idModel = $('#social-share-model').attr('data-key');
+                var clickedButton = this;
+                
+                $.ajax({
+                  url: 'share-ajax?id='+idModel,
+                }).done(function() {
+                         if($(icon).attr('class') != 'am am-email' && !$(icon).hasClass( 'open-modal' )) {
+                         e.preventDefault();
+                        window.open(href, 'share', 'height=450, width=550, top=' + ($(window).height() / 2 - 275) + ', left=' + ($(window).width() / 2 - 225) + ', toolbar=0, location=0, menubar=0, directories=0, scrollbars=0');
+                        return false;
+                    }
+                    else {
+                        window.location.href = href;                    }
+                    $(clickedButton).removeAttr('target');
+                });
+                
             });
         });");
         }
@@ -107,18 +134,31 @@ class SocialShareWidget extends SocialShare
     /**
      * @return bool
      */
-    public function canShare(){
+    public function canShare()
+    {
         $canShare = true;
         $model = $this->model;
         $cwhModule = \Yii::$app->getModule('cwh');
         // if is visible to all logged user, you can share on socials
-        if(!empty($cwhModule) && $model instanceof ContentModelInterface && in_array(get_class($model), $cwhModule->modelsEnabled)) {
+        if (!empty($cwhModule) && $model instanceof ContentModelInterface && in_array(get_class($model), $cwhModule->modelsEnabled)) {
             $destinatari = $model->destinatari;
             if(!empty($destinatari))
             {
+                /** @var  $regola */
                 foreach ($destinatari as $regola)
                 {
+
                     $cwh_nodi = \lispa\amos\cwh\models\CwhNodi::findOne($regola);
+                    // if the content is inside an OPEN type community,  you can share the content
+                    if(!empty($cwh_nodi)){
+                        $ClassnameNetwork = $cwh_nodi->classname;
+                        if($ClassnameNetwork == "lispa\amos\community\models\Community") {
+                            $modelNetwork = $ClassnameNetwork::findOne($cwh_nodi->record_id);
+                            if ($modelNetwork && $modelNetwork->community_type_id == 1) {
+                                return true;
+                            }
+                        }
+                    }
                     if(!empty($cwh_nodi) && !$cwh_nodi->visibility ){
                         $canShare = false;
                     }
@@ -128,31 +168,30 @@ class SocialShareWidget extends SocialShare
         return $canShare;
     }
 
-
     /**
      * Remove the social share buttons that haven't the right visibility
      */
-    protected function setVisibleSocialNetwork(){
+    protected function setVisibleSocialNetwork()
+    {
         $allowedSocialNetwork = [];
         $canShare = $this->canShare();
-            $socialNetworks = $this->_configurator->getSocialNetworks();
-            foreach ($socialNetworks as $socialName => $social) {
-                $okModule = true;
-                //check if the platform has che required plugin
-                if(!empty($social['required_module'])){
-                    $module = \Yii::$app->getModule($social['required_module']);
-                    if(empty($module)){
-                        $okModule = false;
-                    }
+        $socialNetworks = $this->_configurator->getSocialNetworks();
+        foreach ($socialNetworks as $socialName => $social) {
+            $okModule = true;
+            //check if the platform has che required plugin
+            if (!empty($social['required_module'])) {
+                $module = \Yii::$app->getModule($social['required_module']);
+                if (empty($module)) {
+                    $okModule = false;
                 }
-                if (!empty($social['visibility']) && $social['visibility'] == ConfiguratorSocialShare::VISIBILITY_ALWAYS && $okModule){
-                    $allowedSocialNetwork[$socialName] = $social;
-                }
-                elseif ($canShare && $okModule){
-                    $allowedSocialNetwork[$socialName] = $social;
-                }
-
             }
+            if (!empty($social['visibility']) && $social['visibility'] == ConfiguratorSocialShare::VISIBILITY_ALWAYS && $okModule) {
+                $allowedSocialNetwork[$socialName] = $social;
+            } elseif ($canShare && $okModule) {
+                $allowedSocialNetwork[$socialName] = $social;
+            }
+
+        }
 
         $this->_configurator->socialNetworks = $allowedSocialNetwork;
     }
@@ -160,9 +199,10 @@ class SocialShareWidget extends SocialShare
     /**
      * @return bool
      */
-    protected function isSocialNetworkEmpty(){
+    protected function isSocialNetworkEmpty()
+    {
         $socialNetworks = $this->_configurator->getSocialNetworks();
-        if(empty($socialNetworks)){
+        if (empty($socialNetworks)) {
             return true;
         }
         return false;
@@ -171,9 +211,10 @@ class SocialShareWidget extends SocialShare
     /**
      *  render the modal for sharing with your network
      */
-    public function renderModalAjax(){
+    public function renderModalAjax()
+    {
         $moduleChat = \Yii::$app->getModule('chat');
-        if($moduleChat) {
+        if ($moduleChat) {
             $classname = urlencode($this->model->className());
             $content_id = $this->model->id;
 
@@ -207,4 +248,7 @@ JS;
         }
     }
 
+    public static function isContentShareable(){
+
+    }
 }

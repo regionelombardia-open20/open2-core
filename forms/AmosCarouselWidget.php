@@ -149,7 +149,11 @@ class AmosCarouselWidget extends Widget
             /** @var Record $model */
             $this->carouselItems[] = $this->render($this->singleItemView, ['model' => $model]);
         }
-        return count($this->carouselItems);
+        
+        return ($this->carouselItems != null)
+          ? count($this->carouselItems)
+          : 0
+        ;
     }
 
     /**

@@ -22,6 +22,7 @@ use lispa\amos\core\module\BaseAmosModule;
 use lispa\amos\core\utilities\StringUtils;
 use lispa\amos\core\utilities\WorkflowTransitionWidgetUtility;
 use raoul2000\workflow\base\SimpleWorkflowBehavior;
+use raoul2000\workflow\base\Status;
 use Yii;
 use yii\base\Behavior;
 use yii\behaviors\TimestampBehavior;
@@ -92,9 +93,11 @@ class Record extends ActiveRecord implements StatsToolbarInterface
      */
     public static function find()
     {
+        $className = get_called_class();
+        $model = new $className();
         $return = parent::find();
-        if (array_key_exists('deleted_at', static::getTableSchema()->columns)) {
-            $tableName = static::getTableSchema()->name;
+        if ($model->hasAttribute('deleted_at')) {
+            $tableName = $className::tableName();
             $return->andWhere([$tableName . '.deleted_at' => null]);
         }
         return $return;
@@ -752,6 +755,28 @@ class Record extends ActiveRecord implements StatsToolbarInterface
             ];
         }
         return $newFormFieldNamesAndIds;
+    }
+
+    /**
+     * This method return the base workflow status label. It checks if the workflow behavior is present,
+     * then checks if the model has a workflow status and return the base label.
+     * @return string
+     */
+    public function getWorkflowBaseStatusLabel()
+    {
+        $label = '';
+        $hasWorkflow = false;
+        if ($this->getBehavior('workflow') || $this->findBehaviorByClassName(SimpleWorkflowBehavior::className())) {
+            $hasWorkflow = true;
+        }
+        if ($hasWorkflow && $this->hasWorkflowStatus()) {
+            /** @var Status $status */
+            $status = $this->getWorkflowStatus();
+            if ($status) {
+                $label = $status->getLabel();
+            }
+        }
+        return $label;
     }
 
     /**

@@ -13,9 +13,9 @@ namespace lispa\amos\core\helpers;
 
 
 use Yii;
-use yii\base\Object;
+use yii\base\BaseObject;
 
-class T extends Object
+class T extends BaseObject
 {
     public static $category = '';
     public static $defaultCategory = 'app';

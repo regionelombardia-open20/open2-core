@@ -36,6 +36,11 @@ class ActiveField extends YiiActiveField
     private $_skipLabelFor = false;
 
     /**
+     * @var string $labelTranslationField
+     */
+    private $labelTranslationField;
+
+    /**
      * @inheritdoc
      */
     public function init()
@@ -148,6 +153,7 @@ class ActiveField extends YiiActiveField
      */
     public function label($label = null, $options = [])
     {
+        $this->setTemplateByTranslation();
         if (is_bool($label)) {
             $this->enableLabel = $label;
             if ($label === false && $this->form->layout === 'horizontal') {
@@ -286,5 +292,56 @@ JS;
             $this->model->setScenario($currentScenario);
         }
         return parent::begin();
+    }
+
+    public function setTemplateByTranslation()
+    {
+        try {
+            $module = \Yii::$app->getModule('translation');
+            if (empty($this->labelTranslationField) && !empty($module)) {
+                if (!empty($module->enableLabelTranslationField) && $module->enableLabelTranslationField === true && $module->byPassPermissionInlineTranslation
+                    === true) {
+                    $configuration = $module->translationBootstrap;
+                    if (!empty($configuration['configuration']['translationContents'])) {
+                        $translationContents = $configuration['configuration']['translationContents'];
+                        if (!empty($translationContents['classBehavior']) && !empty($translationContents['models'])) {
+                            foreach ($translationContents['models'] as $model) {
+                                if (!empty($model['namespace']) && !empty($model['attributes'])) {
+                                    $classSender = get_class($this->model);
+                                    if ($classSender == $model['namespace'] && !empty($model['attributes']) && in_array($this->attribute,
+                                            $model['attributes'])) {
+                                        if (!empty($module->labelTranslationField)) {
+                                            eval("\$translationLabelAltField = {$module->translationLabelAltField}");
+                                            eval("\$translationLabelField = {$module->translationLabelField}");
+                                            $templateTranslationField    = $module->templateTranslationField;
+                                            $templateTranslationAltField = $module->templateTranslationAltField;
+                                            $this->labelTranslationField = str_replace($templateTranslationAltField,
+                                                $translationLabelAltField, $module->labelTranslationField);
+                                            $this->labelTranslationField = str_replace($templateTranslationField,
+                                                $translationLabelField, $this->labelTranslationField);                                      
+                                        } else {
+                                            $this->labelTranslationField = ' (<span class="label_translation am am-translate" title="'.\Yii::t("amostranslation",
+                                                    "Testo traducibile direttamente scrivendo in questo campo, tradurrai nella lingua selezionata, la visualizzazione attuale è in").' '.strtoupper(substr(\Yii::$app->language,
+                                                        0, 2)).'"> - '.strtoupper(substr(\Yii::$app->language, 0, 2)).'</span>)';
+                                        }
+                                        if (!empty($this->labelTranslationField)) {
+                                            $posLabel = strpos($this->template, '{label}');
+                                            if ($posLabel !== false && strpos($this->template,
+                                                    $this->labelTranslationField) === false) {
+                                                $pos            = $posLabel + 7;
+                                                $this->template = substr($this->template, 0, $pos).$this->labelTranslationField.substr($this->template,
+                                                        $pos);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+
+        }
     }
 }

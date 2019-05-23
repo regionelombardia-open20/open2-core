@@ -16,13 +16,13 @@ use lispa\amos\core\module\AmosModule;
 use lispa\amos\core\module\BaseAmosModule;
 use lispa\amos\core\record\Record;
 use raoul2000\workflow\base\Status;
-use yii\base\Object;
+use yii\base\BaseObject;
 
 /**
  * Class WorkflowTransitionWidgetUtility
  * @package lispa\amos\core\utilities
  */
-class WorkflowTransitionWidgetUtility extends Object
+class WorkflowTransitionWidgetUtility extends BaseObject
 {
     /**
      * This method return the workflow status label if is set in the metadata field.

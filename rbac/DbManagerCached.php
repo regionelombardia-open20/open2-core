@@ -33,7 +33,7 @@ class DbManagerCached extends AuthManager
     /**
      * @var string cache key name
      */
-    public $cacheKeyName = 'RbacCached';
+    public $cacheKeyName = 'rbacCached';
     /**
      * @var array php cache
      */

@@ -848,4 +848,51 @@ class AmosMigrationPermissions extends Migration
         
         return $ok;
     }
+
+    /**
+     * @param string $roleName
+     * @return null|\yii\rbac\Role
+     */
+    protected function findRole($roleName)
+    {
+        $role = $this->authManager->getRole($roleName);
+        if (is_null($role)) {
+            MigrationCommon::printConsoleMessage(BaseAmosModule::t('amoscore', "Ruolo '{roleName}' non trovato", ['roleName' => $roleName]));
+        }
+        return $role;
+    }
+
+    /**
+     * This method empty a role. You can specify a strings array of children to skip remove.
+     * @param string $roleName
+     * @param string[] $toSkipChildren
+     * @return bool
+     */
+    protected function emptyRole($roleName, $toSkipChildren = [])
+    {
+        $role = $this->findRole($roleName);
+        $roleChildren = $this->authManager->getChildren($roleName);
+        $ok = true;
+        if (!empty($roleChildren)) {
+            foreach ($roleChildren as $roleChild) {
+                if (in_array($roleChild->name, $toSkipChildren)) {
+                    MigrationCommon::printConsoleMessage(BaseAmosModule::t('amoscore', "AuthItem da skippare nello svuotamento del ruolo") . ': ' . $roleChild->name);
+                    continue;
+                }
+                $ok = $this->authManager->removeChild($role, $roleChild);
+                if (!$ok) {
+                    MigrationCommon::printConsoleMessage(BaseAmosModule::t('amoscore', "Errori durante la rimozione di '{childName}' da '{roleName}'", [
+                        'childName' => $roleChild->name,
+                        'roleName' => $role->name
+                    ]));
+                    $ok = false;
+                    break;
+                }
+            }
+        }
+        if ($ok) {
+            MigrationCommon::printConsoleMessage(BaseAmosModule::t('amoscore', "Il ruolo '{roleName}' è stato svuotato correttamente", ['roleName' => $role->name]));
+        }
+        return $ok;
+    }
 }

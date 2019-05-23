@@ -13,9 +13,9 @@ namespace lispa\amos\core\utilities;
 
 
 use yii\base\Exception;
-use yii\base\Object;
+use yii\base\BaseObject;
 
-class ClassUtility extends Object
+class ClassUtility extends BaseObject
 {
 
     /**

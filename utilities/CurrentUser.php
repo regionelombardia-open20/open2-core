@@ -12,9 +12,9 @@
 namespace lispa\amos\core\utilities;
 
 use Yii;
-use yii\base\Object;
+use yii\base\BaseObject;
 
-class CurrentUser extends Object
+class CurrentUser extends BaseObject
 {
 
     static public $user;

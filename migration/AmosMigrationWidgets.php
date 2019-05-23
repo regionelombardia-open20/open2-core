@@ -30,7 +30,7 @@ class AmosMigrationWidgets extends Migration
     /**
      * @var array $fieldsToSkip Fields to skip during insert or update of a widget.
      */
-    protected $fieldsToSkip = [
+    private $fieldsToSkip = [
         'update',
         'old_classname'
     ];
@@ -39,9 +39,9 @@ class AmosMigrationWidgets extends Migration
      */
     public function init()
     {
-        parent::init();
         $this->db->enableSchemaCache = false;
         $this->initWidgetsConfs();
+        parent::init();
     }
 
     /**
@@ -199,7 +199,7 @@ class AmosMigrationWidgets extends Migration
      * @param AmosWidgets|null $widget Optional param. It's the widget to be updated.
      * @return bool
      */
-    protected function saveWidget($widgetData, $widget = null)
+    private function saveWidget($widgetData, $widget = null)
     {
         $cleanedWidgetData = $this->cleanWidgetConf($widgetData);
         $adminId = 1;
@@ -226,7 +226,7 @@ class AmosMigrationWidgets extends Migration
      * @param array $widgetData Key => value array that contains all widget data.
      * @return array
      */
-    protected function cleanWidgetConf($widgetData)
+    private function cleanWidgetConf($widgetData)
     {
         $cleanedWidgetData = [];
         foreach ($widgetData as $fieldName => $fieldValue) {

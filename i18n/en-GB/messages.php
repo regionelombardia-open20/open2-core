@@ -410,4 +410,10 @@ return [
     'Yes' => 'Yes',
     'You are not authorized to delete this element.' => 'You are not authorized to delete this element.',
     'You must accept privacy policy' => 'You must accept privacy policy',
+    'news' => 'news',
+    'discussions' => 'discussions',
+    'partnershipprofiles' => 'partnership profiles',
+    'community' => 'community',
+    'admin' => 'users',
+    'documenti' => 'documents',
 ];

@@ -85,15 +85,4 @@ class FormUtility
         return $allOk;
     }
 
-    /**
-     * Return an array with the values used in boolean fields.
-     * @return array
-     */
-    public static function getBooleanFieldsValues()
-    {
-        return [
-            0 => BaseAmosModule::t('amoscore', 'No'),
-            1 => BaseAmosModule::t('amoscore', 'Yes')
-        ];
-    }
 }

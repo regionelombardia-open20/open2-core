@@ -12,13 +12,13 @@
 namespace lispa\amos\core\utilities;
 
 use Yii;
-use yii\base\Object;
+use yii\base\BaseObject;
 
 /**
  * Class Email
  * @package lispa\amos\core\utilities
  */
-class Email extends Object
+class Email extends BaseObject
 {
     /**
      * @param string $from

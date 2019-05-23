@@ -11,8 +11,6 @@
 
 namespace lispa\amos\core\views\toolbars;
 
-
-use yii\base\Object;
 use yii\helpers\ArrayHelper;
 
 class CommentStatsPanel extends StatsPanel

@@ -15,7 +15,7 @@ use Closure;
 use lispa\amos\core\module\BaseAmosModule;
 use Yii;
 use yii\grid\Column;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\widgets\LinkPager;
@@ -48,7 +48,7 @@ HTML;
     
     public $layout = "<div class=\"table_switch table-responsive\"> {items} \n {summary} <br> {pager} </div>";
     public $summary = "Risultati visualizzati {count} - Risultati da {begin} a {end} su un totale di {totalCount} - Pagina {page} di {pageCount}";
-    public $tableOptions = ['class' => 'table table-striped'];
+    public $tableOptions = ['class' => 'table table-hover'];
     
     /**
      * @var string the default data column class if the class name is not explicitly specified when configuring a data column.

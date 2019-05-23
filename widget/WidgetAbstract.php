@@ -13,133 +13,143 @@ namespace lispa\amos\core\widget;
 
 use yii\base\Widget;
 
-abstract class WidgetAbstract extends Widget
-{
-    public $label;
-    public $description;
-    public $code;
-    public $moduleName;
-    public $widgetPermission = null;
-    public $isVisible        = false;
-    public $children         = [];
+abstract class WidgetAbstract extends Widget {
 
-    /**
-     * The class name define custom size
-     * @var string $classFullSize
-     */
-    public $classFullSize;
+  const
+    ENGINE_COLUMNS = 'columns',
+    ENGINE_ROWS = 'rows';
 
-    public function isVisible()
-    {
-        if ($return = \Yii::$app->getUser()->can($this->getWidgetPermission())) {
-            return true;
-        } else {
-            //pr($this->getWidgetPermission() ,'NON PRESENTE!');
-            return false;
-        }
+  public 
+    $label,
+    $description,
+    $code,
+    $moduleName,
+    $widgetPermission = null,
+    $isVisible = false,
+    $children = [],
+    $engine = self::ENGINE_COLUMNS,
+    $classFullSize;                     // The class name define custom size
+
+  /**
+   * @inheritdoc 
+   */
+  public function init() {
+    parent::init();
+    
+    $permissionWidgetName = get_called_class();
+    $this->setWidgetPermission($permissionWidgetName);
+    if (!empty(\Yii::$app->params['dashboardEngine']) && in_array(\Yii::$app->params['dashboardEngine'], [self::ENGINE_COLUMNS, self::ENGINE_ROWS])) {
+      $this->setEngine(\Yii::$app->params['dashboardEngine']);
     }
+  }
 
-    /**
-     * @return string
-     */
-    public function getWidgetPermission()
-    {
-        return $this->widgetPermission;
-    }
+  /**
+   * TDB - FRANZ - Investigate this ->can() function
+   * 
+   * @return boolean
+   */
+  public function isVisible() {
+    return \Yii::$app->getUser()->can($this->getWidgetPermission());
 
-    /**
-     * @param string $widgetPermission
-     */
-    public function setWidgetPermission($widgetPermission)
-    {
-        $this->widgetPermission = $widgetPermission;
-    }
+  }
 
-    public function init()
-    {
-        parent::init();
-        $permissionWidgetName = get_called_class();
-        $this->setWidgetPermission($permissionWidgetName);
-    }
+  /**
+   * @return string
+   */
+  public function getEngine() {
+    return $this->engine;
+  }
 
-    /**
-     * @return mixed
-     */
-    public function getModuleName()
-    {
-        return $this->moduleName;
-    }
+  /**
+   * @param $engine
+   */
+  public function setEngine($engine) {
+    $this->engine = $engine;
+  }
 
-    /**
-     * @param mixed $moduleName
-     */
-    public function setModuleName($moduleName)
-    {
-        $this->moduleName = $moduleName;
-    }
+  /**
+   * @return string
+   */
+  public function getWidgetPermission() {
+    return $this->widgetPermission;
+  }
 
-    /**
-     * @return mixed
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
+  /**
+   * @param string $widgetPermission
+   */
+  public function setWidgetPermission($widgetPermission) {
+    $this->widgetPermission = $widgetPermission;
+  }
 
-    /**
-     * @param mixed $description
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-    }
+  /**
+   * @return mixed
+   */
+  public function getModuleName() {
+    return $this->moduleName;
+  }
 
-    /**
-     * @return mixed
-     */
-    public function getCode()
-    {
-        return $this->code;
-    }
+  /**
+   * @param mixed $moduleName
+   */
+  public function setModuleName($moduleName) {
+    $this->moduleName = $moduleName;
+  }
 
-    /**
-     * @param mixed $code
-     */
-    public function setCode($code)
-    {
-        $this->code = $code;
-    }
+  /**
+   * @return mixed
+   */
+  public function getDescription() {
+    return $this->description;
+  }
 
-    /**
-     * @return mixed
-     */
-    public function getLabel()
-    {
-        return $this->label;
-    }
+  /**
+   * @param mixed $description
+   */
+  public function setDescription($description) {
+    $this->description = $description;
+  }
 
-    /**
-     * @param mixed $label
-     */
-    public function setLabel($label)
-    {
-        $this->label = $label;
-    }
+  /**
+   * @return mixed
+   */
+  public function getCode() {
+    return $this->code;
+  }
 
-    /**
-     * This method set the class name define custom size
-     * @param string $customSize 
-     */
-    public function setClassFullSize($classFullSize)
-    {
-        $this->classFullSize = $classFullSize;
-    }
+  /**
+   * @param mixed $code
+   */
+  public function setCode($code) {
+    $this->code = $code;
+  }
 
-    /**
-     * @return string Return the class name define custom size
-     */
-    public function getClassFullSize()
-    {
-        return $this->classFullSize;
-    }
+  /**
+   * @return mixed
+   */
+  public function getLabel() {
+    return $this->label;
+  }
+
+  /**
+   * @param mixed $label
+   */
+  public function setLabel($label) {
+    $this->label = $label;
+  }
+
+  /**
+   * This method set the class name define custom size
+   * @param string $customSize 
+   */
+  public function setClassFullSize($classFullSize) {
+    $this->classFullSize = $classFullSize;
+  }
+
+  /**
+   * @return string Return the class name define custom size
+   */
+  public function getClassFullSize() {
+    return $this->classFullSize;
+  }
+
 }

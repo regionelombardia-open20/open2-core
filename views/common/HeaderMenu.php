@@ -14,6 +14,8 @@ namespace lispa\amos\core\views\common;
 use Yii;
 use lajax\translatemanager\models\Language;
 use lajax\translatemanager\widgets\ToggleTranslate;
+use \lispa\amos\core\icons\AmosIcons;
+
 
 class HeaderMenu
 {
@@ -85,13 +87,13 @@ class HeaderMenu
     /**
      * Echo translate button
      */
-    public function getToggleTranslate($addClass = 'btn btn-secondary')
+    public function getToggleTranslate($addClass = 'btn btn-secondary animated')
     {
         if (!\Yii::$app->user->isGuest) {
 
             if (Yii::$app->getUser()->can('TRANSLATION_ADMINISTRATOR')) {
                 echo ToggleTranslate::widget([
-                    'template' => '<a href="javascript:void(0);" id="toggle-translate" class="{position} ' . $addClass . '" data-language="{language}" data-url="{url}" style="z-index:10000;"> ' . Yii::t('amoscore', 'Traduzioni in linea') . '</a><div id="translate-manager-div"></div>',
+                    'template' => '<a href="javascript:void(0);" id="toggle-translate" class="{position} ' . $addClass . '" data-language="{language}" data-url="{url}" style="z-index:10000;"><div class=\'wrapper\'><span class=\'tooltip-label\'>' . Yii::t('amoscore', 'Traduzioni in linea') . '</span>' . AmosIcons::show('translate', ['class' => 'tooltip-icon']) . '</div></a><div id="translate-manager-div"></div>',
                     'position' => ToggleTranslate::POSITION_TOP_LEFT,
                 ]);
             }
@@ -109,7 +111,7 @@ class HeaderMenu
             $language = new \lajax\translatemanager\models\Language;
             $arrayLang = [];
 
-            if (Yii::$app->db->schema->getTableSchema($table, true) != null) {
+            if (Yii::$app->db->schema->getTableSchema($table, false) != null) {
                 $arrayLang = (new \yii\db\Query())->from($table)->andWhere(['status' => 1])->select(['language_id', 'name'])->all();
             }
             return $arrayLang;

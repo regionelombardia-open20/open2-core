@@ -12,6 +12,7 @@
 namespace lispa\amos\core\forms\editors\m2mWidget;
 
 use lispa\amos\core\forms\CreateNewButtonWidget;
+use lispa\amos\core\forms\editors\ExportMenu;
 use lispa\amos\core\icons\AmosIcons;
 use lispa\amos\core\module\BaseAmosModule;
 use lispa\amos\core\module\Module;
@@ -19,6 +20,7 @@ use lispa\amos\core\record\Record;
 use lispa\amos\core\utilities\JsUtility;
 use lispa\amos\core\views\AmosGridView;
 use Yii;
+use yii\base\Event;
 use yii\base\Exception;
 use yii\base\InvalidConfigException;
 use yii\base\Widget;
@@ -28,6 +30,7 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\JsExpression;
+use yii\web\View;
 
 /**
  * Class M2MWidget
@@ -175,6 +178,17 @@ class M2MWidget extends Widget
      */
     public $titleWidget = '';
 
+    /**
+     * @var ActiveDataProvider $itemsMittenteDataProvider
+     */
+    protected $itemsMittenteDataProvider = null;
+
+    /**
+     * @var array $downloadMittenteConfig Config to export the mittente columns. There must be "exportEnabled" key set to boolean true.
+     * If you specify only the "exportEnabled" key the export menu compose the excel file with the itemsMittente columns.
+     * If you specify the "exportColumns" key as an array the export menu compose the excel file with the specified columns.
+     */
+    public $exportMittenteConfig = [];
 
     /**
      * @throws Exception
@@ -299,11 +313,11 @@ class M2MWidget extends Widget
                 if (isset($this->model)) {
                     $createOptions['model'] = $this->model;
                 }
-                if(!is_null($confirm)){
+                if (!is_null($confirm)) {
                     $createOptions['otherOptions']['onClick'] = $confirm;
                 }
                 // Render create new button only if user has the correct permission. The correct permission check is done by widget.
-                $buttons = CreateNewButtonWidget::widget($createOptions);
+                $buttons .= CreateNewButtonWidget::widget($createOptions);
             }
 
             // Render "associa" button if the user has the correct permission set in this widget config array.
@@ -343,6 +357,50 @@ class M2MWidget extends Widget
             }
         }
 
+        $downloadButton = '';
+        if (
+            isset($this->exportMittenteConfig) &&
+            is_array($this->exportMittenteConfig) &&
+            isset($this->exportMittenteConfig['exportEnabled']) &&
+            is_bool($this->exportMittenteConfig['exportEnabled']) &&
+            ($this->exportMittenteConfig['exportEnabled'] === true)
+        ) {
+            $downloadButton = Html::tag('div', '', ['id' => 'm2m-toolbar-mittente-download-btn', 'class' => 'm2m-toolbar-btn pull-left hidden']);
+            Event::on(View::className(), View::EVENT_END_BODY, function ($event) {
+                $exportColumns = (isset($this->exportMittenteConfig['exportColumns']) ? $this->exportMittenteConfig['exportColumns'] : $this->itemsMittente);
+                $exportMenuParams = [
+                    'dataProvider' => $this->getItemsMittenteDataProvider(),
+                    'columns' => $exportColumns,
+                    'selectedColumns' => array_keys($exportColumns),
+                    'showColumnSelector' => false,
+                    'showConfirmAlert' => false,
+                    'filename' => Yii::$app->view->title,
+                    'clearBuffers' => true,
+                    'exportConfig' => [
+                        ExportMenu::FORMAT_HTML => false,
+                        ExportMenu::FORMAT_CSV => false,
+                        ExportMenu::FORMAT_TEXT => false,
+                        ExportMenu::FORMAT_PDF => false
+                    ],
+                    'dropdownOptions' => [
+                        'class' => 'btn btn-tools-secondary',
+                        'icon' => AmosIcons::show('download')
+                    ]
+                ];
+
+                // Renders a export dropdown menu
+                echo Html::beginTag('div', ['id' => 'm2m-toolbar-mittente-dropdown-download', 'class' => 'hidden']);
+                echo ExportMenu::widget($exportMenuParams);
+                echo Html::endTag('div');
+            });
+
+            $js = "
+                $('#m2m-toolbar-mittente-dropdown-download').appendTo('#m2m-toolbar-mittente-download-btn').removeClass('hidden');
+                $('#m2m-toolbar-mittente-download-btn').removeClass('hidden');
+            ";
+            Yii::$app->view->registerJs($js, View::POS_READY);
+        }
+
         if ($this->firstGridSearch) {
             $gridId = $this->gridId;
             $searchFieldValue = '';
@@ -353,8 +411,8 @@ class M2MWidget extends Widget
                 }
             }
 
-
             $buttons = '<div class="col-xs-12 nop"><div class="col-sm-6 btn-add-admin">' . $buttons . '</div><div class="col-sm-6 btn-search-admin">' .
+                $downloadButton .
                 Html::input('text', null, $searchFieldValue, [
                     'id' => 'search-' . $gridId,
                     'class' => 'form-control pull-left',
@@ -373,6 +431,8 @@ class M2MWidget extends Widget
                         'class' => 'btn btn-danger-inverse',
                         'alt' => BaseAmosModule::t('amoscore', 'Cancel search')
                     ]) . '</div></div>';
+        } else {
+            $buttons = $downloadButton . $buttons;
         }
 
         if (strlen($buttons)) {
@@ -382,9 +442,8 @@ class M2MWidget extends Widget
         return $retVal;
     }
 
-
     /**
-     * Renders the toolbar
+     * Renders the mini toolbar
      */
     public function renderToolbarMittenteMini()
     {
@@ -407,7 +466,7 @@ class M2MWidget extends Widget
                 if (isset($this->model)) {
                     $createOptions['model'] = $this->model;
                 }
-                if(!is_null($confirm)){
+                if (!is_null($confirm)) {
                     $createOptions['otherOptions']['onClick'] = $confirm;
                 }
                 // Render create new button only if user has the correct permission. The correct permission check is done by widget.
@@ -447,7 +506,6 @@ class M2MWidget extends Widget
                 }
             }
         }
-
 
         $buttonsAssocia = $buttons;
         $buttons = '';
@@ -483,7 +541,6 @@ class M2MWidget extends Widget
                     ]),
                 ['class' => 'col-xs-12 nop m2mwidget-search-mini']);
         }
-
 
         $retVal .= Html::tag('div',
             (!empty($this->titleWidget) ? Html::tag('h2', $this->titleWidget) : '')
@@ -538,19 +595,21 @@ class M2MWidget extends Widget
 
     private function getItemsMittenteDataProvider()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => $this->modelData,
-            'pagination' => [
-                'pageSize' => $this->itemsSenderPageSize,
-                'pageParam' => $this->pageParam
-            ]
-        ]);
-        if (isset($this->itemMittenteDefaultOrder)) {
-            $dataProvider->setSort([
-                'defaultOrder' => $this->itemMittenteDefaultOrder
+        if (is_null($this->itemsMittenteDataProvider)) {
+            $this->itemsMittenteDataProvider = new ActiveDataProvider([
+                'query' => $this->modelData,
+                'pagination' => [
+                    'pageSize' => $this->itemsSenderPageSize,
+                    'pageParam' => $this->pageParam
+                ]
             ]);
+            if (isset($this->itemMittenteDefaultOrder)) {
+                $this->itemsMittenteDataProvider->setSort([
+                    'defaultOrder' => $this->itemMittenteDefaultOrder
+                ]);
+            }
         }
-        return $dataProvider;
+        return $this->itemsMittenteDataProvider;
     }
 
     /**
@@ -732,10 +791,14 @@ class M2MWidget extends Widget
                     'checkboxOptions' => function ($model, $key, $index, $column) {
                         $checkboxOptions = [
                             'value' => $model['id'],
-                            'checked' => array_key_exists($model['id'], $this->modelDataArr) || (isset($_POST['selected']) && in_array($model['id'], $_POST['selected'])) ? 'checked' : '',
                             'onchange' => new JsExpression('Correlazioni.gestisciSelezione(this, "' . $this->postName . '", "' . $this->postKey . '", ' . ($this->multipleSelection ? 'false' : 'true') . ');'),
                             'class' => 'm2m-target-checkbox'
                         ];
+
+                        if (array_key_exists($model['id'], $this->modelDataArr) || (isset($_POST['selected']) && in_array($model['id'], $_POST['selected']))) {
+                            $checkboxOptions['checked'] = 'checked';
+                        }
+
                         return $checkboxOptions;
                     },
                     'multiple' => $this->multipleSelection
@@ -840,13 +903,14 @@ class M2MWidget extends Widget
     /**
      * @return null|string
      */
-    public function getConfirm(){
+    public function getConfirm()
+    {
         $controller = Yii::$app->controller;
         $action = $controller->action->id;
         $isActionUpdate = ($action != 'view') && ($action == 'update' || $action == 'associa-m2m');
         $messageDialog = BaseAmosModule::t('amoscore', '#confirm_exit_without_saving');
 
-        if($isActionUpdate) {
+        if ($isActionUpdate) {
             Yii::$app->view->registerJs(<<<JS
         function customDialogM2m(e) {
             e.preventDefault();

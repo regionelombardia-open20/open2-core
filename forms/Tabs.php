@@ -92,7 +92,8 @@ class Tabs extends BaseTabs
                 $contentCwh = \Yii::$app->controller->renderFile($cwhView,
                     [
                     'model' => $model,
-                    'form' => \yii\base\Widget::$stack[0]
+                    'form' => \yii\base\Widget::$stack[0],
+                    'moduleCwh' => $moduleCwh
                 ]);
                 $content    .= $contentCwh;
             }

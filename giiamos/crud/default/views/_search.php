@@ -27,6 +27,8 @@ use yii\widgets\ActiveForm;
 * @var <?= ltrim($generator->searchModelClass, '\\') ?> $model
 * @var yii\widgets\ActiveForm $form
 */
+
+$enableAutoOpenSearchPanel = !isset(\Yii::$app->params['enableAutoOpenSearchPanel']) || \Yii::$app->params['enableAutoOpenSearchPanel'] === true;
 ?>
 
 <div class="<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) ?>-search element-to-toggle" data-toggle-element="form-search">
@@ -40,7 +42,7 @@ use yii\widgets\ActiveForm;
         ]
     ]);
 
-    echo Html::hiddenInput("enableSearch", "1");
+    echo Html::hiddenInput("enableSearch", $enableAutoOpenSearchPanel;
     echo Html::hiddenInput("currentView", Yii::$app->request->getQueryParam('currentView'));
     ?>
 

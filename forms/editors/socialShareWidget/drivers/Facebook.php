@@ -15,12 +15,15 @@ use ymaker\social\share\base\Driver;
 class Facebook extends Driver
 {
 
+
     /**
      * @inheritdoc
      */
     public function getLink()
     {
         $this->_link = 'http://www.facebook.com/sharer.php?u={url}';
+//        $this->_link =  'share?urlRedirect='.static::encodeData('http://www.facebook.com/sharer.php?u=').'{url}';
+
 
         return parent::getLink();
     }

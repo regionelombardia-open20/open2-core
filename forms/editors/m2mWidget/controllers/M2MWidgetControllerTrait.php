@@ -194,6 +194,12 @@ trait M2MWidgetControllerTrait
                             $intercect = $mmTableName::find()->andWhere([$this->mmStartKey => $model->id])
                                 ->andWhere([$this->mmTargetKey => $target->id])->one();
                             if (is_null($intercect)) {
+                                $event = new Event();
+                                $event->sender = [
+                                    'startObj' => $model,
+                                    'targetObj' => $target
+                                ];
+                                $this->trigger(M2MEventsEnum::EVENT_BEFORE_INTERCECT_M2M, $event);
                                 /** @var ActiveRecord $intercect */
                                 $intercect = new $mmTableName();
                                 $intercect->$startKey = $model->id;
@@ -204,6 +210,8 @@ trait M2MWidgetControllerTrait
                                     }
                                 }
                                 $intercect->save(false);
+                                $event->sender['intercect'] = $intercect;
+                                $this->trigger(M2MEventsEnum::EVENT_AFTER_INTERCECT_M2M, $event);
                             }
                             $notInTargets[] = $target->id;
                         }

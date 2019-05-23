@@ -80,7 +80,10 @@ class ListTagsWidget extends Widget
         $allTag = null;
         $widget = '';
 
-        $userProfileClass = AmosAdmin::getInstance()->model('UserProfile');
+        $userProfileClass = AmosAdmin::instance()->model('UserProfile');
+        // $module = Yii::$app->getModule(AmosAdmin::getModuleName());
+        // $userProfileClass = $module::getInstance()->model('UserProfile');
+
         $classes_enabled = ArrayHelper::merge($this->moduleTag->modelsEnabled, [$userProfileClass]);
         $showTags = isset($this->moduleTag) && in_array($this->className, $classes_enabled) && $this->moduleTag->behaviors;
 
@@ -111,7 +114,11 @@ class ListTagsWidget extends Widget
      */
     protected function getTags()
     {
-        $userProfileClass = AmosAdmin::getInstance()->model('UserProfile');
+        
+        $userProfileClass = AmosAdmin::instance()->model('UserProfile');
+        // $module = Yii::$app->getModule(AmosAdmin::getModuleName());
+        // $userProfileClass = $module::getInstance()->model('UserProfile');
+
         if ($this->className == $userProfileClass) {
             $tagsMm = \lispa\amos\cwh\models\CwhTagOwnerInterestMm::find()
                 ->innerJoin('tag', 'tag.id = tag_id')

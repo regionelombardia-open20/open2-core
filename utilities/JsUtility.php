@@ -12,13 +12,13 @@
 namespace lispa\amos\core\utilities;
 
 
-use yii\base\Object;
+use yii\base\BaseObject;
 
 /**
  * Class JsUtility
  * @package lispa\amos\core\utilities
  */
-class JsUtility extends Object
+class JsUtility extends BaseObject
 {
     /**
      * @param string $gridId

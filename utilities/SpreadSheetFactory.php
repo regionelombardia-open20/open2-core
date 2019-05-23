@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Lombardia Informatica S.p.A.
  * OPEN 2.0
@@ -20,6 +21,10 @@ use \PhpOffice\PhpSpreadsheet\Shared\Date;
 use yii\log\Logger;
 use lispa\amos\core\record\RecordDynamicModel;
 
+/**
+ * Class SpreadSheetFactory
+ * @package lispa\amos\core\utilities
+ */
 class SpreadSheetFactory
 {
     const SHEET_TO_EXPORT_FIRST = 'first__sheet';
@@ -418,11 +423,19 @@ class SpreadSheetFactory
      * Reading the file.
      * Identified the filetype before creation of Reader.
      *
-     *
-     * @param type $fileName
-     * @param type $model_name
-     * @param type $rowToStart
-     * @param type $colToStart
+     * @param string $sheet
+     * @param string $fileName
+     * @param string $table
+     * @param array $attributes
+     * @param int $typeUpdate
+     * @param int $rowToStart
+     * @param string $db
+     * @param string $driver
+     * @param int $colToStart
+     * @param int $chunkSize
+     * @return int
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
      */
     public static function createImportAndSaveDynamic($sheet, $fileName, $table, $attributes,
                                                       $typeUpdate = self::UPDATE_INCREMENTAL, $rowToStart = 2,

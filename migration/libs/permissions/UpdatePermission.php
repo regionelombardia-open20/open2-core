@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Lombardia Informatica S.p.A.
  * OPEN 2.0
@@ -15,7 +14,7 @@ use lispa\amos\core\exceptions\MigrationsException;
 use lispa\amos\core\migration\libs\common\MigrationCommon;
 use lispa\amos\core\module\BaseAmosModule;
 use Yii;
-use yii\base\Object;
+use yii\base\BaseObject;
 use yii\rbac\DbManager;
 use yii\rbac\Item;
 use yii\rbac\Permission;
@@ -24,7 +23,7 @@ use yii\rbac\Permission;
  * Class UpdatePermission
  * @package lispa\amos\core\migration\libs
  */
-class UpdatePermission extends Object
+class UpdatePermission extends BaseObject
 {
     const FIELD_TYPE_STRING = 'STRING';
     const FIELD_TYPE_INT = 'INT';

@@ -12,10 +12,10 @@
 namespace lispa\amos\core\views\toolbars;
 
 
-use yii\base\Object;
+use yii\base\BaseObject;
 use yii\helpers\ArrayHelper;
 
-class StatsPanel extends Object implements IStatsPanel
+class StatsPanel extends BaseObject implements IStatsPanel
 {
 
     private $icon;

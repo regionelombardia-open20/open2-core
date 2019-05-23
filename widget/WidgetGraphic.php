@@ -11,21 +11,27 @@
 
 namespace lispa\amos\core\widget;
 
-class WidgetGraphic extends WidgetAbstract
-{
-    public function run()
-    {
-        if ($this->isVisible()) {
-            return $this->getHtml();
-        } else {
-            return '';
-        }
-    }
+class WidgetGraphic extends WidgetAbstract {
 
-    public function getHtml()
-    {
-        return "############GRAPHIC!############";
+  /**
+   * 
+   * @return string
+   */
+  public function run() {
+    if ($this->isVisible()) {
+      return $this->getHtml();
     }
+    
+    return '';
+  }
 
+  /**
+   * TBD - FRANZ ?!?!??!!?
+   * 
+   * @return string
+   */
+  public function getHtml() {
+    return "############GRAPHIC!############";
+  }
 
 }

@@ -772,8 +772,22 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
         }
 
 
-        foreach ($searchParamsArray as $searchString) {
+        //search tag
+        $tagsValues = \Yii::$app->request->get('tagValues');
+        if ($enableTagSearch) {
+            $arrayTagIds = [];
+            if(!empty($tagsValues)) {
+                $tagIds = ArrayHelper::merge($arrayTagIds, explode(',', $tagsValues));
+                $dataProvider->query->andFilterWhere(['t.id' => $tagIds]);
+            }
+        }else {
+            if (!empty($tagsValues)) {
+                $dataProvider->query->andWhere(0);
+            }
+        }
 
+        //search string
+        foreach ($searchParamsArray as $searchString) {
             $orQueries = null;
 
             $searchFieldGlobal = $this->searchFieldsGlobalSearch();
@@ -784,26 +798,6 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
                 }
             }
 
-            $tagsValues = \Yii::$app->request->get('tagValues');
-            if ($enableTagSearch) {
-                $arrayTagIds = [];
-                if(!empty($tagsValues)) {
-                    $tagIds = ArrayHelper::merge($arrayTagIds, explode(',', $tagsValues));
-                    $dataProvider->query->andFilterWhere(['t.id' => $tagIds]);
-                }
-
-//                if (is_null($orQueries)) {
-//                    $orQueries[] = 'or';
-//                }
-//                if ($tagTranslationSearch) {
-//                    $orQueries[] = ['like', 'tt.nome', $searchString];
-//                }
-//                $orQueries[] = ['like', 't.nome', $searchString];
-            }else {
-                if (!empty($tagsValues)) {
-                    $dataProvider->query->andWhere(0);
-                }
-            }
             if (!is_null($orQueries)) {
                 $dataProvider->query->andWhere($orQueries);
             }
