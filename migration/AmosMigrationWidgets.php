@@ -199,7 +199,7 @@ class AmosMigrationWidgets extends Migration
      * @param AmosWidgets|null $widget Optional param. It's the widget to be updated.
      * @return bool
      */
-    private function saveWidget($widgetData, $widget = null)
+    protected function saveWidget($widgetData, $widget = null)
     {
         $cleanedWidgetData = $this->cleanWidgetConf($widgetData);
         $adminId = 1;
