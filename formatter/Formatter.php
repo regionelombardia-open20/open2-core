@@ -1,22 +1,21 @@
 <?php
-
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\formatter
+ * @package    open20\amos\core\formatter
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\formatter;
+namespace open20\amos\core\formatter;
 
-use lispa\amos\core\module\BaseAmosModule;
+use open20\amos\core\module\BaseAmosModule;
 use yii\i18n\Formatter as YiiFormatter;
 
 /**
  * Class Formatter
- * @package lispa\amos\core\formatter
+ * @package open20\amos\core\formatter
  */
 class Formatter extends YiiFormatter
 {
@@ -46,7 +45,7 @@ class Formatter extends YiiFormatter
 
         $tagFormatter = '';
         foreach ($tagsValues as $tag) {
-            $tagFormatter .= '<span class="formatter-tag">' . $tag . '</span>';
+            $tagFormatter .= '<span class="formatter-tag">'.$tag.'</span>';
         }
 
         return $tagFormatter;
@@ -61,7 +60,7 @@ class Formatter extends YiiFormatter
         $dimvalue = strlen($value);
         $newvalue = "";
         for ($i = 0; $i < $dimvalue; $i = $i + 4) {
-            $newvalue .= " " . $value[$i] . $value[$i + 1] . $value[$i + 2] . $value[$i + 3];
+            $newvalue .= " ".$value[$i].$value[$i + 1].$value[$i + 2].$value[$i + 3];
         }
         return $newvalue;
     }
@@ -99,8 +98,8 @@ class Formatter extends YiiFormatter
      */
     public function asPrice($value)
     {
-        $value = round($value, 2);
-        $newvalue = "€ " . $value;
+        $value    = round($value, 2);
+        $newvalue = "€ ".$value;
         return $newvalue;
     }
 
@@ -110,9 +109,9 @@ class Formatter extends YiiFormatter
      */
     public function asMinutiDaIntero($value)
     {
-        $newvalue = $value . " minuti";
+        $newvalue = $value." minuti";
         if ($value == 1) {
-            $newvalue = $value . " minuto";
+            $newvalue = $value." minuto";
         }
         return $newvalue;
     }
@@ -123,8 +122,8 @@ class Formatter extends YiiFormatter
      */
     public function asPercentuale($value)
     {
-        $value = number_format($value, 2, '.', '');
-        $newvalue = $value . " %";
+        $value    = number_format($value, 2, '.', '');
+        $newvalue = $value." %";
         return $newvalue;
     }
 
@@ -153,8 +152,7 @@ class Formatter extends YiiFormatter
     {
         if ($value === null) {
             return $this->nullDisplay;
-        } else
-            return strip_tags($value);
+        } else return strip_tags($value);
     }
 
     /**
@@ -199,7 +197,7 @@ class Formatter extends YiiFormatter
                     $str = $nb > 1 ? BaseAmosModule::t('amoscore', 'seconds') : BaseAmosModule::t('amoscore', 'second');
                     break;
             }
-            return $str . ' ' . BaseAmosModule::t('amoscore', 'ago');
+            return $str.' '.BaseAmosModule::t('amoscore', 'ago');
         };
 
         /*
@@ -213,7 +211,7 @@ class Formatter extends YiiFormatter
          */
 
         if ($bypassFormat || ($interval->m !== 0) || ($interval->y !== 0)) {
-            return $start->format('d/m/Y') . ' ' . BaseAmosModule::t('amoscore', '#formatdatediff_at') . ' ' . $start->format('H:i');
+            return $start->format('d/m/Y').' '.BaseAmosModule::t('amoscore', '#formatdatediff_at').' '.$start->format('H:i');
         }
 
         /*
@@ -229,12 +227,12 @@ class Formatter extends YiiFormatter
 
             if ($interval2->d == 1) {
                 if ($interval2->invert == 0) {
-                    return BaseAmosModule::t('amoscore', 'yesterday at') . ' ' . $start->format('H:i');
+                    return BaseAmosModule::t('amoscore', 'yesterday at').' '.$start->format('H:i');
                 } else {
-                    return BaseAmosModule::t('amoscore', 'tomorrow at') . ' ' . $start->format('H:i');
+                    return BaseAmosModule::t('amoscore', 'tomorrow at').' '.$start->format('H:i');
                 }
             } else {
-                return $start->format('d/m/Y') . ' ' . BaseAmosModule::t('amoscore', '#formatdatediff_at') . ' ' . $start->format('H:i');
+                return $start->format('d/m/Y').' '.BaseAmosModule::t('amoscore', '#formatdatediff_at').' '.$start->format('H:i');
             }
         }
 
@@ -247,20 +245,20 @@ class Formatter extends YiiFormatter
 
             if ($interval2->d == 1) {
                 if ($interval2->format('%R%a') == '+1') {
-                    return BaseAmosModule::t('amoscore', 'yesterday at') . ' ' . $start->format('H:i');
+                    return BaseAmosModule::t('amoscore', 'yesterday at').' '.$start->format('H:i');
                 }
                 if ($interval2->format('%R%a') == '-1') {
-                    return BaseAmosModule::t('amoscore', 'tomorrow at') . ' ' . $start->format('H:i');
+                    return BaseAmosModule::t('amoscore', 'tomorrow at').' '.$start->format('H:i');
                 }
             }
 
             if ($interval->h < 6) {
-                $format[] = '%h ' . $doPlural($interval->h, 'hour');
+                $format[] = '%h '.$doPlural($interval->h, 'hour');
             } else {
-                return BaseAmosModule::t('amoscore', 'today at') . ' ' . $start->format('H:i');
+                return BaseAmosModule::t('amoscore', 'today at').' '.$start->format('H:i');
             }
         } elseif ($interval->i !== 0) {
-            $format[] = '%i ' . $doPlural($interval->i, 'minute');
+            $format[] = '%i '.$doPlural($interval->i, 'minute');
         } elseif ($interval->s >= 0) {
             return BaseAmosModule::t('amoscore', 'now');
             /*
@@ -293,14 +291,14 @@ class Formatter extends YiiFormatter
                     $value = date('Y-m-d H:i:s', $value);
                 }
                 $dStart = new \DateTime($value);
-                $dEnd = new \DateTime();
+                $dEnd   = new \DateTime();
                 return $this->formatDateDiff($dStart, $dEnd);
             } elseif ($format == 'humanalwaysdatetime') {
                 if ($this->isValidTimeStamp($value)) {
                     $value = date('Y-m-d H:i:s', $value);
                 }
                 $dStart = new \DateTime($value);
-                $dEnd = new \DateTime();
+                $dEnd   = new \DateTime();
                 return $this->formatDateDiff($dStart, $dEnd, true);
             } else {
                 return parent::asDatetime($value, $format);
@@ -316,6 +314,6 @@ class Formatter extends YiiFormatter
      */
     protected function isValidTimeStamp($timestamp)
     {
-        return ((string)(int)$timestamp === $timestamp) && ($timestamp <= PHP_INT_MAX) && ($timestamp >= ~PHP_INT_MAX);
+        return ((string) (int) $timestamp === $timestamp) && ($timestamp <= PHP_INT_MAX) && ($timestamp >= ~PHP_INT_MAX);
     }
 }

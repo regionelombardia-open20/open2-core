@@ -1,20 +1,20 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\utilities
+ * @package    open20\amos\core\utilities
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\utilities;
+namespace open20\amos\core\utilities;
 
-use lispa\amos\core\helpers\Html;
-use lispa\amos\core\interfaces\WorkflowModelInterface;
-use lispa\amos\core\module\BaseAmosModule;
-use lispa\amos\core\record\Record;
+use open20\amos\core\helpers\Html;
+use open20\amos\core\interfaces\WorkflowModelInterface;
+use open20\amos\core\module\BaseAmosModule;
+use open20\amos\core\record\Record;
 use Yii;
 use yii\base\BaseObject;
 use yii\bootstrap\Modal;
@@ -22,7 +22,7 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class ModalUtility
- * @package lispa\amos\core\utilities
+ * @package open20\amos\core\utilities
  */
 class ModalUtility extends BaseObject
 {
@@ -225,6 +225,12 @@ class ModalUtility extends BaseObject
         $containerOptions = ((isset($modalConfiguration['containerOptions']) && is_array($modalConfiguration['containerOptions'])) ?
             $modalConfiguration['containerOptions'] :
             ['class' => 'modal-utility']);
+        $modalFooterClass = ((isset($modalConfiguration['footerClass']) && is_string($modalConfiguration['footerClass'])) ?
+            $modalConfiguration['footerClass'] :
+            '');
+        $modalFooterText = ((isset($modalConfiguration['footerText']) && is_string($modalConfiguration['footerText'])) ?
+            Html::tag('div', $modalConfiguration['footerText'], ['class' => 'bootstrap-dialog-footer']) :
+            Html::tag('div', '', ['class' => 'bootstrap-dialog-footer-buttons']));
         $modalClassSize = ((isset($modalConfiguration['modalClassSize']) && is_string($modalConfiguration['modalClassSize'])) ?
             $modalConfiguration['modalClassSize'] :
             '');
@@ -234,6 +240,8 @@ class ModalUtility extends BaseObject
             'id' => $modalId,
             'header' => $modalHeaderText,
             'headerOptions' => ['class' => $modalHeaderClass],
+            'footer' => $modalFooterText,
+            'footerOptions' => ['class' => $modalFooterClass],
             'options' => $containerOptions,
             'size' => $modalClassSize,
         ]);

@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\validators
+ * @package    open20\amos\core\validators
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\validators;
+namespace open20\amos\core\validators;
 
 use yii\db\ActiveRecord;
 use yii\validators\Validator;
@@ -17,6 +17,7 @@ use yii\validators\Validator;
 /**
  * Description of CFValidator
  *
+ * @author Cesare
  */
 class CFValidator extends Validator
 {
@@ -130,7 +131,7 @@ class CFValidator extends Validator
             }
         }
         if (chr($s % 26 + ord('A')) != $theVar[15]) {
-            $this->addError($model, $attribute, \Yii::t('app', 'Codice Fiscale non valido') );
+            $this->addError($model, $attribute, \Yii::t('amosapp', 'Codice Fiscale non valido') );
             return false;
         }
         return true;
@@ -145,8 +146,8 @@ class CFValidator extends Validator
      */
     public function clientValidateAttribute($model, $attribute, $view)
     {
-        $error_msg = \Yii::t('app', 'Codice Fiscale non valido');
-        $error_format_msg = \Yii::t('app', 'Il codice fiscale deve contenere 16 tra lettere e cifre');
+        $error_msg = \Yii::t('amosapp', 'Codice Fiscale non valido');
+        $error_format_msg = \Yii::t('amosapp', 'Il codice fiscale deve contenere 16 tra lettere e cifre');
         return <<<JS
         
         var cf = value.toUpperCase();

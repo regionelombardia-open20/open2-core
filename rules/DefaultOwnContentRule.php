@@ -1,22 +1,22 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\rules
+ * @package    open20\amos\core\rules
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\rules;
+namespace open20\amos\core\rules;
 
-use lispa\amos\core\record\Record;
+use open20\amos\core\record\Record;
 use yii\rbac\Rule;
 
 /**
  * Class DefaultOwnContentRule
- * @package lispa\amos\core\rules
+ * @package open20\amos\core\rules
  */
 class DefaultOwnContentRule extends Rule
 {

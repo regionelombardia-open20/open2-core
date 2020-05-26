@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core
+ * @package    open20\amos\core
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\giiamos;
+namespace open20\amos\core\giiamos;
 
 use yii\gii\Generator as BaseGenerator;
 use yii\helpers\StringHelper;
@@ -45,7 +45,7 @@ abstract class Generator extends BaseGenerator {
     public function hints() {
         return array_merge(
                 parent::hints(), [
-            'vendorPath' => 'Percorso relativo dentro la vendor  per esempio "lispa/amos-news/src/widgets"',
+            'vendorPath' => 'Percorso relativo dentro la vendor  per esempio "open20/amos-news/src/widgets"',
                 ]
         );
     }

@@ -1,19 +1,19 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms\editors\socialShareWidget
+ * @package    open20\amos\core\forms\editors\socialShareWidget
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\forms\editors\socialShareWidget;
+namespace open20\amos\core\forms\editors\socialShareWidget;
 
-use lispa\amos\core\components\ConfiguratorSocialShare;
-use lispa\amos\core\icons\AmosIcons;
-use lispa\amos\core\interfaces\ContentModelInterface;
+use open20\amos\core\components\ConfiguratorSocialShare;
+use open20\amos\core\icons\AmosIcons;
+use open20\amos\core\interfaces\ContentModelInterface;
 use yii\bootstrap\Modal;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -21,7 +21,7 @@ use ymaker\social\share\widgets\SocialShare;
 
 /**
  * Class SocialShareWidget
- * @package lispa\amos\core\forms\editors\socialShareWidget
+ * @package open20\amos\core\forms\editors\socialShareWidget
  */
 class SocialShareWidget extends SocialShare
 {
@@ -55,10 +55,11 @@ class SocialShareWidget extends SocialShare
      */
     public function init()
     {
+        $baseUrl = (!empty(\Yii::$app->params['platform']['backendUrl']) ? \Yii::$app->params['platform']['backendUrl'] : '');
         if (!empty(\Yii::$app->components[$this->configuratorId])) {
             parent::init();
             if (empty($this->imageUrl)) {
-                $this->imageUrl = \yii\helpers\Url::to(\Yii::$app->params['platform']['backendUrl'] . "/img/img_default.jpg");
+                $this->imageUrl = \yii\helpers\Url::to($baseUrl . "/img/img_default.jpg");
             }
         }
     }
@@ -148,11 +149,11 @@ class SocialShareWidget extends SocialShare
                 foreach ($destinatari as $regola)
                 {
 
-                    $cwh_nodi = \lispa\amos\cwh\models\CwhNodi::findOne($regola);
+                    $cwh_nodi = \open20\amos\cwh\models\CwhNodi::findOne($regola);
                     // if the content is inside an OPEN type community,  you can share the content
                     if(!empty($cwh_nodi)){
                         $ClassnameNetwork = $cwh_nodi->classname;
-                        if($ClassnameNetwork == "lispa\amos\community\models\Community") {
+                        if($ClassnameNetwork == "open20\amos\community\models\Community") {
                             $modelNetwork = $ClassnameNetwork::findOne($cwh_nodi->record_id);
                             if ($modelNetwork && $modelNetwork->community_type_id == 1) {
                                 return true;

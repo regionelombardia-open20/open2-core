@@ -1,17 +1,17 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\views
+ * @package    open20\amos\core\views
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\views;
+namespace open20\amos\core\views;
 
-use lispa\amos\core\views\common\BaseListView;
+use open20\amos\core\views\common\BaseListView;
 use Yii;
 
 class ListView extends BaseListView
@@ -22,7 +22,7 @@ class ListView extends BaseListView
 
     public $template = '{view} {update} {delete}';
     public $buttons;
-    public $buttonClass = 'lispa\amos\core\views\common\Buttons';
+    public $buttonClass = 'open20\amos\core\views\common\Buttons';
     public $viewOptions = [
         'class' => ''
     ];

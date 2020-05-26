@@ -1,33 +1,32 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\bootstrap
+ * @package    open20\amos\core\bootstrap
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\bootstrap;
+namespace open20\amos\core\bootstrap;
 
 use yii\base\BootstrapInterface;
-use yii\base\Controller;
 use yii\base\Event;
-use yii\base\ViewEvent;
-use yii\base\View;
 use yii\base\WidgetEvent;
 use yii\helpers\Url;
 use yii\widgets\Breadcrumbs;
 
-
+/**
+ * Class Breadcrumb
+ * @package open20\amos\core\bootstrap
+ */
 class Breadcrumb implements BootstrapInterface
 {
-
     /**
      * @var string
      */
-    public $activeBreadcrumbHelperClass = "lispa\\amos\\core\\helpers\\BreadcrumbHelper";
+    public $activeBreadcrumbHelperClass = "open20\\amos\\core\\helpers\\BreadcrumbHelper";
 
     /**
      * @param $app
@@ -71,7 +70,7 @@ class Breadcrumb implements BootstrapInterface
         /**
          * if label is empty log in into breadcrumbs log
          */
-        if(empty($label)) {
+        if (empty($label)) {
             /**
              * set logger stack info to zero
              */
@@ -88,6 +87,4 @@ class Breadcrumb implements BootstrapInterface
         //pr($trail,"Trail");
         $event->sender->links = $trail;
     }
-
-
 }

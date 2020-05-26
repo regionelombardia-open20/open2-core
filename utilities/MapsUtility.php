@@ -1,24 +1,24 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\utilities
+ * @package    open20\amos\core\utilities
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\utilities;
+namespace open20\amos\core\utilities;
 
-use lispa\amos\core\module\BaseAmosModule;
+use open20\amos\core\module\BaseAmosModule;
 use yii\base\BaseObject;
 use Yii;
 use yii\helpers\Json;
 
 /**
  * Class MapsUtility
- * @package lispa\amos\core\utilities
+ * @package open20\amos\core\utilities
  */
 class MapsUtility extends BaseObject
 {

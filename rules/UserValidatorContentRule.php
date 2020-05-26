@@ -1,23 +1,23 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\rules
+ * @package    open20\amos\core\rules
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\rules;
+namespace open20\amos\core\rules;
 
-use lispa\amos\core\controllers\BaseController;
-use lispa\amos\core\record\Record;
+use open20\amos\core\controllers\BaseController;
+use open20\amos\core\record\Record;
 
 
 /**
  * Class UserValidatorContentRule
- * @package lispa\amos\core\rules
+ * @package open20\amos\core\rules
  */
 class UserValidatorContentRule extends DefaultOwnContentRule
 {
@@ -70,7 +70,7 @@ class UserValidatorContentRule extends DefaultOwnContentRule
      */
     private function userValidatorContentPermission($userId ,$permissionCwhValidate)
     {
-        $cwhContentValidatePerssions = \lispa\amos\cwh\models\base\CwhAuthAssignment::find()->andWhere(['user_id' => $userId, 'item_name' => $permissionCwhValidate])->all();
+        $cwhContentValidatePerssions = \open20\amos\cwh\models\base\CwhAuthAssignment::find()->andWhere(['user_id' => $userId, 'item_name' => $permissionCwhValidate])->all();
         return (!empty($cwhContentValidatePerssions));
     }
 }

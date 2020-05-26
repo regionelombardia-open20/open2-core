@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\giiamos\crud\wizard\views
+ * @package    open20\amos\core\giiamos\crud\wizard\views
  * @category   CategoryName
  */
 
@@ -34,7 +34,7 @@ foreach ($generator->getFormTabsAsArray() as $nomeTab) {
 }
 ?>
 
-use lispa\amos\core\helpers\Html;
+use open20\amos\core\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\datecontrol\DateControl;
 

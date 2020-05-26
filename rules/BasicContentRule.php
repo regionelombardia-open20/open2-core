@@ -1,22 +1,22 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\rules
+ * @package    open20\amos\core\rules
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\rules;
+namespace open20\amos\core\rules;
 
-use lispa\amos\core\record\Record;
+use open20\amos\core\record\Record;
 use yii\rbac\Rule;
 
 /**
  * Class BasicContentRule
- * @package lispa\amos\core\rules
+ * @package open20\amos\core\rules
  */
 abstract class BasicContentRule extends Rule
 {
@@ -49,7 +49,7 @@ abstract class BasicContentRule extends Rule
      * the unique identifier of a user. See [[\yii\web\User::id]].
      * @param \yii\rbac\Item $item the role or permission that this rule is associated with
      * @param array $params parameters passed to [[CheckAccessInterface::checkAccess()]].
-     * @param \lispa\amos\core\record\Record $model
+     * @param \open20\amos\core\record\Record $model
      * @return bool
      */
     abstract public function ruleLogic($user, $item, $params, $model);

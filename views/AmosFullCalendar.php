@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\views
+ * @package    open20\amos\core\views
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\views;
+namespace open20\amos\core\views;
 
 use yii\web\View;
 
@@ -27,10 +27,10 @@ class AmosFullCalendar extends \yii2fullcalendar\yii2fullcalendar
         $moduleL = \Yii::$app->getModule('layout');
         if (!empty($moduleL)) {
             /** @var \yii\web\AssetBundle $assetClass */
-            $assets = \lispa\amos\layout\assets\AmosCalendarCoreAsset::register($view);
+            $assets = \open20\amos\layout\assets\AmosCalendarCoreAsset::register($view);
         } else {
             /** @var \yii\web\AssetBundle $assetClass */
-            $assets = \lispa\amos\core\views\assets\AmosCalendarCoreAsset::register($view);
+            $assets = \open20\amos\core\views\assets\AmosCalendarCoreAsset::register($view);
         }
 
         //by default we load the jui theme, but if you like you can set the theme to false and nothing gets loaded....

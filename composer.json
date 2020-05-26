@@ -1,17 +1,17 @@
 {
-    "name": "lispa/amos-core",
+    "name": "open20/amos-core",
     "description": "Amos Core",
     "keywords": [
         "amos",
         "core"
     ],
-    "homepage": "http://www.lispa.it/",
+    "homepage": "http://www.open20.it/",
     "type": "component",
     "require": {
         "php": ">=5.4.0",
         "2amigos/yii2-google-maps-library": "^1.0.2",
         "2amigos/yii2-tinymce-widget" : "~1.1",
-        "bedezign/yii2-audit": ">=1.0",
+        "open20/amos-audit": ">=1.0",
         "bower-asset/bootstrap-tour": "*",
         "bower-asset/jquery-ui-touch-punch-improved": "*",
         "brussens/yii2-maintenance-mode": "*",
@@ -30,8 +30,9 @@
         "lajax/yii2-translate-manager": "1.*",
         "mdmsoft/yii2-admin": "~2.0",
         "nizsheanez/yii2-asset-converter": "^1.3.0",
-        "lispa/yii2-less.php" : "*",
-        "philippfrenzel/yii2fullcalendar": "*",
+        "open20/yii2-less.php": "~1.0.0",
+        "philippfrenzel/yii2fullcalendar": "^3.9.0",
+        "bower-asset/fullcalendar" : "^3.9.0",
         "raoul2000/yii2-workflow": "*",
         "raoul2000/yii2-workflow-view": "*",
         "schmunk42/yii2-giiant": "*",
@@ -41,11 +42,11 @@
         "yiisoft/yii2-bootstrap": "*",
         "yiisoft/yii2-swiftmailer": "*",
         "yiimaker/yii2-social-share": "1.4.1",
-        "yii2tech/spreadsheet": "*"  
+        "yii2tech/spreadsheet": "^1.0.5"  
     },
     "autoload": {
         "psr-4": {
-            "lispa\\amos\\core\\": ""
+            "open20\\amos\\core\\": ""
         }
     }
 }

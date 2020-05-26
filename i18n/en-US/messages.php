@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\i18n\en-US
+ * @package    open20\amos\core\i18n\en-US
  * @category   CategoryName
  */
 
@@ -31,6 +31,7 @@ return [
     'Annulla richiesta di contatto' => 'Cancel contact request',
     'Apri il profilo di {nome_profilo}' => 'Open {nome_profilo}\'s profile',
     'Aree di interesse' => 'Areas of interest',
+    '#ArrayUtility_isStringArray_array_to_check_not_array' => 'ArrayUtility: the param arrayToCheck must be an array',
     'are required' => 'are required',
     'Are you sure you want to change status?' => 'Are you sure you want to change status?',
     'Associa' => 'Associate',
@@ -198,6 +199,8 @@ return [
     'is of incorrect type. It must be' => 'is of incorrect type. It must be',
     'is required but not present in add.' => 'is required but not present in add.',
     'is required but not present in update.' => 'is required but not present.',
+    '#item_card_header_widget_from_community' => 'from community',
+    '#item_card_header_widget_from_organization' => "from organization",
     'Item created' => 'Item created',
     'Item deleted' => 'Item deleted',
     'Item not created, check data' => 'Item not created, check data',
@@ -269,7 +272,7 @@ return [
     'Not set' => 'Not set',
     'now' => 'now',
     'Ordinamenti dashboard' => 'Dashboard sortings',
-    'organizzazione', 'organisation',
+    'organizzazione' => 'organisation',
     'Ottimizza le tabelle' => 'Optimize tables',
     'Page' => 'Page',
     'Parent not found' => 'Parent not found',
@@ -371,6 +374,7 @@ return [
     'The TAX code/VAT code is not in a permitted format' => 'The TAX code/VAT code is not in a permitted format',
     'The translations configuration array is empty' => 'The translations configuration array is empty',
     'The workflow configuration array is empty' => 'The workflow configuration array is empty',
+    '#tinyMCECharsCount' => '{0} characters',
     '#to_dashboard_link_text' => 'go to dashboard',
     'today at' => 'today at',
     'tomorrow at' => 'tomorrow at',
@@ -413,7 +417,21 @@ return [
     'news' => 'news',
     'discussions' => 'discussions',
     'partnershipprofiles' => 'partnership profiles',
-    'community' => 'community',
     'admin' => 'users',
     'documenti' => 'documents',
+    '#ZipUtility_exec_error_command_line_error' => 'ZipUtility: line command error',
+    '#ZipUtility_exec_error_fatal_error' => 'ZipUtility: fatal error',
+    '#ZipUtility_exec_error_not_enough_memory' => 'ZipUtility: memory limit reached',
+    '#ZipUtility_exec_error_user_stop' => 'ZipUtility: command stopped by user',
+    '#ZipUtility_exec_error_warning' => 'ZipUtility: warning. Check the params passed to the class.',
+    '#ZipUtility_missing_file_to_zip' => 'ZipUtility: file to zip cannot be empty',
+    '#ZipUtility_missing_zip_file_extension' => 'ZipUtility: zip file extension cannot be empty',
+    '#ZipUtility_missing_zip_file_name' => 'ZipUtility: zip file name cannot be empty',
+    '#ZipUtility_not_string_array_property_file_to_zip' => 'ZipUtility: file to zip is not a string array',
+    '#ZipUtility_not_string_or_array_property_file_to_zip' => 'ZipUtility: file to zip is not a string or an array',
+    '#ZipUtility_not_string_property_destination_folder' => 'ZipUtility: destination folder is not a string',
+    '#ZipUtility_not_string_property_file_to_unzip' => 'ZipUtility: file to unzip is not a string',
+    '#ZipUtility_not_string_property_password' => 'ZipUtility: password is not a string',
+    '#ZipUtility_not_string_property_zip_file_extension' => 'ZipUtility: compressed file extension is not a string',
+    '#ZipUtility_not_string_property_zip_file_name' => 'ZipUtility: zip file name is not a string',
 ];

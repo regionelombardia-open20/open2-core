@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\migration
+ * @package    open20\amos\core\migration
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\migration;
+namespace open20\amos\core\migration;
 
 use Yii;
 use yii\db\Migration;
@@ -18,7 +18,7 @@ use yii\rbac\Permission;
 /**
  * Class AmosMigration
  * @deprecated Don't use this class. Not removed only for retro compatibility.
- * @package lispa\amos\core\migration
+ * @package open20\amos\core\migration
  */
 class AmosMigration extends Migration
 {
@@ -38,12 +38,14 @@ class AmosMigration extends Migration
     ];
 
     /**
+     * @see \yii\db\Migration::init() for more info.
      */
     public function init()
     {
+        parent::init();
         $this->db->enableSchemaCache = false;
         $this->setAuthorizations();
-        parent::init();
+        
     }
 
     /**

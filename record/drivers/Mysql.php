@@ -1,15 +1,20 @@
 <?php
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\record
+ * @package    open20\amos\core\record
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\record\drivers;
+namespace open20\amos\core\record\drivers;
 
+use Exception;
+use Yii;
+use yii\base\InvalidConfigException;
+use yii\db\Schema;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Inflector;
 use yii\log\Logger;
 
@@ -130,7 +135,7 @@ class Mysql
         try {
             if (count($this->columns)) {
 
-                $connection = \Yii::$app->{$this->db};
+                $connection = Yii::$app->{$this->db};
 
                 $connection->enableQueryCache = 0;
 
@@ -147,27 +152,30 @@ class Mysql
                     $sql .= "create table {{".$this->table."}} (id INT AUTO_INCREMENT, ";
                     foreach ($this->columns as $col) {
                         $column = self::getSlug($col);
-                        $sql    .= "[[$column]] TEXT, ";
+                        if (strcmp($column, 'id')) {
+                            $sql .= "[[$column]] TEXT, ";
+                        }
                     }
-                    $sql .= " PRIMARY KEY (id)) CHARACTER SET utf8 COLLATE utf8_general_ci ENGINE=InnoDB AUTO_INCREMENT=1;";
+                    $sql .= " PRIMARY KEY (id)) CHARACTER SET utf8 COLLATE utf8_general_ci ENGINE=InnoDB AUTO_INCREMENT=0;";
 
                     //eseguo la query
                     $command = $connection->createCommand($sql);
                     $result  = $command->execute();
                     $transaction->commit();
                     $connection->close();
+                    $connection->schema->refresh();
                     return TRUE;
-                } catch (\Exception $er) {
+                } catch (Exception $er) {
                     $transaction->rollBack();
                     $connection->close();
-                    \Yii::getLogger()->log($er->getTrace(), Logger::LEVEL_ERROR);
+                    Yii::getLogger()->log($er->getTrace(), Logger::LEVEL_ERROR);
                     return FALSE;
                 }
             } else {
                 return FALSE;
             }
-        } catch (\Exception $e) {
-            \Yii::getLogger()->log($e->getTrace(), Logger::LEVEL_ERROR);
+        } catch (Exception $e) {
+            Yii::getLogger()->log($e->getTrace(), Logger::LEVEL_ERROR);
             return FALSE;
         }
     }
@@ -182,7 +190,7 @@ class Mysql
         $sqlParams = [];
         try {
             if (count($this->columns) && !empty($this->data)) {
-                $connection                   = \Yii::$app->{$this->db};
+                $connection                   = Yii::$app->{$this->db};
                 $connection->enableQueryCache = 0;
 
                 $transaction = $connection->beginTransaction();
@@ -199,19 +207,121 @@ class Mysql
                     $indx2 = 0;
                     foreach ($this->data as $k => $v) {
                         $column                  = self::getSlug($k);
-                        $sql                     .= ($indx2 > 0 ? ", :{$column}" : ":{$column}");
+                        $sql                     .= ($indx2 > 0 ? ", :{$column}"
+                                : ":{$column}");
                         $sqlParams[":{$column}"] = $v;
                         $indx2++;
                     }
                     $sql .= ")";
 
                     $command = $connection->createCommand($sql, $sqlParams);
-                    $result  = $command->execute();
+                    $result  = [];
+                    if (!$command->execute()) {
+                        return false;
+                    }
+
+                    $tableSchema  = $this->getTableSchema($this->getTable());
+                    $result['id'] = $this->getSchema()->getLastInsertID($tableSchema->sequenceName);
                     $transaction->commit();
                     $connection->close();
                     return $result;
-                } catch (\Exception $er) {
+                } catch (Exception $er) {
                     $transaction->rollBack();
+                    $connection->close();
+                    Yii::getLogger()->log($er->getTrace(), Logger::LEVEL_ERROR);
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } catch (Exception $e) {
+            Yii::getLogger()->log($e->getTrace(), Logger::LEVEL_ERROR);
+            return false;
+        }
+    }
+
+    /**
+     *
+     * @return boolean
+     */
+    public function save()
+    {
+        $connection                   = Yii::$app->{$this->db};
+        $connection->enableQueryCache = 0;
+        $continue                     = true;
+        if ($connection->schema->getTableSchema($this->table, true) === null) {
+            $continue = $this->createTable();
+        }else{
+            $continue = $this->alterTable();
+        }
+        if ($continue) {
+            return $this->saveData();
+        }
+        return false;
+    }
+
+    /**
+     *
+     * @param string $name
+     * @return string
+     */
+    public static function getSlug($name)
+    {
+        return Inflector::slug($name, '_', true);
+    }
+
+    public function getTableSchema($tableName)
+    {
+        $tableSchema = $this->getSchema()
+            ->getTableSchema($tableName);
+        if ($tableSchema === null) {
+            throw new InvalidConfigException('The table does not exist: '.$this->getTable());
+        }
+        return $tableSchema;
+    }
+
+    /**
+     *
+     * @return Schema
+     */
+    public function getSchema()
+    {
+        return Yii::$app->{$this->getDb()}
+                ->getSchema();
+    }
+
+    /**
+     *
+     * @param type $where
+     * @return boolean
+     */
+    public function select($where)
+    {
+        $sqlParams = [];
+        try {
+
+            eval("\$whereConditions = $where;");
+            if (count($this->columns)) {
+                $connection                   = \Yii::$app->{$this->db};
+                $connection->enableQueryCache = 0;
+
+
+                try {
+                    //creo la query di select.
+                    $sql = "select * from  {{".$this->table."}} ";
+                    if (count($whereConditions)) {
+                        $sql .= " where ";
+                        foreach ($whereConditions as $key => $value) {
+                            $sql .= "[[$key]] = :{$key}";
+                            $sqlParams[":{$key}"] = $value;
+                        }
+                    }
+                    $command = $connection->createCommand($sql, $sqlParams);
+                    $result  = $command->queryAll();
+
+                    $connection->close();
+                    return $result;
+                } catch (\Exception $er) {
                     $connection->close();
                     \Yii::getLogger()->log($er->getTrace(), Logger::LEVEL_ERROR);
                     return false;
@@ -229,27 +339,28 @@ class Mysql
      *
      * @return boolean
      */
-    public function save()
+    public function alterTable()
     {
-        $connection                   = \Yii::$app->{$this->db};
-        $connection->enableQueryCache = 0;
-        $continue                     = true;
-        if ($connection->schema->getTableSchema($this->table, true) === null) {
-            $continue = $this->createTable();
+        $ret = true;
+        try {
+            $columns = Yii::$app->db->schema->getTableSchema($this->table)->getColumnNames();
+            foreach ($this->columns as $col) {
+                $column = self::getSlug($col);
+                if (!ArrayHelper::isIn($column, $columns)) {
+                    Yii::$app->db->createCommand()->addColumn($this->table, $column,
+                        Schema::TYPE_TEXT)->execute();
+                }
+            }
+//            foreach ($columns as $col) {
+//                $column = self::getSlug($col);
+//                if (!ArrayHelper::isIn($column, $this->columns)) {
+//                    Yii::$app->db->createCommand()->dropColumn($this->table, $column)->execute();
+//                }
+//            }
+        } catch (Exception $e) {
+            \Yii::getLogger()->log($e->getTrace(), Logger::LEVEL_ERROR);
+            $ret = true;
         }
-        if ($continue) {
-            return $this->saveData();
-        }
-        return false;
-    }
-
-    /**
-     *
-     * @param string $name
-     * @return string
-     */
-    public static function getSlug($name)
-    {
-        return Inflector::slug($name, '_', true);
+        return $ret;
     }
 }

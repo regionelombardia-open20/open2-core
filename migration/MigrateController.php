@@ -1,49 +1,65 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\migration
+ * @package    open20\amos\core\migration
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\migration;
- 
+namespace open20\amos\core\migration;
+
 use Yii;
-use yii\helpers\ArrayHelper;
 use yii\console\controllers\MigrateController as YiiMigrateController;
- 
+use yii\helpers\ArrayHelper;
+
+/**
+ * Class MigrateController
+ * @package open20\amos\core\migration
+ */
 class MigrateController extends YiiMigrateController
 {
     /**
      * @var array
      */
     public $migrationLookup = [];
- 
+
     /**
      * @var array
      */
     private $_migrationFiles;
- 
+
+    /**
+     * @var array $migrationNameSpacesPaths
+     */
+    private $migrationNameSpacesPaths = [];
+
+    /**
+     * @return array|null
+     */
     protected function getMigrationFiles()
     {
         if ($this->_migrationFiles === null) {
             $this->_migrationFiles = [];
-            $array_migrationPath = [];
-            if(is_array($this->migrationPath)){
+            if (is_array($this->migrationPath)) {
                 $array_migrationPath = $this->migrationPath;
-            }else{
+            } else {
                 $array_migrationPath = [$this->migrationPath];
             }
+            foreach ($this->migrationNamespaces as $namespace) {
+                $nameSpacePath = $this->getNamespacePath($namespace);
+                $array_migrationPath[] = $nameSpacePath;
+                $this->migrationNameSpacesPaths[$nameSpacePath] = $namespace;
+            }
 
-            $directories = array_merge($this->migrationLookup,$array_migrationPath);
+            $directories = array_merge($this->migrationLookup, $array_migrationPath);
             $extraPath = ArrayHelper::getValue(Yii::$app->params, 'yii.migrations');
             if (!empty($extraPath)) {
-                $directories = array_merge((array) $extraPath, $directories);
+                $directories = array_merge((array)$extraPath, $directories);
             }
- 
+
             foreach (array_unique($directories) as $dir) {
                 $dir = Yii::getAlias($dir, false);
                 if ($dir && is_dir($dir)) {
@@ -60,35 +76,59 @@ class MigrateController extends YiiMigrateController
                     closedir($handle);
                 }
             }
- 
+
             ksort($this->_migrationFiles);
         }
- 
+
         return $this->_migrationFiles;
     }
- 
+
+    /**
+     * Returns the file path matching the give namespace.
+     * @param string $namespace namespace.
+     * @return string file path.
+     * @since 2.0.10
+     */
+    private function getNamespacePath($namespace)
+    {
+        return str_replace('/', DIRECTORY_SEPARATOR, Yii::getAlias('@' . str_replace('\\', '/', $namespace)));
+    }
+
+    /**
+     * @inheritdoc
+     */
     protected function createMigration($class)
     {
         $file = $this->getMigrationFiles()[$class];
+        $pathParts = pathinfo($file);
+        $path = $pathParts['dirname'];
         require_once($file);
- 
-        return new $class(['db' => $this->db]);
+
+        if (isset($this->migrationNameSpacesPaths[$path])) {
+            $classToInstance = $this->migrationNameSpacesPaths[$path] . '\\' . $class;
+            return new $classToInstance(['db' => $this->db]);
+        } else {
+            return new $class(['db' => $this->db]);
+        }
     }
- 
+
+    /**
+     * @inheritdoc
+     */
     protected function getNewMigrations()
     {
         $applied = [];
         foreach ($this->getMigrationHistory(null) as $version => $time) {
             $applied[substr($version, 1, 13)] = true;
         }
- 
+
         $migrations = [];
         foreach ($this->getMigrationFiles() as $version => $path) {
             if (!isset($applied[substr($version, 1, 13)])) {
                 $migrations[] = $version;
             }
         }
- 
+
         return $migrations;
     }
 }

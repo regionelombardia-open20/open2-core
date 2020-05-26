@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\views\layouts
+ * @package    open20\amos\core\views\layouts
  * @category   CategoryName
  */
 
@@ -18,7 +18,7 @@
 echo "<?php\n";
 ?>
 
-use lispa\amos\core\migration\AmosMigrationPermissions;
+use open20\amos\core\migration\AmosMigrationPermissions;
 use yii\rbac\Permission;
 
 class <?= $className ?> extends AmosMigrationPermissions

@@ -1,8 +1,17 @@
 <?php
 
+/**
+ * Aria S.p.A.
+ * OPEN 2.0
+ *
+ *
+ * @package    Open20Package
+ * @category   CategoryName
+ */
 
 
-namespace lispa\amos\core\views\assets;
+
+namespace open20\amos\core\views\assets;
 
 use yii\web\AssetBundle;
 
@@ -10,7 +19,7 @@ class CheckScopeAsset extends AssetBundle{
     
    
     
-    public $sourcePath = '@vendor/lispa/amos-core/views/assets/web';
+    public $sourcePath = '@vendor/open20/amos-core/views/assets/web';
     
     public $css = [
     ];

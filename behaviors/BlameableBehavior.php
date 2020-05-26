@@ -1,21 +1,21 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\behaviors
+ * @package    open20\amos\core\behaviors
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\behaviors;
+namespace open20\amos\core\behaviors;
 
 use Yii;
 
 /**
  * Class BlameableBehavior
- * @package lispa\amos\core\behaviors
+ * @package open20\amos\core\behaviors
  */
 class BlameableBehavior extends \yii\behaviors\BlameableBehavior
 {

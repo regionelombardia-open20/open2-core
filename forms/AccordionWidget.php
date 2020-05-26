@@ -1,12 +1,17 @@
 <?php
+
 /**
- * Created by PhpStorm.
- * User: simone.matteucci
- * Date: 29/03/2018
- * Time: 12:12
+ * Aria S.p.A.
+ * OPEN 2.0
+ *
+ *
+ * @package    Open20Package
+ * @category   CategoryName
+ */
+/**
  */
 
-namespace lispa\amos\core\forms;
+namespace open20\amos\core\forms;
 
 use yii\jui\Accordion;
 

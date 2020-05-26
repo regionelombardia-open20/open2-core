@@ -1,14 +1,14 @@
 <?php
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms
+ * @package    open20\amos\core\forms
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\forms;
+namespace open20\amos\core\forms;
 
 use yii\base\InvalidConfigException;
 use yii\base\Model;
@@ -18,7 +18,7 @@ use yii\helpers\Html;
 
 /**
  * Class RecaptchaV3Widget
- * @package lispa\amos\core\forms
+ * @package open20\amos\core\forms
  *
  * Widget that allows inserting a recaptcha v3 in a form.
  */
@@ -58,7 +58,7 @@ class RecaptchaV3Widget extends Widget
          */
         if(!array_key_exists('recaptchaV3Public', \Yii::$app->params) || is_null(\Yii::$app->params['recaptchaV3Public']) || empty(\Yii::$app->params['recaptchaV3Public'])) {
             if(is_null($this->publicKey) || empty($this->publicKey)) {
-                throw new InvalidConfigException("You haven't set any recaptcha v3 public key.\nTo do so, add a new 'recaptchaV3Public' parameter in your params.php file with your public recaptcha site key or set it directly in the widget options.\n\ne.g. 'recaptchaV3Public' => 'your_recaptcha_public_key'\n\nor\n\n\\lispa\\amos\\core\\forms\\RecaptchaV3Widget::widget(\n'name' => 'your_hidden_field_name',\n'publicKey' => 'YOUR_RECAPTCHA_PUBLIC_KEY'\n');");
+                throw new InvalidConfigException("You haven't set any recaptcha v3 public key.\nTo do so, add a new 'recaptchaV3Public' parameter in your params.php file with your public recaptcha site key or set it directly in the widget options.\n\ne.g. 'recaptchaV3Public' => 'your_recaptcha_public_key'\n\nor\n\n\\open20\\amos\\core\\forms\\RecaptchaV3Widget::widget(\n'name' => 'your_hidden_field_name',\n'publicKey' => 'YOUR_RECAPTCHA_PUBLIC_KEY'\n');");
             }
         }
 

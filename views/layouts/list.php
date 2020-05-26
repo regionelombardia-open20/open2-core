@@ -1,19 +1,19 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\views\layouts
+ * @package    open20\amos\core\views\layouts
  * @category   CategoryName
  */
 
 use yii\helpers\Html;
 use yii\helpers\Url;
-use lispa\amos\dashboard\models\AmosWidgets;
+use open20\amos\dashboard\models\AmosWidgets;
 
-////\bedezign\yii2\audit\web\JSLoggingAsset::register($this);
+////\open20\amos\audit\web\JSLoggingAsset::register($this);
 /* @var $this \yii\web\View */
 /* @var $content string */
 $urlCorrente = Url::current();
@@ -92,41 +92,42 @@ if ($countArrayUrl) {
             <div class="page-content">
                 <?= $this->render("parts" . DIRECTORY_SEPARATOR . "breadcrumb"); ?>
                 <div class="page-header">
-                    <?php
-                    if (!is_null($this->title)) {
-                        ?>
+                    <?php if (!is_null($this->title)) : ?>
                         <h1 class="title"><?= Html::encode($this->title) ?></h1>
                         <?= $this->render("parts" . DIRECTORY_SEPARATOR . "textHelp"); ?>
-                        <?php
-                    }
-                    ?>
+                    <?php endif; ?>
                 </div>
 
-                <?php if (array_key_exists('currentDashboard', $this->params)): ?>
-                    <div class="col-xs-12 nop">
-                        <?php
-                        $items = [];
-                        $widgetsIcons = $thisDashboardWidgets = $this->params['currentDashboard']
-                            ->getAmosWidgetsSelectedIcon(true);
-                        if(\Yii::$app->controller->hasProperty('child_of')){
-                            $widgetsIcons->andFilterWhere([AmosWidgets::tableName() . '.child_of' => \Yii::$app->controller->child_of]);
-                        }
+                <?php if (array_key_exists('currentDashboard', $this->params)) : ?>
+                <div class="col-xs-12 nop">
+                <?php
+                    $items = [];
+                    $widgetsIcons = $thisDashboardWidgets = $this->params['currentDashboard']
+                        ->getAmosWidgetsSelectedIcon(true);
 
-                        foreach ($widgetsIcons->all() as $widgetIcon) {
-                            if (Yii::$app->user->can($widgetIcon['classname'])) {
-                                $widgetObj = Yii::createObject($widgetIcon['classname']);
-                                $label = $widgetObj->bulletCount ? $widgetObj->label . '<span class="badge badge-default">' . $widgetObj->bulletCount . '</span>' : $widgetObj->label;
-                                $items[$widgetIcon['classname']] = ['label' => $label, 'url' => $widgetObj->url];
-                            }
-                        }
+                    if (\Yii::$app->controller->hasProperty('child_of')) {
+                        $widgetsIcons
+                            ->andFilterWhere([AmosWidgets::tableName() . '.child_of' => \Yii::$app->controller->child_of]);
+                    }
 
-                        echo \lispa\amos\core\toolbar\Nav::widget([
-                            'items' => $items,
-                            'encodeLabels' => false,
-                            'options' => ['class' => 'nav nav-tabs'],
-                        ]);
-                        ?>
-                    </div>
+                    $allWidgets = $widgetsIcons->all();
+                    foreach ($allWidgetsIcons as $widgetIcon) {
+                        if (Yii::$app->user->can($widgetIcon['classname'])) {
+                            $widgetObj = Yii::createObject($widgetIcon['classname']);
+                            $label = $widgetObj->bulletCount 
+                                ? $widgetObj->label . '<span class="badge badge-default">' . $widgetObj->bulletCount . '</span>' 
+                                : $widgetObj->label;
+                            $items[$widgetIcon['classname']] = ['label' => $label, 'url' => $widgetObj->url];
+                        }
+                    }
+
+                    echo \open20\amos\core\toolbar\Nav::widget([
+                        'items' => $items,
+                        'encodeLabels' => false,
+                        'options' => ['class' => 'nav nav-tabs'],
+                    ]);
+                ?>
+                </div>
                 <?php endif; ?>
 
                 <div class="container-change-view  col-xs-12">

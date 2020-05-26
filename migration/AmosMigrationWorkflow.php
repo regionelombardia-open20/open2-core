@@ -1,18 +1,18 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\migration
+ * @package    open20\amos\core\migration
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\migration;
+namespace open20\amos\core\migration;
 
-use lispa\amos\core\migration\libs\common\MigrationCommon;
-use lispa\amos\core\module\BaseAmosModule;
+use open20\amos\core\migration\libs\common\MigrationCommon;
+use open20\amos\core\module\BaseAmosModule;
 use yii\db\Migration;
 use yii\db\Query;
 
@@ -75,7 +75,7 @@ use yii\db\Query;
  * }
  * The methods are all private and are all to be created at own developer discretion, because all the configurations can stay in one array in setWorkflow() method.
  *
- * @package lispa\amos\core\migration
+ * @package open20\amos\core\migration
  */
 class AmosMigrationWorkflow extends Migration
 {
@@ -178,10 +178,8 @@ class AmosMigrationWorkflow extends Migration
      */
     public function init()
     {
-        $this->db->enableSchemaCache = false;
-
         parent::init();
-
+        $this->db->enableSchemaCache = false;
         $this->_workflowConf = $this->setWorkflow();
 
         if (empty($this->_workflowConf)) {

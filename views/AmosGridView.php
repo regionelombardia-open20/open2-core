@@ -1,18 +1,18 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\views
+ * @package    open20\amos\core\views
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\views;
+namespace open20\amos\core\views;
 
 use Closure;
-use lispa\amos\core\module\BaseAmosModule;
+use open20\amos\core\module\BaseAmosModule;
 use Yii;
 use yii\grid\Column;
 use kartik\grid\GridView;
@@ -22,7 +22,7 @@ use yii\widgets\LinkPager;
 
 /**
  * Class AmosGridView
- * @package lispa\amos\core\views
+ * @package open20\amos\core\views
  */
 class AmosGridView extends GridView
 {
@@ -52,9 +52,9 @@ HTML;
     
     /**
      * @var string the default data column class if the class name is not explicitly specified when configuring a data column.
-     * Defaults to 'lispa\amos\core\views\grid\DataColumn'.
+     * Defaults to 'open20\amos\core\views\grid\DataColumn'.
      */
-    public $dataColumnClass = 'lispa\amos\core\views\grid\DataColumn';
+    public $dataColumnClass = 'open20\amos\core\views\grid\DataColumn';
     
     /**
      * @var bool $enableExport Enable export of the data present in the grid view without other columns.

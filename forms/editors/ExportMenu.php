@@ -1,18 +1,18 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms\editors
+ * @package    open20\amos\core\forms\editors
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\forms\editors;
+namespace open20\amos\core\forms\editors;
 
-use lispa\amos\core\forms\editors\assets\ExportMenuAsset;
-use lispa\amos\core\utilities\StringUtils;
+use open20\amos\core\forms\editors\assets\ExportMenuAsset;
+use open20\amos\core\utilities\StringUtils;
 use kartik\base\BootstrapInterface;
 use kartik\base\BootstrapTrait;
 use kartik\dialog\Dialog;
@@ -29,6 +29,7 @@ use yii\web\View;
  * Export menu widget. Export tabular data to various formats using the `\PhpOffice\PhpSpreadsheet\Spreadsheet library
  * by reading data from a dataProvider - with configuration very similar to a GridView.
  *
+ * @author Kartik Visweswaran <kartikv2@gmail.com>
  * @since  1.0
  */
 class ExportMenu extends KartikExportMenu

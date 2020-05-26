@@ -1,17 +1,17 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\validators
+ * @package    open20\amos\core\validators
  * @category   CategoryName
  */
 
 namespace backend\validators;
 
-use lispa\amos\comuni\models\IstatComuni;
+use open20\amos\comuni\models\IstatComuni;
 use yii\db\ActiveRecord;
 use yii\db\Query;
 use yii\validators\Validator;
@@ -264,7 +264,7 @@ class CFAdvancedCheck extends Validator
                 }
             }
             if (chr($s % 26 + ord('A')) != $theVar[15]) {
-                $this->addError($model, $attribute, \Yii::t('app', 'Codice Fiscale non valido'));
+                $this->addError($model, $attribute, \Yii::t('amosapp', 'Codice Fiscale non valido'));
                 return false;
             }
 
@@ -292,7 +292,7 @@ class CFAdvancedCheck extends Validator
 
             if(strtoupper($surname) != substr($theVar,0, 3)) {
                 $isCfOk = false;
-                $errorMessage .= \Yii::t('app', "cognome").', ';
+                $errorMessage .= \Yii::t('amosapp', "cognome").', ';
             }
 
             /**
@@ -319,7 +319,7 @@ class CFAdvancedCheck extends Validator
 
             if(strtoupper($name) != substr($theVar,3, 3)) {
                 $isCfOk = false;
-                $errorMessage .= \Yii::t('app', "nome").', ';
+                $errorMessage .= \Yii::t('amosapp', "nome").', ';
             }
 
             /**
@@ -341,11 +341,11 @@ class CFAdvancedCheck extends Validator
 
             if($birthDateInverse == substr($theVar,6, 5)) {
                 $isCfOk = false;
-                $errorMessage .= \Yii::t('app', "sesso").', ';
+                $errorMessage .= \Yii::t('amosapp', "sesso").', ';
             } else {
                 if ($birthDate != substr($theVar, 6, 5)) {
                     $isCfOk = false;
-                    $errorMessage .= \Yii::t('app', "data di nascita") . ', ';
+                    $errorMessage .= \Yii::t('amosapp', "data di nascita") . ', ';
                 }
             }
 
@@ -363,17 +363,17 @@ SQL
 
             if($codice_catastale != substr($theVar,11, 4)) {
                 $isCfOk = false;
-                $errorMessage .= \Yii::t('app', "luogo di nascita").', ';
+                $errorMessage .= \Yii::t('amosapp', "luogo di nascita").', ';
             }
 
             if(!$isCfOk){
                 $errorMsg = ucfirst($errorMessage);
                 if(substr_count($errorMsg, ",") > 1) {
                     $errorMsg = substr_replace($errorMsg, " ", strrpos($errorMsg, ", "), 1);
-                    $errorMsg .= \Yii::t('app', "non corrispondono con il codice fiscale inserito");
+                    $errorMsg .= \Yii::t('amosapp', "non corrispondono con il codice fiscale inserito");
                 } else {
                     $errorMsg = substr_replace($errorMsg, " ", strrpos($errorMsg, ", "), 1);
-                    $errorMsg .= \Yii::t('app', "non corrisponde con il codice fiscale inserito");
+                    $errorMsg .= \Yii::t('amosapp', "non corrisponde con il codice fiscale inserito");
                 }
                 $this->addError($model, $attribute, $errorMsg);
             }
@@ -403,8 +403,8 @@ SQL
      */
     public function clientValidateAttribute($model, $attribute, $view)
     {
-        $error_msg = \Yii::t('app', 'Codice Fiscale non valido');
-        $error_format_msg = \Yii::t('app', 'Il codice fiscale deve contenere 16 tra lettere e cifre o 11 cifre');
+        $error_msg = \Yii::t('amosapp', 'Codice Fiscale non valido');
+        $error_format_msg = \Yii::t('amosapp', 'Il codice fiscale deve contenere 16 tra lettere e cifre o 11 cifre');
         return <<<JS
         
         var cf = value.toUpperCase();

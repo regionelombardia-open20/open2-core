@@ -1,21 +1,21 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\components
+ * @package    open20\amos\core\components
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\components;
+namespace open20\amos\core\components;
 
 use yii\i18n\MissingTranslationEvent;
 
 /**
  * Class TranslationEventHandler
- * @package lispa\amos\core\components
+ * @package open20\amos\core\components
  */
 class TranslationEventHandler
 {

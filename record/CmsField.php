@@ -1,6 +1,15 @@
 <?php
 
-namespace lispa\amos\core\record;
+/**
+ * Aria S.p.A.
+ * OPEN 2.0
+ *
+ *
+ * @package    Open20Package
+ * @category   CategoryName
+ */
+
+namespace open20\amos\core\record;
 
 use yii\base\Model;
 
@@ -8,7 +17,7 @@ use yii\base\Model;
  * Class CmsField
  *
  * This is the model class for fields to use in cms  *
- * @package lispa\amos\core\record
+ * @package open20\amos\core\record
  */
 class CmsField extends Model {
 
@@ -70,6 +79,7 @@ class CmsField extends Model {
      * Returns the text hint for the specified attribute.
      * @param string $attribute the attribute name
      * @return string the attribute hint
+     * @see attributeHints
      */
     public function getAttributeHint($attribute) {
         $hints = $this->attributeHints();

@@ -1,25 +1,25 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms
+ * @package    open20\amos\core\forms
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\forms;
+namespace open20\amos\core\forms;
 
-use lispa\amos\core\helpers\Html;
-use lispa\amos\core\icons\AmosIcons;
+use open20\amos\core\helpers\Html;
+use open20\amos\core\icons\AmosIcons;
 use Yii;
 use yii\base\Widget;
 use yii\data\ActiveDataProvider;
 
 /**
  * Class PublishedContentsWidget
- * @package lispa\amos\core\forms
+ * @package open20\amos\core\forms
  */
 class PublishedContentsWidget extends Widget
 {
@@ -38,12 +38,12 @@ class PublishedContentsWidget extends Widget
      */
     public $modelIcon;
     public $modelIcons = [
-        'lispa\amos\news\models\News' => 'feed',
-        'lispa\amos\discussioni\models\DiscussioniTopic' => 'comment',
-        'lispa\amos\documenti\models\Documenti' => 'file-text-o',
-        'lispa\amos\partnershipprofiles\models\PartnershipProfiles' => 'lightbulb-o',
-        'lispa\amos\risultati\models\Risultati' => 'gears',
-        'lispa\amos\showcaseprojects\models\ShowcaseProjectProposal' => 'gears',
+        'open20\amos\news\models\News' => 'feed',
+        'open20\amos\discussioni\models\DiscussioniTopic' => 'comment',
+        'open20\amos\documenti\models\Documenti' => 'file-text-o',
+        'open20\amos\partnershipprofiles\models\PartnershipProfiles' => 'lightbulb-o',
+        'open20\amos\risultati\models\Risultati' => 'gears',
+        'open20\amos\showcaseprojects\models\ShowcaseProjectProposal' => 'gears',
     ];
 
     /**
@@ -54,7 +54,7 @@ class PublishedContentsWidget extends Widget
     /**
      * @var string $layout Widget view
      */
-    public $layout = "@vendor/lispa/amos-core/forms/views/widgets/published_contents_widget.php";
+    public $layout = "@vendor/open20/amos-core/forms/views/widgets/published_contents_widget.php";
 
     /**
      * @var ActiveDataProvider $data Ihe data list to show
@@ -87,7 +87,7 @@ class PublishedContentsWidget extends Widget
         $query = null;
 
         if (!is_null($moduleCwh)) {
-            /** @var \lispa\amos\cwh\AmosCwh $moduleCwh */
+            /** @var \open20\amos\cwh\AmosCwh $moduleCwh */
 
             // Save old cwh scope
             $oldScope = $moduleCwh->getCwhScope();
@@ -96,7 +96,7 @@ class PublishedContentsWidget extends Widget
             $moduleCwh->resetCwhScopeInSession();
             $moduleCwh->setCwhScopeInSession($this->scope);
             $moduleCwh->setCwhScopeFromSession();
-            $cwhActiveQuery = new \lispa\amos\cwh\query\CwhActiveQuery(
+            $cwhActiveQuery = new \open20\amos\cwh\query\CwhActiveQuery(
                 $this->modelClass, [
                 'queryBase' => $object::find()->distinct()
             ]);
@@ -119,7 +119,7 @@ class PublishedContentsWidget extends Widget
         ]);
 
         $this->gridViewColumns[] = [
-            'class' => 'lispa\amos\core\views\grid\ActionColumn',
+            'class' => 'open20\amos\core\views\grid\ActionColumn',
             'headerOptions' => [
                 'id' => 'favourite'
             ],

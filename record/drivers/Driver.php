@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core
+ * @package    open20\amos\core
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\record\drivers;
+namespace open20\amos\core\record\drivers;
 
 interface Driver
 {

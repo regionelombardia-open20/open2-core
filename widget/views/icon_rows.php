@@ -1,17 +1,17 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\widget\views
+ * @package    open20\amos\core\widget\views
  * @category   CategoryName
  */
 
 /**
  * @var $this \yii\web\View
- * @var $widget \lispa\amos\core\widget\WidgetIcon
+ * @var $widget \open20\amos\core\widget\WidgetIcon
  * @var $asset \yii\web\AssetBundle
  */
 $classSpanStr = implode(' ', $widget->classSpan);
@@ -24,7 +24,7 @@ $url = is_array($widget->url) ? \yii\helpers\Url::to($widget->url) : $widget->ur
 $target = ((strlen($widget->targetUrl) > 0) ? 'target="' . $widget->targetUrl . '" ' : '');
 $dataModule = $widget->moduleName;
 
-use lispa\amos\core\icons\AmosIcons;
+use open20\amos\core\icons\AmosIcons;
 ?>
 
 <div class="square-box" data-code="<?= $className ?>">
@@ -44,7 +44,7 @@ use lispa\amos\core\icons\AmosIcons;
             echo AmosIcons::show('modale', ['class' => 'icon-open-modal'], AmosIcons::IC);
         } ?>
         <span class="<?= $classSpanStr ?>">
-            <?= \lispa\amos\core\icons\AmosIcons::show($widget->icon, [], $widget->iconFramework) ?>
+            <?= \open20\amos\core\icons\AmosIcons::show($widget->icon, [], $widget->iconFramework) ?>
             <!--span class="svg-container">
                 <svg title="< ?= $widget->description ?>" role="img" class="svg-content">
                   <use xlink:href="< ?= $asset->baseUrl ?>/svg/icone< ?= vv ?>.svg#< ?= $widget->icon ?>"></use>

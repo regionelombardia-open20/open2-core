@@ -1,22 +1,22 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms\views\widgets
+ * @package    open20\amos\core\forms\views\widgets
  * @category   CategoryName
  */
 
-use lispa\amos\core\forms\AmosCarouselWidget;
-use lispa\amos\core\forms\ItemAndCardHeaderWidget;
-use lispa\amos\core\helpers\Html;
-use lispa\amos\core\module\BaseAmosModule;
-use lispa\amos\core\views\toolbars\StatsToolbar;
+use open20\amos\core\forms\AmosCarouselWidget;
+use open20\amos\core\forms\ItemAndCardHeaderWidget;
+use open20\amos\core\helpers\Html;
+use open20\amos\core\module\BaseAmosModule;
+use open20\amos\core\views\toolbars\StatsToolbar;
 
 /**
- * @var \lispa\amos\core\record\Record $model
+ * @var \open20\amos\core\record\Record $model
  */
 
 $contentTitle = AmosCarouselWidget::getContentTitle($model);

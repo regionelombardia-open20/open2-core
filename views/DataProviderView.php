@@ -1,17 +1,17 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\views
+ * @package    open20\amos\core\views
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\views;
+namespace open20\amos\core\views;
 
-use lispa\amos\core\controllers\CrudController;
+use open20\amos\core\controllers\CrudController;
 use Yii;
 use yii\base\Widget;
 use yii\helpers\ArrayHelper;
@@ -25,12 +25,12 @@ class DataProviderView extends Widget
 {
     public $view;
     public $currentView;
-    public $viewListClass = 'lispa\amos\core\views\ListView';
-    public $viewGridClass = 'lispa\amos\core\views\AmosGridView';
-    public $viewIconClass = 'lispa\amos\core\views\IconView';
-    public $viewMapClass = 'lispa\amos\core\views\MapView';
-    public $viewCalendarClass = 'lispa\amos\core\views\CalendarView';
-    public $viewGanttClass = 'lispa\amos\core\views\GanttView';
+    public $viewListClass = 'open20\amos\core\views\ListView';
+    public $viewGridClass = 'open20\amos\core\views\AmosGridView';
+    public $viewIconClass = 'open20\amos\core\views\IconView';
+    public $viewMapClass = 'open20\amos\core\views\MapView';
+    public $viewCalendarClass = 'open20\amos\core\views\CalendarView';
+    public $viewGanttClass = 'open20\amos\core\views\GanttView';
     public $dataProvider;
     public $gridView;
     public $listView;
@@ -108,7 +108,7 @@ class DataProviderView extends Widget
             if(!is_null($this->createNewBtnParams)){
                 $params = ArrayHelper::merge($params, ['createNewBtnParams' => $this->createNewBtnParams]);
             }
-            echo $this->render('@vendor/lispa/amos-layout/src/views/layouts/parts/list_toolbar', $params);
+            echo $this->render('@vendor/open20/amos-layout/src/views/layouts/parts/list_toolbar', $params);
         }
 
         $view = ArrayHelper::merge([

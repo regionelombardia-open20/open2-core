@@ -1,18 +1,18 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\i18n\grammar
+ * @package    open20\amos\core\i18n\grammar
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\i18n\grammar;
+namespace open20\amos\core\i18n\grammar;
 
-use lispa\amos\core\interfaces\ModelGrammarInterface;
-use lispa\amos\core\module\BaseAmosModule;
+use open20\amos\core\interfaces\ModelGrammarInterface;
+use open20\amos\core\module\BaseAmosModule;
 
 /**
  * Class ContentModelGrammar

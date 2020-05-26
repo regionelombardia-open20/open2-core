@@ -1,18 +1,18 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms\editors
+ * @package    open20\amos\core\forms\editors
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\forms\editors;
+namespace open20\amos\core\forms\editors;
 
 
-use lispa\amos\core\views\AmosGridView;
+use open20\amos\core\views\AmosGridView;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\base\Widget;
@@ -178,7 +178,7 @@ class CarteWidget extends Widget
                 ['attribute' => 'cf_condominio', 'label' => 'CF del condominio'],
                 'note:ntext',
                 /*[
-                    'class' => 'lispa\amos\core\views\grid\ActionColumn',
+                    'class' => 'open20\amos\core\views\grid\ActionColumn',
                     'template' => '{condominio}',
                     'buttons' => [
                         'condominio' => function ($url, $model) {

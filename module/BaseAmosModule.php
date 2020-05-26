@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\module
+ * @package    open20\amos\core\module
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\module;
+namespace open20\amos\core\module;
 
 use lajax\translatemanager\helpers\Language as Lx;
 use Yii;
@@ -17,16 +17,33 @@ use yii\base\Module as BaseModule;
 
 /**
  * Class BaseAmosModule
- * @package lispa\amos\core\module
+ * @package open20\amos\core\module
  */
 abstract class BaseAmosModule extends BaseModule implements ModuleInterface
 {
     private $rbacEnabled = true;
+    
+    /**
+     *
+     * @var type 
+     */
+    private $contentCompression = false;
 
     /**
      * @var array The plugin metas eg Icons, Colors, Etc
      */
     public $pluginMetadata = [];
+
+    /**
+     * @var array
+     */
+    public $viewPathEmailSummary = [];
+
+    /**
+     * @var array
+     */
+    public $viewPathEmailSummaryNetwork = [];
+
     
     /**
      * 
@@ -47,6 +64,25 @@ abstract class BaseAmosModule extends BaseModule implements ModuleInterface
     }
     
     /**
+     * 
+     * @return type
+     */
+    public function getContentCompression()
+    {
+        return $this->contentCompression;
+    }
+    
+    /**
+     * 
+     * @param type $contentCompression
+     */
+    public function setContentCompression($contentCompression)
+    {
+        $this->contentCompression = $contentCompression;
+    }
+    
+    
+    /**
      * @param $category
      * @param $message
      * @param array $params
@@ -62,6 +98,7 @@ abstract class BaseAmosModule extends BaseModule implements ModuleInterface
      * Metodo da usare per tutte le traduzioni che non fanno parte di attributi dei tag html (es. Non si può usare
      * nell'attributo "title" del tag "a")
      *
+     * @see Lx::t() for more info.
      *
      * @param string $category the message category.
      * @param string $message the message to be translated.
@@ -78,6 +115,7 @@ abstract class BaseAmosModule extends BaseModule implements ModuleInterface
     /**
      * Metodo vecchio stile com'era nei plugin prima di introdurre le traduzioni a db.
      *
+     * @see Yii::t() for more info.
      *
      * @param string $category the message category.
      * @param string $message the message to be translated.

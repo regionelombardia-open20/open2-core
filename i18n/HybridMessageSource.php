@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\i18n
+ * @package    open20\amos\core\i18n
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\i18n;
+namespace open20\amos\core\i18n;
 
 use yii\i18n\PhpMessageSource;
 

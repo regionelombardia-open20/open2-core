@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\giiamos\crud\wizard\views
+ * @package    open20\amos\core\giiamos\crud\wizard\views
  * @category   CategoryName
  */
 use yii\helpers\StringHelper;
@@ -14,7 +14,7 @@ use yii\helpers\StringHelper;
 <?= "<?php 
     
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
@@ -22,7 +22,7 @@ use yii\helpers\StringHelper;
  */
      
 use yii\helpers\Html;
-use lispa\amos\core\icons\AmosIcons;
+use open20\amos\core\icons\AmosIcons;
 use backend\modules\admin\Module as AdminModule; 
     
 /*

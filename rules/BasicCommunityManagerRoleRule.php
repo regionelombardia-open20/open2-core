@@ -1,22 +1,22 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\community\rules
+ * @package    open20\amos\community\rules
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\rules;
+namespace open20\amos\core\rules;
 
 
 use yii\helpers\Url;
 
 /**
  * Class CreateSubcommunitiesRule
- * @package lispa\amos\community\rules
+ * @package open20\amos\community\rules
  */
 class BasicCommunityManagerRoleRule extends DefaultOwnContentRule
 {
@@ -40,7 +40,7 @@ class BasicCommunityManagerRoleRule extends DefaultOwnContentRule
 //                $cwhModule->setCwhScopeFromSession();
 //                if (!empty($cwhModule->userEntityRelationTable)) {
 //                    $entityId = $cwhModule->userEntityRelationTable['entity_id'];
-//                    $model =  \lispa\amos\community\models\Community::findOne($entityId);
+//                    $model =  \open20\amos\community\models\Community::findOne($entityId);
 //                    return $this->hasRole($user, $model);
 //                }
 //            }
@@ -54,10 +54,10 @@ class BasicCommunityManagerRoleRule extends DefaultOwnContentRule
      * @return bool
      */
     public function hasRole($user_id, $model){
-        $communityUserMm = \lispa\amos\community\models\CommunityUserMm::find()
+        $communityUserMm = \open20\amos\community\models\CommunityUserMm::find()
             ->andWhere(['user_id' => $user_id])
             ->andWhere(['community_id' => $model->id])
-            ->andWhere(['role' => \lispa\amos\community\models\CommunityUserMm::ROLE_COMMUNITY_MANAGER])
+            ->andWhere(['role' => \open20\amos\community\models\CommunityUserMm::ROLE_COMMUNITY_MANAGER])
             ->one();
 
         if(!empty($communityUserMm)){

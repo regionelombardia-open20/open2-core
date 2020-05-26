@@ -1,27 +1,27 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms
+ * @package    open20\amos\core\forms
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\forms;
+namespace open20\amos\core\forms;
 
-use lispa\amos\attachments\components\AttachmentsInput;
-use lispa\amos\attachments\components\AttachmentsList;
-use lispa\amos\core\exceptions\AmosException;
-use lispa\amos\core\helpers\Html;
-use lispa\amos\core\module\BaseAmosModule;
-use lispa\amos\core\record\Record;
+use open20\amos\attachments\components\AttachmentsInput;
+use open20\amos\attachments\components\AttachmentsList;
+use open20\amos\core\exceptions\AmosException;
+use open20\amos\core\helpers\Html;
+use open20\amos\core\module\BaseAmosModule;
+use open20\amos\core\record\Record;
 use yii\base\Widget;
 
 /**
  * Class AttachmentsWidget
- * @package lispa\amos\core\forms
+ * @package open20\amos\core\forms
  */
 class AttachmentsWidget extends Widget
 {

@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\utility
+ * @package    open20\amos\utility
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\components;
+namespace open20\amos\core\components;
 
 use yii2tech\spreadsheet\Spreadsheet;
 use yii\data\ArrayDataProvider;
@@ -151,18 +151,6 @@ class AmosSpreadSheet extends Spreadsheet {
             ];
         }
         return $config;
-    }
-
-    
-    /**
-     * Rendered content
-     * 
-     * @param type $exporter
-     * @param type $filename
-     * @return type
-     */
-    function render($exporter) {
-        return $exporter->render();
     }
     
     /**

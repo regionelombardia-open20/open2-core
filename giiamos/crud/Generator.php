@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\giiamos\crud
+ * @package    open20\amos\core\giiamos\crud
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\giiamos\crud;
+namespace open20\amos\core\giiamos\crud;
 
 use Yii;
 use yii\db\ActiveRecord;
@@ -26,7 +26,7 @@ use schmunk42\giiant\helpers\SaveForm;
 use schmunk42\giiant\generators\model\Generator as ModelGenerator;
 
 
-class Generator extends \lispa\amos\core\giiamos\Generator {
+class Generator extends \open20\amos\core\giiamos\Generator {
 //\schmunk42\giiant\generators\crud\Generator {
 
     /**
@@ -152,20 +152,20 @@ class Generator extends \lispa\amos\core\giiamos\Generator {
      */
     public $enablePjax = false;
     public $formTabs;
-    public $templates = ['default' => '@vendor/lispa/amos-core/giiamos/crud/default',
-        'wizard' => '@vendor/lispa/amos-core/giiamos/crud/wizard',
-        'advanced' => '@vendor/lispa/amos-core/giiamos/crud/advanced'];
+    public $templates = ['default' => '@vendor/open20/amos-core/giiamos/crud/default',
+        'wizard' => '@vendor/open20/amos-core/giiamos/crud/wizard',
+        'advanced' => '@vendor/open20/amos-core/giiamos/crud/advanced'];
     public $template = 'advanced';
     public $formTabsSeparator = '|';
     public $formTabsFieldSeparator = ',';
     public $tabsFieldList = [];
-    public $providerList = 'lispa\amos\core\giiamos\crud\providers\CallbackProvider,
-                            lispa\amos\core\giiamos\crud\providers\DateTimeProvider,
-                            lispa\amos\core\giiamos\crud\providers\DateProvider,
-                            lispa\amos\core\giiamos\crud\providers\EditorProvider,
-                            lispa\amos\core\giiamos\crud\providers\EditableProvider,
-                            lispa\amos\core\giiamos\crud\providers\OptsProvider,
-                            lispa\amos\core\giiamos\crud\providers\RelationProvider';
+    public $providerList = 'open20\amos\core\giiamos\crud\providers\CallbackProvider,
+                            open20\amos\core\giiamos\crud\providers\DateTimeProvider,
+                            open20\amos\core\giiamos\crud\providers\DateProvider,
+                            open20\amos\core\giiamos\crud\providers\EditorProvider,
+                            open20\amos\core\giiamos\crud\providers\EditableProvider,
+                            open20\amos\core\giiamos\crud\providers\OptsProvider,
+                            open20\amos\core\giiamos\crud\providers\RelationProvider';
 
     /**
      * @var array Array delle relazioni M2M
@@ -197,7 +197,7 @@ class Generator extends \lispa\amos\core\giiamos\Generator {
     public $descriptorField;
     public $moduleRelRequired;
     public $arrayForeignKeys = [];
-    public $baseControllerClass = 'lispa\amos\core\controllers\CrudController';
+    public $baseControllerClass = 'open20\amos\core\controllers\CrudController';
 
     /**
      * @var string translation catalogue

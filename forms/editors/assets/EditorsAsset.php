@@ -1,21 +1,21 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms\editors\assets
+ * @package    open20\amos\core\forms\editors\assets
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\forms\editors\assets;
+namespace open20\amos\core\forms\editors\assets;
 
 use yii\web\AssetBundle;
 
 class EditorsAsset extends AssetBundle
 {
-    public $sourcePath = '@vendor/lispa/amos-core/forms/editors/assets/web';
+    public $sourcePath = '@vendor/open20/amos-core/forms/editors/assets/web';
 
     public $css = [
     ];

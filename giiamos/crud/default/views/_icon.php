@@ -1,6 +1,15 @@
-<?= "<?php 
+<?= "<?php
+
+/**
+ * Aria S.p.A.
+ * OPEN 2.0
+ *
+ *
+ * @package    Open20Package
+ * @category   CategoryName
+ */ 
 use yii\helpers\Html;
-use lispa\amos\core\icons\AmosIcons;
+use open20\amos\core\icons\AmosIcons;
 use backend\modules\admin\Module as AdminModule; 
     
 /*

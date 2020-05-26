@@ -1,24 +1,24 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms
+ * @package    open20\amos\core\forms
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\forms;
+namespace open20\amos\core\forms;
 
-use lispa\amos\admin\models\UserProfile;
-use lispa\amos\admin\widgets\UserCardWidget;
-use lispa\amos\core\helpers\Html;
-use lispa\amos\core\interfaces\OrganizationsModelInterface;
-use lispa\amos\core\module\BaseAmosModule;
-use lispa\amos\core\module\Module;
-use lispa\amos\core\record\Record;
-use lispa\amos\cwh\models\CwhNodi;
+use open20\amos\admin\models\UserProfile;
+use open20\amos\admin\widgets\UserCardWidget;
+use open20\amos\core\helpers\Html;
+use open20\amos\core\interfaces\OrganizationsModelInterface;
+use open20\amos\core\module\BaseAmosModule;
+use open20\amos\core\module\Module;
+use open20\amos\core\record\Record;
+use open20\amos\cwh\models\CwhNodi;
 use yii\base\Widget;
 
 /**
@@ -29,14 +29,14 @@ use yii\base\Widget;
  * If you want to enable only a certain group of buttons you must set interactionMenuButtons array with only the enabled buttons.
  * If you want to disable only a certain group of buttons you must set interactionMenuButtonsHide array with only the disabled buttons.
  *
- * @package lispa\amos\core\forms
+ * @package open20\amos\core\forms
  */
 class ItemAndCardHeaderWidget extends Widget
 {
     /**
      * @var string $layout Widget view
      */
-    public $layout = "@vendor/lispa/amos-core/forms/views/widgets/item_and_card_header_widget.php";
+    public $layout = "@vendor/open20/amos-core/forms/views/widgets/item_and_card_header_widget.php";
 
     /**
      * @var Record $model
@@ -73,13 +73,45 @@ class ItemAndCardHeaderWidget extends Widget
      */
     private $_contentCreator = null;
 
+    /**
+     * @var bool $showPrevalentPartnershipAndTargets
+     */
     public $showPrevalentPartnershipAndTargets = false;
 
+    /**
+     * @var string $customContent
+     */
     public $customContent = null;
 
+    /**
+     * @var bool $truncateLongWords
+     */
     public $truncateLongWords = false;
-    
+
+    /**
+     * @var bool $absoluteUrlAvatar
+     */
     public $absoluteUrlAvatar = false;
+
+    /**
+     * @var bool $checkReadPermissionForUserLink If true check if the logged user can access the view of the content creator. If false the view link is always enabled.
+     */
+    public $checkReadPermissionForUserLink = true;
+
+    /**
+     * @var bool $enableLink If true enable links on creator avatar and name.
+     */
+    public $enableLink = true;
+
+    /**
+     * @var bool $hideCreatorNameSurname If true hide the name and surname of the content creator.
+     */
+    public $hideCreatorNameSurname = false;
+
+    /**
+     * @var string $customCreatorAvatarUrl Custom creator avatar url.
+     */
+    public $customCreatorAvatarUrl = null;
 
     /**
      * @inheritdoc
@@ -99,8 +131,7 @@ class ItemAndCardHeaderWidget extends Widget
         }
 
         $this->_contentCreator = $this->_model->createdUserProfile;
-        if(is_null($this->_contentCreator))
-        {
+        if (is_null($this->_contentCreator)) {
             $this->_contentCreator = UserProfile::findOne(['user_id' => 1]);
         }
     }
@@ -172,7 +203,7 @@ class ItemAndCardHeaderWidget extends Widget
      */
     public function getNodesAsString($nodes)
     {
-        $targetsCollection = \lispa\amos\cwh\models\CwhNodi::findAll([
+        $targetsCollection = \open20\amos\cwh\models\CwhNodi::findAll([
             'id' => $nodes
         ]);
 
@@ -180,10 +211,10 @@ class ItemAndCardHeaderWidget extends Widget
         /** @var CwhNodi $target */
         foreach ($targetsCollection as $target) {
             $targetString = "";
-//            if(array_key_exists('lispa\amos\community\models\CommunityContextInterface', class_implements($this->findNode($target)))){
+//            if(array_key_exists('open20\amos\community\models\CommunityContextInterface', class_implements($this->findNode($target)))){
 //                $targetString .= Module::t('amoscore', 'Community') . ' ';
 //            }
-//            if(array_key_exists('lispa\amos\core\interfaces\OrganizationsModelInterface', class_implements($this->findNode($target)))){
+//            if(array_key_exists('open20\amos\core\interfaces\OrganizationsModelInterface', class_implements($this->findNode($target)))){
 //                $targetString .= Module::t('amoscore', 'Organizzazione') . ' ';
 //            }
             $targetArr[] = $targetString . $this->findNode($target)->toStringWithCharLimit(-1);
@@ -199,7 +230,7 @@ class ItemAndCardHeaderWidget extends Widget
      */
     public function getValidatorName($validators)
     {
-        $validatorsCollection = \lispa\amos\cwh\models\CwhNodi::findAll([
+        $validatorsCollection = \open20\amos\cwh\models\CwhNodi::findAll([
             'id' => $validators
         ]);
 
@@ -208,11 +239,11 @@ class ItemAndCardHeaderWidget extends Widget
         foreach ($validatorsCollection as $singleValidator) {
             if (!(strpos($singleValidator->id, 'user') !== false)) {
                 $targetString = "";
-                if (array_key_exists('lispa\amos\community\models\CommunityContextInterface', class_implements($this->findNode($singleValidator)))) {
-                    $targetString .= Module::t('amoscore', 'community') . ' ';
+                if (array_key_exists('open20\amos\community\models\CommunityContextInterface', class_implements($this->findNode($singleValidator)))) {
+                    $targetString .= Module::t('amoscore', '#item_card_header_widget_from_community') . ' ';
                 }
-                if (array_key_exists('lispa\amos\core\interfaces\OrganizationsModelInterface', class_implements($this->findNode($singleValidator)))) {
-                    $targetString .= Module::t('amoscore', 'organizzazione') . ' ';
+                if (array_key_exists('open20\amos\core\interfaces\OrganizationsModelInterface', class_implements($this->findNode($singleValidator)))) {
+                    $targetString .= Module::t('amoscore', '#item_card_header_widget_from_organization') . ' ';
                 }
                 $validatorsArr[] = $targetString . $this->findNode($singleValidator)->toStringWithCharLimit(-1);
             }
@@ -228,7 +259,7 @@ class ItemAndCardHeaderWidget extends Widget
      */
     public static function getValidatorNameGeneral($validators)
     {
-        $validatorsCollection = \lispa\amos\cwh\models\CwhNodi::findAll([
+        $validatorsCollection = \open20\amos\cwh\models\CwhNodi::findAll([
             'id' => $validators
         ]);
 
@@ -239,10 +270,10 @@ class ItemAndCardHeaderWidget extends Widget
                 $modelClass = \Yii::createObject($singleValidator['classname']);
                 $model = $modelClass->findOne($singleValidator['record_id']);
                 $targetString = "";
-                if (array_key_exists('lispa\amos\community\models\CommunityContextInterface', class_implements($model))) {
+                if (array_key_exists('open20\amos\community\models\CommunityContextInterface', class_implements($model))) {
                     $targetString .= Module::t('amoscore', 'community') . ' ';
                 }
-                if (array_key_exists('lispa\amos\core\interfaces\OrganizationsModelInterface', class_implements($model))) {
+                if (array_key_exists('open20\amos\core\interfaces\OrganizationsModelInterface', class_implements($model))) {
                     $targetString .= Module::t('amoscore', 'organizzazione') . ' ';
                 }
                 $validatorsArr[] = $targetString . $model->toStringWithCharLimit(-1);
@@ -279,19 +310,21 @@ class ItemAndCardHeaderWidget extends Widget
         if (!empty($this->model->validatori)) {
             $validatorName = $this->getValidatorName($this->model->validatori);
             if ($validatorName != "") {
-                $targetString = Module::t('amoscore', 'dalla') . ' ' . $this->getValidatorName($this->model->validatori);
+                $targetString = $validatorName;
             }
         }
 
         $contentToRender = [
             'contentCreatorAvatar' => $this->makeContentCreatorAvatar(),
             'contentCreatorNameSurname' => $this->retrieveUserNameAndSurname(),
+            'contentCreator' => $this->_contentCreator,
             'hideInteractionMenu' => $this->isHideInteractionMenu(),
             'interactionMenuButtons' => $this->getInteractionMenuButtons(),
             'interactionMenuButtonsHide' => $this->getInteractionMenuButtonsHide(),
             'publicatonDate' => $this->makePublicationDate(),
             'model' => $this->getModel(),
             'customContent' => $this->customContent,
+            
         ];
 
         if ($this->showPrevalentPartnershipAndTargets) {
@@ -321,23 +354,43 @@ class ItemAndCardHeaderWidget extends Widget
     private function makeContentCreatorAvatar()
     {
         $html = '';
+
         if (!is_null($this->_contentCreator)) {
             $moduleAdmin = \Yii::$app->getModule('admin');
             if (!empty($moduleAdmin)) {
+                $userCardWidgetConf = [
+                    'model' => $this->_contentCreator,
+                    'absoluteUrl' => $this->absoluteUrlAvatar
+                ];
                 if (property_exists(UserCardWidget::className(), 'enableLink')) {
-                    $html = UserCardWidget::widget(['model' => $this->_contentCreator, 'enableLink' => true, 'absoluteUrl' => $this->absoluteUrlAvatar]);
-                } else {
-                    $html = UserCardWidget::widget(['model' => $this->_contentCreator, 'absoluteUrl' => $this->absoluteUrlAvatar]);
+                    $userCardWidgetConf['enableLink'] = $this->creatorLinkEnabled();
                 }
+                if ($this->customCreatorAvatarUrl) {
+                    $userCardWidgetConf['customUserAvatarUrl'] = $this->customCreatorAvatarUrl;
+                } else if (isset(\Yii::$app->params['customContentCreatorAvatarUrl']) && \Yii::$app->params['customContentCreatorAvatarUrl']) {
+                    $userCardWidgetConf['customUserAvatarUrl'] = \Yii::$app->params['customContentCreatorAvatarUrl'];
+                }
+                $html = UserCardWidget::widget($userCardWidgetConf);
             } else {
-                $html .= Html::a(
-                        $this->absoluteUrlAvatar ?
-                        Html::img($this->_contentCreator->getAvatarWebUrl(), ['width' => '50', 'class' => 'avatar'])
-                        :
-                        Html::img($this->_contentCreator->getAvatarUrl(), ['width' => '50', 'class' => 'avatar']) ,
-                    $this->_contentCreator->getFullViewUrl(),
-                    ['title' => $this->getContentCreatorLinkTitle()]
-                );
+                if ($this->customCreatorAvatarUrl) {
+                    $avatarUrl = $this->customCreatorAvatarUrl;
+                } else if (isset(\Yii::$app->params['customContentCreatorAvatarUrl']) && \Yii::$app->params['customContentCreatorAvatarUrl']) {
+                    $avatarUrl = \Yii::$app->params['customContentCreatorAvatarUrl'];
+                } else if ($this->absoluteUrlAvatar) {
+                    $avatarUrl = $this->_contentCreator->getAvatarWebUrl();
+                } else {
+                    $avatarUrl = $this->_contentCreator->getAvatarUrl();
+                }
+                $avatar = Html::img($avatarUrl, ['width' => '50', 'class' => 'avatar']);
+                if ($this->creatorLinkEnabled()) {
+                    $html .= Html::a(
+                        $avatar,
+                        $this->getCreatorLink(),
+                        ['title' => $this->getContentCreatorLinkTitle()]
+                    );
+                } else {
+                    $html .= $avatar;
+                }
             }
         }
         return $html;
@@ -349,7 +402,7 @@ class ItemAndCardHeaderWidget extends Widget
      */
     public function getContentCreatorLinkTitle()
     {
-        return BaseAmosModule::t('amoscore', 'Apri il profilo di {user_profile_name}', ['user_profile_name' => ($this->truncateLongWords ? $this->getContentCreator()-> __toString() : $this->getContentCreator()->getNomeCognome())]);
+        return BaseAmosModule::t('amoscore', 'Apri il profilo di {user_profile_name}', ['user_profile_name' => ($this->truncateLongWords ? $this->getContentCreator()->__toString() : $this->getContentCreator()->getNomeCognome())]);
     }
 
     /**
@@ -361,11 +414,49 @@ class ItemAndCardHeaderWidget extends Widget
     }
 
     /**
+     * @return bool
+     */
+    public function creatorLinkEnabled()
+    {
+        if (!$this->enableLink || (isset(\Yii::$app->params['disableLinkContentCreator']) && (\Yii::$app->params['disableLinkContentCreator'] === true))) {
+            return false;
+        }
+        $contentCreatorUserProfile = $this->getContentCreator();
+        return (!$this->checkReadPermissionForUserLink || (\Yii::$app instanceof \yii\console\Application) || \Yii::$app->user->can('USERPROFILE_READ', $contentCreatorUserProfile));
+    }
+
+    /**
+     * @return string
+     */
+    public function getCreatorLink()
+    {
+        $contentCreatorUserProfile = $this->getContentCreator();
+        return ($this->creatorLinkEnabled() ? $contentCreatorUserProfile->getFullViewUrl() : null);
+    }
+
+    /**
+     * @return string
+     */
+    public function getCreator($contentCreatorNameSurname)
+    {
+        if ($this->creatorLinkEnabled()) {
+            return Html::a($contentCreatorNameSurname, $this->getCreatorLink(), [
+                'title' => $this->getContentCreatorLinkTitle()
+            ]);
+        } else {
+            return Html::tag('strong', $contentCreatorNameSurname);
+        }
+    }
+
+    /**
      * This method creates a string that contains the name and surname of the user whose ID is contained in the parameter.
      * @return string
      */
     private function retrieveUserNameAndSurname()
     {
+        if ($this->hideCreatorNameSurname || (isset(\Yii::$app->params['hideListsContentCreatorName']) && (\Yii::$app->params['hideListsContentCreatorName'] === true))) {
+            return '';
+        }
         $nameSurname = BaseAmosModule::t('amoscore', 'Utente Cancellato');
         if (!is_null($this->_contentCreator)) {
             if ($this->truncateLongWords) {

@@ -1,8 +1,17 @@
 <?php
 
-namespace lispa\amos\core\forms;
+/**
+ * Aria S.p.A.
+ * OPEN 2.0
+ *
+ *
+ * @package    Open20Package
+ * @category   CategoryName
+ */
 
-use lispa\amos\core\module\BaseAmosModule;
+namespace open20\amos\core\forms;
+
+use open20\amos\core\module\BaseAmosModule;
 use kartik\password\PasswordInput as KartikPasswordInput;
 use yii\web\View;
 use Yii;
@@ -43,11 +52,11 @@ class PasswordInput extends KartikPasswordInput
         $moduleL = \Yii::$app->getModule('layout');
         if(!empty($moduleL))
         {
-            \lispa\amos\layout\assets\PasswordInputAsset::register($view);
+            \open20\amos\layout\assets\PasswordInputAsset::register($view);
         }
         else
         {
-            \lispa\amos\core\views\assets\PasswordInputAsset::register($view);
+            \open20\amos\core\views\assets\PasswordInputAsset::register($view);
         }
 
         return "<div class='{$class}'>{$content}</div>";

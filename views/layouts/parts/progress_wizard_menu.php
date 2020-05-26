@@ -1,21 +1,21 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\views\layouts\parts
+ * @package    open20\amos\core\views\layouts\parts
  * @category   CategoryName
  */
 
-use lispa\amos\core\helpers\Html;
-use lispa\amos\core\icons\AmosIcons;
+use open20\amos\core\helpers\Html;
+use open20\amos\core\icons\AmosIcons;
 
 /**
  * @var yii\web\View $this
- * @var \lispa\amos\core\record\Record $model
- * @var \lispa\amos\core\components\PartQuestionarioAbstract $partsQuestionario
+ * @var \open20\amos\core\record\Record $model
+ * @var \open20\amos\core\components\PartQuestionarioAbstract $partsQuestionario
  * @var bool $hidePartsLabel
  * @var bool $hidePartsUrl
  */

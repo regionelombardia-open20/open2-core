@@ -1,19 +1,20 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package lispa\amos\core\exceptions
+ * @package open20\amos\core\exceptions
  * @category CategoryName
+ * @author Lombardia Informatica S.p.A.
  */
 
-namespace lispa\amos\core\exceptions;
+namespace open20\amos\core\exceptions;
 
 /**
  * Class MigrationsException
- * @package lispa\amos\core\exceptions
+ * @package open20\amos\core\exceptions
  */
 class MigrationsException extends \Exception
 {

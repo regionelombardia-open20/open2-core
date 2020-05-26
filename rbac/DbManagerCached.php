@@ -1,21 +1,21 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\rbac
+ * @package    open20\amos\core\rbac
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\rbac;
+namespace open20\amos\core\rbac;
 
 use Yii;
 use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 use yii\log\Logger;
-use lispa\amos\core\record\CachedQuery;
+use open20\amos\core\record\CachedQuery;
 use yii\db\Query;
 
 class DbManagerCached extends AuthManager

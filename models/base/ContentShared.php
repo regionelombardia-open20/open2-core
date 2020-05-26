@@ -1,6 +1,15 @@
 <?php
 
-namespace lispa\amos\core\models\base;
+/**
+ * Aria S.p.A.
+ * OPEN 2.0
+ *
+ *
+ * @package    Open20Package
+ * @category   CategoryName
+ */
+
+namespace open20\amos\core\models\base;
 
 use Yii;
 
@@ -17,9 +26,9 @@ use Yii;
  * @property string $deleted_at
  * @property integer $deleted_by
  *
- * @property \lispa\amos\core\models\ModelsClassname $modelsClassname
+ * @property \open20\amos\core\models\ModelsClassname $modelsClassname
  */
-class  ContentShared extends \lispa\amos\core\record\Record
+class  ContentShared extends \open20\amos\core\record\Record
 {
 
 
@@ -66,6 +75,6 @@ class  ContentShared extends \lispa\amos\core\record\Record
      */
     public function getModelsClassname()
     {
-        return $this->hasOne(\lispa\amos\core\models\ModelsClassname::className(), ['id' => 'models_classname_id']);
+        return $this->hasOne(\open20\amos\core\models\ModelsClassname::className(), ['id' => 'models_classname_id']);
     }
 }

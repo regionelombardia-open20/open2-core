@@ -1,6 +1,15 @@
 <?php
 
-namespace lispa\amos\core\record;
+/**
+ * Aria S.p.A.
+ * OPEN 2.0
+ *
+ *
+ * @package    Open20Package
+ * @category   CategoryName
+ */
+
+namespace open20\amos\core\record;
 
 use yii\base\Model;
 
@@ -9,7 +18,7 @@ use yii\base\Model;
  *
  * This is the model class for the global search result in different plugins
  *
- * @package lispa\amos\core\record
+ * @package open20\amos\core\record
  */
 
 
@@ -35,11 +44,11 @@ class SearchResult extends Model {
      */
     public $box_type; 
      /**
-     * @var \lispa\amos\attachments\models\File | string | null  image of the search result (the file or the file path). Used only if $box_type is "image".
+     * @var \open20\amos\attachments\models\File | string | null  image of the search result (the file or the file path). Used only if $box_type is "image".
      */
     public $immagine;
      /**
-     * @var \lispa\amos\attachments\models\File | null  document of the search result. Used only if $box_type is "file".
+     * @var \open20\amos\attachments\models\File | null  document of the search result. Used only if $box_type is "file".
      */
     public $documento;
      /**
@@ -77,6 +86,7 @@ class SearchResult extends Model {
      * Returns the text hint for the specified attribute.
      * @param string $attribute the attribute name
      * @return string the attribute hint
+     * @see attributeHints
      */
     public function getAttributeHint($attribute) {
         $hints = $this->attributeHints();

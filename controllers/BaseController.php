@@ -1,17 +1,17 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\controllers
+ * @package    open20\amos\core\controllers
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\controllers;
+namespace open20\amos\core\controllers;
 
-use lispa\amos\core\module\BaseAmosModule;
+use open20\amos\core\module\BaseAmosModule;
 use ReflectionClass;
 use Yii;
 use yii\base\InvalidConfigException;
@@ -23,7 +23,7 @@ use yii\web\ForbiddenHttpException;
 
 /**
  * Class BaseController
- * @package lispa\amos\core\controllers
+ * @package open20\amos\core\controllers
  */
 abstract class BaseController extends BackendController
 {

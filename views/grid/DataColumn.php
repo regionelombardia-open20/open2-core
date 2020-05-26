@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\views\grid
+ * @package    open20\amos\core\views\grid
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\views\grid;
+namespace open20\amos\core\views\grid;
 
 use kartik\base\Config;
 use kartik\grid\DataColumn as KartikDataColumn;

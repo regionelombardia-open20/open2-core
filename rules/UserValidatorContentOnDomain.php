@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\rules
+ * @package    open20\amos\core\rules
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\rules;
+namespace open20\amos\core\rules;
 
 
 class UserValidatorContentOnDomain extends DefaultOwnContentRule
@@ -57,7 +57,7 @@ class UserValidatorContentOnDomain extends DefaultOwnContentRule
             $networkKeys = array_keys($scope);
             $allow = true;
             foreach ($networkKeys as $networkKey) {
-                $networkConfig = \lispa\amos\cwh\models\CwhConfig::findOne(['tablename' => $networkKey]);
+                $networkConfig = \open20\amos\cwh\models\CwhConfig::findOne(['tablename' => $networkKey]);
                 if (is_null($networkConfig)) {
                     $allow = false;
                 } else {
@@ -80,7 +80,7 @@ class UserValidatorContentOnDomain extends DefaultOwnContentRule
     private function userCreatorContentPermission($userId, $permissionCwhValidate, $networkConfigId, $networkId)
     {
 
-        $cwhContentValidatePerssions = \lispa\amos\cwh\models\base\CwhAuthAssignment::findOne([
+        $cwhContentValidatePerssions = \open20\amos\cwh\models\base\CwhAuthAssignment::findOne([
             'user_id' => $userId,
             'item_name' => $permissionCwhValidate,
             'cwh_config_id' => $networkConfigId,

@@ -1,20 +1,21 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms
+ * @package    open20\amos\core\forms
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\forms;
+namespace open20\amos\core\forms;
 
-use lispa\amos\admin\models\UserProfile;
-use lispa\amos\core\helpers\Html;
-use lispa\amos\core\icons\AmosIcons;
-use lispa\amos\core\module\BaseAmosModule;
+use open20\amos\admin\models\UserProfile;
+use open20\amos\core\helpers\Html;
+use open20\amos\core\icons\AmosIcons;
+use open20\amos\core\widget\WidgetAbstract;
+use open20\amos\core\module\BaseAmosModule;
 use yii\base\Widget;
 use yii\db\ActiveRecord;
 
@@ -23,7 +24,7 @@ use yii\db\ActiveRecord;
  *
  * The widget requires only one parameter: the model
  *
- * @package lispa\amos\core\forms
+ * @package open20\amos\core\forms
  */
 class CreatedUpdatedWidget extends Widget
 {
@@ -51,7 +52,7 @@ class CreatedUpdatedWidget extends Widget
     public $updatedSectionOptions = [];
 
     /**
-     * @var \lispa\amos\core\record\Record $model
+     * @var \open20\amos\core\record\Record $model
      */
     private $model = null;
 
@@ -136,13 +137,22 @@ class CreatedUpdatedWidget extends Widget
      */
     protected function renderBeginContainerSection()
     {
+        if (!empty(\Yii::$app->params['dashboardEngine']) && \Yii::$app->params['dashboardEngine'] == WidgetAbstract::ENGINE_ROWS) {
+            $icon = (get_class($this->getModel()) == 'open20\amos\community\models\Community') 
+                ? AmosIcons::show('info', [], AmosIcons::IC) 
+                : AmosIcons::show('info-circle', [], AmosIcons::DASH);
+        }
+        else {
+            $icon = AmosIcons::show('info-circle', [], AmosIcons::DASH);
+        }
+
         if ($this->isTooltip) {
             $sectionContent = Html::beginTag('span', [
                     'title' => $this->tooltipParams['title'],
                     'data-toggle' => 'tooltip',
                     'data-html' => 'true',
                     'class' => 'amos-tooltip',
-                ]) . AmosIcons::show('info-circle',[],'dash');
+                ]) . $icon;
         } else {
             $sectionContent = Html::beginTag('div', $this->containerOptions);
         }

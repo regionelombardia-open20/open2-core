@@ -1,19 +1,19 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms
+ * @package    open20\amos\core\forms
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\forms;
+namespace open20\amos\core\forms;
 
-use lispa\amos\core\helpers\Html;
-use lispa\amos\core\helpers\PermissionHelper;
-use lispa\amos\core\record\Record;
+use open20\amos\core\helpers\Html;
+use open20\amos\core\helpers\PermissionHelper;
+use open20\amos\core\record\Record;
 use Yii;
 use yii\base\Widget;
 use yii\helpers\Url;
@@ -22,7 +22,7 @@ use yii\helpers\Url;
  * Class CloseSaveButtonWidget
  * Renders the close and submit buttons also according to the permissions that the user has.
  *
- * @package lispa\amos\core\forms
+ * @package open20\amos\core\forms
  */
 class CloseSaveButtonWidget extends Widget
 {
@@ -42,11 +42,12 @@ class CloseSaveButtonWidget extends Widget
     private $buttonCloseVisibility = true;
 
     /**
-     * @var \lispa\amos\core\record\Record $model
+     * @var \open20\amos\core\record\Record $model
      */
     private $model;
 
     /**
+     * @see \kartik\base\Widget::init();
      *
      * Set of the permissionSave
      */

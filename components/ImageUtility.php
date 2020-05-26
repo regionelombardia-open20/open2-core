@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\components
+ * @package    open20\amos\core\components
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\components;
+namespace open20\amos\core\components;
 
 use yii\base\Component;
 use yii\log\Logger;
@@ -23,7 +23,7 @@ use yii\log\Logger;
  * 'components' => [
  * //...
  *  'imageUtility' => [
- *           'class' => 'lispa\amos\core\components\ImageUtility', 
+ *           'class' => 'open20\amos\core\components\ImageUtility', 
  *           ],
  * //...
  * ]

@@ -1,17 +1,17 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms\editors\assets\m2mWidget\controllers
+ * @package    open20\amos\core\forms\editors\assets\m2mWidget\controllers
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\forms\editors\m2mWidget\controllers;
+namespace open20\amos\core\forms\editors\m2mWidget\controllers;
 
-use lispa\amos\core\forms\editors\m2mWidget\M2MEventsEnum;
+use open20\amos\core\forms\editors\m2mWidget\M2MEventsEnum;
 use Yii;
 use yii\base\Event;
 use yii\db\ActiveRecord;
@@ -20,7 +20,7 @@ use yii\web\NotFoundHttpException;
 
 /**
  * Class M2MWidgetControllerTrait
- * @package lispa\amos\core\forms\editors\m2mWidget\controllers
+ * @package open20\amos\core\forms\editors\m2mWidget\controllers
  */
 trait M2MWidgetControllerTrait
 {
@@ -55,7 +55,7 @@ trait M2MWidgetControllerTrait
     private $redirectAction = '';
 
     /**
-     * @var array $redirectArray
+     * @var array|string $redirectArray
      */
     private $redirectArray = null;
 
@@ -69,6 +69,16 @@ trait M2MWidgetControllerTrait
      */
     private $targetUrl = '';
 
+    /**
+     * @var string $targetUrlInvitation
+     */
+    private $targetUrlInvitation = '';
+    
+    /**
+     * @var bool $externalInvitationEnabled If true enable the invitation of external users.
+     */
+    public $externalInvitationEnabled = false;
+    
     /**
      * @var array $targetUrlParams
      */
@@ -134,7 +144,7 @@ trait M2MWidgetControllerTrait
                     }
                 }
             }
-
+            
             $event = new Event;
             $event->sender = $model;
             $this->trigger(M2MEventsEnum::EVENT_AFTER_ASSOCIATE_ONE2MANY, $event);
@@ -335,7 +345,7 @@ trait M2MWidgetControllerTrait
     }
 
     /**
-     * @param array $redirectArray
+     * @param array|string $redirectArray
      */
     public function setRedirectArray($redirectArray)
     {
@@ -348,7 +358,7 @@ trait M2MWidgetControllerTrait
     public function actionAnnullaM2m($id)
     {
         $this->trigger(M2MEventsEnum::EVENT_BEFORE_CANCEL_ASSOCIATE_M2M);
-        $this->redirect($this->getRedirectArray($id));
+        return $this->redirect($this->getRedirectArray($id));
     }
 
     /**
@@ -666,4 +676,37 @@ trait M2MWidgetControllerTrait
     {
         $this->targetUrlParams = $targetUrlParams;
     }
+    
+    /**
+     * @return array
+     */
+    public function getTargetUrlInvitation()
+    {
+        return $this->targetUrlInvitation;
+    }
+
+    /**
+     * @param array $targetUrlInvitation
+     */
+    public function setTargetUrlInvitation($targetUrlInvitation)
+    {
+        $this->targetUrlInvitation = $targetUrlInvitation;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInvitationModule()
+    {
+        return $this->invitationModule;
+    }
+
+    /**
+     * @param array $targetUrlInvitation
+     */
+    public function setInvitationModule($invitationModule)
+    {
+        $this->invitationModule = $invitationModule;
+    }
+
 }

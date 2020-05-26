@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\interfaces
+ * @package    open20\amos\core\interfaces
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\interfaces;
+namespace open20\amos\core\interfaces;
 
 
 interface CmsModelInterface {
@@ -26,14 +26,14 @@ interface CmsModelInterface {
      * return a list of fields that can be shown in frontend pages made by cms. For each field , also the field type is specified. 
      * In "Backend modules" cms section, user can choose to show only some of these fields.
      * 
-     * @return array An array of lispa\amos\core\record\CmsField objects
+     * @return array An array of open20\amos\core\record\CmsField objects
      */
     public function cmsViewFields() ;
     
      /**
      * return the list of fields to search for in frontend pages made by cms.For each field , also the field type is specified. 
      * 
-     * @return array An array of lispa\amos\core\record\CmsField objects
+     * @return array An array of open20\amos\core\record\CmsField objects
      */
     public function cmsSearchFields();
     

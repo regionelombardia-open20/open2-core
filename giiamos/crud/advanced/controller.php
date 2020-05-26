@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\giiamos\crud\wizard
+ * @package    open20\amos\core\giiamos\crud\wizard
  * @category   CategoryName
  */
 
@@ -46,7 +46,7 @@ foreach ((array) $generator->getMmRelations() as $Relation){
 echo "<?php\n";
 ?>
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
@@ -63,12 +63,12 @@ use <?= ltrim($generator->modelClass, '\\') ?>;
     use yii\data\ActiveDataProvider;
 <?php endif; ?>
 use <?= ltrim($generator->baseControllerClass, '\\') ?>;
-use lispa\amos\core\module\BaseAmosModule;
+use open20\amos\core\module\BaseAmosModule;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use lispa\amos\core\icons\AmosIcons;
-use lispa\amos\core\helpers\Html;
-use lispa\amos\core\helpers\T;
+use open20\amos\core\icons\AmosIcons;
+use open20\amos\core\helpers\Html;
+use open20\amos\core\helpers\T;
 use yii\helpers\Url;
 
 

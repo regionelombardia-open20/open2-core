@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\views
+ * @package    open20\amos\core\views
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\views;
+namespace open20\amos\core\views;
 
 use yii\base\InvalidConfigException;
 use yii\bootstrap\BootstrapPluginAsset;
@@ -18,7 +18,7 @@ use yii\helpers\Html;
 
 /**
  * Class ChangeView
- * @package lispa\amos\core\views
+ * @package open20\amos\core\views
  */
 class ChangeView extends Dropdown
 {

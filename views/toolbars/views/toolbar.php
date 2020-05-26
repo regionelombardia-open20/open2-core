@@ -1,17 +1,17 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\views\toolbars\views
+ * @package    open20\amos\core\views\toolbars\views
  * @category   CategoryName
  */
 
-use lispa\amos\core\icons\AmosIcons;
-use lispa\amos\core\helpers\Html;
-use lispa\amos\core\views\toolbars\StatsToolbar;
+use open20\amos\core\icons\AmosIcons;
+use open20\amos\core\helpers\Html;
+use open20\amos\core\views\toolbars\StatsToolbar;
 
 /**
  *

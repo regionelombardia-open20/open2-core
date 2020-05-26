@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\giiamos\widgets\default
+ * @package    open20\amos\core\giiamos\widgets\default
  * @category   CategoryName
  */
 
@@ -14,7 +14,7 @@ echo "<?php\n";
 <?php ?>
 namespace <?= $data_obj->ns_4class ?>;
 
-use lispa\amos\core\widget\WidgetIcon;
+use open20\amos\core\widget\WidgetIcon;
 use Yii;
 use yii\helpers\ArrayHelper;
 
@@ -48,12 +48,12 @@ class <?= $data_obj->widgetName ?> extends WidgetIcon {
 
     /**
     * Recupera i widget figli da far visualizzare nella dashboard secondaria
-    * @return [lispa\amos\core\widget\WidgetIcon] Array con i widget della dashboard
+    * @return [open20\amos\core\widget\WidgetIcon] Array con i widget della dashboard
     */
     public function getWidgetsIcon() {
         $widgets = [];
 
-        $widget = \lispa\amos\dashboard\models\AmosWidgets::find()->andWhere(['module' => '<?= $data_obj->moduleName; ?>'])->andWhere(['type' => 'ICON'])->andWhere(['!=', 'child_of', NULL])->all();
+        $widget = \open20\amos\dashboard\models\AmosWidgets::find()->andWhere(['module' => '<?= $data_obj->moduleName; ?>'])->andWhere(['type' => 'ICON'])->andWhere(['!=', 'child_of', NULL])->all();
 
         foreach ($widget as $Widget) {
         $className = (strpos($Widget['classname'], '\\') === 0)? $Widget['classname'] : '\\' . $Widget['classname'];

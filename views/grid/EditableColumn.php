@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\views\grid
+ * @package    open20\amos\core\views\grid
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\views\grid;
+namespace open20\amos\core\views\grid;
 
 use Yii;
 use Closure;
@@ -18,7 +18,7 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Json;
 //use kartik\editable\Editable;
-use lispa\amos\core\views\grid\Editable;
+use open20\amos\core\views\grid\Editable;
 use kartik\base\Config;
 
 class EditableColumn extends DataColumn{

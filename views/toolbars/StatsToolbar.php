@@ -1,24 +1,24 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\views\toolbars
+ * @package    open20\amos\core\views\toolbars
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\views\toolbars;
+namespace open20\amos\core\views\toolbars;
 
-use lispa\amos\core\interfaces\StatsToolbarInterface;
+use open20\amos\core\interfaces\StatsToolbarInterface;
 use yii\base\Widget;
 use yii\base\Model;
 
 /**
  * Class StatsToolbar
  *
- * @package lispa\amos\core\views\toolbars
+ * @package open20\amos\core\views\toolbars
  *
  */
 class StatsToolbar extends Widget
@@ -76,9 +76,9 @@ class StatsToolbar extends Widget
     {
         $moduleL = \Yii::$app->getModule('layout');
         if (!empty($moduleL)) {
-            \lispa\amos\layout\assets\TabsAsset::register($this->getView());
+            \open20\amos\layout\assets\TabsAsset::register($this->getView());
         } else {
-            \lispa\amos\core\views\assets\TabsAsset::register($this->getView());
+            \open20\amos\core\views\assets\TabsAsset::register($this->getView());
         }
         $this->panels = []; //$this->fetchPanels();
         parent::init();

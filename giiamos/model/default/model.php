@@ -1,10 +1,10 @@
 <?php
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\giiamos\model\default
+ * @package    open20\amos\core\giiamos\model\default
  * @category   CategoryName
  */
 
@@ -45,7 +45,7 @@ use Yii;
 */
 <?php if ($interfacessel): ?> abstract class <?php else: ?> class <?php endif; ?> <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . "\n" ?>
 {
-
+    public $isSearch = false;
 <?php
 $arrayAttributi = [];
 $indx = [];

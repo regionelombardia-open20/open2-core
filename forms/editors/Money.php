@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
@@ -9,11 +9,11 @@
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\forms\editors;
+namespace open20\amos\core\forms\editors;
 
 /**
  * Class Money
- * @package lispa\amos\core\forms\editors
+ * @package open20\amos\core\forms\editors
  */
 class Money extends \kartik\money\MaskMoney
 {

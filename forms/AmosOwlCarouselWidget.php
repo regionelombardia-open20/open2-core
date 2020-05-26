@@ -1,26 +1,26 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms
+ * @package    open20\amos\core\forms
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\forms;
+namespace open20\amos\core\forms;
 
-use lispa\amos\core\exceptions\AmosException;
-use lispa\amos\core\module\BaseAmosModule;
-use lispa\amos\core\record\Record;
+use open20\amos\core\exceptions\AmosException;
+use open20\amos\core\module\BaseAmosModule;
+use open20\amos\core\record\Record;
 use Yii;
 use yii\base\Widget;
 use yii\helpers\ArrayHelper;
 
 /**
  * Class AmosOwlCarouselWidget
- * @package lispa\amos\core\forms
+ * @package open20\amos\core\forms
  */
 class AmosOwlCarouselWidget extends Widget
 {
@@ -32,7 +32,7 @@ class AmosOwlCarouselWidget extends Widget
     /**
      * @var string $widgetView The widget view.
      */
-    protected $widgetView = "@vendor/lispa/amos-core/forms/views/widgets/amos_owl_carousel_widget";
+    protected $widgetView = "@vendor/open20/amos-core/forms/views/widgets/amos_owl_carousel_widget";
 
     /**
      * @var string $singleItemView The view for a single owl carousel item.
@@ -119,7 +119,7 @@ class AmosOwlCarouselWidget extends Widget
     public function run()
     {
         if (Yii::$app->getModule('layout')) {
-            \lispa\amos\layout\assets\OwlCarouselAsset::register($this->view);
+            \open20\amos\layout\assets\OwlCarouselAsset::register($this->view);
         } else {
             throw new AmosException(BaseAmosModule::t('amoscore', '#amos_carousel_widget_missing_layout_module'));
         }

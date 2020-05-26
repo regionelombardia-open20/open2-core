@@ -1,21 +1,21 @@
 <?php
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\validators
+ * @package    open20\amos\core\validators
  * @category   CategoryName
  *
  */
 
-namespace lispa\amos\core\validators\assets;
+namespace open20\amos\core\validators\assets;
 
 use yii\web\AssetBundle;
 
 class StringHtmlAsset extends AssetBundle
 {
-    public $sourcePath = '@vendor/lispa/amos-core/validators/assets';
+    public $sourcePath = '@vendor/open20/amos-core/validators/assets';
     public $js = [
         'js/yii.validation.texteditor.js',
     ];

@@ -1,17 +1,17 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms\views\widgets
+ * @package    open20\amos\core\forms\views\widgets
  * @category   CategoryName
  */
 
-//use lispa\amos\core\forms\InteractionMenuWidget;
-use lispa\amos\core\helpers\Html;
-use lispa\amos\core\module\BaseAmosModule;
+//use open20\amos\core\forms\InteractionMenuWidget;
+use open20\amos\core\helpers\Html;
+use open20\amos\core\module\BaseAmosModule;
 
 /**
  * @var string $contentCreatorAvatar Avatar of the content creator.
@@ -21,7 +21,7 @@ use lispa\amos\core\module\BaseAmosModule;
  * @var array $interactionMenuButtonsHide Sets the interaction menu buttons to hide.
  * @var string $publicatonDate Publication date of the content.
  * @var string $customContent Custom content.
- * @var \lispa\amos\core\forms\ItemAndCardHeaderWidget $widget
+ * @var \open20\amos\core\forms\ItemAndCardHeaderWidget $widget
  */
 
 ?>
@@ -30,9 +30,7 @@ use lispa\amos\core\module\BaseAmosModule;
     <div class="post-header-avatar pull-left">
         <?= $contentCreatorAvatar ?>
     </div>
-    <p class="creator"><?= Html::a($contentCreatorNameSurname, $widget->getContentCreator()->getFullViewUrl(), [
-            'title' => $widget->getContentCreatorLinkTitle()
-        ]) ?></p>
+    <p class="creator"><?= $widget->getCreator($contentCreatorNameSurname) ?></p>
     <?php if (isset($contentPrevalentPartnership) && $contentPrevalentPartnership) : ?>
         <p class="card-prevalent-partnership"><i>(<?= $contentPrevalentPartnership ?>)</i></p>
     <?php endif; ?>

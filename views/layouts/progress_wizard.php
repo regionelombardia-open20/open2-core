@@ -1,20 +1,21 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\views\layouts
+ * @package    open20\amos\core\views\layouts
  * @category   CategoryName
  */
 
-\bedezign\yii2\audit\web\JSLoggingAsset::register($this);
+\open20\amos\audit\web\JSLoggingAsset::register($this);
+
 use yii\helpers\Html;
 use yii\helpers\Url;
 
 /* @var $this \yii\web\View */
-/* @var \lispa\amos\core\components\PartQuestionarioAbstract $partsQuestionario */
+/* @var \open20\amos\core\components\PartQuestionarioAbstract $partsQuestionario */
 /* @var $content string */
 
 $urlCorrente = Url::current();
@@ -90,9 +91,7 @@ $(document).ready(function (){
 SCRIPT;
 
 $this->registerJs($script, \yii\web\View::POS_END, 'my-options');
-
 ?>
-
 
 <?php $this->beginPage() ?>
 

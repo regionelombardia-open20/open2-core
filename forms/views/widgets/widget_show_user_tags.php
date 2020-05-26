@@ -1,19 +1,19 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms\views\widgets
+ * @package    open20\amos\core\forms\views\widgets
  * @category   CategoryName
  */
 
-use lispa\amos\core\icons\AmosIcons;
-use lispa\amos\core\module\BaseAmosModule;
+use open20\amos\core\icons\AmosIcons;
+use open20\amos\core\module\BaseAmosModule;
 
 /**
- * @var \lispa\amos\tag\models\Tag $root
+ * @var \open20\amos\tag\models\Tag $root
  * @var \yii\base\View $this
  * @var array $allRootTags
  * @var array $allTags

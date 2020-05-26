@@ -1,28 +1,28 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\toolbar
+ * @package    open20\amos\core\toolbar
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\toolbar;
+namespace open20\amos\core\toolbar;
 
-use lispa\amos\core\helpers\Html;
-use lispa\amos\core\icons\AmosIcons;
-use lispa\amos\core\module\BaseAmosModule;
-use lispa\amos\core\toolbar\NavBarOverriden as YiiNavBar;
-use lispa\amos\core\utilities\CurrentUser;
+use open20\amos\core\helpers\Html;
+use open20\amos\core\icons\AmosIcons;
+use open20\amos\core\module\BaseAmosModule;
+use open20\amos\core\toolbar\NavBarOverriden as YiiNavBar;
+use open20\amos\core\utilities\CurrentUser;
 use Yii;
 use yii\web\JsExpression;
 use yii\helpers\Url;
 
 /**
  * Class NavBar - draws the toogle button for hamburger menu (small size screen)
- * @package lispa\amos\core\toolbar
+ * @package open20\amos\core\toolbar
  */
 class NavBar extends YiiNavBar
 {
@@ -44,7 +44,7 @@ class NavBar extends YiiNavBar
             }
             /* Configuration of Slideshow - begin */
             if (\Yii::$app->getModule('slideshow') && isset(\Yii::$app->params['slideshow']) && \Yii::$app->params['slideshow'] === TRUE) {
-                $slideshow = new \lispa\amos\slideshow\models\Slideshow;
+                $slideshow = new \open20\amos\slideshow\models\Slideshow;
                 $route = "/" . \Yii::$app->request->getPathInfo();
                 $idSlideshow = $slideshow->hasSlideshow($route);
                 $slideshowLabel = ($idSlideshow) ? $slideshow->findOne($idSlideshow)->label : NULL;                
@@ -67,7 +67,7 @@ class NavBar extends YiiNavBar
 
             /* Configuration of Slideshow - end  */
             /* Configurazione translation */
-            $headerMenu = new \lispa\amos\core\views\common\HeaderMenu();
+            $headerMenu = new \open20\amos\core\views\common\HeaderMenu();
             $menuTranslation = $headerMenu->getTranslationField();
 
             //if there is information page for policy or cookies - display link at the end of menu

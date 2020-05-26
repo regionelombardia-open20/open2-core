@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\views\assets
+ * @package    open20\amos\core\views\assets
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\views\assets;
+namespace open20\amos\core\views\assets;
 
 use yii\web\AssetBundle;
 
@@ -33,7 +33,7 @@ class AmosCalendarAsset extends AssetBundle
      */
     public $googleCalendar = false;
 
-    public $sourcePath = '@vendor/lispa/amos-core/views/assets/web';
+    public $sourcePath = '@vendor/open20/amos-core/views/assets/web';
 
     public $css = [
     ];

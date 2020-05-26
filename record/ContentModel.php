@@ -1,26 +1,29 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\record
+ * @package    open20\amos\core\record
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\record;
+namespace open20\amos\core\record;
 
-use lispa\amos\core\i18n\grammar\ContentModelGrammar;
-use lispa\amos\core\interfaces\ContentModelInterface;
-use lispa\amos\core\interfaces\ContentModelSearchInterface;
-use lispa\amos\core\interfaces\CrudModelInterface;
-use lispa\amos\core\interfaces\FacilitatorInterface;
-use lispa\amos\core\interfaces\ModelImageInterface;
-use lispa\amos\core\interfaces\SearchModelInterface;
-use lispa\amos\notificationmanager\record\NotifyRecord;
+use open20\amos\core\i18n\grammar\ContentModelGrammar;
+use open20\amos\core\interfaces\ContentModelInterface;
+use open20\amos\core\interfaces\ContentModelSearchInterface;
+use open20\amos\core\interfaces\CrudModelInterface;
+use open20\amos\core\interfaces\FacilitatorInterface;
+use open20\amos\core\interfaces\ModelImageInterface;
+use open20\amos\core\interfaces\SearchModelInterface;
+use open20\amos\notificationmanager\record\NotifyRecord;
+use open20\amos\notificationmanager\models\NotificationChannels;
+
 use Yii;
 use yii\base\Model;
+use yii\base\Event;
 use yii\data\ActiveDataProvider;
 use yii\data\Pagination;
 use yii\db\ActiveQuery;
@@ -29,7 +32,7 @@ use yii\helpers\Url;
 
 /**
  * Class ContentModel
- * @package lispa\amos\core\record
+ * @package open20\amos\core\record
  */
 abstract class ContentModel extends NotifyRecord implements ContentModelInterface, CrudModelInterface, SearchModelInterface, ContentModelSearchInterface, ModelImageInterface, FacilitatorInterface
 {
@@ -56,6 +59,11 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      */
     public $destinatari_pubblicazione;
 
+    /*
+     * @var boolean bypassscope to search for content without added scope
+     */
+    public $bypassScope = false;
+    
     /**
      * @inheritdoc
      */
@@ -146,7 +154,7 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
         $behaviors = [];
         if (\Yii::$app->getModule('attachments')) {
             $behaviors['fileBehavior'] = [
-                'class' => \lispa\amos\attachments\behaviors\FileBehavior::className()
+                'class' => \open20\amos\attachments\behaviors\FileBehavior::className()
             ];
         }
         if ($this->isSearch) {
@@ -250,6 +258,14 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
     /**
      * @inheritdoc
      */
+    public function getExternalFacilitatorRole()
+    {
+        return "FACILITATOR_EXTERNAL";
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getCwhValidationStatuses()
     {
         $validationStatuses = [];
@@ -295,6 +311,14 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
     public function getViewUrl()
     {
         return $this->getModelModuleName() . '/' . $this->getModelControllerName() . '/view';
+    }
+	
+    public function getBypassScope() {
+        return $this->bypassScope;
+    }
+
+    public function setBypassScope($bypassScope) {
+        $this->bypassScope = $bypassScope;
     }
 
     /**
@@ -435,12 +459,13 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
     public function applySearchFilters($query)
     {
         $searchFieldMatch = $this->searchFieldsMatch();
+        
         if (!empty($searchFieldMatch)) {
             foreach ($searchFieldMatch as $searchField) {
-                $query->andFilterWhere([$searchField => $this->{$searchField}]);
+                $query->andFilterWhere([static::tableName() . '.' . $searchField => $this->{$searchField}]);
             }
         }
-
+        
         $searchFieldLike = $this->searchFieldsLike();
         if (!empty($searchFieldLike)) {
             foreach ($searchFieldLike as $searchField) {
@@ -515,28 +540,31 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
         $this->setOrderVars($params);
         /** @var Record $className */
         $className = $this->modelClassName;
+        
         return $className::find()->distinct();
     }
 
     /**
-     * Content search method
-     *
-     * @param array $params
-     * @param string $queryType
-     * @param int|null $limit
-     * @return ActiveDataProvider
+     * 
+     * @param type $params
+     * @param type $queryType
+     * @param type $limit
+     * @param type $onlyDrafts
+     * @return type
      */
     public function search($params, $queryType = null, $limit = null, $onlyDrafts = false)
     {
+
         if (!empty($queryType)) {
             $query = $this->buildQuery($params, $queryType, $onlyDrafts);
         } else {
             $query = $this->baseSearch($params);
         }
+        
         $query->limit($limit);
 
         /** Switch off notifications - method of NotifyRecord */
-        $this->switchOffNotifications($query);
+        //        $this->switchOffNotifications($query);
 
         $dp_params = ['query' => $query,];
         if ($limit) {
@@ -667,7 +695,20 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      */
     public function buildQuery($params, $queryType, $onlyDrafts = false)
     {
+        $validByScopeIgnoreStatus = false;
+        $validByScopeIgnoreDates = false;
+        if (isset($params['validByScopeIgnoreStatus'])) {
+            $validByScopeIgnoreStatus = $params['validByScopeIgnoreStatus'];
+            unset($params['validByScopeIgnoreStatus']);
+        }
+        
+        if (isset($params['validByScopeIgnoreDates'])) {
+            $validByScopeIgnoreDates = $params['validByScopeIgnoreDates'];
+            unset($params['validByScopeIgnoreDates']);
+        }
+        
         $query = $this->baseSearch($params);
+        
         $classname = $this->modelClassName;
         $moduleCwh = \Yii::$app->getModule('cwh');
         $cwhActiveQuery = null;
@@ -675,13 +716,19 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
         $isSetCwh = !is_null($moduleCwh) && in_array($classname, $moduleCwh->modelsEnabled);
 
         if ($isSetCwh) {
-            /** @var \lispa\amos\cwh\AmosCwh $moduleCwh */
+            /** @var \open20\amos\cwh\AmosCwh $moduleCwh */
             $moduleCwh->setCwhScopeFromSession();
-            $cwhActiveQuery = new \lispa\amos\cwh\query\CwhActiveQuery(
-                $classname, [
-                'queryBase' => $query
-            ]);
+            $cwhActiveQuery = new \open20\amos\cwh\query\CwhActiveQuery(
+                $classname, 
+                [
+                    'queryBase' => $query,
+                    'bypassScope' => $this->getBypassScope()
+                ]
+            );
+            $cwhActiveQuery->validByScopeIgnoreStatus = $validByScopeIgnoreStatus;
+            $cwhActiveQuery->validByScopeIgnoreDates = $validByScopeIgnoreDates;
         }
+
         switch ($queryType) {
             case 'created-by':
                 if ($isSetCwh) {
@@ -726,6 +773,7 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
                     ]);
                     $this->getSearchQueryCwhDisabled($query);
                 }
+                
                 break;
             case 'admin-scope':
                 if ($isSetCwh) {
@@ -851,4 +899,42 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
         }
         return true;
     }
+    
+    /**
+     * 
+     * @param type $query
+     */
+    public function setEventAfterCounter()
+    {
+        Event::on(
+            \open20\amos\core\widget\WidgetIcon::className(),
+            \open20\amos\core\widget\WidgetIcon::EVENT_AFTER_COUNT,
+            [$this, 'notificationOffAfterCount']
+        );
+    }
+
+    /**
+     * Switch off notification service for not readed discussion notifications
+     */
+    public function notificationOffAfterCount()
+    {
+        /** @var \open20\amos\notificationmanager\AmosNotify $notify */
+        $notify = $this->getNotifier();
+
+        if ($notify) {
+            $query = \Yii::$app->session->get('_offQuery');
+
+            if ($query) {
+                \Yii::$app->session->get('_offQuery', null);
+
+                $notify->notificationOff(
+                    Yii::$app->getUser()->id,
+                    $this->modelClassName,
+                    $query,
+                    NotificationChannels::CHANNEL_READ
+                );
+            }
+        }
+    }
+
 }

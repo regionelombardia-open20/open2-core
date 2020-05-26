@@ -1,16 +1,26 @@
 <?php
 
+/**
+ * Aria S.p.A.
+ * OPEN 2.0
+ *
+ *
+ * @package    Open20Package
+ * @category   CategoryName
+ */
+
 /*
- * To change this proscription header, choose Proscription Headers in Project Properties.
+ * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 
-namespace lispa\amos\core\giiamos\model;
+namespace open20\amos\core\giiamos\model;
 
 /**
  * Description of GeneratoConfig
  *
+ * @author lisa.pelati
  */
 class GeneratoConfig {
 
@@ -41,33 +51,33 @@ class GeneratoConfig {
     public static function getDefinition() {
         return [
             'baseClassNames' => [
-                'ContentModel' => 'lispa\amos\core\record\ContentModel',
-                'Record' => 'lispa\amos\core\record\Record',
-                'NotifyRecord' => 'lispa\amos\notificationmanager\record\NotifyRecord'
+                'ContentModel' => 'open20\amos\core\record\ContentModel',
+                'Record' => 'open20\amos\core\record\Record',
+                'NotifyRecord' => 'open20\amos\notificationmanager\record\NotifyRecord'
             ],
             'baseInterfaceNames' => [
-                'CommentInterface' => 'lispa\amos\comments\models\CommentInterface',
-                'ContentModelInterface' => 'lispa\amos\core\interfaces\ContentModelInterface',
-                'ModelImageInterface' => 'lispa\amos\core\interfaces\ModelImageInterface',
-                'ViewModelInterface' => 'lispa\amos\core\interfaces\ViewModelInterface',
-                'SeoModelInterface' => 'lispa\amos\seo\interfaces\SeoModelInterface',
-                'NotifyRecordInterface' => 'lispa\amos\notificationmanager\record\NotifyRecordInterface',
-                'StatsToolbarInterface' => 'lispa\amos\core\interfaces\StatsToolbarInterface',
-                'ContentModelSearchInterface' => 'lispa\amos\core\interfaces\ContentModelSearchInterface',
-                'SearchModelInterface' => 'lispa\amos\core\interfaces\SearchModelInterface',
+                'CommentInterface' => 'open20\amos\comments\models\CommentInterface',
+                'ContentModelInterface' => 'open20\amos\core\interfaces\ContentModelInterface',
+                'ModelImageInterface' => 'open20\amos\core\interfaces\ModelImageInterface',
+                'ViewModelInterface' => 'open20\amos\core\interfaces\ViewModelInterface',
+                'SeoModelInterface' => 'open20\amos\seo\interfaces\SeoModelInterface',
+                'NotifyRecordInterface' => 'open20\amos\notificationmanager\record\NotifyRecordInterface',
+                'StatsToolbarInterface' => 'open20\amos\core\interfaces\StatsToolbarInterface',
+                'ContentModelSearchInterface' => 'open20\amos\core\interfaces\ContentModelSearchInterface',
+                'SearchModelInterface' => 'open20\amos\core\interfaces\SearchModelInterface',
             ],
             'ContentModel' => [
-                'ContentModelInterface' => 'lispa\amos\core\interfaces\ContentModelInterface',
-                'ViewModelInterface' => 'lispa\amos\core\interfaces\ViewModelInterface',
-                'ContentModelSearchInterface' => 'lispa\amos\core\interfaces\ContentModelSearchInterface',
-                'ModelImageInterface' => 'lispa\amos\core\interfaces\ModelImageInterface',
-                'SearchModelInterface' => 'lispa\amos\core\interfaces\SearchModelInterface',
+                'ContentModelInterface' => 'open20\amos\core\interfaces\ContentModelInterface',
+                'ViewModelInterface' => 'open20\amos\core\interfaces\ViewModelInterface',
+                'ContentModelSearchInterface' => 'open20\amos\core\interfaces\ContentModelSearchInterface',
+                'ModelImageInterface' => 'open20\amos\core\interfaces\ModelImageInterface',
+                'SearchModelInterface' => 'open20\amos\core\interfaces\SearchModelInterface',
             ],
             'Record' => [
-                'StatsToolbarInterface' => 'lispa\amos\core\interfaces\StatsToolbarInterface',
+                'StatsToolbarInterface' => 'open20\amos\core\interfaces\StatsToolbarInterface',
             ],
             'NotifyRecord' => [
-                'NotifyRecordInterface' => 'lispa\amos\notificationmanager\record\NotifyRecordInterface',
+                'NotifyRecordInterface' => 'open20\amos\notificationmanager\record\NotifyRecordInterface',
             ],
         ];
     }

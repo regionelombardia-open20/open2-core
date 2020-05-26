@@ -1,17 +1,16 @@
 <?php
-
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\user
+ * @package    open20\amos\core\user
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\user;
+namespace open20\amos\core\user;
 
-use lispa\amos\core\record\Record;
+use open20\amos\core\record\Record;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\web\IdentityInterface;
@@ -29,15 +28,15 @@ use yii\web\IdentityInterface;
  * @property integer $created_at
  * @property integer $updated_at
  * @property string $password write-only password
- * @property \lispa\amos\admin\models\UserProfile $userProfile
+ * @property \open20\amos\admin\models\UserProfile $userProfile
  */
 class User extends Record implements IdentityInterface
 {
     const STATUS_DELETED = 0;
-    const STATUS_ACTIVE = 10;
+    const STATUS_ACTIVE  = 10;
 
     protected $adminInstalled = NULL;
-    protected $userProfile = null;
+    protected $userProfile    = null;
 
     /**
      * @inheritdoc
@@ -66,8 +65,11 @@ class User extends Record implements IdentityInterface
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
             [['username', 'email'], 'safe'],
             [['email'], 'required'],
-            [['username', 'email'], 'unique'],
+            [['email'], 'unique'],
+            [['username'], 'unique', 'skipOnEmpty' => true],
             [['email'], 'email'],
+            ['password_reset_token', 'default', 'value' => null],
+            ['username', 'default', 'value' => null],
         ];
     }
 
@@ -117,7 +119,7 @@ class User extends Record implements IdentityInterface
      */
     public static function findByEmail($email)
     {
-        $condition = ['email' => $email, 'status' => self::STATUS_ACTIVE];
+        $condition       = ['email' => $email, 'status' => self::STATUS_ACTIVE];
         $allUsersByEmail = static::findAll($condition);
         if (count($allUsersByEmail) > 1) {
             return null;
@@ -133,7 +135,7 @@ class User extends Record implements IdentityInterface
      */
     public static function findByEmailInactive($email)
     {
-        $condition = ['email' => $email, 'status' => self::STATUS_DELETED];
+        $condition       = ['email' => $email, 'status' => self::STATUS_DELETED];
         $allUsersByEmail = static::findAll($condition);
         if (count($allUsersByEmail) > 1) {
             return null;
@@ -184,8 +186,8 @@ class User extends Record implements IdentityInterface
         }
 
         return static::findOne([
-            'password_reset_token' => $token,
-            'status' => self::STATUS_ACTIVE,
+                'password_reset_token' => $token,
+                'status' => self::STATUS_ACTIVE,
         ]);
     }
 
@@ -201,8 +203,8 @@ class User extends Record implements IdentityInterface
             return false;
         }
 
-        $timestamp = (int)substr($token, strrpos($token, '_') + 1);
-        $expire = Yii::$app->params['user.passwordResetTokenExpire'];
+        $timestamp = (int) substr($token, strrpos($token, '_') + 1);
+        $expire    = Yii::$app->params['user.passwordResetTokenExpire'];
         return $timestamp + $expire >= time();
     }
 
@@ -264,7 +266,7 @@ class User extends Record implements IdentityInterface
      */
     public function generatePasswordResetToken()
     {
-        $this->password_reset_token = Yii::$app->security->generateRandomString() . '_' . time();
+        $this->password_reset_token = Yii::$app->security->generateRandomString().'_'.time();
     }
 
     /**
@@ -281,7 +283,7 @@ class User extends Record implements IdentityInterface
     public function getUserProfile()
     {
         if ($this->adminInstalled) {
-            $modelClass = \lispa\amos\admin\AmosAdmin::instance()->createModel('UserProfile');
+            $modelClass = \open20\amos\admin\AmosAdmin::instance()->createModel('UserProfile');
             return $this->hasOne($modelClass::className(), ['user_id' => 'id']);
         } else {
             return null;
@@ -294,8 +296,7 @@ class User extends Record implements IdentityInterface
     public function getProfile()
     {
         if ($this->adminInstalled) {
-            if(is_null($this->userProfile))
-            {
+            if (is_null($this->userProfile)) {
                 $this->userProfile = $this->getUserProfile()->one();
             }
             return $this->userProfile;

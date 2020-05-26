@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\giiamos\model\default
+ * @package    open20\amos\core\giiamos\model\default
  * @category   CategoryName
  */
 use yii\helpers\Inflector;
@@ -112,7 +112,7 @@ if (empty($representingColumn) && strlen($primoCampo)) {
 public function attributeHints(){
 return [
 <?php foreach ($generator->newRules as $key => $value) { ?>
-    '<?= $key ?>' => \Yii::t('app', '<?= addslashes(isset($value['hints']) ? $value['hints'] : '') ?>'),
+    '<?= $key ?>' => \Yii::t('amosapp', '<?= addslashes(isset($value['hints']) ? $value['hints'] : '') ?>'),
 <?php } ?>
 ];
 }
@@ -121,6 +121,7 @@ return [
 * Returns the text hint for the specified attribute.
 * @param string $attribute the attribute name
 * @return string the attribute hint
+* @see attributeHints
 */
 public function getAttributeHint($attribute) {
 $hints = $this->attributeHints();
@@ -439,6 +440,7 @@ foreach ($tableSchema->columns as $attribute) {
         ?>
         /**
         *  @inheritdoc
+        *  @see <?= array_pop($pathsee) ?>::<?= $key ?>
         */
         public function <?= $key ?>(<?= $str ? substr($str, 0, -1) : '' ?>) {
         //

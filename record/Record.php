@@ -1,26 +1,25 @@
 <?php
-
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\record
+ * @package    open20\amos\core\record
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\record;
+namespace open20\amos\core\record;
 
-use lispa\amos\core\behaviors\BlameableBehavior;
-use lispa\amos\core\behaviors\EJsonBehavior;
-use lispa\amos\core\behaviors\SoftDeleteByBehavior;
-use lispa\amos\core\behaviors\VersionableBehaviour;
-use lispa\amos\core\interfaces\StatsToolbarInterface;
-use lispa\amos\core\interfaces\WorkflowModelInterface;
-use lispa\amos\core\module\AmosModule;
-use lispa\amos\core\module\BaseAmosModule;
-use lispa\amos\core\utilities\StringUtils;
-use lispa\amos\core\utilities\WorkflowTransitionWidgetUtility;
+use open20\amos\core\behaviors\BlameableBehavior;
+use open20\amos\core\behaviors\EJsonBehavior;
+use open20\amos\core\behaviors\SoftDeleteByBehavior;
+use open20\amos\core\behaviors\VersionableBehaviour;
+use open20\amos\core\interfaces\StatsToolbarInterface;
+use open20\amos\core\interfaces\WorkflowModelInterface;
+use open20\amos\core\module\AmosModule;
+use open20\amos\core\module\BaseAmosModule;
+use open20\amos\core\utilities\StringUtils;
+use open20\amos\core\utilities\WorkflowTransitionWidgetUtility;
 use raoul2000\workflow\base\SimpleWorkflowBehavior;
 use raoul2000\workflow\base\Status;
 use Yii;
@@ -38,12 +37,12 @@ use yii\web\Application as Web;
 /**
  * Class Record
  *
- * @property \lispa\amos\admin\models\UserProfile $createdUserProfile
- * @property \lispa\amos\admin\models\UserProfile $updatedUserProfile
- * @property \lispa\amos\admin\models\UserProfile $deletedUserProfile
+ * @property \open20\amos\admin\models\UserProfile $createdUserProfile
+ * @property \open20\amos\admin\models\UserProfile $updatedUserProfile
+ * @property \open20\amos\admin\models\UserProfile $deletedUserProfile
  * @property string $workflowStatusLabel
  *
- * @package lispa\amos\core\record
+ * @package open20\amos\core\record
  */
 class Record extends ActiveRecord implements StatsToolbarInterface
 {
@@ -64,10 +63,8 @@ class Record extends ActiveRecord implements StatsToolbarInterface
     /**
      * @var integer ORDER ascending (SORT_ASC), descending (SORT_DESC)
      */
-    public $orderType = NULL;
-
+    public $orderType         = NULL;
     protected $adminInstalled = NULL;
-
     public $tagsMandatory;
 
     /**
@@ -80,7 +77,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface
      */
     public function scenarios()
     {
-        $scenarios = parent::scenarios();
+        $scenarios                               = parent::scenarios();
         $scenarios[self::SCENARIO_FAKE_REQUIRED] = $scenarios[self::SCENARIO_DEFAULT];
         return $scenarios;
     }
@@ -94,11 +91,11 @@ class Record extends ActiveRecord implements StatsToolbarInterface
     public static function find()
     {
         $className = get_called_class();
-        $model = new $className();
-        $return = parent::find();
+        $model     = new $className();
+        $return    = parent::find();
         if ($model->hasAttribute('deleted_at')) {
             $tableName = $className::tableName();
-            $return->andWhere([$tableName . '.deleted_at' => null]);
+            $return->andWhere([$tableName.'.deleted_at' => null]);
         }
         return $return;
     }
@@ -130,14 +127,13 @@ class Record extends ActiveRecord implements StatsToolbarInterface
     }
 
     /**
-     *Init the order variables from the module config
+     * Init the order variables from the module config
      */
     public function initOrderVars()
     {
         //if the search is enabled
         if (
-            isset(\Yii::$app->controller->module)
-            &&
+            isset(\Yii::$app->controller->module) &&
             isset(\Yii::$app->controller->module->params['orderParams'][\Yii::$app->controller->id])
         ) {
             //clean var
@@ -145,8 +141,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface
 
             //check if is set an array of order params
             if (
-                isset($moduleParams['fields'])
-                &&
+                isset($moduleParams['fields']) &&
                 $moduleParams['fields']
             ) {
                 $this->setOrderAttributes($moduleParams['fields']);
@@ -154,8 +149,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface
 
             //check if is set a default value
             if (
-                isset($moduleParams['default_field'])
-                &&
+                isset($moduleParams['default_field']) &&
                 $moduleParams['default_field']
             ) {
                 $this->setOrderAttribute($moduleParams['default_field']);
@@ -163,8 +157,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface
 
             //check if is set a default order value
             if (
-                isset($moduleParams['order_type'])
-                &&
+                isset($moduleParams['order_type']) &&
                 $moduleParams['order_type']
             ) {
                 $this->setOrderType($moduleParams['order_type']);
@@ -177,7 +170,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface
      */
     public function rules()
     {
-        $rules = parent::rules();
+        $rules     = parent::rules();
         $cwhModule = \Yii::$app->getModule('cwh');
         if ($this->isEnabledCwh($cwhModule)) {
             if ($this->isEnabledTag()) {
@@ -199,16 +192,15 @@ class Record extends ActiveRecord implements StatsToolbarInterface
                         ]
                     ];
                 } else {
-                    $tagRoots = \lispa\amos\tag\models\TagModelsAuthItemsMm::find()->andWhere(['classname' => $this->className()])->addSelect('tag_id')->groupBy('tag_id')->column();
+                    $tagRoots = \open20\amos\tag\models\TagModelsAuthItemsMm::find()->andWhere(['classname' => $this->className()])->addSelect('tag_id')->groupBy('tag_id')->column();
                     if ($tagRoots) {
                         $ruleTags = [
                             [
                                 'tagsMandatory',
                                 'required',
                                 'when' => function ($model) use ($tagRoots) {
-                                    if (!is_null($model->regola_pubblicazione)
-                                        && in_array($model->regola_pubblicazione, [2, 4])
-                                        && empty($model->tagValues)
+                                    if (!is_null($model->regola_pubblicazione) && in_array($model->regola_pubblicazione,
+                                            [2, 4]) && empty($model->tagValues)
                                     ) {
                                         $formTags = $_POST[$this->formName()]['tagValues'];
                                         if (empty($formTags)) {
@@ -224,7 +216,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface
                                 },
                                 'whenClient' => "function (attribute, value) {
                                     var regolaPubblicazione = $('#cwh-regola_pubblicazione');
-                                    var tagValueTrees = $('input[name^=\"" . $this->formName() . "[tagValues][\"]');
+                                    var tagValueTrees = $('input[name^=\"".$this->formName()."[tagValues][\"]');
                                     var selectedEachTree = true;
                                     $.each( tagValueTrees, function( i, tagsSelected ) {
                                         if(tagsSelected.value == '' || tagsSelected.value.length == 0 ){
@@ -281,7 +273,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface
      */
     public function setOrderType($type = SORT_ASC)
     {
-        $this->orderType = (int)$type;
+        $this->orderType = (int) $type;
         return true;
     }
 
@@ -292,13 +284,11 @@ class Record extends ActiveRecord implements StatsToolbarInterface
      */
     public function setOrderVars($params)
     {
-        $classSearch = Inflector::id2camel(\Yii::$app->controller->id, '-') . 'Search';
+        $classSearch = Inflector::id2camel(\Yii::$app->controller->id, '-').'Search';
 
         if (
-            array_key_exists($classSearch, $params)
-            &&
-            array_key_exists("orderAttribute", $params[$classSearch])
-            &&
+            array_key_exists($classSearch, $params) &&
+            array_key_exists("orderAttribute", $params[$classSearch]) &&
             array_key_exists("orderType", $params[$classSearch])
         ) {
             $this->setOrderAttribute($params[$classSearch]["orderAttribute"]);
@@ -322,7 +312,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface
     public function init()
     {
         parent::init();
-        $this->adminInstalled = \Yii::$app->getModule('admin');
+        $this->adminInstalled  = \Yii::$app->getModule('admin');
         $this->reflectionClass = new \ReflectionClass(static::className());
     }
 
@@ -332,13 +322,13 @@ class Record extends ActiveRecord implements StatsToolbarInterface
     public function attributeLabels()
     {
         return ArrayHelper::merge(parent::attributeLabels(),
-            [
+                [
                 'orderAttribute' => \Yii::t('amoscore', 'Campo di ordinamento'),
                 'orderType' => \Yii::t('amoscore', 'Criterio di ordinamento'),
                 'createdUserProfile' => \Yii::t('amoscore', 'Creato da'),
                 'updatedUserProfile' => \Yii::t('amoscore', 'Ultimo aggiornamento di'),
                 'deletedUserProfile' => \Yii::t('amoscore', 'Cancellato da')
-            ]
+                ]
         );
     }
 
@@ -349,7 +339,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface
     {
         $behaviorsParent = parent::behaviors();
 
-        $behaviors = [
+        $behaviors             = [
             "EJsonBehavior" => [
                 'class' => EJsonBehavior::className()
             ],
@@ -386,23 +376,24 @@ class Record extends ActiveRecord implements StatsToolbarInterface
     {
         $representingColumn = $this->representingColumn();
         if (($representingColumn === null) || ($representingColumn === array()))
-            if ($this->getTableSchema()->primaryKey !== null) {
+                if ($this->getTableSchema()->primaryKey !== null) {
                 $representingColumn = $this->getTableSchema()->primaryKey;
             } else {
-                $columnNames = $this->getTableSchema()->getColumnNames();
+                $columnNames        = $this->getTableSchema()->getColumnNames();
                 $representingColumn = $columnNames[0];
             }
 
         if (is_array($representingColumn)) {
             $part = '';
             foreach ($representingColumn as $representingColumn_item) {
-                $part .= ($this->$representingColumn_item === null ? '' : $this->__shortText($this->$representingColumn_item, 30)) . ' ';
+                $part .= ($this->$representingColumn_item === null ? '' : $this->__shortText($this->$representingColumn_item,
+                        30)).' ';
             }
             return substr($part, 0, -1);
         } elseif (is_string($representingColumn)) {
             return $representingColumn;
         } else {
-            return $this->$representingColumn === null ? '' : (string)$this->$representingColumn;
+            return $this->$representingColumn === null ? '' : (string) $this->$representingColumn;
         }
     }
 
@@ -410,23 +401,24 @@ class Record extends ActiveRecord implements StatsToolbarInterface
     {
         $representingColumn = $this->representingColumn();
         if (($representingColumn === null) || ($representingColumn === array()))
-            if ($this->getTableSchema()->primaryKey !== null) {
+                if ($this->getTableSchema()->primaryKey !== null) {
                 $representingColumn = $this->getTableSchema()->primaryKey;
             } else {
-                $columnNames = $this->getTableSchema()->getColumnNames();
+                $columnNames        = $this->getTableSchema()->getColumnNames();
                 $representingColumn = $columnNames[0];
             }
 
         if (is_array($representingColumn)) {
             $part = '';
             foreach ($representingColumn as $representingColumn_item) {
-                $part .= ($this->$representingColumn_item === null ? '' : $this->__shortText($this->$representingColumn_item, $char_limit)) . ' ';
+                $part .= ($this->$representingColumn_item === null ? '' : $this->__shortText($this->$representingColumn_item,
+                        $char_limit)).' ';
             }
             return substr($part, 0, -1);
         } elseif (is_string($representingColumn)) {
             return $representingColumn;
         } else {
-            return $this->$representingColumn === null ? '' : (string)$this->$representingColumn;
+            return $this->$representingColumn === null ? '' : (string) $this->$representingColumn;
         }
     }
 
@@ -468,8 +460,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface
             }
 
             //Return it
-            return $asString . "...";
-
+            return $asString."...";
         } else {
             return $asString;
         }
@@ -481,7 +472,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface
     public function getCreatedUserProfile()
     {
         if ($this->adminInstalled) {
-            $modelClass = \lispa\amos\admin\AmosAdmin::instance()->createModel('UserProfile');
+            $modelClass = \open20\amos\admin\AmosAdmin::instance()->createModel('UserProfile');
             return $this->hasOne($modelClass::className(), ['user_id' => 'created_by']);
         } else {
             return null;
@@ -494,7 +485,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface
     public function getUpdatedUserProfile()
     {
         if ($this->adminInstalled) {
-            $modelClass = \lispa\amos\admin\AmosAdmin::instance()->createModel('UserProfile');
+            $modelClass = \open20\amos\admin\AmosAdmin::instance()->createModel('UserProfile');
             return $this->hasOne($modelClass::className(), ['user_id' => 'updated_by']);
         } else {
             return null;
@@ -507,7 +498,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface
     public function getDeletedUserProfile()
     {
         if ($this->adminInstalled) {
-            $modelClass = \lispa\amos\admin\AmosAdmin::instance()->createModel('UserProfile');
+            $modelClass = \open20\amos\admin\AmosAdmin::instance()->createModel('UserProfile');
             return $this->hasOne($modelClass::className(), ['user_id' => 'deleted_by']);
         } else {
             return null;
@@ -524,7 +515,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface
         $isDemo = $this->isDemo();
 
         if ($isDemo && (Yii::$app instanceof Web) && $this->inBlackList()) {
-            $key = 'success';
+            $key     = 'success';
             $message = BaseAmosModule::t('amoscore', 'In Demo non &eacute; possibile modificare i contenuti');
             $flashes = Yii::$app->session->getFlash($key);
             if (!Yii::$app->session->hasFlash($key) || !in_array($message, $flashes)) {
@@ -562,7 +553,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface
                   ON DUPLICATE KEY UPDATE updates = updates + 1, updated_at = now()"
             )->execute();
         }
-
+        
         parent::afterSave($insert, $changedAttributes);
     }
 
@@ -581,8 +572,9 @@ class Record extends ActiveRecord implements StatsToolbarInterface
      */
     private function inBlackList()
     {
-        $ret = false;
-        $demoModelBlackList = isset(\Yii::$app->params['demoModelBlackList']) ? \Yii::$app->params['demoModelBlackList'] : [];
+        $ret                = false;
+        $demoModelBlackList = isset(\Yii::$app->params['demoModelBlackList']) ? \Yii::$app->params['demoModelBlackList']
+                : [];
         foreach ($demoModelBlackList as $cls) {
             if ($this instanceof $cls) {
                 $ret = true;
@@ -601,7 +593,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface
         $isDemo = $this->isDemo();
 
         if ($isDemo && (Yii::$app instanceof Web)) {
-            $key = 'success';
+            $key     = 'success';
             $message = BaseAmosModule::t('amoscore', 'In Demo non &eacute; possibile modificare i contenuti');
             $flashes = Yii::$app->session->getFlash($key);
             if (!Yii::$app->session->hasFlash($key) || !in_array($message, $flashes)) {
@@ -618,7 +610,15 @@ class Record extends ActiveRecord implements StatsToolbarInterface
      */
     public function beforeValidate()
     {
-        if (isset(Yii::$app->params['forms-purify-data']) && (Yii::$app->params['forms-purify-data'] == true)) {
+
+        $enablePurifyDataParam = true;
+        
+        if (isset(Yii::$app->params['forms-purify-data']) && (Yii::$app->params['forms-purify-data'] == false)) {
+            $enablePurifyDataParam = false;
+        }
+        
+        if ($enablePurifyDataParam == true){
+          
             if (isset(Yii::$app->params['forms-purify-data-white-models'])) {
                 $listClassModels = Yii::$app->params['forms-purify-data-white-models'];
                 if (in_array($this->className(), $listClassModels)) {
@@ -628,9 +628,24 @@ class Record extends ActiveRecord implements StatsToolbarInterface
 
             $listAttributes = $this->attributes;
             foreach ($listAttributes as $key => $attribute) {
-                $this->$key = HtmlPurifier::process($this->$key);
-            }
+                if (is_string($this->$key)) {
+                    $config = [
+                        // Change from 'XHTML 1.0 Strict'.
+                        'HTML.Doctype' => 'XHTML 1.0 Transitional',
+                        // Change from 'XHTML 1.0 Strict'.
+                        'HTML.Allowed' => 'a[href],h1,h2,h3,h4,h5,h6,b,strong,i,em,ul,ol,li,p[style],br,span,img[width|height|alt|src],iframe[width|height|src|frameborder]',
+                        // Finally add the following lines:
+                        'HTML.SafeIframe' => true,
+                        'URI.SafeIframeRegexp' => '%^(http://|https://|//)(www.youtube.com/embed/|player.vimeo.com/video/)%',
+                    ];
 
+                    if (!empty(\Yii::$app->params['forms-purify-data-config'])) {
+                        $config = \Yii::$app->params['forms-purify-data-config'];
+                    }
+
+                    $this->$key = HtmlPurifier::process(trim($this->$key), $config);
+                }
+            }
         }
         return parent::beforeValidate();
     }
@@ -646,17 +661,16 @@ class Record extends ActiveRecord implements StatsToolbarInterface
         try {
             $moduleCwh = Yii::$app->getModule('cwh');
             if ($this->isEnabledCwh($moduleCwh)) {
-                $users = \lispa\amos\cwh\models\CwhAuthAssignment::find()->andWhere([
-                    'item_name' => $moduleCwh->permissionPrefix . '_VALIDATE_' . $this->className(),
-                ])->andWhere(['in', 'cwh_nodi_id', $this->validatori])
-                    ->select('user_id')->groupBy('user_id')->asArray()->column();
+                $users = \open20\amos\cwh\models\CwhAuthAssignment::find()->andWhere([
+                            'item_name' => $moduleCwh->permissionPrefix.'_VALIDATE_'.$this->className(),
+                        ])->andWhere(['in', 'cwh_nodi_id', $this->validatori])
+                        ->select('user_id')->groupBy('user_id')->asArray()->column();
             }
             if (empty($users) && $this instanceof WorkflowModelInterface) {
                 $validatorRole = $this->getValidatorRole();
-                $authManager = \Yii::$app->authManager;
-                $users = $authManager->getUserIdsByRole($validatorRole);
+                $authManager   = \Yii::$app->authManager;
+                $users         = $authManager->getUserIdsByRole($validatorRole);
             }
-
         } catch (\Exception $ex) {
             Yii::getLogger()->log($ex->getMessage(), \yii\log\Logger::LEVEL_ERROR);
         }
@@ -671,11 +685,11 @@ class Record extends ActiveRecord implements StatsToolbarInterface
         $panels = [];
 
         $behaviors = $this->getBehaviors();
-        /**@var $behavior Behavior */
+        /*         * @var $behavior Behavior */
         foreach ($behaviors as $behavior) {
             if ($behavior->hasMethod(__FUNCTION__)) {
                 $panelsAttributes = $behavior->{__FUNCTION__}($disableLink);
-                $panels = ArrayHelper::merge($panels, $panelsAttributes);
+                $panels           = ArrayHelper::merge($panels, $panelsAttributes);
             }
         }
 
@@ -689,7 +703,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface
      */
     public function findBehaviorByClassName($className)
     {
-        $behaviors = $this->getBehaviors();
+        $behaviors        = $this->getBehaviors();
         $behaviorToReturn = null;
         foreach ($behaviors as $index => $behavior) {
             /** @var Behavior $behavior */
@@ -750,8 +764,8 @@ class Record extends ActiveRecord implements StatsToolbarInterface
         $newFormFieldNamesAndIds = [];
         foreach ($this->attributes() as $attribute) {
             $newFormFieldNamesAndIds[$attribute] = [
-                'name' => $this->formName() . $formNameSuffix . '[' . $attribute . ']',
-                'id' => strtolower($this->formName()) . '-' . strtolower($formNameSuffix) . '-' . $attribute,
+                'name' => $this->formName().$formNameSuffix.'['.$attribute.']',
+                'id' => strtolower($this->formName()).'-'.strtolower($formNameSuffix).'-'.$attribute,
             ];
         }
         return $newFormFieldNamesAndIds;
@@ -764,7 +778,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface
      */
     public function getWorkflowBaseStatusLabel()
     {
-        $label = '';
+        $label       = '';
         $hasWorkflow = false;
         if ($this->getBehavior('workflow') || $this->findBehaviorByClassName(SimpleWorkflowBehavior::className())) {
             $hasWorkflow = true;
@@ -786,7 +800,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface
      */
     public function getWorkflowStatusLabel()
     {
-        $label = '';
+        $label       = '';
         $hasWorkflow = false;
         if ($this->getBehavior('workflow') || $this->findBehaviorByClassName(SimpleWorkflowBehavior::className())) {
             $hasWorkflow = true;
@@ -826,13 +840,13 @@ class Record extends ActiveRecord implements StatsToolbarInterface
         $className = $dataProvider->query->modelClass;
 
         // Verifico se il modulo supporta i TAG e, in caso, ricerco anche fra quelli
-        $moduleTag = Yii::$app->getModule('tag');
+        $moduleTag       = Yii::$app->getModule('tag');
         $enableTagSearch = (isset($moduleTag) && in_array($className, $moduleTag->modelsEnabled));
 
         $searchModels = [];
         if ($enableTagSearch) {
             $dataProvider->query->leftJoin('entitys_tags_mm e_tag',
-                "e_tag.record_id= " . $tableName . ".id AND e_tag.deleted_at IS NULL AND e_tag.classname='" . addslashes($className) . "'");
+                "e_tag.record_id= ".$tableName.".id AND e_tag.deleted_at IS NULL AND e_tag.classname='".addslashes($className)."'");
 
             $dataProvider->query->leftJoin('tag t', "e_tag.tag_id=t.id");
             if ($tagIds) {
@@ -897,7 +911,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface
      */
     public function getModelModuleName()
     {
-        $namespaceName = $this->reflectionClass->getNamespaceName();
+        $namespaceName  = $this->reflectionClass->getNamespaceName();
         $splitNamespace = explode('\\', $namespaceName);
         do {
             $moduleName = array_pop($splitNamespace);
@@ -913,17 +927,55 @@ class Record extends ActiveRecord implements StatsToolbarInterface
      */
     public function getModelControllerName()
     {
-        $modelShortName = $this->reflectionClass->getShortName();
-        $pieces = StringUtils::splitAtUpperCase($modelShortName);
+        $modelShortName      = $this->reflectionClass->getShortName();
+        $pieces              = StringUtils::splitAtUpperCase($modelShortName);
         $modelControllerName = '';
-        $isFirst = true;
+        $isFirst             = true;
         foreach ($pieces as $piece) {
             if (!$isFirst) {
                 $modelControllerName .= '-';
             }
             $modelControllerName .= strtolower($piece);
-            $isFirst = false;
+            $isFirst             = false;
         }
         return $modelControllerName;
+    }
+
+    /**
+     * 
+     * @return type
+     */
+    public function getCloseCommentThread()
+    {
+        return null;
+    }
+
+    /**
+     * 
+     * @param type $closeCommentThread
+     */
+    public function setCloseCommentThread($closeCommentThread)
+    {
+
+    }
+
+    private function updateFrequentlyCommunityUpdate()
+    {
+        Url::remember();
+        $moduleCwh       = \Yii::$app->getModule('cwh');
+        $moduleCommunity = \Yii::$app->getModule('community');
+
+        if (isset($moduleCommunity) && isset($moduleCwh) && !empty($moduleCwh->getCwhScope())) {
+            $scope = $moduleCwh->getCwhScope();
+            if (isset($scope['community'])) {
+                $id        = $scope['community'];
+                $community = \open20\amos\community\models\Community::findOne($id);
+                if (!empty($community)) {
+                    $this->modelSearch->community_id = $id;
+
+                    // salvare l'aggioamento della community
+                }
+            }
+        }
     }
 }

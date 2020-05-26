@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\giiamos\crud\providers
+ * @package    open20\amos\core\giiamos\crud\providers
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\giiamos\crud\providers;
+namespace open20\amos\core\giiamos\crud\providers;
 
 class RelationProvider extends \schmunk42\giiant\generators\crud\providers\core\RelationProvider
 {

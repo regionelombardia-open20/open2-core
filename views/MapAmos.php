@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\views
+ * @package    open20\amos\core\views
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\views;
+namespace open20\amos\core\views;
 
 use dosamigos\google\maps\overlays\Marker;
 use dosamigos\google\maps\Map;
@@ -24,7 +24,7 @@ use yii\helpers\Html;
 use yii\web\JsExpression;
 use yii\web\View;
 use yii\helpers\ArrayHelper;
-//use lispa\amos\core\views\assets\AmosMapAsset;
+//use open20\amos\core\views\assets\AmosMapAsset;
 use dosamigos\google\maps\PluginAbstract;
 
 /**

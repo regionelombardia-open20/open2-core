@@ -1,19 +1,19 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\utilities
+ * @package    open20\amos\core\utilities
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\utilities;
+namespace open20\amos\core\utilities;
 
 /**
  * Class StringUtils
- * @package lispa\amos\core\utilities
+ * @package open20\amos\core\utilities
  */
 final class StringUtils
 {
@@ -1155,6 +1155,7 @@ final class StringUtils
      *
      * @return string|null The capitalized `string` or `null` if `null` `string`
      *    input.
+     * @see StringUtils::uncapitalize, WordUtils::capitalize
      */
     public static function capitalize($str)
     {
@@ -1176,6 +1177,7 @@ final class StringUtils
      *
      * @return string|null The uncapitalized `string` or `null` if `null`
      *    `string` input.
+     * @see StringUtils::capitalize, WordUtils::uncapitalize
      */
     public static function uncapitalize($str)
     {

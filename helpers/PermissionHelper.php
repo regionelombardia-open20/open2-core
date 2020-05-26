@@ -1,20 +1,20 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\helpers
+ * @package    open20\amos\core\helpers
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\helpers;
+namespace open20\amos\core\helpers;
 
 /**
  * Class PermissionHelper
  * Generic functionality of use for permission management
- * @package lispa\amos\core\helpers
+ * @package open20\amos\core\helpers
  */
 class PermissionHelper
 {

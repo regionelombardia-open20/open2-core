@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\behaviors
+ * @package    open20\amos\core\behaviors
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\behaviors;
+namespace open20\amos\core\behaviors;
 
 use Yii;
 use yii\base\Behavior;
@@ -22,7 +22,7 @@ use yii\helpers\Inflector;
 
 /**
  * Class SluggableAmosBehavior
- * @package lispa\amos\core\behaviors
+ * @package open20\amos\core\behaviors
  */
 class SluggableAmosBehavior extends SluggableBehavior
 {

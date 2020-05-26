@@ -1,23 +1,23 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms
+ * @package    open20\amos\core\forms
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\forms;
+namespace open20\amos\core\forms;
 
-use lispa\amos\core\interfaces\ContentSettingsMenuInterface;
+use open20\amos\core\interfaces\ContentSettingsMenuInterface;
 use Yii;
 use yii\base\Widget;
 
 /**
  * Class ContentSettingsMenuWidget
- * @package lispa\amos\core\forms
+ * @package open20\amos\core\forms
  */
 class ContentSettingsMenuWidget extends Widget
 {
@@ -29,7 +29,7 @@ class ContentSettingsMenuWidget extends Widget
     /**
      * @var string $widgetView Widget view
      */
-    public $widgetView = "@vendor/lispa/amos-core/forms/views/widgets/content_settings_menu_widget";
+    public $widgetView = "@vendor/open20/amos-core/forms/views/widgets/content_settings_menu_widget";
 
     /**
      * @var string $mainDivClasses Standard widget classes. If is set in widget options, this variable is overwritten

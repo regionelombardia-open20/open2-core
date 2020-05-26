@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\module
+ * @package    open20\amos\core\module
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\module;
+namespace open20\amos\core\module;
 
 interface ModuleInterface
 {

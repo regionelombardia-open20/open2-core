@@ -1,22 +1,22 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms
+ * @package    open20\amos\core\forms
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\forms;
+namespace open20\amos\core\forms;
 
-use lispa\amos\admin\AmosAdmin;
-use lispa\amos\core\helpers\Html;
-use lispa\amos\core\icons\AmosIcons;
-use lispa\amos\core\module\BaseAmosModule;
-use lispa\amos\tag\AmosTag;
-use lispa\amos\tag\models\Tag;
+use open20\amos\admin\AmosAdmin;
+use open20\amos\core\helpers\Html;
+use open20\amos\core\icons\AmosIcons;
+use open20\amos\core\module\BaseAmosModule;
+use open20\amos\tag\AmosTag;
+use open20\amos\tag\models\Tag;
 use yii\base\Widget;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveQuery;
@@ -24,11 +24,11 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class ListTagsWidget
- * @package lispa\amos\core\forms
+ * @package open20\amos\core\forms
  */
 class ListTagsWidget extends Widget
 {
-    public $layout = "@vendor/lispa/amos-core/forms/views/widgets/widget_list_tags.php";
+    public $layout = "@vendor/open20/amos-core/forms/views/widgets/widget_list_tags.php";
     protected $userProfile;
     protected $className;
     protected $userTagList;
@@ -120,7 +120,7 @@ class ListTagsWidget extends Widget
         // $userProfileClass = $module::getInstance()->model('UserProfile');
 
         if ($this->className == $userProfileClass) {
-            $tagsMm = \lispa\amos\cwh\models\CwhTagOwnerInterestMm::find()
+            $tagsMm = \open20\amos\cwh\models\CwhTagOwnerInterestMm::find()
                 ->innerJoin('tag', 'tag.id = tag_id')
                 ->andWhere([
                     'record_id' => $this->userProfile,
@@ -129,7 +129,7 @@ class ListTagsWidget extends Widget
                     'tag.nome' => SORT_DESC
                 ])->all();
         } else {
-            $tagsMm = \lispa\amos\tag\models\EntitysTagsMm::find()
+            $tagsMm = \open20\amos\tag\models\EntitysTagsMm::find()
                 ->joinWith('tag')
                 ->andWhere([
                     'classname' => $this->className,

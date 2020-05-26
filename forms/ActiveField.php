@@ -1,18 +1,18 @@
 <?php
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms
+ * @package    open20\amos\core\forms
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\forms;
+namespace open20\amos\core\forms;
 
-use lispa\amos\core\helpers\Html;
-use lispa\amos\core\icons\AmosIcons;
-use lispa\amos\core\record\Record;
+use open20\amos\core\helpers\Html;
+use open20\amos\core\icons\AmosIcons;
+use open20\amos\core\record\Record;
 use yii\bootstrap\ActiveField as YiiActiveField;
 use yii\helpers\ArrayHelper;
 use yii\helpers\BaseHtml;
@@ -20,7 +20,7 @@ use yii\db\ActiveRecord;
 
 /**
  * Class ActiveField
- * @package lispa\amos\core\forms
+ * @package open20\amos\core\forms
  */
 class ActiveField extends YiiActiveField
 {

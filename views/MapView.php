@@ -1,20 +1,20 @@
 <?php
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\views
+ * @package    open20\amos\core\views
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\views;
+namespace open20\amos\core\views;
 
 use dosamigos\google\maps\Map;
-use lispa\amos\core\record\Record;
+use open20\amos\core\record\Record;
 use dosamigos\google\maps\LatLng;
-use lispa\amos\core\utilities\MapsUtility;
-use lispa\amos\core\views\MapAmos;
+use open20\amos\core\utilities\MapsUtility;
+use open20\amos\core\views\MapAmos;
 use dosamigos\google\maps\MapAsset;
 use dosamigos\google\maps\overlays\InfoWindow;
 use dosamigos\google\maps\overlays\Marker;
@@ -226,9 +226,9 @@ class MapView extends BaseListView
         MapAsset::register($this->getView());
         $moduleL = \Yii::$app->getModule('layout');
         if (!empty($moduleL)) {
-            \lispa\amos\layout\assets\AmosMapAsset::register($this->getView());
+            \open20\amos\layout\assets\AmosMapAsset::register($this->getView());
         } else {
-            \lispa\amos\core\views\assets\AmosMapAsset::register($this->getView());
+            \open20\amos\core\views\assets\AmosMapAsset::register($this->getView());
         }
         return $this->map->display();
     }

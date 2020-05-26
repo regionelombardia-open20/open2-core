@@ -1,19 +1,19 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms\views\widgets
+ * @package    open20\amos\core\forms\views\widgets
  * @category   CategoryName
  */
 
-/** @var \lispa\amos\core\forms\PublishedContentsWidget $widget */
+/** @var \open20\amos\core\forms\PublishedContentsWidget $widget */
 
-use lispa\amos\core\icons\AmosIcons;
-use lispa\amos\core\views\AmosGridView;
-use lispa\amos\core\forms\AccordionWidget;
+use open20\amos\core\icons\AmosIcons;
+use open20\amos\core\views\AmosGridView;
+use open20\amos\core\forms\AccordionWidget;
 
 ?>
 

@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms
+ * @package    open20\amos\core\forms
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\forms;
+namespace open20\amos\core\forms;
 
 use kartik\base\Widget;
 use kartik\select2\Select2;
@@ -18,7 +18,7 @@ use kartik\select2\Select2;
  * Class WorkflowStateWidget
  * Renders
  *
- * @package lispa\amos\core\forms
+ * @package open20\amos\core\forms
  */
 class WorkflowStateWidget extends Widget {
 
@@ -41,6 +41,7 @@ class WorkflowStateWidget extends Widget {
     }
 
     /**
+     * @see \kartik\base\Widget::init();
      *
      * Set of the permissionSave
      */

@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\validators
+ * @package    open20\amos\core\validators
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\validators;
+namespace open20\amos\core\validators;
 
 use yii\base\InvalidConfigException;
 use yii\validators\Validator;

@@ -1,18 +1,16 @@
 <?php
-
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\i18n
+ * @package    open20\amos\core\i18n
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\i18n;
+namespace open20\amos\core\i18n;
 
-
-use lispa\amos\core\module\AmosModule;
+use open20\amos\core\module\AmosModule;
 use lajax\translatemanager\models\Language;
 use lajax\translatemanager\models\LanguageSource;
 use lajax\translatemanager\models\LanguageTranslate;
@@ -22,7 +20,6 @@ use Yii;
 
 class MessageSource extends DbMessageSource
 {
-
     /**
      * @var boolean enable autoUpdate db-files i18n
      */
@@ -32,9 +29,9 @@ class MessageSource extends DbMessageSource
      * @var array More paths [key] => [pathstring] to parse for translations
      */
     public $extraCategoryPaths = [];
-    
-    /**     
-     * @var string If the translation of the current language is not set you can translate it in the default language if it is set 
+
+    /**
+     * @var string If the translation of the current language is not set you can translate it in the default language if it is set
      */
     public $defaultLanguage;
 
@@ -47,16 +44,14 @@ class MessageSource extends DbMessageSource
      * @var array application's modules
      */
     private static $modules; //Singleton pattern
-    
-    private static $languages;//Singleton pattern
-
+    private static $languages; //Singleton pattern
 
     public function init()
     {
         parent::init();
         try {
             if (!self::$modules) {
-                self::$modules = [];
+                self::$modules     = [];
                 $modulesByCategory = \Yii::$app->getModules(false);
                 foreach ($modulesByCategory as $key => $module) {
                     $mod = $this->isAmosModule($key, $module);
@@ -65,11 +60,10 @@ class MessageSource extends DbMessageSource
                     }
                 }
             }
-        }catch(Exception $ex){
+        } catch (Exception $ex) {
             Yii::getLogger()->log($ex->getMessage(), \yii\log\Logger::LEVEL_ERROR);
         }
     }
-
 
     /**
      * @param $key
@@ -84,16 +78,16 @@ class MessageSource extends DbMessageSource
                 if ($module instanceof AmosModule) {
                     $amodModule = $module;
                 }
-            } elseif(isset($module['class'])) {
+            } elseif (isset($module['class'])) {
                 $reflectionClass = new \ReflectionClass($module['class']);
                 if ($reflectionClass->isSubclassOf(AmosModule::className())) {
                     $amodModule = \Yii::createObject($reflectionClass->getName(), [$key]);
                 }
             }
-        }catch (Exception $ex){
+        } catch (Exception $ex) {
             Yii::getLogger()->log($ex->getMessage(), \yii\log\Logger::LEVEL_ERROR);
         }
-        return  $amodModule;
+        return $amodModule;
     }
 
     /**
@@ -103,15 +97,16 @@ class MessageSource extends DbMessageSource
      * @param string $language
      * @return bool|string
      */
-
     public function translate($category, $message, $language)
     {
         try {
+            $this->addUrlToSourceBySource($category, $message);
             $dbTranslation = $this->loadMessages($category, $language);
             if (!isset($dbTranslation[$message])) {
-                if($this->autoUpdate) {
+                if ($this->autoUpdate) {
                     if (isset(self::$modules[$category])) {
-                        if ($translation = $this->addTranslationByPath($category, $message, $language, self::$modules[$category]->getI18nDirPath())) {
+                        if ($translation = $this->addTranslationByPath($category, $message, $language,
+                            self::$modules[$category]->getI18nDirPath())) {
                             $dbTranslation[$message] = $translation;
                             return $translation;
                         }
@@ -130,10 +125,10 @@ class MessageSource extends DbMessageSource
                         }
                     }
                 }
-            } else{
+            } else {
                 return $dbTranslation[$message];
             }
-        }catch (Exception $ex){
+        } catch (Exception $ex) {
             Yii::getLogger()->log($ex->getMessage(), \yii\log\Logger::LEVEL_ERROR);
         }
         $ret = parent::translate($category, $message, $language);
@@ -148,7 +143,6 @@ class MessageSource extends DbMessageSource
         return $ret;
     }
 
-
     /**
      * @param $category
      * @param $message
@@ -156,14 +150,15 @@ class MessageSource extends DbMessageSource
      * @param $pathLanguage
      * @return mixed
      */
-    protected function addTranslationByPath($category, $message, $language, $pathLanguage) {
+    protected function addTranslationByPath($category, $message, $language, $pathLanguage)
+    {
         /**
          * Get general translation configs
          */
-        $translationsConfig = [];
-        $translationsConfig['sourceLanguage'] = 'en-US';
-        $translationsConfig['basePath'] = $pathLanguage;
-        $translationsConfig['fileMap'] = [];
+        $translationsConfig                       = [];
+        $translationsConfig['sourceLanguage']     = 'en-US';
+        $translationsConfig['basePath']           = $pathLanguage;
+        $translationsConfig['fileMap']            = [];
         $translationsConfig['fileMap'][$category] = 'messages.php';
 
 
@@ -179,11 +174,12 @@ class MessageSource extends DbMessageSource
      * @param $messageSource
      * @return mixed
      */
-    protected function alignDbAndTranslate($category, $message, $language, $messageSource) {
+    protected function alignDbAndTranslate($category, $message, $language, $messageSource)
+    {
         /**
          * Active languages
          */
-        if(is_null(static::$languages)){
+        if (is_null(static::$languages)) {
             static::$languages = Language::findAll(['status' => true]);
         }
 
@@ -195,7 +191,7 @@ class MessageSource extends DbMessageSource
         /**
          * If not exists create a new one
          */
-        if(!$currentTranslation || !$currentTranslation->id) {
+        if (!$currentTranslation || !$currentTranslation->id) {
             $currentTranslation = new LanguageSource([
                 'category' => $category,
                 'message' => $message
@@ -204,7 +200,7 @@ class MessageSource extends DbMessageSource
             /**
              * Check validity or throw exception
              */
-            if(!$currentTranslation->validate()) {
+            if (!$currentTranslation->validate()) {
                 throw new Exception('Unable to create language record, check validity');
             }
 
@@ -226,16 +222,17 @@ class MessageSource extends DbMessageSource
             /**
              * If the text is translated then insert the row
              */
-            if(isset($translatedTexts[$message])) {
+            if (isset($translatedTexts[$message])) {
                 $translationExists = LanguageTranslate::findOne([
-                    'id' => $currentTranslation->id,
-                    'language' => $singleLanguage->language_id
+                        'id' => $currentTranslation->id,
+                        'language' => $singleLanguage->language_id
                 ]);
 
                 /**
                  * Create new one if not exists
                  */
-                if(!$translationExists || !$translationExists->id) {
+                if (!$translationExists || !$translationExists->id) {
+
                     /**
                      * The new translated item
                      */
@@ -244,7 +241,6 @@ class MessageSource extends DbMessageSource
                         'language' => $singleLanguage->language_id,
                         'translation' => $translatedTexts[$message]
                     ]);
-
                     /**
                      * Check for validity and save translation
                      */
@@ -254,14 +250,14 @@ class MessageSource extends DbMessageSource
                         /**
                          * If cache category is not set create it
                          */
-                        if(!isset(self::$dbCategoryCache[$category])) {
+                        if (!isset(self::$dbCategoryCache[$category])) {
                             self::$dbCategoryCache[$category] = [];
                         }
 
                         /**
                          * If cache language by category is not set create it
                          */
-                        if(!isset(self::$dbCategoryCache[$category][$language])) {
+                        if (!isset(self::$dbCategoryCache[$category][$language])) {
                             self::$dbCategoryCache[$category][$language] = [];
                         }
 
@@ -273,6 +269,8 @@ class MessageSource extends DbMessageSource
                 }
             }
         }
+
+        $this->addUrlToSource($currentTranslation->id);
 
         //Return translation from message source
         return $messageSource->translate($category, $message, $language);
@@ -313,9 +311,104 @@ class MessageSource extends DbMessageSource
              * Set new messages
              */
             self::$dbCategoryCache[$category][$language] = $messages;
-        }catch (Exception $ex){
+        } catch (Exception $ex) {
             Yii::getLogger()->log($ex->getMessage(), \yii\log\Logger::LEVEL_ERROR);
         }
         return $messages;
+    }
+
+    /**
+     *
+     * @param integer $id
+     */
+    public function addUrlToSource($id)
+    {
+        try {
+            if (\Yii::$app instanceof \yii\web\Application) {
+                if (!empty(\Yii::$app->params['forceUpdateUrlTranslations']) && \Yii::$app->params['forceUpdateUrlTranslations']
+                    == true) {
+                    $url    = \Yii::$app->request->url;
+                    $arrUrl = parse_url($url);
+                    if (!empty($arrUrl['path'])) {
+                        $newUrl     = \yii\helpers\Url::toRoute($arrUrl['path'], true);
+                        $connection = Yii::$app->getDb();
+                        $command    = $connection->createCommand("
+    SELECT urls FROM language_source WHERE id = $id
+    ");
+                        $result     = $command->queryOne();
+                        if (!empty($result)) {
+
+                            if (empty($result['urls'])) {
+                                $params2  = [':newurl' => $newUrl, ':id' => $id];
+                                $command2 = $connection->createCommand("
+                                        UPDATE language_source SET urls=:newurl WHERE id=:id
+                                    ", $params2);
+                                $command2->execute();
+                            } else {
+                                if (strpos($result['urls'], $newUrl) === false) {
+                                    $addUrl   = $result['urls'].'  '.$newUrl;
+                                    $params3  = [':newurl' => $addUrl, ':id' => $id];
+                                    $command3 = $connection->createCommand("
+                                        UPDATE language_source SET urls=:newurl WHERE id=:id
+                                    ", $params3);
+                                    $command3->execute();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (\Exception $ex) {
+            
+        }
+    }
+
+    /**
+     *
+     * @param string $category
+     * @param string $message
+     */
+    public function addUrlToSourceBySource($category, $message)
+    {
+        try {
+            if (\Yii::$app instanceof \yii\web\Application) {
+                if (!empty(\Yii::$app->params['forceUpdateUrlTranslations']) && \Yii::$app->params['forceUpdateUrlTranslations']
+                    == true) {
+                    $url    = \Yii::$app->request->url;
+                    $arrUrl = parse_url($url);
+                    if (!empty($arrUrl['path'])) {
+                        $newUrl     = \yii\helpers\Url::toRoute($arrUrl['path'], true);
+                        $connection = Yii::$app->getDb();
+
+                        $params = [':category' => $category, ':message' => $message];
+                        $result = $connection->createCommand("
+    SELECT id, urls FROM language_source WHERE category=:category AND message=:message
+    ", $params)->queryOne();
+
+                        if (!empty($result)) {
+
+                            if (empty($result['urls'])) {
+                                $params2  = [':newurl' => $newUrl, ':id' => $result['id']];
+                                $command2 = $connection->createCommand("
+                                        UPDATE language_source SET urls=:newurl WHERE id=:id
+                                    ", $params2);
+                                $command2->execute();
+                            } else {
+                                if (strpos($result['urls'], $newUrl) === false) {
+                                    $addUrl   = $result['urls'].'  '.$newUrl;
+                                    $params3  = [':newurl' => $addUrl, ':id' => $result['id']];
+                                    $command3 = $connection->createCommand("
+                                        UPDATE language_source SET urls=:newurl WHERE id=:id
+                                    ", $params3);
+                                    $command3->execute();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (\Exception $ex) {
+
+        }
     }
 }

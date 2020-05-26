@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\workflow
+ * @package    open20\amos\core\workflow
  * @category   CategoryName
  */
 
@@ -15,17 +15,17 @@
  * componente da mettere nella vendor.
  */
 
-namespace lispa\amos\core\workflow;
+namespace open20\amos\core\workflow;
 
 use cornernote\workflow\manager\components\WorkflowDbSource;
-use lispa\amos\core\controllers\BaseController;
-use lispa\amos\core\record\Record;
+use open20\amos\core\controllers\BaseController;
+use open20\amos\core\record\Record;
 use raoul2000\workflow\base\Transition;
 use Yii;
 
 /**
  * Class ContentDefaultWorkflowDbSource
- * @package lispa\amos\core\workflow
+ * @package open20\amos\core\workflow
  */
 class ContentDefaultWorkflowDbSource extends WorkflowDbSource
 {

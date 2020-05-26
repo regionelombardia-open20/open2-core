@@ -1,19 +1,19 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms
+ * @package    open20\amos\core\forms
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\forms;
+namespace open20\amos\core\forms;
 
-use lispa\amos\core\icons\AmosIcons;
-use lispa\amos\core\module\BaseAmosModule;
-use lispa\amos\core\record\Record;
+use open20\amos\core\icons\AmosIcons;
+use open20\amos\core\module\BaseAmosModule;
+use open20\amos\core\record\Record;
 use yii\base\Widget;
 
 /**
@@ -24,14 +24,14 @@ use yii\base\Widget;
  * If you want to enable only a certain group of buttons you must set interactionMenuButtons array with only the enabled buttons.
  * If you want to disable only a certain group of buttons you must set interactionMenuButtonsHide array with only the disabled buttons.
  *
- * @package lispa\amos\core\forms
+ * @package open20\amos\core\forms
  */
 class InteractionMenuWidget extends Widget
 {
     /**
      * @var string $layout Widget view
      */
-    public $layout = "@vendor/lispa/amos-core/forms/views/widgets/interaction_menu_widget.php";
+    public $layout = "@vendor/open20/amos-core/forms/views/widgets/interaction_menu_widget.php";
 
     /**
      * @var array $_defaultInteractionMenuButtons List of the default interaction menu buttons (favorite, signal and share).
@@ -206,7 +206,7 @@ class InteractionMenuWidget extends Widget
         $button = '';
         $module = \Yii::$app->getModule('favorites');
         if (isset($module)) {
-            $button = \lispa\amos\favorites\widgets\FavoriteWidget::widget([
+            $button = \open20\amos\favorites\widgets\FavoriteWidget::widget([
                 'model' => $this->model
             ]);
         }
@@ -226,7 +226,7 @@ class InteractionMenuWidget extends Widget
             } else {
                 $title = $this->model->__toString();
             }
-            $button = \lispa\amos\report\widgets\ReportWidget::widget([
+            $button = \open20\amos\report\widgets\ReportWidget::widget([
                 'modelClassName' => $this->model->className(),
                 'context_id' => $this->model->id,
                 'title' => $title

@@ -1,28 +1,28 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms\views
+ * @package    open20\amos\core\forms\views
  * @category   CategoryName
  */
 
-use lispa\amos\core\module\BaseAmosModule;
-use lispa\amos\core\forms\ActiveForm;
-use lispa\amos\core\helpers\Html;
+use open20\amos\core\module\BaseAmosModule;
+use open20\amos\core\forms\ActiveForm;
+use open20\amos\core\helpers\Html;
 use yii\bootstrap\Modal;
 
 /**
- * @var \lispa\amos\core\forms\EmailForm $infoRequest
+ * @var \open20\amos\core\forms\EmailForm $infoRequest
  * @var integer $modelId
  */
 
-/** @var \lispa\amos\core\controllers\CrudController $controller */
+/** @var \open20\amos\core\controllers\CrudController $controller */
 $controller = Yii::$app->controller;
 
-/** @var \lispa\amos\core\module\AmosModule $controller->module */
+/** @var \open20\amos\core\module\AmosModule $controller->module */
 $url = '/'. $controller->module->getUniqueId().'/'.$controller->id .'/request-information?id='.$modelId;
 $formErrorMessage = BaseAmosModule::t('amoscore', '#info_request_form_error');
 

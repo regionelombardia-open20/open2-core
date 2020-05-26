@@ -1,23 +1,28 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\helpers
+ * @package    open20\amos\core\helpers
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\helpers;
+namespace open20\amos\core\helpers;
 
-use lispa\amos\core\module\BaseAmosModule;
+use open20\amos\core\module\BaseAmosModule;
 use yii\base\InvalidConfigException;
 use yii\helpers\ArrayHelper;
 use yii\helpers\StringHelper;
+use yii\helpers\Json;
 
-class Html extends \yii\helpers\Html {
-
+/**
+ * Class Html
+ * @package open20\amos\core\helpers
+ */
+class Html extends \yii\helpers\Html
+{
     private static $actionMap = [
         'CREATE' => 'CREATE',
         'UPDATE' => 'UPDATE',
@@ -27,21 +32,20 @@ class Html extends \yii\helpers\Html {
         'DOWNLOAD' => 'READ',
     ];
 
-    const 
+    const
         BOOLEAN_FIELDS_VALUE_NO = 0,
-        BOOLEAN_FIELDS_VALUE_YES = 1
-    ;
-    
+        BOOLEAN_FIELDS_VALUE_YES = 1;
+
     /**
-     * 
-     * @param type $content
-     * @param type $options
-     * @param type $permissions
-     * @param type $permissionsParams
+     * @param string $content
+     * @param array $options
+     * @param string|null $permissions
+     * @param array $permissionsParams
      * @return string
      * @throws InvalidConfigException
      */
-    public static function submitButton($content = 'Submit', $options = [], $permissions = null, $permissionsParams = []) {
+    public static function submitButton($content = 'Submit', $options = [], $permissions = null, $permissionsParams = [])
+    {
         if (\Yii::$app->getAuthManager()) {
             if (isset($permissions)) {
                 if (is_array($permissions)) {
@@ -59,15 +63,15 @@ class Html extends \yii\helpers\Html {
     }
 
     /**
-     * 
-     * @param type $content
-     * @param type $options
-     * @param type $permissions
-     * @param type $permissionsParams
+     * @param string $content
+     * @param array $options
+     * @param null $permissions
+     * @param array $permissionsParams
      * @return string
      * @throws InvalidConfigException
      */
-    public static function button($content = 'Button', $options = [], $permissions = null, $permissionsParams = []) {
+    public static function button($content = 'Button', $options = [], $permissions = null, $permissionsParams = [])
+    {
         if (\Yii::$app->getAuthManager()) {
             if (isset($permissions)) {
                 if (is_array($permissions)) {
@@ -85,14 +89,14 @@ class Html extends \yii\helpers\Html {
     }
 
     /**
-     * 
-     * @param type $text
-     * @param type $url
-     * @param type $options
-     * @param type $checkPermNew
+     * @param string $text
+     * @param string|array|null $url
+     * @param array $options
+     * @param bool $checkPermNew
      * @return string
      */
-    public static function a($text, $url = null, $options = [], $checkPermNew = false) {
+    public static function a($text, $url = null, $options = [], $checkPermNew = false)
+    {
         if (\Yii::$app->getAuthManager()) {
             if (isset($url)) {
 //                $safeUrl = '';
@@ -129,7 +133,7 @@ class Html extends \yii\helpers\Html {
 //                        return '';
 //                    }
 //                } else
-               if ($checkPermNew && !$isValidPermissionNew) {
+                if ($checkPermNew && !$isValidPermissionNew) {
                     return '';
                 } else {
                     return parent:: a($text, $url, $options);
@@ -140,15 +144,17 @@ class Html extends \yii\helpers\Html {
     }
 
     /**
-     * @param mixed $url
+     * @param string|array $url
      * @param array $options
      * @return bool
+     * @throws InvalidConfigException
      */
-    private static function checkPermissionByUrl($url, $options = []) {        
+    private static function checkPermissionByUrl($url, $options = [])
+    {
         if (is_array($url)) {
             $splittedUrl = explode("/", $url[0]);
             $realActionId = trim(strtoupper(end($splittedUrl)));
-            $realModelClassName = (isset($options['model']) ? get_class($options['model']) : NULL);           
+            $realModelClassName = (isset($options['model']) ? get_class($options['model']) : NULL);
         } else {
             list($controllerObj, $actionId) = \Yii::$app->createController($url);
             $realModelClassName = (isset($controllerObj->modelClassName) ? $controllerObj->modelClassName : '');
@@ -162,7 +168,7 @@ class Html extends \yii\helpers\Html {
         $mappedActionId = $realActionId;
         if (array_key_exists($realActionId, self::$actionMap)) {
             $mappedActionId = self::$actionMap[$realActionId];
-        }        
+        }
         if (!empty($realModelClassName)) {
             $permission1 = $realModelClassName . '_' . strtoupper($mappedActionId);
             $permission2 = strtoupper(StringHelper::basename($realModelClassName)) . '_' . strtoupper($mappedActionId);
@@ -171,7 +177,7 @@ class Html extends \yii\helpers\Html {
             return FALSE;
         }
     }
-   
+
     /**
      * Generates a boolean input.
      * @param string $type the input type. This can be either `radio` or `checkbox`.
@@ -194,8 +200,9 @@ class Html extends \yii\helpers\Html {
      * @return string the generated checkbox tag
      * @since 2.0.9
      */
-    protected static function booleanInput($type, $name, $checked = false, $options = []) {
-        $options['checked'] = (bool) $checked;
+    protected static function booleanInput($type, $name, $checked = false, $options = [])
+    {
+        $options['checked'] = (bool)$checked;
         $value = array_key_exists('value', $options) ? $options['value'] : '1';
 
         if (isset($options['uncheck'])) {
@@ -224,7 +231,7 @@ class Html extends \yii\helpers\Html {
             return $hidden . static::input($type, $name, $value, $options);
         }
     }
-    
+
     /**
      * Generates a list of radio buttons.
      * A radio button list is like a checkbox list, except that it only allows single selection.
@@ -286,14 +293,14 @@ class Html extends \yii\helpers\Html {
             $index++;
         }
         $visibleContent = implode($separator, $lines);
-        
+
         if ($tag === false) {
             return '<fieldset><legend class="sr-only">' . \yii\helpers\Inflector::camel2words($name) . '</legend>' . $hidden . $visibleContent . '</fieldset>';
         }
 
         return '<fieldset><legend class="sr-only">' . \yii\helpers\Inflector::camel2words($name) . '</legend>' . $hidden . static::tag($tag, $visibleContent, $options) . '</fieldset>';
     }
-    
+
     /**
      * Generates a list of checkboxes.
      * A checkbox list allows multiple selection, like [[listBox()]].
@@ -386,5 +393,70 @@ class Html extends \yii\helpers\Html {
             Html::BOOLEAN_FIELDS_VALUE_YES => BaseAmosModule::t('amoscore', 'Yes')
         ];
     }
-    
+
+    /**
+     *
+     * @param type $content
+     * @param type $options
+     * @return string
+     */
+    public static function meta($content = '', $options = [], $encode = true)
+    {
+
+        $html = "<meta" . static::renderTagAttributes($options, $encode) . '>';
+        return $html;
+    }
+
+    /**
+     *
+     * @param type $attributes
+     * @return string
+     */
+    public static function renderTagAttributes($attributes, $encode = true)
+    {
+        if (count($attributes) > 1) {
+            $sorted = [];
+            foreach (static::$attributeOrder as $name) {
+                if (isset($attributes[$name])) {
+                    $sorted[$name] = $attributes[$name];
+                }
+            }
+            $attributes = array_merge($sorted, $attributes);
+        }
+
+        $html = '';
+        foreach ($attributes as $name => $value) {
+            if (is_bool($value)) {
+                if ($value) {
+                    $html .= " $name";
+                }
+            } elseif (is_array($value)) {
+                if (in_array($name, static::$dataAttributes)) {
+                    foreach ($value as $n => $v) {
+                        if (is_array($v)) {
+                            $html .= " $name-$n='" . Json::htmlEncode($v) . "'";
+                        } else {
+                            $html .= " $name-$n=\"" . ($encode ?  static::encode($v) :  $v) . '"';
+                        }
+                    }
+                } elseif ($name === 'class') {
+                    if (empty($value)) {
+                        continue;
+                    }
+                    $html .= " $name=\"" . ($encode ? static::encode(implode(' ', $value)) : implode(' ', $value)) . '"';
+                } elseif ($name === 'style') {
+                    if (empty($value)) {
+                        continue;
+                    }
+                    $html .= " $name=\"" . ($encode ? static::encode(static::cssStyleFromArray($value)) :  static::cssStyleFromArray($value)) . '"';
+                } else {
+                    $html .= " $name='" . Json::htmlEncode($value) . "'";
+                }
+            } elseif ($value !== null) {
+                $html .= " $name=\"" . ($encode ? static::encode($value) :  $value) . '"';
+            }
+        }
+
+        return $html;
+    }
 }

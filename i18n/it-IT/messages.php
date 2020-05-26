@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\i18n\it-IT
+ * @package    open20\amos\core\i18n\it-IT
  * @category   CategoryName
  */
 
@@ -31,6 +31,7 @@ return [
     'Annulla richiesta di contatto' => 'Annulla richiesta di contatto',
     'Apri il profilo di {nome_profilo}' => 'Apri il profilo di {nome_profilo}',
     'Aree di interesse' => 'Aree di interesse',
+    '#ArrayUtility_isStringArray_array_to_check_not_array' => 'ArrayUtility: il parametro arrayToCheck deve essere un array',
     'are required' => 'sono obbligatori',
     'Are you sure you want to change status?' => 'Sei sicuro di voler cambiare stato?',
     'Associa' => 'Associa',
@@ -199,6 +200,8 @@ return [
     'is of incorrect type. It must be' => 'è di un tipo non corretto. Deve essere',
     'is required but not present in add.' => 'è richiesto ma non presente.',
     'is required but not present in update.' => 'è richiesto ma non presente.',
+    '#item_card_header_widget_from_community' => 'dalla community',
+    '#item_card_header_widget_from_organization' => "dall'organizzazione",
     'Item created' => 'Elemento creato correttamente.',
     'Item deleted' => 'Elemento cancellato correttamente.',
     'Item not created, check data' => 'Elemento non creato, verificare i dati inseriti.',
@@ -269,7 +272,7 @@ return [
     'Not set' => 'Non impostato',
     'now' => 'adesso',
     'Ordinamenti dashboard' => 'Ordinamenti dashboard',
-    'organizzazione', 'organizzazione',
+    'organizzazione' => 'organizzazione',
     'Ottimizza le tabelle' => 'Ottimizza le tabelle',
     'Page' => 'Pagina',
     'Parent not found' => 'Padre non trovato',
@@ -377,6 +380,7 @@ return [
     'The TAX code/VAT code is not in a permitted format' => 'Il codice fiscale / partita iva non è in un formato corretto',
     'The translations configuration array is empty' => 'The translations configuration array è vuoto',
     'The workflow configuration array is empty' => 'L\'array di configurazione del workflow è vuoto',
+    '#tinyMCECharsCount' => '{0} caratteri',
     '#to_dashboard_link_text' => 'vai alla dashboard',
     'today at' => 'oggi alle',
     'tomorrow at' => 'domani alle',
@@ -421,4 +425,19 @@ return [
     'partnershipprofiles' => 'proposte di collaborazione',
     'admin' => 'utenti',
     'documenti' => 'documenti',
+    '#ZipUtility_exec_error_command_line_error' => 'ZipUtility: errore linea di comando',
+    '#ZipUtility_exec_error_fatal_error' => 'ZipUtility: errore fatale',
+    '#ZipUtility_exec_error_not_enough_memory' => 'ZipUtility: memoria insufficiente',
+    '#ZipUtility_exec_error_user_stop' => 'ZipUtility: comando fermato da utente',
+    '#ZipUtility_exec_error_warning' => 'ZipUtility: warning. Verificare i parametri passati alla classe',
+    '#ZipUtility_missing_file_to_zip' => 'ZipUtility: file da zippare non può essere vuoto',
+    '#ZipUtility_missing_zip_file_extension' => 'ZipUtility: estensione del file zip non può essere vuota',
+    '#ZipUtility_missing_zip_file_name' => 'ZipUtility: nome del file zip non può essere vuoto',
+    '#ZipUtility_not_string_array_property_file_to_zip' => 'ZipUtility: file da zippare non è un array di stringhe',
+    '#ZipUtility_not_string_or_array_property_file_to_zip' => 'ZipUtility: file da zippare non è una stringa o un array',
+    '#ZipUtility_not_string_property_destination_folder' => 'ZipUtility: cartella di destinazione non è una stringa',
+    '#ZipUtility_not_string_property_file_to_unzip' => 'ZipUtility: file da decomprimere non è una stringa',
+    '#ZipUtility_not_string_property_password' => 'ZipUtility: password non è una stringa',
+    '#ZipUtility_not_string_property_zip_file_extension' => 'ZipUtility: estensione del file compresso non è una stringa',
+    '#ZipUtility_not_string_property_zip_file_name' => 'ZipUtility: nome del file zip non è una stringa',
 ];

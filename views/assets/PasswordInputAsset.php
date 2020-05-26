@@ -1,21 +1,22 @@
 <?php
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  * @licence GPLv3
- * @licence https://opensource.org/proscriptions/gpl-3.0.html GNU General Public Proscription version 3
+ * @licence https://opensource.org/licenses/gpl-3.0.html GNU General Public License version 3
  *
  * @package amos-core
  * @category CategoryName
+ * @author Lombardia Informatica S.p.A.
  */
-namespace lispa\amos\core\views\assets;
+namespace open20\amos\core\views\assets;
 
 use yii\web\AssetBundle;
 
 class PasswordInputAsset extends AssetBundle
 {
-    public $sourcePath = '@vendor/lispa/amos-core/views/assets/web';
+    public $sourcePath = '@vendor/open20/amos-core/views/assets/web';
 
     public $css = [
         'css/less/password-input.less'
@@ -24,6 +25,6 @@ class PasswordInputAsset extends AssetBundle
         'js/password-input.js',
     ];
     public $depends = [
-        'lispa\amos\core\views\assets\AmosCoreAsset'
+        'open20\amos\core\views\assets\AmosCoreAsset'
     ];
 }

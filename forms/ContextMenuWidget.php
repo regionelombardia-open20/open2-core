@@ -1,20 +1,20 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms
+ * @package    open20\amos\core\forms
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\forms;
+namespace open20\amos\core\forms;
 
-use lispa\amos\core\helpers\Html;
-use lispa\amos\core\interfaces\WorkflowModelInterface;
-use lispa\amos\core\module\BaseAmosModule;
-use lispa\amos\core\utilities\ModalUtility;
+use open20\amos\core\helpers\Html;
+use open20\amos\core\interfaces\WorkflowModelInterface;
+use open20\amos\core\module\BaseAmosModule;
+use open20\amos\core\utilities\ModalUtility;
 use Yii;
 use yii\base\Widget;
 use yii\bootstrap\Modal;
@@ -22,7 +22,7 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class ContextMenuWidget
- * @package lispa\amos\core\forms
+ * @package open20\amos\core\forms
  */
 class ContextMenuWidget extends Widget
 {
@@ -34,7 +34,7 @@ class ContextMenuWidget extends Widget
     /**
      * @var string $layout Widget view
      */
-    public $layout = "@vendor/lispa/amos-core/forms/views/widgets/context_menu_widget.php";
+    public $layout = "@vendor/open20/amos-core/forms/views/widgets/context_menu_widget.php";
 
     /**
      * @var array $optionsModify Modify options

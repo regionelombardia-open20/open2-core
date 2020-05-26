@@ -1,21 +1,19 @@
 <?php
-
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\views\common
+ * @package    open20\amos\core\views\common
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\views\common;
+namespace open20\amos\core\views\common;
 
 use Yii;
 use lajax\translatemanager\models\Language;
 use lajax\translatemanager\widgets\ToggleTranslate;
-use \lispa\amos\core\icons\AmosIcons;
-
+use \open20\amos\core\icons\AmosIcons;
 
 class HeaderMenu
 {
@@ -28,29 +26,32 @@ class HeaderMenu
     {
         try {
             $voceMenu = [];
-            if (\Yii::$app->getModule('translatemanager') && isset(Yii::$app->params['languageSelector']) && Yii::$app->params['languageSelector'] && isset(Yii::$app->language)) {
+            if (\Yii::$app->getModule('translatemanager') && isset(Yii::$app->params['languageSelector']) && Yii::$app->params['languageSelector']
+                && isset(Yii::$app->language)) {
                 $translateManager = new Language();
-                $table = $translateManager->getTableSchema()->name;
+                $table            = $translateManager->getTableSchema()->name;
 
-                $posLang = strpos(Yii::$app->language, '-');
+                $posLang   = strpos(Yii::$app->language, '-');
                 $labelLang = strtoupper(substr(Yii::$app->language, 0, $posLang));
 
                 $activeLanguage = $this->getActiveLanguages($table);
-                $languages = (!empty($activeLanguage) ? $activeLanguage : []); //TODO al momento è così poi sistemiamo con il plugin
+                $languages      = (!empty($activeLanguage) ? $activeLanguage : []); //TODO al momento è così poi sistemiamo con il plugin
                 if (!empty($languages)) {
-                    $arrayLang = ['<li class="dropdown-header">' . Yii::t('amoscore', 'Seleziona la lingua') . '</li>',
+                    $arrayLang = ['<li class="dropdown-header">'.Yii::t('amoscore', 'Seleziona la lingua').'</li>',
                         '<li class="divider"></li>'];
                     foreach ($languages as $Lang) {
                         $arrayLang[] = [
                             'label' => $Lang['name'],
-                            'url' => (!empty(\Yii::$app->getModule('translation')->actionLanguage) ? [\Yii::$app->getModule('translation')->actionLanguage] : ['/site/language']),
-                            'linkOptions' => ['data-method' => 'post', 'data-params' => ['language' => $Lang['language_id'], 'url' => \yii\helpers\Url::current()]],
+                            'url' => (!empty(\Yii::$app->getModule('translation')->actionLanguage) ? [\Yii::$app->getModule('translation')->actionLanguage]
+                                : ['/site/language']),
+                            'linkOptions' => ['data-method' => 'post', 'data-params' => ['language' => $Lang['language_id'],
+                                    'url' => \yii\helpers\Url::current()]],
                         ];
                     }
                 }
                 if (Yii::$app->getUser()->can('TRANSLATION_ADMINISTRATOR')) {
                     $arrayLang[] = (!empty($languages)) ? '<li class="divider"></li>' : '';
-                    $arrayLang[] = '<li class="dropdown-header">' . Yii::t('amoscore', 'Amministra le traduzioni') . '</li>';
+                    $arrayLang[] = '<li class="dropdown-header">'.Yii::t('amoscore', 'Amministra le traduzioni').'</li>';
                     $arrayLang[] = '<li class="divider"></li>';
                     $arrayLang[] = [
                         'label' => Yii::t('amoscore', 'Lista delle lingue'),
@@ -71,7 +72,7 @@ class HeaderMenu
                 }
 
                 $voceMenu = [
-                    'label' => '<p>' . $labelLang . '</p>',
+                    'label' => '<p>'.$labelLang.'</p>',
                     'items' => $arrayLang,
                     'options' => ['class' => 'user-menu'],
                     'linkOptions' => ['title' => 'azioni utente']
@@ -93,7 +94,8 @@ class HeaderMenu
 
             if (Yii::$app->getUser()->can('TRANSLATION_ADMINISTRATOR')) {
                 echo ToggleTranslate::widget([
-                    'template' => '<a href="javascript:void(0);" id="toggle-translate" class="{position} ' . $addClass . '" data-language="{language}" data-url="{url}" style="z-index:10000;"><div class=\'wrapper\'><span class=\'tooltip-label\'>' . Yii::t('amoscore', 'Traduzioni in linea') . '</span>' . AmosIcons::show('translate', ['class' => 'tooltip-icon']) . '</div></a><div id="translate-manager-div"></div>',
+                    'template' => '<a href="javascript:void(0);" id="toggle-translate" class="{position} '.$addClass.'" data-language="{language}" data-url="{url}" style="z-index:10000;"><div class=\'wrapper\'><span class=\'tooltip-label\'>'.Yii::t('amoscore',
+                        'Traduzioni in linea').'</span>'.AmosIcons::show('translate', ['class' => 'tooltip-icon']).'</div></a><div id="translate-manager-div"></div>',
                     'position' => ToggleTranslate::POSITION_TOP_LEFT,
                 ]);
             }
@@ -108,11 +110,17 @@ class HeaderMenu
     protected function getActiveLanguages($table)
     {
         try {
-            $language = new \lajax\translatemanager\models\Language;
+            $language  = new \lajax\translatemanager\models\Language;
             $arrayLang = [];
 
             if (Yii::$app->db->schema->getTableSchema($table, false) != null) {
-                $arrayLang = (new \yii\db\Query())->from($table)->andWhere(['status' => 1])->select(['language_id', 'name'])->all();
+                if (\Yii::$app->user->can('CONTENT_TRANSLATOR')) {
+                    $arrayLang = (new \yii\db\Query())->from($table)->andWhere(['>=', 'status', 1])->select(['language_id',
+                            'name'])->all();
+                } else {
+                    $arrayLang = (new \yii\db\Query())->from($table)->andWhere(['=', 'status', 1])->select(['language_id',
+                            'name'])->all();
+                }
             }
             return $arrayLang;
         } catch (\Exception $e) {
@@ -130,22 +138,24 @@ class HeaderMenu
             //TO-DO GESTIONE DI ARRAY DI CONFIGURAZIONI
             if (isset(\Yii::$app->params['headerCustomContent'])) {
                 $arrItems = [];
-                $menu = [];
+                $menu     = [];
                 if (isset(\Yii::$app->params['headerCustomContent']['class'])) {
                     $headerCustomContentClass = \Yii::$app->params['headerCustomContent']['class'];
-                    $class = new $headerCustomContentClass;
-                    $method = (isset(\Yii::$app->params['headerCustomContent']['class']['method'])) ? \Yii::$app->params['headerCustomContent']['class']['method'] : 'getHeaderCustomContent';
+                    $class                    = new $headerCustomContentClass;
+                    $method                   = (isset(\Yii::$app->params['headerCustomContent']['class']['method'])) ? \Yii::$app->params['headerCustomContent']['class']['method']
+                            : 'getHeaderCustomContent';
                     if (method_exists($class, $method)) {
                         $arrItems[] = $class->getHeaderCustomContent();
                         foreach ($arrItems as $value) {
                             if (is_array($value)) {
-                                $menu['label'] = '<p style="margin: 6px 0 0 0;">' . ((isset($value['label'])) ? $value['label'] : 'Menu custom') . '</p>';
+                                $menu['label'] = '<p style="margin: 6px 0 0 0;">'.((isset($value['label'])) ? $value['label']
+                                        : 'Menu custom').'</p>';
                                 if (isset($value['items'])) {
                                     foreach ($value['items'] as $item)
                                         $menu['items'][] = $item;
                                 }
                             } else {
-                                $menu['label'] = '<p style="margin: 6px 0 0 0">' . $value . '</p>';
+                                $menu['label'] = '<p style="margin: 6px 0 0 0">'.$value.'</p>';
                             }
                         }
                     }
@@ -164,27 +174,27 @@ class HeaderMenu
     public function getListLanguages()
     {
         $translateManager = new Language();
-        $table = $translateManager->getTableSchema()->name;
-        $activeLanguage = $this->getActiveLanguages($table);
-        $languages = (!empty($activeLanguage) ? $activeLanguage : []); //TODO al momento è così poi sistemiamo con il plugin
+        $table            = $translateManager->getTableSchema()->name;
+        $activeLanguage   = $this->getActiveLanguages($table);
+        $languages        = (!empty($activeLanguage) ? $activeLanguage : []); //TODO al momento è così poi sistemiamo con il plugin
         if (!empty($languages)) {
-            $stringLang = '<div class="dropdown">' .
-                \lispa\amos\core\helpers\Html::a(
-                    Yii::t('amoscore', '#select_language') . \lispa\amos\core\icons\AmosIcons::show('chevron-down', ['title' => Yii::t('amosadmin', '#select_language')]),
-                    '#',
-                   ['class' => 'dropdown-toggle','data-toggle' => 'dropdown']) .
+            $stringLang = '<div class="dropdown">'.
+                \open20\amos\core\helpers\Html::a(
+                    Yii::t('amoscore', '#select_language').\open20\amos\core\icons\AmosIcons::show('chevron-down',
+                        ['title' => Yii::t('amosadmin', '#select_language')]), '#',
+                    ['class' => 'dropdown-toggle', 'data-toggle' => 'dropdown']).
                 '<ul class="dropdown-menu">';
             foreach ($languages as $Lang) {
-                $stringLang = $stringLang . '<li>' .
-                    \lispa\amos\core\helpers\Html::a(
+                $stringLang = $stringLang.'<li>'.
+                    \open20\amos\core\helpers\Html::a(
                         $Lang['name'],
-                        (!empty(\Yii::$app->getModule('translation')->actionLanguage) ? [\Yii::$app->getModule('translation')->actionLanguage] : ['/site/language']),
-                        ['data-method' => 'post', 'data-params' => ['language' => $Lang['language_id'], 'url' => \yii\helpers\Url::current()]]
-                    ) . '</li>';
+                        (!empty(\Yii::$app->getModule('translation')->actionLanguage) ? [\Yii::$app->getModule('translation')->actionLanguage]
+                            : ['/site/language']),
+                        ['data-method' => 'post', 'data-params' => ['language' => $Lang['language_id'], 'url' => \Yii::$app->request->url]]
+                    ).'</li>';
             }
-            $stringLang = $stringLang . '</ul></div>';
+            $stringLang = $stringLang.'</ul></div>';
         }
         return $stringLang;
     }
-
 }

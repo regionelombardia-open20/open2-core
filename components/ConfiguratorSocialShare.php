@@ -1,10 +1,22 @@
 <?php
+
 /**
+ * Aria S.p.A.
+ * OPEN 2.0
+ *
+ *
+ * @package    Open20Package
+ * @category   CategoryName
+ */
+/**
+ * @link https://github.com/yiimaker/yii2-social-share
+ * @copyright Copyright (c) 2017-2018 Yii Maker
+ * @license BSD 3-Clause License
  */
 
-namespace lispa\amos\core\components;
+namespace open20\amos\core\components;
 
-use lispa\amos\core\interfaces\ContentModelInterface;
+use open20\amos\core\interfaces\ContentModelInterface;
 use yii\base\BaseObject;
 use yii\helpers\ArrayHelper;
 use ymaker\social\share\configurators\Configurator;
@@ -13,6 +25,7 @@ use ymaker\social\share\configurators\Configurator;
 /**
  * Configurator for social network drivers.
  *
+ * @author Vladimir Kuprienko <vldmr.kuprienko@gmail.com>
  * @since 1.0
  */
 class ConfiguratorSocialShare extends Configurator
@@ -51,7 +64,7 @@ class ConfiguratorSocialShare extends Configurator
         if(empty($this->socialNetworks)) {
             $this->socialNetworks = [
                 'facebook' => [
-                    'class' => \lispa\amos\core\forms\editors\socialShareWidget\drivers\Facebook::class,
+                    'class' => \open20\amos\core\forms\editors\socialShareWidget\drivers\Facebook::class,
                     'label' => \yii\helpers\Html::tag('span', '', ['class' => 'am am-facebook-box', 'title' => \Yii::t('amoscore','Share with facebook')]),
                 ],
                     'twitter' => [
@@ -72,13 +85,13 @@ class ConfiguratorSocialShare extends Configurator
                     'visibility' => ConfiguratorSocialShare::VISIBILITY_ONLY_PUBLIC_CONTENT
                 ],
                 'email' => [
-                    'class' => \lispa\amos\core\forms\editors\socialShareWidget\drivers\Email::class,
+                    'class' => \open20\amos\core\forms\editors\socialShareWidget\drivers\Email::class,
                     'label' => \yii\helpers\Html::tag('span', '', ['class' => 'am am-email', 'title' => \Yii::t('amoscore','Share with email')]),
                     'options' => ['class' => 'email-btn'],
                     'visibility' => ConfiguratorSocialShare::VISIBILITY_ONLY_PUBLIC_CONTENT
                 ],
                 'ownNetwork' => [
-                    'class' => \lispa\amos\core\forms\editors\socialShareWidget\drivers\OwnNetwork::class,
+                    'class' => \open20\amos\core\forms\editors\socialShareWidget\drivers\OwnNetwork::class,
                     'label' => \yii\helpers\Html::tag('span', '', ['class' => 'am am-accounts-alt open-modal', 'title' => \Yii::t('amoscore','Share with your own network')]),
                     'options' => ['class' => 'own-network'],
                     'visibility' => ConfiguratorSocialShare::VISIBILITY_ALWAYS,

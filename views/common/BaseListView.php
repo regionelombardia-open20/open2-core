@@ -1,17 +1,17 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\views\common
+ * @package    open20\amos\core\views\common
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\views\common;
+namespace open20\amos\core\views\common;
 
-use lispa\amos\core\views\toolbars\StatsToolbar;
+use open20\amos\core\views\toolbars\StatsToolbar;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -32,7 +32,7 @@ class BaseListView extends ListView
         "data-role" => "list-view"
     ];
     public $buttons;
-    public $buttonClass           = 'lispa\amos\core\views\common\Buttons';
+    public $buttonClass           = 'open20\amos\core\views\common\Buttons';
     public $viewOptions           = [
         'class' => 'bk-btnMore'
     ];
@@ -168,9 +168,9 @@ class BaseListView extends ListView
         $view    = \Yii::$app->getView();
         $moduleL = \Yii::$app->getModule('layout');
         if (!empty($moduleL)) {
-            \lispa\amos\layout\assets\MasonryAsset::register($view);
+            \open20\amos\layout\assets\MasonryAsset::register($view);
         } else {
-            \lispa\amos\core\views\assets\MasonryAsset::register($view);
+            \open20\amos\core\views\assets\MasonryAsset::register($view);
         }
         $options = \yii\helpers\Json::encode($this->masonryOptions);
         $view->registerJs("$('$this->masonrySelector').masonry($options);", View::POS_READY);

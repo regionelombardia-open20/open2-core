@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\interfaces
+ * @package    open20\amos\core\interfaces
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\interfaces;
+namespace open20\amos\core\interfaces;
 
 /**
  * Interface ContentModelInterface
@@ -17,7 +17,7 @@ namespace lispa\amos\core\interfaces;
  * Must be implemented by those model that provides contents to share/publish such as
  * News, Discussioni, Documenti, ..
  *
- * @package lispa\amos\core\record
+ * @package open20\amos\core\record
  */
 interface ContentModelInterface extends BaseContentModelInterface, WorkflowModelInterface, ModelLabelsInterface
 {

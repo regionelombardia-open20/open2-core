@@ -1,9 +1,18 @@
 <?php
 
-namespace lispa\amos\core\utilities;
+/**
+ * Aria S.p.A.
+ * OPEN 2.0
+ *
+ *
+ * @package    Open20Package
+ * @category   CategoryName
+ */
 
-use lispa\amos\core\utilities\Email;
-use lispa\amos\core\user\User;
+namespace open20\amos\core\utilities;
+
+use open20\amos\core\utilities\Email;
+use open20\amos\core\user\User;
 use triscovery\esperienze\Module;
 use Yii;
 

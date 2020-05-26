@@ -1,19 +1,19 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms
+ * @package    open20\amos\core\forms
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\forms;
+namespace open20\amos\core\forms;
 
-use lispa\amos\core\helpers\Html;
-use lispa\amos\core\module\BaseAmosModule;
-use lispa\amos\core\icons\AmosIcons;
+use open20\amos\core\helpers\Html;
+use open20\amos\core\module\BaseAmosModule;
+use open20\amos\core\icons\AmosIcons;
 use Yii;
 use yii\base\Model;
 use yii\base\Widget;
@@ -38,7 +38,7 @@ use yii\helpers\ArrayHelper;
  * - `{pubblishedfrom}`: the publication date begin of current model. See [[renderPublishedFrom()]].
  * - `{pubblishedat}`: the publication date end of current model. See [[renderPublishedAt()]].
  *
- * @package lispa\amos\core\forms
+ * @package open20\amos\core\forms
  */
 class PublishedByWidget extends Widget
 {
@@ -79,6 +79,7 @@ class PublishedByWidget extends Widget
     /**
      * @var array the HTML attributes for the container tag of the list view.
      * The "tag" element specifies the tag name of the container element and defaults to "div".
+     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $options = [
         'class' => 'published-by'
@@ -266,7 +267,7 @@ class PublishedByWidget extends Widget
         }
 
         if ($targets) {
-            $targetsCollection = \lispa\amos\cwh\models\CwhNodi::findAll([
+            $targetsCollection = \open20\amos\cwh\models\CwhNodi::findAll([
                 'id' => $targets
             ]);
 
@@ -297,7 +298,7 @@ class PublishedByWidget extends Widget
      */
     public function renderPublishingRules()
     {
-        $content = \lispa\amos\cwh\utility\CwhUtil::getPublicationRuleLabel($this->model->regola_pubblicazione);
+        $content = \open20\amos\cwh\utility\CwhUtil::getPublicationRuleLabel($this->model->regola_pubblicazione);
         return Html::tag($this->sectionTag, BaseAmosModule::t("amoscore", "<label>Regola di pubblicazione</label> : {el}", [
             'el' => $content
         ]), $this->sectionOptions);
@@ -338,7 +339,7 @@ class PublishedByWidget extends Widget
      */
     public function getNodesAsString($nodes)
     {
-        $targetsCollection = \lispa\amos\cwh\models\CwhNodi::findAll([
+        $targetsCollection = \open20\amos\cwh\models\CwhNodi::findAll([
             'id' => $nodes
         ]);
 
@@ -364,15 +365,15 @@ class PublishedByWidget extends Widget
                 $targets = $this->model->destinatari;
             }
         }
-        $publicationRule = \lispa\amos\cwh\utility\CwhUtil::getPublicationRuleLabel($this->model->regola_pubblicazione);
+        $publicationRule = \open20\amos\cwh\utility\CwhUtil::getPublicationRuleLabel($this->model->regola_pubblicazione);
         $targetsString = $this->getNodesAsString($targets);
         if (count($targets)) {
-            $content = BaseAmosModule::t("amoscore", "<label>per</label> <span class='target'>{target}</span>", [
+            $content = BaseAmosModule::t("amoscore", "<label>per</label> <span class='target'> {target}</span>", [
                 'rule' => $publicationRule,
                 'target' => $targetsString
             ]);
         } else {
-            $content = BaseAmosModule::t("amoscore", "<label>per</label> <span class='rules'>{rule}</span>", [
+            $content = BaseAmosModule::t("amoscore", "<label>per</label> <span class='rules'> {rule}</span>", [
                 'rule' => $publicationRule
             ]);
         }
@@ -582,7 +583,7 @@ class PublishedByWidget extends Widget
                 $targets = $this->model->destinatari;
             }
         }
-        $publicationRule = \lispa\amos\cwh\utility\CwhUtil::getPublicationRuleLabel($this->model->regola_pubblicazione);
+        $publicationRule = \open20\amos\cwh\utility\CwhUtil::getPublicationRuleLabel($this->model->regola_pubblicazione);
         $targetsString = $this->getNodesAsString($targets);
         if (count($targets)) {
             $content = BaseAmosModule::t("amoscore", "<strong><span>per:</span></strong> {target}", [
@@ -698,7 +699,7 @@ class PublishedByWidget extends Widget
      * @return string
      */
     public function renderPublishedAtSection()
-    {
+    { 
         try {
             // Date to
             $dateTo = '';

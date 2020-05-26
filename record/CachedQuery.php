@@ -1,6 +1,6 @@
 <?php
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
@@ -8,7 +8,7 @@
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\record;
+namespace open20\amos\core\record;
 
 use yii\db\Query;
 
@@ -196,7 +196,7 @@ class CachedQuery extends \yii\db\Query
     /* Use query caching for this Query.
      *
      * @param int|null $duration Seconds to cache; Use 0 to indicate that the cached data will never expire; NULL indicates No Cache.
-     * @return lispa\amos\core\record\CachedQuery
+     * @return open20\amos\core\record\CachedQuery
      */
 
     public function cache($duration = null, $queryCache = null)

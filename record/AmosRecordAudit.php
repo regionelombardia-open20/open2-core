@@ -1,19 +1,19 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\record
+ * @package    open20\amos\core\record
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\record;
+namespace open20\amos\core\record;
 
 use backend\modules\admin\models\UserProfile;
-use \lispa\amos\core\record\Record;
-use \bedezign\yii2\audit\AuditTrailBehavior;
+use \open20\amos\core\record\Record;
+use \open20\amos\audit\AuditTrailBehavior;
 use \yii\db\ActiveQuery;
 use \yii\helpers\ArrayHelper;
 

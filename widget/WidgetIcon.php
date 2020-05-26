@@ -1,313 +1,362 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\widget
+ * @package    open20\amos\core\widget
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\widget;
+namespace open20\amos\core\widget;
 
-use lispa\amos\core\icons\AmosIcons;
+use open20\amos\core\icons\AmosIcons;
+use Yii;
+use yii\db\ActiveQuery;
 
-class WidgetIcon extends WidgetAbstract {
-
-  public
-    $url,
-    $post,
-    $icon = 'linmodulo',
-    $iconFramework = 'dash',
-    $namespace,
-    $classLi = [],
-    $classA = [],
-    $classSpan = ['color-primary'],
-    $targetUrl = '',
-    $bulletCount = '',
-    $dataPjaxZero = '',
-    $attributes = ''          // @var string $attributes - additional attributes for html tag <a>
-  ;
-
-  /**
-   * @inheritdoc
-   */
-  public function init() {
-    parent::init();
-  }
-
-  /**
-   * 
-   * @return string
-   */
-  public function run() {
-    if ($this->isVisible()) {
-      return $this->getHtml();
-    }
+class WidgetIcon extends WidgetAbstract
+{
     
-    return '';
-  }
-  
-  /**
-   * 
-   * @param type $module
-   */
-  public function checkScope($module = null) {
-    $moduleCwh = \Yii::$app->getModule('cwh');
+    public
+        $url,
+        $post,
+        $icon = 'linmodulo',
+        $iconFramework = 'dash',
+        $namespace,
+        $classLi = [],
+        $classA = [],
+        $classSpan = ['color-primary'],
+        $targetUrl = '',
+        $bulletCount = '',
+        $dataPjaxZero = 'data-pjax="0"', 
+        $attributes = '',          // @var string $attributes - additional attributes for html tag <a>
+        $disableBulletCounters = false
+    ;
     
-    if (isset($moduleCwh)) {
-      $scope = $moduleCwh->getCwhScope();
-      if (!empty($scope)) {
-        if (isset($scope[$module])) {
-          return $scope[$module];
+    const EVENT_AFTER_COUNT = 'EVENT_AFTER_COUNT';
+    
+    /**
+     * @inheritdoc
+     */
+    public function init()
+    {
+        parent::init();
+        
+        if (isset(\Yii::$app->params['disableBulletCounters']) && (\Yii::$app->params['disableBulletCounters'] === true)) {
+            $this->disableBulletCounters = true;
         }
-      }
-    }
-    
-    return false;
-  }
-  
-  /**
-   * 
-   * @return type
-   */
-  public function getHtml() {
-    $controller = \Yii::$app->controller;
-    $moduleL = \Yii::$app->getModule('layout');
-    
-    if (!empty($moduleL)) {
-      $assetBundle = \lispa\amos\layout\assets\BaseAsset::register($controller->getView());
-    } else {
-      $assetBundle = \lispa\amos\core\views\assets\AmosCoreAsset::register($controller->getView());
     }
 
-    $view = '@vendor/lispa/amos-core/widget/views/icon';
-    if ($this->getEngine() == WidgetAbstract::ENGINE_ROWS) {
-      $view = '@vendor/lispa/amos-core/widget/views/icon_rows';
+    /**
+     * 
+     * @return string
+     */
+    public function run()
+    {
+        return ($this->isVisible())
+            ? $this->getHtml()
+            : '';
+    }
+
+    /**
+     * 
+     * @param type $module
+     */
+    public function checkScope($module = null)
+    {
+        $moduleCwh = \Yii::$app->getModule('cwh');
+
+        if (isset($moduleCwh)) {
+            $scope = $moduleCwh->getCwhScope();
+            if (!empty($scope)) {
+                if (isset($scope[$module])) {
+                    return $scope[$module];
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * 
+     * @return type
+     */
+    public function getHtml()
+    {
+        $controller = \Yii::$app->controller;
+        $moduleL = \Yii::$app->getModule('layout');
+
+        if (!empty($moduleL)) {
+            $assetBundle = \open20\amos\layout\assets\BaseAsset::register($controller->getView());
+        } else {
+            $assetBundle = \open20\amos\core\views\assets\AmosCoreAsset::register($controller->getView());
+        }
+
+        $view = '@vendor/open20/amos-core/widget/views/icon';
+        if ($this->getEngine() == WidgetAbstract::ENGINE_ROWS) {
+            $view = '@vendor/open20/amos-core/widget/views/icon_rows';
+        }
+
+        return $this->render(
+            $view, 
+            [
+                'asset' => $assetBundle,
+                'widget' => $this
+            ]
+        );
+    }
+
+    /**
+     * 
+     * @return type
+     */
+    public function getOptions()
+    {
+        return [
+            'isVisible' => $this->isVisible(),
+            'label' => $this->getLabel(),
+            'description' => $this->getDescription(),
+            'code' => $this->getCode(),
+            'url' => $this->getUrl(),
+            'post' => $this->getPost(),
+            'moduleName' => $this->getModuleName(),
+            'icon' => $this->getIcon(),
+            'namespace' => $this->getNamespace(),
+            'iconFramework' => $this->getIconFramework(),
+            'classSpan' => $this->getClassSpan(),
+            'attributes' => $this->getAttributes()
+        ];
+    }
+
+    /**
+     * @return string
+     */
+    public function getBulletCount()
+    {
+        return $this->bulletCount;
+    }
+
+    /**
+     * @param string $bulletCount
+     */
+    public function setBulletCount($bulletCount)
+    {
+        $this->bulletCount = $bulletCount;
+    }
+
+    /**
+     * Return not read record of $className object for the current logged user, 
+     * based on amos-notify so bullet count is update in right way and 
+     * disapper when the relative object is actived
+     * 
+     * @param int $userId
+     * @param string $className
+     * @param ActiveQuery $externalQuery
+     * @return int
+     */
+    public function makeBulletCounter($userId = null, $className = null, $externalQuery = null)
+    {
+        if (($this->disableBulletCounters == true) || ($userId == null) || ($className == null)) {
+            return 0;
+        }
+        
+        $count = 0;
+        $notifier = Yii::$app->getModule('notify');
+        if ($notifier) {
+            $count = $notifier->countNotRead(
+                $userId,
+                $className,
+                $externalQuery
+            );
+        }
+
+        return $count;
     }
     
-    $params = [
-      'asset' => $assetBundle,
-      'widget' => $this
-    ];
-    
-    return $this->render($view, $params);
-  }
+    /**
+     * @return mixed
+     */
+    public function getPost()
+    {
+        return $this->post;
+    }
 
-  /**
-   * 
-   * @return type
-   */
-  public function getOptions() {
-    return [
-      'isVisible' => $this->isVisible(),
-      'label' => $this->getLabel(),
-      'description' => $this->getDescription(),
-      'code' => $this->getCode(),
-      'url' => $this->getUrl(),
-      'post' => $this->getPost(),
-      'moduleName' => $this->getModuleName(),
-      'icon' => $this->getIcon(),
-      'namespace' => $this->getNamespace(),
-      'iconFramework' => $this->getIconFramework(),
-      'classSpan' => $this->getClassSpan(),
-      'attributes' => $this->getAttributes()
-    ];
-  }
+    /**
+     * @return mixed
+     */
+    public function setPost($post)
+    {
+        $this->post = $post;
+    }
 
-  /**
-   * @return string
-   */
-  public function getBulletCount() {
-    return $this->bulletCount;
-  }
+    /**
+     * @return mixed
+     */
+    public function getTargetUrl()
+    {
+        return $this->targetUrl;
+    }
 
-  /**
-   * @param string $bulletCount
-   */
-  public function setBulletCount($bulletCount) {
-    $this->bulletCount = $bulletCount;
-  }
+    /**
+     * @param mixed $targetUrl
+     */
+    public function setTargetUrl($targetUrl)
+    {
+        $this->targetUrl = $targetUrl;
+    }
 
-//  /**
-//   *
-//   * @param string $bulletCount
-//   * @return string
-//   */
-//  protected function getNewsBulletCount($bulletCount = '') {
-//    return $bulletCount;
-//    /* try {
-//      $className = $this->namespace;
-//      $widget    = \lispa\amos\dashboard\models\AmosWidgets::findOne(['classname' => $className]);
-//      if (!empty($widget) && $widget->hasMethod('isNews')) {
-//      $bulletCount = $widget->isNews() ? \Yii::t('amoscore', 'NEW') : $bulletCount;
-//      }
-//      return $bulletCount;
-//      } catch (Exception $ex) {
-//      return $bulletCount;
-//      } */
-//  }
+    /**
+     * @return array
+     */
+    public function getClassLi()
+    {
+        return $this->classLi;
+    }
 
-  /**
-   * @return mixed
-   */
-  public function getPost() {
-    return $this->post;
-  }
+    /**
+     * @param array $classLi
+     */
+    public function setClassLi($classLi)
+    {
+        $this->classLi = $classLi;
+    }
 
-  /**
-   * @return mixed
-   */
-  public function setPost($post) {
-    $this->post = $post;
-  }
+    /**
+     * @return array
+     */
+    public function getClassA()
+    {
+        return $this->classA;
+    }
 
-  /**
-   * @return mixed
-   */
-  public function getTargetUrl() {
-    return $this->targetUrl;
-  }
+    /**
+     * @param array $classA
+     */
+    public function setClassA($classA)
+    {
+        $this->classA = $classA;
+    }
 
-  /**
-   * @param mixed $targetUrl
-   */
-  public function setTargetUrl($targetUrl) {
-    $this->targetUrl = $targetUrl;
-  }
+    /**
+     * @return mixed
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
 
-  /**
-   * @return array
-   */
-  public function getClassLi() {
-    return $this->classLi;
-  }
+    /**
+     * @param mixed $url
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
+    }
 
-  /**
-   * @param array $classLi
-   */
-  public function setClassLi($classLi) {
-    $this->classLi = $classLi;
-  }
+    /**
+     * @return mixed
+     */
+    public function getIcon()
+    {
+        return $this->icon;
+    }
 
-  /**
-   * @return array
-   */
-  public function getClassA() {
-    return $this->classA;
-  }
+    /**
+     * @param mixed $icon
+     */
+    public function setIcon($icon)
+    {
+        $this->icon = $icon;
+    }
 
-  /**
-   * @param array $classA
-   */
-  public function setClassA($classA) {
-    $this->classA = $classA;
-  }
+    /**
+     * @return mixed
+     */
+    public function getNamespace()
+    {
+        return $this->namespace;
+    }
 
-  /**
-   * @return mixed
-   */
-  public function getUrl() {
-    return $this->url;
-  }
+    /**
+     * @param mixed $namespace
+     */
+    public function setNamespace($namespace)
+    {
+        $this->namespace = $namespace;
+    }
 
-  /**
-   * @param mixed $url
-   */
-  public function setUrl($url) {
-    $this->url = $url;
-  }
+    /**
+     * @return mixed
+     */
+    public function getIconFramework()
+    {
+        return $this->iconFramework;
+    }
 
-  /**
-   * @return mixed
-   */
-  public function getIcon() {
-    return $this->icon;
-  }
+    /**
+     * @param mixed $iconFramework
+     */
+    public function setIconFramework($iconFramework)
+    {
+        $this->iconFramework = $iconFramework;
+    }
 
-  /**
-   * @param mixed $icon
-   */
-  public function setIcon($icon) {
-    $this->icon = $icon;
-  }
+    /**
+     * @return array
+     */
+    public function getClassSpan()
+    {
+        return $this->classSpan;
+    }
 
-  /**
-   * @return mixed
-   */
-  public function getNamespace() {
-    return $this->namespace;
-  }
+    /**
+     * @param array $classSpan
+     */
+    public function setClassSpan($classSpan)
+    {
+        $this->classSpan = $classSpan;
+    }
 
-  /**
-   * @param mixed $namespace
-   */
-  public function setNamespace($namespace) {
-    $this->namespace = $namespace;
-  }
+    /**
+     * @return string
+     */
+    public function getDataPjaxZero()
+    {
+        return $this->dataPjaxZero;
+    }
 
-  /**
-   * @return mixed
-   */
-  public function getIconFramework() {
-    return $this->iconFramework;
-  }
+    /**
+     * @param string $dataPjaxZero
+     */
+    public function setDataPjaxZero($dataPjaxZero)
+    {
+        $this->dataPjaxZero = $dataPjaxZero;
+    }
 
-  /**
-   * @param mixed $iconFramework
-   */
-  public function setIconFramework($iconFramework) {
-    $this->iconFramework = $iconFramework;
-  }
+    /**
+     * @return string
+     */
+    public function getAttributes()
+    {
+        return $this->attributes;
+    }
 
-  /**
-   * @return array
-   */
-  public function getClassSpan() {
-    return $this->classSpan;
-  }
+    /**
+     * @param string $attributes
+     */
+    public function setAttributes($attributes)
+    {
+        $this->attributes = $attributes;
+    }
 
-  /**
-   * @param array $classSpan
-   */
-  public function setClassSpan($classSpan) {
-    $this->classSpan = $classSpan;
-  }
-
-  /**
-   * @return string
-   */
-  public function getDataPjaxZero() {
-    return $this->dataPjaxZero;
-  }
-
-  /**
-   * @param string $dataPjaxZero
-   */
-  public function setDataPjaxZero($dataPjaxZero) {
-    $this->dataPjaxZero = $dataPjaxZero;
-  }
-
-  /**
-   * @return string
-   */
-  public function getAttributes() {
-    return $this->attributes;
-  }
-
-  /**
-   * @param string $attributes
-   */
-  public function setAttributes($attributes) {
-    $this->attributes = $attributes;
-  }
-
-  /**
-   *
-   */
-  public function enableDashboardModal() {
-    $this->classA[] = 'open-modal-dashboard';
-  }
+    /**
+     *
+     */
+    public function enableDashboardModal()
+    {
+        $this->classA[] = 'open-modal-dashboard';
+    }
 
 }

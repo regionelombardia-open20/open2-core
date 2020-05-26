@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\toolbar
+ * @package    open20\amos\core\toolbar
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\toolbar;
+namespace open20\amos\core\toolbar;
 
 use Yii;
 use yii\bootstrap\BootstrapPluginAsset;
@@ -19,7 +19,7 @@ use yii\bootstrap\Html;
 
 /**
  * Class NavBarOverriden
- * @package lispa\amos\core\toolbar
+ * @package open20\amos\core\toolbar
  *
  * ovveride yii/bootstrap/NavBar
  * the only difference is not setting the role options toi 'navigation' in function init()
@@ -31,6 +31,7 @@ class NavBarOverriden extends Widget
      *
      * - tag: string, defaults to "nav", the name of the container tag.
      *
+     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $options = [];
     /**
@@ -38,10 +39,12 @@ class NavBarOverriden extends Widget
      *
      * - tag: string, defaults to "div", the name of the container tag.
      *
+     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $containerOptions = [];
     /**
      * @var string|boolean the text of the brand or false if it's not used. Note that this is not HTML-encoded.
+     * @see http://getbootstrap.com/components/#navbar
      */
     public $brandLabel = false;
     /**
@@ -53,6 +56,7 @@ class NavBarOverriden extends Widget
     public $brandUrl = false;
     /**
      * @var array the HTML attributes of the brand link.
+     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $brandOptions = [];
     /**
@@ -66,6 +70,7 @@ class NavBarOverriden extends Widget
     public $renderInnerContainer = true;
     /**
      * @var array the HTML attributes of the inner container.
+     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $innerContainerOptions = [];
 

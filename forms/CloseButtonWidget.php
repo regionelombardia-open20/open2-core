@@ -1,17 +1,17 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms
+ * @package    open20\amos\core\forms
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\forms;
+namespace open20\amos\core\forms;
 
-use lispa\amos\core\helpers\Html;
+use open20\amos\core\helpers\Html;
 use Yii;
 use yii\base\Widget;
 use yii\helpers\Url;
@@ -20,7 +20,7 @@ use yii\helpers\Url;
  * Class CloseButtonWidget
  * Renders the close and submit buttons also according to the permissions that the user has.
  *
- * @package lispa\amos\core\forms
+ * @package open20\amos\core\forms
  */
 class CloseButtonWidget extends Widget
 {

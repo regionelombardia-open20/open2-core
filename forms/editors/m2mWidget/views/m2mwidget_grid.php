@@ -1,21 +1,21 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\editors\m2mwidget\views
+ * @package    open20\amos\core\editors\m2mwidget\views
  * @category   CategoryName
  */
 
-use lispa\amos\core\forms\editors\assets\EditorsAsset;
-use lispa\amos\core\forms\editors\m2mWidget\M2MWidget;
-use lispa\amos\core\helpers\Html;
-use lispa\amos\core\icons\AmosIcons;
-use lispa\amos\core\module\BaseAmosModule;
-use lispa\amos\core\utilities\JsUtility;
-use lispa\amos\core\views\DataProviderView;
+use open20\amos\core\forms\editors\assets\EditorsAsset;
+use open20\amos\core\forms\editors\m2mWidget\M2MWidget;
+use open20\amos\core\helpers\Html;
+use open20\amos\core\icons\AmosIcons;
+use open20\amos\core\module\BaseAmosModule;
+use open20\amos\core\utilities\JsUtility;
+use open20\amos\core\views\DataProviderView;
 use yii\bootstrap\Modal;
 
 /**

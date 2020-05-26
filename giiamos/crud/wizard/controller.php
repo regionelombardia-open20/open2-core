@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\giiamos\crud\wizard
+ * @package    open20\amos\core\giiamos\crud\wizard
  * @category   CategoryName
  */
 
@@ -58,9 +58,9 @@ use <?= ltrim($generator->modelClass, '\\') ?>;
 use <?= ltrim($generator->baseControllerClass, '\\') ?>;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use lispa\amos\core\icons\AmosIcons;
-use lispa\amos\core\helpers\Html;
-use lispa\amos\core\helpers\T;
+use open20\amos\core\icons\AmosIcons;
+use open20\amos\core\helpers\Html;
+use open20\amos\core\helpers\T;
 use yii\helpers\Url;
 
 /**
@@ -149,7 +149,7 @@ return $this->render('view', ['model' => $model]);
 */
 public function actionCreate()
 {
-$this->layout = "@vendor/lispa/amos-core/views/layouts/form";
+$this->layout = "@vendor/open20/amos-core/views/layouts/form";
 $model = new <?= $modelClass ?>;
 
 if ($model->load(Yii::$app->request->post()) && $model->validate()) {
@@ -238,7 +238,7 @@ return $this->render('create', [
 */
 public function actionCreateAjax($fid, $dataField)
 {
-$this->layout = "@vendor/lispa/amos-core/views/layouts/form";
+$this->layout = "@vendor/open20/amos-core/views/layouts/form";
 $model = new <?= $modelClass ?>;
 
 if (\Yii::$app->request->isAjax && $model->load(Yii::$app->request->post()) && $model->validate()) {
@@ -326,7 +326,7 @@ return $this->renderAjax('_formAjax', [
 */
 public function actionUpdate(<?= $actionParams ?>)
 {
-$this->layout = "@vendor/lispa/amos-core/views/layouts/form";
+$this->layout = "@vendor/open20/amos-core/views/layouts/form";
 $model = $this->findModel(<?= $actionParams ?>);
 <?php foreach ((array) $elencoAttributi as $key => $Relation):        
         ?>   

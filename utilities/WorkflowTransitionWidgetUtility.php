@@ -1,26 +1,26 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\utilities
+ * @package    open20\amos\core\utilities
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\utilities;
+namespace open20\amos\core\utilities;
 
-use lispa\amos\core\interfaces\WorkflowMetadataInterface;
-use lispa\amos\core\module\AmosModule;
-use lispa\amos\core\module\BaseAmosModule;
-use lispa\amos\core\record\Record;
+use open20\amos\core\interfaces\WorkflowMetadataInterface;
+use open20\amos\core\module\AmosModule;
+use open20\amos\core\module\BaseAmosModule;
+use open20\amos\core\record\Record;
 use raoul2000\workflow\base\Status;
 use yii\base\BaseObject;
 
 /**
  * Class WorkflowTransitionWidgetUtility
- * @package lispa\amos\core\utilities
+ * @package open20\amos\core\utilities
  */
 class WorkflowTransitionWidgetUtility extends BaseObject
 {

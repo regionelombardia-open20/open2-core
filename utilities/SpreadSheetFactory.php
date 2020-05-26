@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\utilities
+ * @package    open20\amos\core\utilities
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\utilities;
+namespace open20\amos\core\utilities;
 
 use Yii;
 use PhpOffice\PhpSpreadsheet\Settings;
@@ -19,11 +19,11 @@ use \PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use \PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use \PhpOffice\PhpSpreadsheet\Shared\Date;
 use yii\log\Logger;
-use lispa\amos\core\record\RecordDynamicModel;
+use open20\amos\core\record\RecordDynamicModel;
 
 /**
  * Class SpreadSheetFactory
- * @package lispa\amos\core\utilities
+ * @package open20\amos\core\utilities
  */
 class SpreadSheetFactory
 {
@@ -75,7 +75,7 @@ class SpreadSheetFactory
     /**
      *
      * @param type $type Reader class to create.
-     * @return \lispa\amos\core\utilities\readerClass  Returns a IReader of the given type if found.
+     * @return \open20\amos\core\utilities\readerClass  Returns a IReader of the given type if found.
      * @throws \InvalidArgumentException
      */
     public static function createReader($type)
@@ -440,7 +440,7 @@ class SpreadSheetFactory
     public static function createImportAndSaveDynamic($sheet, $fileName, $table, $attributes,
                                                       $typeUpdate = self::UPDATE_INCREMENTAL, $rowToStart = 2,
                                                       $db = 'db',
-                                                      $driver = 'lispa\\amos\\core\\record\\drivers\\Mysql',
+                                                      $driver = 'open20\\amos\\core\\record\\drivers\\Mysql',
                                                       $colToStart = 1, $chunkSize = 1000)
     {
         $format       = IOFactory::identify($fileName);
@@ -477,7 +477,7 @@ class SpreadSheetFactory
                     for ($row = $startRow; $row <= $maxRows; ++$row) {
                         $indx++;
                         $model = new RecordDynamicModel($attributes);
-                        $model->addRule($attributes, 'safe');
+//                        $model->addRule($attributes, 'safe'); // Commentata per adeguarsi agli unsafeAttributes del RecordDynamicModel. Se la riga è scommentata non va e crea la tabella con la sola colonna id.
                         $model->setDb($db);
                         $model->setDriver($driver);
                         $model->setTableName($table);

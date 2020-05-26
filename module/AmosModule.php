@@ -1,24 +1,24 @@
 <?php
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\module
+ * @package    open20\amos\core\module
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\module;
+namespace open20\amos\core\module;
 
 use ReflectionClass;
 use yii\helpers\ArrayHelper;
-use lispa\amos\core\widget\WidgetAbstract;
+use open20\amos\core\widget\WidgetAbstract;
 
 /**
  * Class AmosModule
- * @package lispa\amos\core\module
+ * @package open20\amos\core\module
  */
-abstract class AmosModule extends \lispa\amos\core\module\BaseAmosModule implements ModuleInterface
+abstract class AmosModule extends \open20\amos\core\module\BaseAmosModule implements ModuleInterface
 {
     /**
      * Array that will store the models used in the package
@@ -44,14 +44,14 @@ abstract class AmosModule extends \lispa\amos\core\module\BaseAmosModule impleme
      * e.g. :
      * [
      *      [
-     *           'namespace' => 'lispa\amos\showcaseprojects\models\InitiativeType',
+     *           'namespace' => 'open20\amos\showcaseprojects\models\InitiativeType',
      *           //'connection' => 'db', //if not set it use 'db'
      *           //'classBehavior' => NULL,//if not set it use default classBehavior 'lajax\translatemanager\behaviors\TranslateBehavior'
      *           'attributes' => ['name', 'description'],
      *           'category' => 'amosshowcaseprojects',
      *      ],
      *      [
-     *           'namespace' => 'lispa\amos\showcaseprojects\models\InitiativeType',
+     *           'namespace' => 'open20\amos\showcaseprojects\models\InitiativeType',
      *           'attributes' => ['name', 'description'],
      *           'category' => 'amosshowcaseprojects',
      *      ]

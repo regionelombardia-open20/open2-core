@@ -1,7 +1,16 @@
 <?php
 
-use lispa\amos\core\helpers\Html;
-use lispa\amos\core\icons\AmosIcons;
+/**
+ * Aria S.p.A.
+ * OPEN 2.0
+ *
+ *
+ * @package    Open20Package
+ * @category   CategoryName
+ */
+
+use open20\amos\core\helpers\Html;
+use open20\amos\core\icons\AmosIcons;
 
 use yii\bootstrap\Modal;
 
@@ -59,9 +68,9 @@ $this->registerJs($js);
           <a class="btn"><?= AmosIcons::show('heart', [], 'dash') ?></a>
       </span>
         <span class="like-wrap-piacea">
-          <a class="btn" id="like-to">Piace a <span id="n-piacea" class="likeme">
+          <a class="btn" id="like-to"><?= \Yii::t('amosapp','Piace a') . ' ' ?><span id="n-piacea" class="likeme">
                   <?= $tot ?>
-              </span> utenti
+              </span><?= ' ' . \Yii::t('amosapp', 'utenti') ?>
           </a>
   </span>
     </div>
@@ -73,7 +82,7 @@ $this->registerJs($js);
 <?php
 Modal::begin([
     'id' => 'openModelUsers',
-    'header' => AmosIcons::show('heart', [], 'dash') . ' ' .Yii::t('amoscwh', 'Piace a'),
+    'header' => AmosIcons::show('heart', [], 'dash') . ' ' .Yii::t('app', 'Piace a'),
 //    'size' => Modal::SIZE_LARGE
 ]);
 echo Html::tag('div', '', ['id' => 'openmodal-preview']);

@@ -1,20 +1,20 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms\views\widgets
+ * @package    open20\amos\core\forms\views\widgets
  * @category   CategoryName
  */
 
-use lispa\amos\core\helpers\Html;
-use lispa\amos\core\icons\AmosIcons;
-use lispa\amos\core\module\BaseAmosModule;
+use open20\amos\core\helpers\Html;
+use open20\amos\core\icons\AmosIcons;
+use open20\amos\core\module\BaseAmosModule;
 
 /**
- * @var \lispa\amos\core\widget\WidgetGraphic $widget The widget view where this is applied
+ * @var \open20\amos\core\widget\WidgetGraphic $widget The widget view where this is applied
  * @var string $tClassName Complete classname of module of the graphic widget.
  * @var string $actionRoute Route to controller action.
  * @var array $options Array of options to be applied at create button.

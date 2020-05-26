@@ -1,28 +1,28 @@
 <?php
-
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\utilities
+ * @package    open20\amos\core\utilities
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\utilities;
+namespace open20\amos\core\utilities;
 
 use Yii;
 use yii\base\BaseObject;
 
 /**
  * Class Email
- * @package lispa\amos\core\utilities
+ * @package open20\amos\core\utilities
  */
 class Email extends BaseObject
 {
+
     /**
      * @param string $from
-     * @param array $to
+     * @param array|string $to
      * @param $subject
      * @param $text
      * @param array $files
@@ -33,23 +33,20 @@ class Email extends BaseObject
      * @return bool
      */
     public static function sendMail(
-        $from,
-        array $to = [],
-        $subject,
-        $text,
-        array $files = [],
-        array $bcc = [],
-        $params = [],
-        $priority = 0,
-        $use_queue = false
+    $from, $to, $subject, $text, array $files = [], array $bcc = [], $params = [], $priority = 0, $use_queue = false
     )
     {
-        /** @var \lispa\amos\emailmanager\AmosEmail $mailModule */
+        /** @var \open20\amos\emailmanager\AmosEmail $mailModule */
         $mailModule = Yii::$app->getModule("email");
-        $errCnt = 0;
+        $errCnt     = 0;
         if (isset($mailModule)) {
-            /** @var string $recipient */
+            if (is_string($to)) {
+                $to = [$to];
+            } elseif (!is_string($to) && !is_array($to)) {
+                return false;
+            }
             foreach ($to as $recipient) {
+                /** @var string $recipient */
                 if ($use_queue) {
                     if (!$mailModule->queue($from, $recipient, $subject, $text, $files, $bcc, $params, $priority)) {
                         $errCnt++;
@@ -80,13 +77,19 @@ class Email extends BaseObject
         if (is_null($user_id)) {
             $user_id = \Yii::$app->getUser()->id;
         }
-        self::setUserLanguage($user_id);
+        if (empty($user_id)) {
+            self::setGuestLanguage();
+        } else {
+            self::setUserLanguage($user_id);
+        }
         if (Yii::$app->controller instanceof \yii\base\Controller) {
             $value = Yii::$app->controller->renderPartial($view, $params);
             if (!is_null($user_id)) {
                 if (\Yii::$app instanceof \yii\web\Application) {
                     self::setUserLanguage(\Yii::$app->getUser()->id);
                 }
+            } else {
+                self::setGuestLanguage();
             }
         }
         return $value;
@@ -101,6 +104,20 @@ class Email extends BaseObject
         if ($module && !empty($module->enableUserLanguage) && $module->enableUserLanguage == true) {
             $lang = $module->getUserLanguage($user_id);
             $module->setAppLanguage($lang);
+        }
+    }
+
+    /**
+     * Set the guest lang
+     */
+    public static function setGuestLanguage()
+    {
+        $module = \Yii::$app->getModule('translation');
+        if ($module && !empty($module->enableUserLanguage) && $module->enableUserLanguage == true) {
+            if (method_exists($module, 'getGuestLanguage')) {
+                $lang = $module->getGuestLanguage();
+                $module->setAppLanguage($lang);
+            }
         }
     }
 }

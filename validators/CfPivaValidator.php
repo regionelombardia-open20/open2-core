@@ -1,23 +1,24 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\validators
+ * @package    open20\amos\core\validators
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\validators;
+namespace open20\amos\core\validators;
 
 use yii\validators\Validator;
-use lispa\amos\core\validators\CFValidator;
-use lispa\amos\core\validators\PIVAValidator;
+use open20\amos\core\validators\CFValidator;
+use open20\amos\core\validators\PIVAValidator;
 
 /**
  * Description of CfPivaValidator
  *
+ * @author Cesare
  */
 class CfPivaValidator extends Validator
 {

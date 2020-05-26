@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\views\layouts
+ * @package    open20\amos\core\views\layouts
  * @category   CategoryName
  */
 
@@ -20,7 +20,7 @@ use backend\assets\ModuleFrontendAsset;
 /* @var $this \yii\web\View */
 /* @var $content string */
 
-//\bedezign\yii2\audit\web\JSLoggingAsset::register($this);
+//\open20\amos\audit\web\JSLoggingAsset::register($this);
 AppAsset::register($this);
 ModuleFrontendAsset::register($this);
 ?>

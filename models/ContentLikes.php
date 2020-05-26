@@ -1,56 +1,66 @@
 <?php
 
-namespace lispa\amos\core\models;
+/**
+ * Aria S.p.A.
+ * OPEN 2.0
+ *
+ *
+ * @package    Open20Package
+ * @category   CategoryName
+ */
 
-use lispa\amos\admin\models\UserProfile;
-use lispa\amos\core\user\User;
+namespace open20\amos\core\models;
+
+use open20\amos\admin\models\UserProfile;
+use open20\amos\core\user\User;
 
 use Yii;
 use yii\helpers\ArrayHelper;
+use open20\amos\admin\utility\UserProfileUtility;
 
 /**
  * This is the model class for table "content_likes".
  */
-class ContentLikes extends \lispa\amos\core\models\base\ContentLikes {
+class ContentLikes extends \open20\amos\core\models\base\ContentLikes {
 
-  /**
-   * 
-   * @param type $uid
-   * @param type $cid
-   * @param type $mid
-   * @return type
-   */
-  public static function getLikesToCounter($uid = null, $cid = null, $mid = null) {
-    $classname = \lispa\amos\core\models\ContentLikes::className();
-    
-    $tblContentLikes = ContentLikes::tableName();
-    $tblUserProfile = UserProfile::tableName();
-    $tblUser = User::tableName();
-    
-    $query = $classname::find()
-      ->join(
-        'INNER JOIN',
-        $tblUserProfile,
-        $tblUserProfile . '.user_id = ' . $tblContentLikes . '.user_id'
-      )
-      ->join(
-        'INNER JOIN',
-        $tblUser,
-        $tblUser . '.id = ' . $tblUserProfile . '.id'
-      )
-      ->andWhere([
-        $tblContentLikes . '.content_id' => $cid,
-        $tblContentLikes . '.models_classname_id' => $mid,
-        $tblContentLikes . '.likes' => 1,
-        
-        $tblUserProfile . '.attivo' => UserProfile::STATUS_ACTIVE,
-        $tblUser . '.status' => User::STATUS_ACTIVE,
-        $tblUser . '.deleted_at' => null
-      ]);
-    
-    return count($query->all());
-  }
-  
+    /**
+     *
+     * @param type $uid
+     * @param type $cid
+     * @param type $mid
+     * @return type
+     */
+    public static function getLikesToCounter($uid = null, $cid = null, $mid = null) {
+        $classname = \open20\amos\core\models\ContentLikes::className();
+
+        $tblContentLikes = ContentLikes::tableName();
+        $tblUserProfile = UserProfile::tableName();
+        $tblUser = User::tableName();
+
+        $query = $classname::find()
+                ->join(
+                        'INNER JOIN',
+                        $tblUserProfile,
+                        $tblUserProfile . '.user_id = ' . $tblContentLikes . '.user_id'
+                )
+                ->join(
+                        'INNER JOIN',
+                        $tblUser,
+                        $tblUser . '.id = ' . $tblUserProfile . '.user_id'
+                )
+                ->andWhere([
+                    $tblContentLikes . '.content_id' => $cid,
+                    $tblContentLikes . '.models_classname_id' => $mid,
+                    $tblContentLikes . '.likes' => 1,
+                    $tblUserProfile . '.attivo' => UserProfile::STATUS_ACTIVE,
+                    $tblUser . '.status' => User::STATUS_ACTIVE,
+                    $tblUser . '.deleted_at' => null
+                ])
+                ->andWhere(['<>', $tblUserProfile . '.nome', UserProfileUtility::DELETED_ACCOUNT_NAME]);
+
+        return count($query->all());
+    }
+
   /**
    * 
    * @param type $uid
@@ -58,7 +68,7 @@ class ContentLikes extends \lispa\amos\core\models\base\ContentLikes {
    * @param type $mid
    */
   public static function getLikeMe($uid = null, $cid = null, $mid = null) {
-    $classname =  \lispa\amos\core\models\ContentLikes::className();
+    $classname =  \open20\amos\core\models\ContentLikes::className();
     
     $rs = $classname::find()
       ->andWhere([
@@ -93,6 +103,7 @@ class ContentLikes extends \lispa\amos\core\models\base\ContentLikes {
    * Returns the text hint for the specified attribute.
    * @param string $attribute the attribute name
    * @return string the attribute hint
+   * @see attributeHints
    */
   public function getAttributeHint($attribute) {
     $hints = $this->attributeHints();

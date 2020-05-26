@@ -1,28 +1,28 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\record
+ * @package    open20\amos\core\record
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\record;
+namespace open20\amos\core\record;
 
-use lispa\amos\admin\models\UserProfile;
-use lispa\amos\core\user\User;
-use lispa\amos\cwh\base\ModelNetworkInterface;
-use lispa\amos\cwh\models\CwhAuthAssignment;
-use lispa\amos\cwh\models\CwhConfig;
+use open20\amos\admin\models\UserProfile;
+use open20\amos\core\user\User;
+use open20\amos\cwh\base\ModelNetworkInterface;
+use open20\amos\cwh\models\CwhAuthAssignment;
+use open20\amos\cwh\models\CwhConfig;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveQuery;
 
 /**
  * Class networkModel
- * @package lispa\amos\core\record
+ * @package open20\amos\core\record
  *
  * @property Record[] $networkUserMms
  */
@@ -32,7 +32,7 @@ abstract class NetworkModel extends ContentModel implements ModelNetworkInterfac
 
     public function hasSubNetworks()
     {
-      return false;
+        return false;
     }
 
     /**
@@ -43,6 +43,7 @@ abstract class NetworkModel extends ContentModel implements ModelNetworkInterfac
     public function buildQuery($params, $queryType, $onlyActiveStatus = false, $userId = null)
     {
         $query = $this->baseSearch($params);
+
         if(is_null($userId))
         {
             $userId = Yii::$app->getUser()->getId();
@@ -79,6 +80,16 @@ abstract class NetworkModel extends ContentModel implements ModelNetworkInterfac
                         $query->andWhere("ISNULL(".$this->getMmTableName().".status) OR ".$this->getMmTableName().".status = 'ACTIVE'");
                     }
                 }
+                break;
+            case 'own-interest-with-tags':
+                $this->filterValidated($query);
+                /** @var User $loggedUser */
+                $loggedUser = Yii::$app->user->identity;
+                $loggedUserId = $loggedUser->id;
+                $loggedUserProfileId = $loggedUser->userProfile->id;
+                $usersTags = $this->getUsersTag($loggedUserProfileId);
+                $usersCommunities = $this->getUsersCommunities($loggedUserId);
+                $query = $this->getCommunitiesWithTags($query, $usersTags, $usersCommunities);
                 break;
         }
         $this->filterByContext($query);
@@ -240,13 +251,14 @@ abstract class NetworkModel extends ContentModel implements ModelNetworkInterfac
         }
         $userNetworkIds = $this->getNetworkUserMms()->select($this->getMmUserIdFieldName())->column();
         /** @var ActiveQuery $userQuery */
-        $userQuery = User::find()->andFilterWhere(['not in', User::tableName() . '.id', $userNetworkIds]);
-        $userQuery->joinWith('userProfile');
-        $userQuery->andWhere(UserProfile::tableName().'.id is not null');
+        $userQuery = User::find()
+            ->andFilterWhere(['not in', User::tableName() . '.id', $userNetworkIds])
+            ->joinWith('userProfile')
+            ->andWhere(['is not', UserProfile::tableName().'.id', null])
+            ->andWhere([User::tableName().'.status' => User::STATUS_ACTIVE])
+            ->andWhere([UserProfile::tableName().'.attivo' => UserProfile::STATUS_ACTIVE])
+            ->orderBy(['cognome' => SORT_ASC, 'nome' => SORT_ASC]);
 
-        $userQuery->andWhere([UserProfile::tableName().'.attivo' => 1]);
-
-        $userQuery->orderBy(['cognome' => SORT_ASC, 'nome' => SORT_ASC]);
         return $userQuery;
     }
 
@@ -269,5 +281,56 @@ abstract class NetworkModel extends ContentModel implements ModelNetworkInterfac
             Yii::getLogger()->log($ex->getMessage(), \yii\log\Logger::LEVEL_ERROR);
         }
         return $users;
+    }
+
+    /**
+     * Retrieve the user's tags
+     * @param int $userProfileId
+     * @return array
+     * @throws \yii\base\InvalidConfigException
+     */
+    private function getUsersTag($userProfileId)
+    {
+        $usersTags = [];
+        if (!is_null(Yii::$app->getModule('cwh'))) {
+            $usersTags = \open20\amos\cwh\utility\CwhUtil::findInterestTagIdsByUser($userProfileId);
+        }
+        return $usersTags;
+    }
+
+    /**
+     * Retrieve the user's communities
+     * @param int $userId
+     * @return array
+     * @throws \yii\base\InvalidConfigException
+     */
+    private function getUsersCommunities($userId)
+    {
+        $usersCommunities = [];
+        if (!is_null(Yii::$app->getModule('cwh'))) {
+            /** @var ActiveQuery $query */
+            $query = \open20\amos\community\models\CommunityUserMm::find();
+            $usersCommunities = $query->select(['community_id'])->andWhere(['user_id' => $userId])->column();
+        }
+        return $usersCommunities;
+    }
+
+    /**
+     * Retrieve the elements matching with tags in input
+     * @param ActiveQuery $query
+     * @param array $usersTags
+     * @param array $usersCommunities
+     * @return mixed
+     */
+    private function getCommunitiesWithTags($query, $usersTags = [], $usersCommunities = [])
+    {
+        $this->setTagValues($usersTags);
+        $query->innerJoin('entitys_tags_mm entities_tag',
+            "entities_tag.classname = '" . addslashes($this->modelClassName) . "' AND entities_tag.record_id=" . static::tableName() . ".id");
+        $query->andWhere(['or', ["community.community_type_id" => 1], ["community.community_type_id" => 2]]);
+        $query->andWhere(['in', 'community.id', $usersCommunities]);
+        $query->andWhere(['in', 'entities_tag.tag_id', $usersTags]);
+        $query->andWhere(['entities_tag.deleted_at' => null]);
+        return $query;
     }
 }

@@ -1,23 +1,23 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\controllers
+ * @package    open20\amos\core\controllers
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\controllers;
+namespace open20\amos\core\controllers;
 
-use lispa\amos\core\forms\EmailForm;
-use lispa\amos\core\helpers\Html;
-use lispa\amos\core\icons\AmosIcons;
-use lispa\amos\core\interfaces\ModelLabelsInterface;
-use lispa\amos\core\module\BaseAmosModule;
-use lispa\amos\core\user\User;
-use lispa\amos\core\utilities\Email;
+use open20\amos\core\forms\EmailForm;
+use open20\amos\core\helpers\Html;
+use open20\amos\core\icons\AmosIcons;
+use open20\amos\core\interfaces\ModelLabelsInterface;
+use open20\amos\core\module\BaseAmosModule;
+use open20\amos\core\user\User;
+use open20\amos\core\utilities\Email;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\data\ActiveDataProvider;
@@ -30,10 +30,10 @@ use yii\web\NotFoundHttpException;
 /**
  * Class CrudController
  *
- * @property \lispa\amos\core\record\Record $model
- * @property \lispa\amos\core\record\Record $modelSearch
+ * @property \open20\amos\core\record\Record $model
+ * @property \open20\amos\core\record\Record $modelSearch
  *
- * @package lispa\amos\core\controllers
+ * @package open20\amos\core\controllers
  */
 abstract class CrudController extends BaseController
 {
@@ -49,6 +49,16 @@ abstract class CrudController extends BaseController
     public $availableViews;
     public $url;
     public $parametro;
+
+    /** 
+     * Used by direct community invitation 
+     * 
+     * @var type 
+     */
+    public 
+        $moduleName = null,
+        $contextModelId = null
+    ;
 
     /**
      * @var array $exportConfig Configurations to export data. DON'T SET IN Yii::$app->request->queryParams!
@@ -88,6 +98,9 @@ abstract class CrudController extends BaseController
         if (!isset($this->availableViews)) {
             throw new InvalidConfigException("{availableViews}: gridView,listView,mapView,calendarView.. must be set");
         }
+
+        $this->moduleName = Yii::$app->request->get('moduleName');
+        $this->contextModelId = Yii::$app->request->get('contextModelId');
 
         $this->initCurrentView();
 
@@ -129,7 +142,9 @@ abstract class CrudController extends BaseController
         $this->setCurrentView($currentView);
 
         if ($currentViewName = Yii::$app->request->getQueryParam('currentView')) {
-            $this->setCurrentView($this->getAvailableView($currentViewName));
+            $views = array_keys($this->getAvailableViews());
+            $viewToSet = (in_array($currentViewName, $views) ? $currentViewName : $currentView['name']);
+            $this->setCurrentView($this->getAvailableView($viewToSet));
         }
     }
 
@@ -216,7 +231,7 @@ abstract class CrudController extends BaseController
      * @return string the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionIndex($layout = NULL)
+    public function actionIndex($layout = null)
     {
         $this->setUpLayout('list');
 
@@ -225,14 +240,20 @@ abstract class CrudController extends BaseController
         if ($layout) {
             $this->setUpLayout($layout);
         }
-        return $this->render('index', [
-            'dataProvider' => $this->getDataProvider(),
-            'model' => $this->getModelSearch(),
-            'currentView' => $this->getCurrentView(),
-            'availableViews' => $this->getAvailableViews(),
-            'url' => ($this->url) ? $this->url : NULL,
-            'parametro' => ($this->parametro) ? $this->parametro : NULL
-        ]);
+        
+        return $this->render(
+            'index', 
+            [
+                'dataProvider' => $this->getDataProvider(),
+                'model' => $this->getModelSearch(),
+                'currentView' => $this->getCurrentView(),
+                'availableViews' => $this->getAvailableViews(),
+                'url' => ($this->url) ? $this->url : null,
+                'parametro' => ($this->parametro) ? $this->parametro : null,
+                'moduleName' => ($this->moduleName) ? $this->moduleName : null,
+                'contextModelId' => ($this->contextModelId) ? $this->contextModelId : null,
+            ]
+        );
     }
 
     /**
@@ -292,7 +313,7 @@ abstract class CrudController extends BaseController
      */
     protected function findModel($id)
     {
-        /** @var \lispa\amos\core\record\Record $model */
+        /** @var \open20\amos\core\record\Record $model */
         $model = null;
         $modelObj = $this->getModelObj();
 
@@ -330,7 +351,7 @@ abstract class CrudController extends BaseController
     public function actionRequestInformation($id)
     {
         $this->model = $this->findModel($id);
-        $view = '@vendor/lispa/amos-core/forms/views/information_request';
+        $view = '@vendor/open20/amos-core/forms/views/information_request';
         $infoRequest = new EmailForm();
         $this->layout = false;
         if (Yii::$app->getRequest()->isAjax && Yii::$app->request->isPost) {
@@ -360,7 +381,7 @@ abstract class CrudController extends BaseController
                         }
                         $subject .= '"' . $this->model->getTitle() . '"';
                     }
-                    $templatePath = !empty($infoRequest->templatePath) ? $infoRequest->templatePath : '@vendor/lispa/amos-core/views/email/request-information';
+                    $templatePath = !empty($infoRequest->templatePath) ? $infoRequest->templatePath : '@vendor/open20/amos-core/views/email/request-information';
                     $text = $this->renderMailPartial($templatePath,
                         ['message' => $infoRequest->message, 'email' => $fromMail, 'nameUser' => $fromName]);
                     if (isset(Yii::$app->params['email-assistenza'])) {

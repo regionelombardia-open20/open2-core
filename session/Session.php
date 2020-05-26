@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\session
+ * @package    open20\amos\core\session
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\session;
+namespace open20\amos\core\session;
 
 use yii\web\Session as BaseSession;
 

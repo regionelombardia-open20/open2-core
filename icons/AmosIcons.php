@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\icons
+ * @package    open20\amos\core\icons
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\icons;
+namespace open20\amos\core\icons;
 
 use kartik\icons\Icon;
 use Yii;
@@ -28,15 +28,14 @@ class AmosIcons extends Icon
      * Icon framework configurations
      */
     public static $_custom_frameworks = [
-        self::AM => ['prefix' => 'am am-', 'class' => '\\lispa\\amos\\layout\\assets\\BaseAsset'],
-        self::DASH => ['prefix' => 'dash dash-', 'class' => '\\lispa\\amos\\layout\\assets\\BaseAsset'],
-        self::IC => ['prefix' => 'ic ic-', 'class' => '\\lispa\\amos\\layout\\assets\\BaseAsset'],
+        self::AM => ['prefix' => 'am am-', 'class' => '\\open20\\amos\\layout\\assets\\BaseAsset'],
+        self::DASH => ['prefix' => 'dash dash-', 'class' => '\\open20\\amos\\layout\\assets\\BaseAsset'],
+        self::IC => ['prefix' => 'ic ic-', 'class' => '\\open20\\amos\\layout\\assets\\BaseAsset'],
     ];
 
     /**
-     * 
-     * @param type $iconFramework
-     * @return string
+     * @param string|null $iconFramework
+     * @return string|null
      */
     public static function getIconFramework($iconFramework = null)
     {
@@ -54,14 +53,14 @@ class AmosIcons extends Icon
     }
 
     /**
-     * 
-     * @param type $name
-     * @param type $options
-     * @param type $framework
-     * @param type $space
-     * @param type $tag
-     * @param type $value
-     * @return type
+     * @param string $name
+     * @param array $options
+     * @param string|null $framework
+     * @param bool $space
+     * @param string $tag
+     * @param string $value
+     * @return string
+     * @throws \yii\base\InvalidConfigException
      */
     public static function show($name, $options = [], $framework = null, $space = true, $tag = 'span', $value = '')
     {
@@ -73,14 +72,14 @@ class AmosIcons extends Icon
             return Html::tag($tag, ' ' . $value, $options) . ($space ? ' ' : '');
         }
         
-        return parent::show($name, $options, $framework, $space, $tag);
+        return parent::show($name, $options);
     }
 
     /**
-     * 
-     * @param type $framework
-     * @param type $method
-     * @return type
+     * @param string|null $framework
+     * @param string $method
+     * @return string|null
+     * @throws \yii\base\InvalidConfigException
      */
     protected static function getFramework($framework = null, $method = 'show')
     {
@@ -102,9 +101,9 @@ class AmosIcons extends Icon
     }
 
     /**
-     * 
-     * @param type $view
-     * @param type $framework
+     * @param \yii\web\View $view
+     * @param string|null $framework
+     * @throws \yii\base\InvalidConfigException
      */
     public static function map($view, $framework = null)
     {
@@ -123,15 +122,15 @@ class AmosIcons extends Icon
     }
 
     /**
-     * 
+     *
      */
     public static function setFramework()
     {
         $moduleL = \Yii::$app->getModule('layout');
         if (empty($moduleL)) {
             self::$_custom_frameworks = [
-                self::AM => ['prefix' => 'am am-', 'class' => '\\lispa\\amos\\core\\views\\assets\\AmosCoreAsset'],
-                self::DASH => ['prefix' => 'dash dash-', 'class' => '\\lispa\\amos\\core\\views\\assets\\AmosCoreAsset'],
+                self::AM => ['prefix' => 'am am-', 'class' => '\\open20\\amos\\core\\views\\assets\\AmosCoreAsset'],
+                self::DASH => ['prefix' => 'dash dash-', 'class' => '\\open20\\amos\\core\\views\\assets\\AmosCoreAsset'],
             ];
         }
     }

@@ -1,17 +1,17 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\views\toolbars
+ * @package    open20\amos\core\views\toolbars
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\views\toolbars;
+namespace open20\amos\core\views\toolbars;
 
-use lispa\amos\core\icons\AmosIcons;
+use open20\amos\core\icons\AmosIcons;
 use Yii;
 
 class StatsToolbarPanels

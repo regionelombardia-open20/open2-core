@@ -1,14 +1,14 @@
 <?php
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\giiamos\widgets
+ * @package    open20\amos\core\giiamos\widgets
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\giiamos\widgets;
+namespace open20\amos\core\giiamos\widgets;
 
 use Yii;
 use yii\gii\CodeFile;
@@ -171,7 +171,7 @@ class Generator extends \yii\gii\generators\model\Generator
     {
         return [
             'iconClass' => 'Icon class',
-            'vendorPath' => 'Percorso relativo dentro la vendor per esempio "lispa/amos-news/src/widgets"',
+            'vendorPath' => 'Percorso relativo dentro la vendor per esempio "open20/amos-news/src/widgets"',
             'iconColor' => 'Icon colors',
             'label' => 'Widget class',
             'moduleName' => 'Module Name eg: modulo_di_test',

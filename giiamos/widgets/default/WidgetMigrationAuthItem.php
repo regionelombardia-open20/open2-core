@@ -1,17 +1,17 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\giiamos\widgets\default
+ * @package    open20\amos\core\giiamos\widgets\default
  * @category   CategoryName
  */
 
 echo "<?php\n";
 ?>
-use lispa\amos\core\migration\AmosMigrationPermissions;
+use open20\amos\core\migration\AmosMigrationPermissions;
 use yii\rbac\Permission;
 <?php
 $el_count = count($data_obj->rolesSelected);

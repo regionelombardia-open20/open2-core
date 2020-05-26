@@ -1,24 +1,24 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms\editors\assets\m2mWidget
+ * @package    open20\amos\core\forms\editors\assets\m2mWidget
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\forms\editors\m2mWidget;
+namespace open20\amos\core\forms\editors\m2mWidget;
 
-use lispa\amos\core\forms\CreateNewButtonWidget;
-use lispa\amos\core\forms\editors\ExportMenu;
-use lispa\amos\core\icons\AmosIcons;
-use lispa\amos\core\module\BaseAmosModule;
-use lispa\amos\core\module\Module;
-use lispa\amos\core\record\Record;
-use lispa\amos\core\utilities\JsUtility;
-use lispa\amos\core\views\AmosGridView;
+use open20\amos\core\forms\CreateNewButtonWidget;
+use open20\amos\core\forms\editors\ExportMenu;
+use open20\amos\core\icons\AmosIcons;
+use open20\amos\core\module\BaseAmosModule;
+use open20\amos\core\module\Module;
+use open20\amos\core\record\Record;
+use open20\amos\core\utilities\JsUtility;
+use open20\amos\core\views\AmosGridView;
 use Yii;
 use yii\base\Event;
 use yii\base\Exception;
@@ -34,7 +34,7 @@ use yii\web\View;
 
 /**
  * Class M2MWidget
- * @package lispa\amos\core\forms\editors\m2mWidget
+ * @package open20\amos\core\forms\editors\m2mWidget
  */
 class M2MWidget extends Widget
 {
@@ -53,6 +53,8 @@ class M2MWidget extends Widget
     public $targetUrlParams = null;
     /** @var string $additionalTargetUrl The url of additional association page */
     public $additionalTargetUrl = null;
+    /** @var array|string $overrideAdditionalTargetUrl Total override of the url of additional association page */
+    public $overrideAdditionalTargetUrl = null;
     //model di scelta associazioni
     public $modelTarget = null;
     //classe di ricerca per il model
@@ -67,6 +69,14 @@ class M2MWidget extends Widget
     public $postKey = '';
     public $modelDataArrFromTo = [];
 
+    
+    /** @var string $targetUrlInvitation The url of invitations page */
+    public $targetUrlInvitation = null;
+    public $btnInvitationLabel = '';
+    public $btnInvitationClass = 'btn btn-primary';
+    public $invitationModule = null;
+    public $externalInvitationEnabled = false;
+    
     /**
      * @var Module $moduleClassName
      */
@@ -108,6 +118,8 @@ class M2MWidget extends Widget
     public $createAdditionalAssociateButtonsEnabled = false;
     public $disableCreateButton = false;
     public $disableAssociaButton = false;
+    public $additionalAssociaButtonEnabled = false;
+    public $btnAssociaId = '';
     public $btnAssociaLabel = '';
     public $btnAssociaClass = 'btn btn-primary';
     public $btnAdditionalAssociateLabel = '';
@@ -190,6 +202,21 @@ class M2MWidget extends Widget
      */
     public $exportMittenteConfig = [];
 
+    /**
+     * @var bool $checkPermWithNewMethod If true check the create button permission with new method. Otherwise it doesn't check the permission.
+     */
+    public $checkPermWithNewMethod = true;
+
+    /**
+     * @var bool $externalInvitaionEnabled If true enable the invitation of external users.
+     */
+    public $externalInvitaionEnabled = false;
+
+        /**
+     *  @var string $additionalButtons
+     */
+    public $additionalButtons = '';
+    
     /**
      * @throws Exception
      */
@@ -300,13 +327,14 @@ class M2MWidget extends Widget
         $retVal = '';
         $buttons = '';
         $btnAssociaLabel = ($this->btnAssociaLabel == '') ? Yii::t('amoscore', 'Associa') : $this->btnAssociaLabel;
+        $btnInvitationLabel = ($this->btnInvitationLabel == '') ? Yii::t('amoscore', 'Add User') : $this->btnInvitationLabel;
 
         if ($this->createAssociaButtonsEnabled) {
             if (!$this->disableCreateButton) {
                 $confirm = $this->getConfirm();
                 $createOptions = [
                     'urlCreateNew' => $this->createNewTargetUrl,
-                    'checkPermWithNewMethod' => true,
+                    'checkPermWithNewMethod' => $this->checkPermWithNewMethod,
                     'createButtonId' => self::creaButtonId(),
                     'createNewBtnLabel' => $this->createNewBtnLabel
                 ];
@@ -321,24 +349,52 @@ class M2MWidget extends Widget
             }
 
             // Render "associa" button if the user has the correct permission set in this widget config array.
-            if (\Yii::$app->getUser()->can($this->permissions['add'], ['model' => $this->model]) && !$this->disableAssociaButton) {
-                $basicUrlParams = [$this->targetUrl, 'id' => $this->modelId];
-                $url = $basicUrlParams;
-                if (isset($this->targetUrlParams)) {
-                    $url = ArrayHelper::merge($basicUrlParams, $this->targetUrlParams);
+            if (\Yii::$app->getUser()->can($this->permissions['add'], ['model' => $this->model])) {
+                if (!$this->disableAssociaButton) {
+                    $basicUrlParams = [$this->targetUrl, 'id' => $this->modelId];
+                    $url = $basicUrlParams;
+                    if (isset($this->targetUrlParams)) {
+                        $url = ArrayHelper::merge($basicUrlParams, $this->targetUrlParams);
+                    }
+                    if ($this->isModal) {
+                        $associateBtnId = $this->gridId . '-btn-associate';
+                    } else if (strlen($this->btnAssociaId) > 0) {
+                        $associateBtnId = $this->btnAssociaId;
+                    } else {
+                        $associateBtnId = self::associaButtonId();
+                    }
+
+                    $buttons .= Html::a($btnAssociaLabel, $url, [
+                        'class' => $this->btnAssociaClass,
+                        'title' => $btnAssociaLabel,
+                        'id' => $associateBtnId
+                    ]);
+
+                    $urlTo = Yii::$app->urlManager->createUrl($url);
+                    
                 }
-                $associateBtnId = $this->isModal ? $this->gridId . '-btn-associate' : self::associaButtonId();
 
-
-                $buttons .= Html::a($btnAssociaLabel, $url, [
-                    'class' => $this->btnAssociaClass,
-                    'title' => $btnAssociaLabel,
-                    'id' => $associateBtnId
-                ]);
-
+                if ($this->externalInvitationEnabled) {
+                    $basicUrlParams = [
+                        $this->targetUrlInvitation,
+                        'moduleName' => $this->invitationModule,
+                        'contextModelId' => $this->modelId
+                    ];
+                    $_url = $basicUrlParams;
+                    $invitationBtnId = $this->isModal ? $this->gridId . '-btn-invitation' : self::invitationButtonId();
+                    $buttons .= Html::a(
+                        $btnInvitationLabel,
+                        $_url,
+                        [
+                            'class' => $this->btnInvitationClass,
+                            'title' => $btnInvitationLabel,
+                            'id' => $invitationBtnId
+                        ]
+                    );
+                }
+                
                 if ($this->isModal) {
                     $buttons .= Html::tag('div', '', ['id' => $this->gridId . '-modal-container']);
-                    $urlTo = Yii::$app->urlManager->createUrl($url);
                     $js = JsUtility::getM2mAssociateBtnModal($this->gridId, $urlTo);
                     $this->getView()->registerJs($js);
                 }
@@ -347,8 +403,13 @@ class M2MWidget extends Widget
 
             if ($this->createAdditionalAssociateButtonsEnabled) {
                 // Render "associa" button if the user has the correct permission set in this widget config array.
-                if (\Yii::$app->getUser()->can($this->permissions['add'], ['model' => $this->model]) && !$this->disableAssociaButton) {
-                    $buttons .= Html::a($this->btnAdditionalAssociateLabel, [$this->additionalTargetUrl, 'id' => $this->modelId], [
+                if (\Yii::$app->getUser()->can($this->permissions['add'], ['model' => $this->model]) && (!$this->disableAssociaButton || $this->additionalAssociaButtonEnabled)) {
+                    if (!is_null($this->overrideAdditionalTargetUrl)) {
+                        $additionalTargetUrl = $this->overrideAdditionalTargetUrl;
+                    } else {
+                        $additionalTargetUrl = [$this->additionalTargetUrl, 'id' => $this->modelId];
+                    }
+                    $buttons .= Html::a($this->btnAdditionalAssociateLabel, $additionalTargetUrl, [
                         'class' => $this->btnAdditionalAssociateClass,
                         'title' => $this->btnAdditionalAssociateLabel,
                         'id' => self::additionalAssociateButtonId()
@@ -369,7 +430,7 @@ class M2MWidget extends Widget
             Event::on(View::className(), View::EVENT_END_BODY, function ($event) {
                 $exportColumns = (isset($this->exportMittenteConfig['exportColumns']) ? $this->exportMittenteConfig['exportColumns'] : $this->itemsMittente);
                 $exportMenuParams = [
-                    'dataProvider' => $this->getItemsMittenteDataProvider(),
+                    'dataProvider' => $this->getItemsMittenteDataProviderDownLoad(),
                     'columns' => $exportColumns,
                     'selectedColumns' => array_keys($exportColumns),
                     'showColumnSelector' => false,
@@ -411,8 +472,15 @@ class M2MWidget extends Widget
                 }
             }
 
-            $buttons = '<div class="col-xs-12 nop"><div class="col-sm-6 btn-add-admin">' . $buttons . '</div><div class="col-sm-6 btn-search-admin">' .
-                $downloadButton .
+            if (!empty($this->additionalButtons)) {
+                $buttons = '<div class="col-xs-12 nop"><div class="col-sm-6 btn-add-admin">' . $buttons . '</div><div class="col-sm-6 btn-search-admin">' .
+                        $downloadButton . $this->additionalButtons;
+            } else {
+                $buttons = '<div class="col-xs-12 nop"><div class="col-sm-6 btn-add-admin">' . $buttons . '</div><div class="col-sm-6 btn-search-admin">' .
+                        $downloadButton;
+            }
+
+            $buttons = $buttons .
                 Html::input('text', null, $searchFieldValue, [
                     'id' => 'search-' . $gridId,
                     'class' => 'form-control pull-left',
@@ -434,6 +502,7 @@ class M2MWidget extends Widget
         } else {
             $buttons = $downloadButton . $buttons;
         }
+
 
         if (strlen($buttons)) {
             $retVal = Html::tag('div', $buttons, ['class' => 'container-tools']);
@@ -562,6 +631,11 @@ class M2MWidget extends Widget
         return 'm2m-widget-btn-associa';
     }
 
+    public static function invitationButtonId()
+    {
+        return 'm2m-widget-btn-invitation';
+    }
+
     public static function gestisciAttributiButtonId()
     {
         return 'm2m-widget-btn-gestisci-attributi';
@@ -596,12 +670,13 @@ class M2MWidget extends Widget
     private function getItemsMittenteDataProvider()
     {
         if (is_null($this->itemsMittenteDataProvider)) {
-            $this->itemsMittenteDataProvider = new ActiveDataProvider([
-                'query' => $this->modelData,
-                'pagination' => [
+                $pagination = [
                     'pageSize' => $this->itemsSenderPageSize,
                     'pageParam' => $this->pageParam
-                ]
+                ];
+            $this->itemsMittenteDataProvider = new ActiveDataProvider([
+                'query' => $this->modelData,
+                'pagination' => $pagination
             ]);
             if (isset($this->itemMittenteDefaultOrder)) {
                 $this->itemsMittenteDataProvider->setSort([
@@ -610,6 +685,19 @@ class M2MWidget extends Widget
             }
         }
         return $this->itemsMittenteDataProvider;
+    }
+	
+    private function getItemsMittenteDataProviderDownLoad() {
+        $pagination = false;
+
+        $itemsMittenteDataProviderDownLoad = new ActiveDataProvider([
+            'query' => $this->modelData,
+            'pagination' => $pagination
+        ]);
+        $itemsMittenteDataProviderDownLoad->setSort([
+            'defaultOrder' => $this->itemMittenteDefaultOrder
+        ]);
+        return $itemsMittenteDataProviderDownLoad;
     }
 
     /**
@@ -641,7 +729,7 @@ class M2MWidget extends Widget
 
         if (!empty($actionButtons)) {
             $completeActionButtonsArray = [
-                'class' => 'lispa\amos\core\views\grid\ActionColumn',
+                'class' => 'open20\amos\core\views\grid\ActionColumn',
                 'template' => $this->actionColumnsTemplate,
                 'buttons' => $actionButtons
             ];
@@ -786,7 +874,7 @@ class M2MWidget extends Widget
         if ($this->renderTargetCheckbox) {
             $columns = [
                 [
-                    'class' => 'lispa\amos\core\views\grid\CheckboxColumn',
+                    'class' => 'open20\amos\core\views\grid\CheckboxColumn',
 //                    'containerGridId' => (isset(Yii::$app->view->params['gridViewContainerId']) ? Yii::$app->view->params['gridViewContainerId'] : self::defaultGridViewContainerId()),
                     'checkboxOptions' => function ($model, $key, $index, $column) {
                         $checkboxOptions = [
@@ -810,7 +898,7 @@ class M2MWidget extends Widget
         }
         if (!empty($this->actionColumnsTemplate) && !empty($this->actionColumnsButtons)) {
             $actionColumns = [
-                'class' => 'lispa\amos\core\views\grid\ActionColumn',
+                'class' => 'open20\amos\core\views\grid\ActionColumn',
                 'template' => $this->actionColumnsTemplate,
                 'buttons' => $this->actionColumnsButtons
             ];

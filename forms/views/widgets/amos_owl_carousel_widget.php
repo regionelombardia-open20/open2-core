@@ -1,18 +1,18 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms\views\widgets
+ * @package    open20\amos\core\forms\views\widgets
  * @category   CategoryName
  */
 
 use kv4nt\owlcarousel\OwlCarouselWidget;
 
 /**
- * @var \lispa\amos\core\forms\AmosOwlCarouselWidget $widget
+ * @var \open20\amos\core\forms\AmosOwlCarouselWidget $widget
  * @var string $owlCarouselContent
  * @var array $containerOptions
  */

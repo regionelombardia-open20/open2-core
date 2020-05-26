@@ -1,16 +1,16 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms\views\widgets
+ * @package    open20\amos\core\forms\views\widgets
  * @category   CategoryName
  */
 
 /**
- * @var \lispa\amos\tag\models\Tag $root
+ * @var \open20\amos\tag\models\Tag $root
  * @var \yii\base\View $this
  */
 ?>

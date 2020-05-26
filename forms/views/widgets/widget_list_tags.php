@@ -1,25 +1,25 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms\views\widgets
+ * @package    open20\amos\core\forms\views\widgets
  * @category   CategoryName
  */
 
-use lispa\amos\core\helpers\Html;
-use lispa\amos\core\icons\AmosIcons;
-use lispa\amos\core\module\BaseAmosModule;
-use lispa\amos\core\views\AmosGridView;
+use open20\amos\core\helpers\Html;
+use open20\amos\core\icons\AmosIcons;
+use open20\amos\core\module\BaseAmosModule;
+use open20\amos\core\views\AmosGridView;
 use yii\bootstrap\Modal;
 use yii\data\ActiveDataProvider;
 use yii\widgets\Pjax;
 
 /**
  * @var \yii\web\View $this
- * @var \lispa\amos\tag\models\Tag $root
+ * @var \open20\amos\tag\models\Tag $root
  * @var \yii\base\View $this
  * @var array $allRootTags
  * @var array $allTags

@@ -1,24 +1,24 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms
+ * @package    open20\amos\core\forms
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\forms;
+namespace open20\amos\core\forms;
 
 use Yii;
-use lispa\amos\tag\models\Tag;
-use lispa\amos\tag\models\TagModelsAuthItemsMm;
+use open20\amos\tag\models\Tag;
+use open20\amos\tag\models\TagModelsAuthItemsMm;
 use yii\base\Widget;
 
 class ShowUserAreeInteresseWidget extends Widget
 {
-    public $layout = "@vendor/lispa/amos-core/forms/views/widgets/widget_show_user_areeinteresse.php";
+    public $layout = "@vendor/open20/amos-core/forms/views/widgets/widget_show_user_areeinteresse.php";
     private $userProfile;
     private $className;
 
@@ -66,7 +66,7 @@ class ShowUserAreeInteresseWidget extends Widget
 
     private function getArrayTagsId()
     {
-        $listaTagId = \lispa\amos\cwh\models\CwhTagOwnerInterestMm::findAll([
+        $listaTagId = \open20\amos\cwh\models\CwhTagOwnerInterestMm::findAll([
             'classname' => $this->className,
             'record_id' => $this->userProfile,
         ]);
@@ -82,7 +82,7 @@ class ShowUserAreeInteresseWidget extends Widget
 
     private function getTagById($tagId)
     {
-        return \lispa\amos\tag\models\Tag::findOne($tagId);
+        return \open20\amos\tag\models\Tag::findOne($tagId);
     }
 
     /**
@@ -104,7 +104,7 @@ class ShowUserAreeInteresseWidget extends Widget
         }
 
         //identifica le root degli alberi per cui l'utente ha selezionato tags
-        $tagIdList = \lispa\amos\cwh\models\CwhTagOwnerInterestMm::find()
+        $tagIdList = \open20\amos\cwh\models\CwhTagOwnerInterestMm::find()
             ->andWhere([
                 'classname' => $this->className,
                 'record_id' => $id_user
@@ -133,8 +133,8 @@ class ShowUserAreeInteresseWidget extends Widget
                     ->andWhere([
                         Tag::tableName() . '.lvl' => 0,
                         TagModelsAuthItemsMm::tableName() . '.classname' => $content,
-                        \lispa\amos\cwh\models\CwhTagInterestMm::tableName() . '.classname' => $this->className,
-                        \lispa\amos\cwh\models\CwhTagInterestMm::tableName() . '.auth_item' => array_keys(\Yii::$app->authManager->getRolesByUser($id_user))
+                        \open20\amos\cwh\models\CwhTagInterestMm::tableName() . '.classname' => $this->className,
+                        \open20\amos\cwh\models\CwhTagInterestMm::tableName() . '.auth_item' => array_keys(\Yii::$app->authManager->getRolesByUser($id_user))
                     ])
                 ;
 

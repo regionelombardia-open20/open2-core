@@ -1,22 +1,22 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\rules
+ * @package    open20\amos\core\rules
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\rules;
+namespace open20\amos\core\rules;
 
-use lispa\amos\core\interfaces\WorkflowModelInterface;
-use lispa\amos\cwh\models\CwhNodi;
+use open20\amos\core\interfaces\WorkflowModelInterface;
+use open20\amos\cwh\models\CwhNodi;
 
 /**
  * Class ReadContentRule
- * @package lispa\amos\core\rules
+ * @package open20\amos\core\rules
  */
 class ReadContentRule extends BasicContentRule
 {

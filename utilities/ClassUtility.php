@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\utilities
+ * @package    open20\amos\core\utilities
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\utilities;
+namespace open20\amos\core\utilities;
 
 
 use yii\base\Exception;
@@ -30,5 +30,23 @@ class ClassUtility extends BaseObject
 
         }
         return $boolean;
+    }
+    
+    /**
+     * 
+     * @param type $obj
+     * @param type $name
+     * @param type $checkVars
+     * @return type
+     */
+    public static function objectHasProperty($obj, $name, $checkVars = true)
+    {
+        $ret = false;
+        
+        if(is_object($obj))
+        {
+            $ret = $obj->hasProperty($name, $checkVars);
+        }
+        return $ret;
     }
 }

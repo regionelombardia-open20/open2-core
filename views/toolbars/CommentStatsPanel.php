@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\views\toolbars
+ * @package    open20\amos\core\views\toolbars
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\views\toolbars;
+namespace open20\amos\core\views\toolbars;
 
 use yii\helpers\ArrayHelper;
 
@@ -27,7 +27,7 @@ class CommentStatsPanel extends StatsPanel
         if ($this->disableLink) {
             return $content;
         } else {
-            return \lispa\amos\core\helpers\Html::a($content, $url, $options);
+            return \open20\amos\core\helpers\Html::a($content, $url, $options);
         }
     }
 

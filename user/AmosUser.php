@@ -1,18 +1,18 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\user
+ * @package    open20\amos\core\user
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\user;
+namespace open20\amos\core\user;
 
-use lispa\amos\admin\models\UserProfile;
-use lispa\amos\core\controllers\BaseController;
+use open20\amos\admin\models\UserProfile;
+use open20\amos\core\controllers\BaseController;
 use Yii;
 use yii\base\Event;
 use yii\log\Logger;
@@ -20,11 +20,11 @@ use yii\web\User;
 
 /**
  * Class AmosUser
- * @package lispa\amos\core\user
+ * @package open20\amos\core\user
  */
 class AmosUser extends User
 {
-    public $identityClass = '\lispa\amos\core\user\User';
+    public $identityClass = '\open20\amos\core\user\User';
     
     /**
      * @inheritdoc
@@ -46,6 +46,7 @@ class AmosUser extends User
             $profile = $this->getIdentity()->getProfile();
             $time = new \DateTime("now");
             $profile->ultimo_accesso = Yii::$app->formatter->asDate($time, 'php:Y-m-d H:i:s'); // 2014-10-06 15:22:34;
+            $profile->count_logins = $profile->count_logins +1;
             $profile->detachBehavior("TimestampBehavior");
             $profile->save(false);
         } catch (\Exception $ex) {

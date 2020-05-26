@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\rbac
+ * @package    open20\amos\core\rbac
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\rbac;
+namespace open20\amos\core\rbac;
 
 use Yii;
 use yii\db\Query;
@@ -19,7 +19,7 @@ use yii\rbac\Item;
 
 /**
  * Class AuthManager
- * @package lispa\amos\core\rbac
+ * @package open20\amos\core\rbac
  */
 class AuthManager extends \yii\rbac\DbManager
 {

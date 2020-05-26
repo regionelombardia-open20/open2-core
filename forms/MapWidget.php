@@ -1,27 +1,27 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms
+ * @package    open20\amos\core\forms
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\forms;
+namespace open20\amos\core\forms;
 
 
 use dosamigos\google\maps\LatLng;
 use dosamigos\google\maps\Map;
 use dosamigos\google\maps\overlays\Marker;
-use lispa\amos\core\utilities\MapsUtility;
+use open20\amos\core\utilities\MapsUtility;
 use yii\base\Widget;
 use yii\helpers\ArrayHelper;
 
 /**
  * Class MapWidget
- * @package lispa\amos\core\forms
+ * @package open20\amos\core\forms
  */
 class MapWidget extends Widget
 {

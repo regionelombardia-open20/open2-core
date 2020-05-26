@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\giiamos\crud\wizard\views
+ * @package    open20\amos\core\giiamos\crud\wizard\views
  * @category   CategoryName
  */
 
@@ -14,7 +14,7 @@ use yii\helpers\StringHelper;
 
 /**
  * @var yii\web\View $this
- * @var \lispa\amos\core\giiamos\crud\Generator $generator
+ * @var \open20\amos\core\giiamos\crud\Generator $generator
  */
 /** @var \yii\db\ActiveRecord $model */
 $model = new $generator->modelClass;
@@ -41,16 +41,16 @@ foreach ($generator->getFormTabsAsArray() as $nomeTab) {
 
 ?>
 
-use lispa\amos\core\helpers\Html;
-use lispa\amos\core\forms\ActiveForm;
+use open20\amos\core\helpers\Html;
+use open20\amos\core\forms\ActiveForm;
 use kartik\builder\Form;
 use kartik\datecontrol\DateControl;
-use lispa\amos\core\forms\Tabs;
-use lispa\amos\core\forms\CloseSaveButtonWidget;
+use open20\amos\core\forms\Tabs;
+use open20\amos\core\forms\CloseSaveButtonWidget;
 use yii\helpers\Url;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
-use lispa\amos\core\icons\AmosIcons;
+use open20\amos\core\icons\AmosIcons;
 use yii\bootstrap\Modal;
 use yii\redactor\widgets\Redactor;
 use yii\helpers\Inflector;

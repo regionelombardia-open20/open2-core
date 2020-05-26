@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\toolbar
+ * @package    open20\amos\core\toolbar
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\toolbar;
+namespace open20\amos\core\toolbar;
 
 use yii\bootstrap\Nav as YiiNav;
 

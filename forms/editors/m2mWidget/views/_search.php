@@ -1,25 +1,26 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms\editors\m2mwidget\views
+ * @package    open20\amos\core\forms\editors\m2mwidget\views
  * @category   CategoryName
  */
 
-use lispa\amos\core\helpers\Html;
-use lispa\amos\core\module\BaseAmosModule;
+use open20\amos\core\helpers\Html;
+use open20\amos\core\module\BaseAmosModule;
+use open20\amos\core\utilities\JsUtility;
 use yii\web\View;
 
 /**
  * @var yii\web\View $this
  * @var \yii\db\ActiveRecord $model
- * @var yii\widgets\ActiveForm $form
  * @var string $pjaxContainerId
  * @var string $gridViewContainerId
- * @var string $GridId
+ * @var string $gridId
+ * @var bool $useCheckbox
  */
 
 $post = Yii::$app->getRequest()->post();
@@ -28,7 +29,7 @@ $fromGenericSearchFieldId = 'm2mwidget-from-generic-search-hiddeninput';
 $resetId = 'm2mwidget-generic-search-reset-btn';
 $submitId = 'm2mwidget-generic-search-submit-btn';
 
-$js = \lispa\amos\core\utilities\JsUtility::getM2mSecondGridSearch($gridId, $this->params['postName'], $this->params['postKey'], $isModal, $useCheckbox);
+$js = JsUtility::getM2mSecondGridSearch($gridId, $this->params['postName'], $this->params['postKey'], $isModal, $useCheckbox);
 $this->registerJs($js, View::POS_READY);
 
 ?>
@@ -42,13 +43,13 @@ $this->registerJs($js, View::POS_READY);
 
             <?= Html::textInput('genericSearch', (isset($post['genericSearch']) ? $post['genericSearch'] : null), [
                 'placeholder' => BaseAmosModule::t('amoscore', 'Search') . '...',
-                'id' => $gridId.'-search-field', 'class' => 'form-control'
+                'id' => $gridId . '-search-field', 'class' => 'form-control'
             ]); ?>
         </div>
 
         <div class="col-sm-6 col-lg-8">
-            <?= Html::button(BaseAmosModule::t('amoscore', 'Reset'), ['class' => 'btn btn-secondary', 'id' => $gridId.'-reset-search-btn']) ?>
-            <?= Html::button(BaseAmosModule::t('amoscore', 'Search'), ['class' => 'btn btn-navigation-primary', 'id' => $gridId.'-search-btn']) ?>
+            <?= Html::button(BaseAmosModule::t('amoscore', 'Reset'), ['class' => 'btn btn-secondary', 'id' => $gridId . '-reset-search-btn']) ?>
+            <?= Html::button(BaseAmosModule::t('amoscore', 'Search'), ['class' => 'btn btn-navigation-primary', 'id' => $gridId . '-search-btn']) ?>
         </div>
     </div>
     <div class="clearfix"></div>

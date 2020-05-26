@@ -1,17 +1,17 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\commands
+ * @package    open20\amos\core\commands
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\commands;
+namespace open20\amos\core\commands;
 
-use lispa\amos\core\module\AmosModule;
+use open20\amos\core\module\AmosModule;
 use lajax\translatemanager\models\Language;
 use lajax\translatemanager\models\LanguageSource;
 use lajax\translatemanager\models\LanguageTranslate;
@@ -25,7 +25,7 @@ use yii\log\Logger;
 
 /**
  * Class LanguageSourceController
- * @package lispa\amos\core\commands
+ * @package open20\amos\core\commands
  */
 class LanguageSourceController extends Controller
 {
@@ -126,11 +126,11 @@ class LanguageSourceController extends Controller
                 ]);
                 $modifiedByUsers = [];
                 $moduleTranslation = \Yii::$app->getModule('translation');
-                if (!is_null($moduleTranslation) && class_exists('lispa\amos\translation\models\LanguageTranslateUserFields')) {
-                    /** @var \lispa\amos\translation\AmosTranslation $moduleTranslation */
+                if (!is_null($moduleTranslation) && class_exists('open20\amos\translation\models\LanguageTranslateUserFields')) {
+                    /** @var \open20\amos\translation\AmosTranslation $moduleTranslation */
                     $query = new Query();
                     $query->select(new Expression("CONCAT(`language_translate_id`, '_', `language_translate_language`) AS language_translate"));
-                    $query->from(\lispa\amos\translation\models\LanguageTranslateUserFields::tableName());
+                    $query->from(\open20\amos\translation\models\LanguageTranslateUserFields::tableName());
                     $query->andWhere(['deleted_at' => null]);
                     $modifiedByUsers = $query->column();
                 }

@@ -1,24 +1,24 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\migration
+ * @package    open20\amos\core\migration
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\migration;
+namespace open20\amos\core\migration;
 
-use lispa\amos\core\module\BaseAmosModule;
-use lispa\amos\dashboard\models\AmosWidgets;
-use lispa\amos\core\behaviors\BlameableBehavior;
+use open20\amos\core\module\BaseAmosModule;
+use open20\amos\dashboard\models\AmosWidgets;
+use open20\amos\core\behaviors\BlameableBehavior;
 use yii\db\Migration;
 
 /**
  * Class AmosMigrationWidgets
- * @package lispa\amos\core\migration
+ * @package open20\amos\core\migration
  */
 class AmosMigrationWidgets extends Migration
 {
@@ -30,18 +30,19 @@ class AmosMigrationWidgets extends Migration
     /**
      * @var array $fieldsToSkip Fields to skip during insert or update of a widget.
      */
-    private $fieldsToSkip = [
+    protected $fieldsToSkip = [
         'update',
         'old_classname'
     ];
 
     /**
+     * @see \yii\db\Migration::init() for more info.
      */
     public function init()
     {
+        parent::init();
         $this->db->enableSchemaCache = false;
         $this->initWidgetsConfs();
-        parent::init();
     }
 
     /**
@@ -226,7 +227,7 @@ class AmosMigrationWidgets extends Migration
      * @param array $widgetData Key => value array that contains all widget data.
      * @return array
      */
-    private function cleanWidgetConf($widgetData)
+    protected function cleanWidgetConf($widgetData)
     {
         $cleanedWidgetData = [];
         foreach ($widgetData as $fieldName => $fieldValue) {

@@ -1,18 +1,18 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\migration
+ * @package    open20\amos\core\migration
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\migration;
+namespace open20\amos\core\migration;
 
-use lispa\amos\core\migration\libs\common\MigrationCommon;
-use lispa\amos\core\module\BaseAmosModule;
+use open20\amos\core\migration\libs\common\MigrationCommon;
+use open20\amos\core\module\BaseAmosModule;
 use lajax\translatemanager\models\Language;
 use lajax\translatemanager\models\LanguageSource;
 use lajax\translatemanager\models\LanguageTranslate;
@@ -77,7 +77,7 @@ use yii\db\Migration;
  *      .
  * ],
  *
- * @package lispa\amos\core\migration
+ * @package open20\amos\core\migration
  */
 class AmosMigrationTranslations extends Migration
 {
@@ -152,9 +152,8 @@ class AmosMigrationTranslations extends Migration
      */
     public function init()
     {
-        $this->db->enableSchemaCache = false;
-
         parent::init();
+        $this->db->enableSchemaCache = false;
         
         $this->translations = $this->setTranslations();
         

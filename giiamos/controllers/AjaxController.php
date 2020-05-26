@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\giiamos\controllers
+ * @package    open20\amos\core\giiamos\controllers
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\giiamos\controllers;
+namespace open20\amos\core\giiamos\controllers;
 
 use yii\web\Controller;
 use yii\helpers\FileHelper;

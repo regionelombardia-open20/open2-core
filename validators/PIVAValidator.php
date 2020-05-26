@@ -1,21 +1,22 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\validators
+ * @package    open20\amos\core\validators
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\validators;
+namespace open20\amos\core\validators;
 
 use yii\validators\Validator;
 
 /**
  * Description of PIVAValidator
  *
+ * @author Cesare
  */
 class PIVAValidator extends Validator
 {
@@ -49,7 +50,7 @@ class PIVAValidator extends Validator
             $s += $c;
         }
         if (( 10 - $s % 10 ) % 10 != ord($pi[10]) - ord('0')) {
-            $this->addError($model, $attribute, \Yii::t('app', 'Partita Iva non valida') );
+            $this->addError($model, $attribute, \Yii::t('amosapp', 'Partita Iva non valida') );
             return false;
         }
 
@@ -66,8 +67,8 @@ class PIVAValidator extends Validator
      */
     public function clientValidateAttribute($model, $attribute, $view)
     {
-        $error_msg = \Yii::t('app', 'Partita Iva non valida');
-        $error_format_msg = \Yii::t('app', 'La partita IVA deve contenere 11 cifre');
+        $error_msg = \Yii::t('amosapp', 'Partita Iva non valida');
+        $error_format_msg = \Yii::t('amosapp', 'La partita IVA deve contenere 11 cifre');
         return <<<JS
             var pi = value;
                 

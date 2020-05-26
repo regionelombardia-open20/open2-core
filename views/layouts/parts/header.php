@@ -1,19 +1,19 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\views\layouts\parts
+ * @package    open20\amos\core\views\layouts\parts
  * @category   CategoryName
  */
 
-use lispa\amos\core\helpers\Html;
-use lispa\amos\core\icons\AmosIcons;
-use lispa\amos\core\toolbar\Nav;
-use lispa\amos\core\toolbar\NavBar;
-use lispa\amos\core\utilities\CurrentUser;
+use open20\amos\core\helpers\Html;
+use open20\amos\core\icons\AmosIcons;
+use open20\amos\core\toolbar\Nav;
+use open20\amos\core\toolbar\NavBar;
+use open20\amos\core\utilities\CurrentUser;
 use yii\web\JsExpression;
 use yii\helpers\Url;
 
@@ -22,11 +22,11 @@ use yii\helpers\Url;
 <?php
 /* Configuration of Slideshow - begin */
 if (\Yii::$app->getModule('slideshow') && isset(\Yii::$app->params['slideshow']) && \Yii::$app->params['slideshow'] === TRUE) {
-    $slideshow = new \lispa\amos\slideshow\models\Slideshow;
+    $slideshow = new \open20\amos\slideshow\models\Slideshow;
     $route = "/" . \Yii::$app->request->getPathInfo();
     $idSlideshow = $slideshow->hasSlideshow($route);
     $slideshowLabel = ($idSlideshow) ? $slideshow->findOne($idSlideshow)->label : NULL;
-    echo \lispa\amos\slideshow\widgets\SlideshowWidget::widget([]);
+    echo \open20\amos\slideshow\widgets\SlideshowWidget::widget([]);
 }
 /** @var bool|false $disablePlatformLinks - if true all the links to dashboard, settings, etc are disabled */
 $disablePlatformLinks = isset(\Yii::$app->params['disablePlatformLinks']) ? \Yii::$app->params['disablePlatformLinks'] : false;
@@ -75,7 +75,7 @@ if ($hasCookiesLink) {
 /* Configuration of Slideshow - end  */
 
 /* Configuration header menu: field translation */
-$headerMenu = new lispa\amos\core\views\common\HeaderMenu();
+$headerMenu = new open20\amos\core\views\common\HeaderMenu();
 $menuTranslation = $headerMenu->getTranslationField();
 $menuCustom = $headerMenu->getCustomContent();
 /* echo Translation button */
@@ -168,7 +168,7 @@ $headerMenu->getToggleTranslate();
                 [
                     'label' => Yii::t('amoscore', 'Ordinamenti dashboard'),
                     'url' => 'javascript:void(0);',
-                    'visible' => (\Yii::$app->controller instanceof lispa\amos\dashboard\controllers\base\DashboardController),
+                    'visible' => (\Yii::$app->controller instanceof open20\amos\dashboard\controllers\base\DashboardController),
                     'options' =>
                         [
                             'class' => 'enable_order',

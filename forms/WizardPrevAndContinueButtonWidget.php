@@ -1,20 +1,20 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms
+ * @package    open20\amos\core\forms
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\forms;
+namespace open20\amos\core\forms;
 
-use lispa\amos\core\helpers\Html;
-use lispa\amos\core\helpers\PermissionHelper;
-use lispa\amos\core\module\BaseAmosModule;
-use lispa\amos\core\record\Record;
+use open20\amos\core\helpers\Html;
+use open20\amos\core\helpers\PermissionHelper;
+use open20\amos\core\module\BaseAmosModule;
+use open20\amos\core\record\Record;
 use Yii;
 use yii\base\Widget;
 use yii\bootstrap\Modal;
@@ -23,7 +23,7 @@ use yii\helpers\Url;
 
 /**
  * Class WizardPrevAndContinueButtonWidget
- * @package lispa\amos\core\forms
+ * @package open20\amos\core\forms
  */
 class WizardPrevAndContinueButtonWidget extends Widget
 {

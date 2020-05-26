@@ -1,6 +1,15 @@
 <?php
 
-namespace lispa\amos\core\models\base;
+/**
+ * Aria S.p.A.
+ * OPEN 2.0
+ *
+ *
+ * @package    Open20Package
+ * @category   CategoryName
+ */
+
+namespace open20\amos\core\models\base;
 
 use Yii;
 
@@ -20,10 +29,10 @@ use Yii;
  * @property integer $updated_by
  * @property integer $deleted_by
  *
- * @property \lispa\amos\core\models\base\ModelsClassname $modelsClassname
- * @property \lispa\amos\core\models\base\User $user
+ * @property \open20\amos\core\models\base\ModelsClassname $modelsClassname
+ * @property \open20\amos\core\models\base\User $user
  */
-class ContentLikes extends \lispa\amos\core\record\Record {
+class ContentLikes extends \open20\amos\core\record\Record {
 
   /**
    * @inheritdoc
@@ -41,7 +50,7 @@ class ContentLikes extends \lispa\amos\core\record\Record {
      [['created_at', 'updated_at', 'deleted_at'], 'safe'],
       [['user_ip'], 'string', 'max' => 39],
       [['models_classname_id'], 'exist', 'skipOnError' => true, 'targetClass' => ModelsClassname::className(), 'targetAttribute' => ['models_classname_id' => 'id']],
-      [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => \lispa\amos\core\user\User::className(), 'targetAttribute' => ['user_id' => 'id']],
+      [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => \open20\amos\core\user\User::className(), 'targetAttribute' => ['user_id' => 'id']],
     ];
   }
 
@@ -69,14 +78,14 @@ class ContentLikes extends \lispa\amos\core\record\Record {
    * @return \yii\db\ActiveQuery
    */
   public function getModelsClassname() {
-    return $this->hasOne(\lispa\amos\core\models\ModelsClassname::className(), ['id' => 'models_classname_id']);
+    return $this->hasOne(\open20\amos\core\models\ModelsClassname::className(), ['id' => 'models_classname_id']);
   }
 
   /**
    * @return \yii\db\ActiveQuery
    */
   public function getUser() {
-    return $this->hasOne(\lispa\amos\core\user\User::className(), ['id' => 'user_id']);
+    return $this->hasOne(\open20\amos\core\user\User::className(), ['id' => 'user_id']);
   }
 
 }

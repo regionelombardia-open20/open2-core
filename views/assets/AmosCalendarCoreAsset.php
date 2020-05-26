@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\views\assets
+ * @package    open20\amos\core\views\assets
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\views\assets;
+namespace open20\amos\core\views\assets;
 
 use Yii;
 use yii\web\AssetBundle;
@@ -64,7 +64,7 @@ class AmosCalendarCoreAsset extends AssetBundle
         'yii\web\YiiAsset',
         'yii2fullcalendar\MomentAsset',
         'yii2fullcalendar\PrintAsset',
-        'lispa\amos\core\views\assets\AmosCalendarAsset',
+        'open20\amos\core\views\assets\AmosCalendarAsset',
     ];
 
     /**

@@ -1,16 +1,16 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\views\layouts\parts
+ * @package    open20\amos\core\views\layouts\parts
  * @category   CategoryName
  */
 
 use yii\helpers\Html;
-use lispa\amos\core\utilities\CurrentUser;
+use open20\amos\core\utilities\CurrentUser;
 ?>
 
 <?php if (isset(Yii::$app->params['logo'])): ?>

@@ -1,19 +1,19 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms\editors\m2mWidget
+ * @package    open20\amos\core\forms\editors\m2mWidget
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\forms\editors\m2mWidget;
+namespace open20\amos\core\forms\editors\m2mWidget;
 
 /**
  * Class M2MEventsEnum
- * @package lispa\amos\core\forms\editors\m2mWidget
+ * @package open20\amos\core\forms\editors\m2mWidget
  */
 class M2MEventsEnum
 {

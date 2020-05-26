@@ -1,18 +1,18 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\views
+ * @package    open20\amos\core\views
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\views;
+namespace open20\amos\core\views;
 
-use lispa\amos\core\views\common\BaseListView;
-use lispa\amos\gantt\widgets\GanttWidget;
+use open20\amos\core\views\common\BaseListView;
+use open20\amos\gantt\widgets\GanttWidget;
 
 class GanttView extends BaseListView
 {
@@ -26,7 +26,7 @@ class GanttView extends BaseListView
 
     public function run()
     {
-        return \lispa\amos\core\helpers\Html::tag(
+        return \open20\amos\core\helpers\Html::tag(
             $this->itemsContainerTag,
             GanttWidget::widget([
                 'model' => $this->model,

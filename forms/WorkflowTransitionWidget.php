@@ -1,22 +1,22 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms
+ * @package    open20\amos\core\forms
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\forms;
+namespace open20\amos\core\forms;
 
-use lispa\amos\core\controllers\CrudController;
-use lispa\amos\core\helpers\Html;
-use lispa\amos\core\icons\AmosIcons;
-use lispa\amos\core\module\AmosModule;
-use lispa\amos\core\module\BaseAmosModule;
-use lispa\amos\core\record\Record;
+use open20\amos\core\controllers\CrudController;
+use open20\amos\core\helpers\Html;
+use open20\amos\core\icons\AmosIcons;
+use open20\amos\core\module\AmosModule;
+use open20\amos\core\module\BaseAmosModule;
+use open20\amos\core\record\Record;
 use kartik\base\Widget;
 use kartik\select2\Select2;
 use raoul2000\workflow\base\Status;
@@ -28,7 +28,7 @@ use yii\db\ActiveRecord;
  * Class WorkflowStateWidget
  * Renders the widget useful to change a model workflow status.
  *
- * @package lispa\amos\core\forms
+ * @package open20\amos\core\forms
  */
 class WorkflowTransitionWidget extends Widget
 {
@@ -161,6 +161,7 @@ class WorkflowTransitionWidget extends Widget
     private $seeStatusButtonId = false;
 
     /**
+     * @see \kartik\base\Widget::init();
      *
      * Set of the permissionSave
      */
@@ -465,10 +466,12 @@ class WorkflowTransitionWidget extends Widget
                         }
 
                         $buttonsArr[] = [
-                            'html' => Html::beginTag('div') .
-                                (isset($metadati[$currentStatus . '_description']) ? $module::t($this->translationCategory, $metadati[$currentStatus . '_description']) : ((isset($metadati['description'])) ? $module::t($this->translationCategory, $metadati['description']) : '')) .
-                                CloseSaveButtonWidget::widget($closeSaveBtnWidgetConf) .
-                                Html::endTag('div'),
+                            'html' =>   Html::beginTag('div', ['class' => 'workflow-info']) .
+                                            Html::beginTag('span', ['class' => 'workflow-description']) .
+                                                (isset($metadati[$currentStatus . '_description']) ? $module::t($this->translationCategory, $metadati[$currentStatus . '_description']) : ((isset($metadati['description'])) ? $module::t($this->translationCategory, $metadati['description']) : '')) .
+                                            Html::endTag('span') .
+                                            CloseSaveButtonWidget::widget($closeSaveBtnWidgetConf) .
+                                        Html::endTag('div'),
                             'order' => ((isset($metadati['order']) && is_numeric($metadati['order'])) ? $metadati['order'] : 0)
                         ];
                     }

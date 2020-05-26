@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\widget
+ * @package    open20\amos\core\widget
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\widget;
+namespace open20\amos\core\widget;
 
 class WidgetGraphic extends WidgetAbstract {
 

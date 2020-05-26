@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
@@ -9,7 +9,7 @@
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\components;
+namespace open20\amos\core\components;
 
 use Yii;
 use yii\base\Component;
@@ -31,7 +31,7 @@ use yii\base\Component;
  * //you config file
  * 'components' => [
  *     'consoleRunner' => [
- *         'class' => 'lispa\amos\core\components\RunConsole'
+ *         'class' => 'open20\amos\core\components\RunConsole'
  *     ]
  * ]
  * ```

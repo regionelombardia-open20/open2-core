@@ -1,25 +1,26 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\utilities
+ * @package    open20\amos\core\utilities
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\utilities;
+namespace open20\amos\core\utilities;
 
-use lispa\amos\core\helpers\Html;
-use lispa\amos\core\icons\AmosIcons;
-use lispa\amos\core\module\BaseAmosModule;
-use lispa\amos\core\record\Record;
+use open20\amos\core\helpers\Html;
+use open20\amos\core\icons\AmosIcons;
+use open20\amos\core\module\BaseAmosModule;
+use open20\amos\core\record\Record;
+use yii\db\ActiveQuery;
 use yii\log\Logger;
 
 /**
  * Class FormUtility
- * @package lispa\amos\core\utilities
+ * @package open20\amos\core\utilities
  */
 class FormUtility
 {
@@ -72,11 +73,7 @@ class FormUtility
                 $attrMmPost = [$attrMmPost];
             }
             foreach ($attrMmPost as $attrId) {
-                /** @var \lispa\amos\core\record\Record $attrMmModel */
-                $attrMmModel = new $mmModelClassName();
-                $attrMmModel->{$firstIdField} = $firstIdValue;
-                $attrMmModel->{$secondIdField} = $attrId;
-                $ok = $attrMmModel->save(false);
+                $ok = self::saveMmField($mmModelClassName, $firstIdField, $firstIdValue, $secondIdField, $attrId);
                 if (!$ok) {
                     $allOk = false;
                 }
@@ -85,4 +82,53 @@ class FormUtility
         return $allOk;
     }
 
+    /**
+     * Save an mm value in MM table.
+     * @param string $mmModelClassName
+     * @param string $firstIdField
+     * @param string $secondIdField
+     * @param mixed $firstIdValue
+     * @param mixed $secondIdValue
+     * @return bool
+     * @throws \yii\base\InvalidConfigException
+     */
+    public static function saveMmField($mmModelClassName, $firstIdField, $firstIdValue, $secondIdField, $secondIdValue)
+    {
+        /** @var Record $mmModelClassName */
+        /** @var ActiveQuery $query */
+        $query = $mmModelClassName::find();
+        $exists = $query->andWhere([
+            $firstIdField => $firstIdValue,
+            $secondIdField => $secondIdValue,
+        ])->exists();
+        if ($exists) {
+            return true;
+        }
+        /** @var \open20\amos\core\record\Record $attrMmModel */
+        $attrMmModel = new $mmModelClassName();
+        $attrMmModel->{$firstIdField} = $firstIdValue;
+        $attrMmModel->{$secondIdField} = $secondIdValue;
+        $ok = $attrMmModel->save(false);
+        return $ok;
+    }
+
+    /**
+     * Return an array with the values used in boolean fields. If the param 'invertValues' is true the values are returned inverted.
+     * @param bool $invertValues
+     * @return array
+     */
+    public static function getBooleanFieldsValues($invertValues = false)
+    {
+        if ($invertValues) {
+            return [
+                Html::BOOLEAN_FIELDS_VALUE_YES => BaseAmosModule::t('amoscore', 'Yes'),
+                Html::BOOLEAN_FIELDS_VALUE_NO => BaseAmosModule::t('amoscore', 'No')
+            ];
+        } else {
+            return [
+                Html::BOOLEAN_FIELDS_VALUE_NO => BaseAmosModule::t('amoscore', 'No'),
+                Html::BOOLEAN_FIELDS_VALUE_YES => BaseAmosModule::t('amoscore', 'Yes')
+            ];
+        }
+    }
 }

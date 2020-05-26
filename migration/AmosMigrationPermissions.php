@@ -1,19 +1,19 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\migration
+ * @package    open20\amos\core\migration
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\migration;
+namespace open20\amos\core\migration;
 
-use lispa\amos\core\migration\libs\common\MigrationCommon;
-use lispa\amos\core\migration\libs\permissions\UpdatePermission;
-use lispa\amos\core\module\BaseAmosModule;
+use open20\amos\core\migration\libs\common\MigrationCommon;
+use open20\amos\core\migration\libs\permissions\UpdatePermission;
+use open20\amos\core\module\BaseAmosModule;
 use Yii;
 use yii\db\Migration;
 use yii\rbac\DbManager;
@@ -24,7 +24,7 @@ use yii\rbac\Permission;
  *
  * If you don't want to remove a permission or a role you must set the "dontRemove" key to true in every array of a single permission or role.
  *
- * @package lispa\amos\core\migration
+ * @package open20\amos\core\migration
  */
 class AmosMigrationPermissions extends Migration
 {
@@ -134,14 +134,15 @@ class AmosMigrationPermissions extends Migration
     }
     
     /**
+     * @see \yii\db\Migration::init() for more info.
      */
     public function init()
     {
+        parent::init();
         $this->db->enableSchemaCache = false;
         $this->authManager = Yii::$app->getAuthManager();
         $this->setAuthorizations();
         $this->authorizations = $this->setRBACConfigurations();
-        parent::init();
     }
     
     /**

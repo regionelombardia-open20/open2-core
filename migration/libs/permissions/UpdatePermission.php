@@ -1,18 +1,18 @@
 <?php
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\migration\libs\permissions
+ * @package    open20\amos\core\migration\libs\permissions
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\migration\libs\permissions;
+namespace open20\amos\core\migration\libs\permissions;
 
-use lispa\amos\core\exceptions\MigrationsException;
-use lispa\amos\core\migration\libs\common\MigrationCommon;
-use lispa\amos\core\module\BaseAmosModule;
+use open20\amos\core\exceptions\MigrationsException;
+use open20\amos\core\migration\libs\common\MigrationCommon;
+use open20\amos\core\module\BaseAmosModule;
 use Yii;
 use yii\base\BaseObject;
 use yii\rbac\DbManager;
@@ -21,7 +21,7 @@ use yii\rbac\Permission;
 
 /**
  * Class UpdatePermission
- * @package lispa\amos\core\migration\libs
+ * @package open20\amos\core\migration\libs
  */
 class UpdatePermission extends BaseObject
 {

@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\giiamos\crud\wizard\views
+ * @package    open20\amos\core\giiamos\crud\wizard\views
  * @category   CategoryName
  */
 use yii\helpers\Inflector;
@@ -22,7 +22,7 @@ $classModel = end($arrClassModel);
 
 echo "<?php\n".
  "/**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
@@ -40,8 +40,8 @@ if (($tableSchema = $generator->getTableSchema()) !== false) {
 //pr($generator);die;
 ?>
 
-use lispa\amos\core\helpers\Html;
-use <?= $generator->indexWidgetType === 'grid' ? "lispa\\amos\\core\\views\\DataProviderView" : "yii\\widgets\\ListView" ?>;
+use open20\amos\core\helpers\Html;
+use <?= $generator->indexWidgetType === 'grid' ? "open20\\amos\\core\\views\\DataProviderView" : "yii\\widgets\\ListView" ?>;
 use yii\widgets\Pjax;
 
 /**
@@ -165,7 +165,7 @@ $this->params['breadcrumbs'][] = $this->title;
         }
         ?>
         [
-        'class' => 'lispa\amos\core\views\grid\ActionColumn',
+        'class' => 'open20\amos\core\views\grid\ActionColumn',
         ],
         ],
         ],

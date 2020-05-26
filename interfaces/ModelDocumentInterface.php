@@ -1,25 +1,25 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\interfaces
+ * @package    open20\amos\core\interfaces
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\interfaces;
+namespace open20\amos\core\interfaces;
 
 /**
  * Interface ModelDocumentInterface
- * @package lispa\amos\core\interfaces
+ * @package open20\amos\core\interfaces
  */
 interface ModelDocumentInterface
 {
     /**
      * This method is the getter for the document file and returns an attachment File object.
-     * @return \lispa\amos\attachments\models\File
+     * @return \open20\amos\attachments\models\File
      */
     public function getDocument();
 

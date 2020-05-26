@@ -1,8 +1,18 @@
 <?php
 
+/**
+ * Aria S.p.A.
+ * OPEN 2.0
+ *
+ *
+ * @package    Open20Package
+ * @category   CategoryName
+ */
+
 use yii\db\Migration;
 
 /**
+ * @author Francesco Scarfato
  */
 class m190215_091000_create_content_like_table extends Migration {
 

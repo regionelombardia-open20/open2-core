@@ -1,10 +1,10 @@
 <?php
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\giiamos\crud
+ * @package    open20\amos\core\giiamos\crud
  * @category   CategoryName
  */
 ?>
@@ -254,7 +254,7 @@ $this->registerJs('
                 ],]);
             ?>
 
-            <?= lispa\amos\core\module\BaseAmosModule::t('giiamos', '&Egrave; obbligatorio scegliere il model per poter impostare la form'); ?>
+            <?= open20\amos\core\module\BaseAmosModule::t('giiamos', '&Egrave; obbligatorio scegliere il model per poter impostare la form'); ?>
 
 
             <?php

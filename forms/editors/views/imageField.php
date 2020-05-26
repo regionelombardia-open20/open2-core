@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms\editors\assets\views
+ * @package    open20\amos\core\forms\editors\assets\views
  * @category   CategoryName
  */
 
-use lispa\amos\core\icons\AmosIcons;
+use open20\amos\core\icons\AmosIcons;
 ?>
 <div class="fileinput fileinput-new" data-provides="fileinput">
  <div class="fileinput-new thumbnail">

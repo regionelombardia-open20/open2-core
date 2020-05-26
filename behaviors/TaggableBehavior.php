@@ -1,21 +1,21 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\behaviors
+ * @package    open20\amos\core\behaviors
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\behaviors;
+namespace open20\amos\core\behaviors;
 
 use creocoder\taggable\TaggableBehavior as YiiTaggable;
-use lispa\amos\core\icons\AmosIcons;
-use lispa\amos\core\views\toolbars\StatsToolbarPanels;
-use lispa\amos\tag\models\EntitysTagsMm;
-use lispa\amos\tag\models\Tag;
+use open20\amos\core\icons\AmosIcons;
+use open20\amos\core\views\toolbars\StatsToolbarPanels;
+use open20\amos\tag\models\EntitysTagsMm;
+use open20\amos\tag\models\Tag;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\db\BaseActiveRecord;
@@ -23,7 +23,7 @@ use yii\db\Expression;
 
 /**
  * Class TaggableBehavior
- * @package lispa\amos\core\behaviors
+ * @package open20\amos\core\behaviors
  */
 class TaggableBehavior extends YiiTaggable
 {

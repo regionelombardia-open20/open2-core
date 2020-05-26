@@ -1,9 +1,18 @@
 <?php
-use lispa\amos\admin\AmosAdmin;
-use lispa\amos\admin\widgets\ConnectToUserWidget;
-use lispa\amos\admin\widgets\SendMessageToUserWidget;
-use lispa\amos\admin\models\UserContact;
-use lispa\amos\core\helpers\Html;
+
+/**
+ * Aria S.p.A.
+ * OPEN 2.0
+ *
+ *
+ * @package    Open20Package
+ * @category   CategoryName
+ */
+use open20\amos\admin\AmosAdmin;
+use open20\amos\admin\widgets\ConnectToUserWidget;
+use open20\amos\admin\widgets\SendMessageToUserWidget;
+use open20\amos\admin\models\UserContact;
+use open20\amos\core\helpers\Html;
 
 use yii\helpers\ArrayHelper;
 
@@ -18,7 +27,7 @@ $uid = \Yii::$app->user->id;
   'enableReplaceState' => false,
   'clientOptions' => ['data-pjax-container' => 'grid-content-like']]);
 
-echo \lispa\amos\core\views\AmosGridView::widget([
+echo \open20\amos\core\views\AmosGridView::widget([
   'id' => 'grid-content-like',
   'dataProvider' => $dataProvider,
   'columns' => [
@@ -32,14 +41,14 @@ echo \lispa\amos\core\views\AmosGridView::widget([
       'label' => \Yii::t('amoscore', 'Photo'),
       'format' => 'raw',
       'value' => function ($model) {
-        /** @var \lispa\amos\admin\models\UserProfile $userProfile */
+        /** @var \open20\amos\admin\models\UserProfile $userProfile */
         $userProfile = $model->user->getProfile();
-        return \lispa\amos\admin\widgets\UserCardWidget::widget(['model' => $userProfile]);
+        return \open20\amos\admin\widgets\UserCardWidget::widget(['model' => $userProfile]);
       }
     ],
     'nomeCognome',
     [
-      'class' => lispa\amos\core\views\grid\ActionColumn::class,
+      'class' => open20\amos\core\views\grid\ActionColumn::class,
       'template' => '{connect}',
       'buttons' => [
         'connect' => function($url, $model) use ($adminModule, $userNetwork, $uid, $moduleChat) {

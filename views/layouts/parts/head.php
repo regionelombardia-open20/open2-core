@@ -1,25 +1,25 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\views\layouts\parts
+ * @package    open20\amos\core\views\layouts\parts
  * @category   CategoryName
  */
 
-/* use bedezign\yii2\audit\assets\JSLoggingAsset; */
+/* use open20\amos\audit\assets\JSLoggingAsset; */
 use yii\helpers\Html;
 
 $moduleL = \Yii::$app->getModule('layout');
 if(!empty($moduleL))
 { 
-    lispa\amos\layout\assets\BaseAsset::register($this); 
+    open20\amos\layout\assets\BaseAsset::register($this); 
 }
 else
 { 
-    lispa\amos\core\views\assets\AmosCoreAsset::register($this); 
+    open20\amos\core\views\assets\AmosCoreAsset::register($this); 
 }
 
 /* JSLoggingAsset::register($this); */

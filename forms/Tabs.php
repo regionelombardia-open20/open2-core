@@ -1,20 +1,20 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms
+ * @package    open20\amos\core\forms
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\forms;
+namespace open20\amos\core\forms;
 
-use lispa\amos\admin\models\UserProfile;
-use lispa\amos\core\controllers\BaseController;
-use lispa\amos\cwh\AmosCwh;
-use lispa\amos\tag\AmosTag;
+use open20\amos\admin\models\UserProfile;
+use open20\amos\core\controllers\BaseController;
+use open20\amos\cwh\AmosCwh;
+use open20\amos\tag\AmosTag;
 use yii\base\InvalidConfigException;
 use yii\bootstrap\Dropdown;
 use yii\bootstrap\Tabs as BaseTabs;
@@ -23,7 +23,7 @@ use yii\helpers\Html;
 
 /**
  * Class Tabs
- * @package lispa\amos\core\forms
+ * @package open20\amos\core\forms
  */
 class Tabs extends BaseTabs
 {
@@ -54,9 +54,9 @@ class Tabs extends BaseTabs
     {
         $moduleL = \Yii::$app->getModule('layout');
         if (!empty($moduleL)) {
-            \lispa\amos\layout\assets\TabsAsset::register($this->getView());
+            \open20\amos\layout\assets\TabsAsset::register($this->getView());
         } else {
-            \lispa\amos\core\views\assets\TabsAsset::register($this->getView());
+            \open20\amos\core\views\assets\TabsAsset::register($this->getView());
         }
         parent::init();
     }
@@ -80,14 +80,14 @@ class Tabs extends BaseTabs
             $model = \Yii::$app->controller->model;
         }
         if (count(\yii\base\Widget::$stack) && isset($model)) {
-            /*             * @var \lispa\amos\cwh\AmosCwh $moduleCwh */
+            /*             * @var \open20\amos\cwh\AmosCwh $moduleCwh */
             $moduleCwh  = \Yii::$app->getModule('cwh');
             $contentCwh = '';
             if (isset($moduleCwh) && in_array(get_class($model), $moduleCwh->modelsEnabled) && $moduleCwh->behaviors && !$this->hideCwhTab) {
                 if ($this->newCwhView) {
-                    $cwhView = '@vendor/lispa/amos-cwh/src/views/pubblicazione/cwh3cols.php';
+                    $cwhView = '@vendor/open20/amos-cwh/src/views/pubblicazione/cwh3cols.php';
                 } else {
-                    $cwhView = '@vendor/lispa/amos-cwh/src/views/pubblicazione/cwh.php';
+                    $cwhView = '@vendor/open20/amos-cwh/src/views/pubblicazione/cwh.php';
                 }
                 $contentCwh = \Yii::$app->controller->renderFile($cwhView,
                     [
@@ -101,7 +101,7 @@ class Tabs extends BaseTabs
             /*             * @var AmosTag $moduleTag */
             $moduleTag = \Yii::$app->getModule('tag');
             if (isset($moduleTag) && in_array(get_class($model), $moduleTag->modelsEnabled) && $moduleTag->behaviors && !$this->hideTagsTab) {
-                $contentTag = \lispa\amos\tag\widgets\TagWidget::widget([
+                $contentTag = \open20\amos\tag\widgets\TagWidget::widget([
                         'model' => $model,
                         'attribute' => 'tagValues',
                         'form' => \yii\base\Widget::$stack[0],
@@ -111,7 +111,6 @@ class Tabs extends BaseTabs
                 ]);
                 $content    .= $contentTag ;
                 $js = <<<JS
-
 if($(".tag-tab .kv-selected").length === 0 && $("div.alert-danger.error-summary").length > 0 ){
     $("a[href=\"#"+$(".tag-tab").attr('id')+"\"").append("<span class=\"errore-alert custom-errore-alert\" title=\"La tab contiene degli errori\">&nbsp; <span class=\"am am-alert-triangle\"> </span> </span>");
 }
@@ -139,35 +138,35 @@ JS;
 
             /* if model is UserProfile or extends UserProfile, show a different Widget */
             if (($model instanceof UserProfile) && isset($moduleCwh) && isset($moduleTag) && !$this->hideTagsTab) {
+                $oneTagPresent = ($model->hasErrors('interestTagValues') ? 0 : 1);
                 $this->items[] = [
                     'label' => \Yii::t('amoscore', 'Tag Aree di interesse'),
-                    'content' => (new \lispa\amos\cwh\widgets\TagWidgetAreeInteresse([
+                    'content' => (new \open20\amos\cwh\widgets\TagWidgetAreeInteresse([
                     'model' => $model,
                     'attribute' => 'areeDiInteresse',
                     'form' => \yii\base\Widget::$stack[0],
-                    ]))->run() . $this->view->registerJs(<<<JS
-
-if($(".tag-aree-interesse-tab .kv-selected").length === 0 && $("div.alert-danger.error-summary").length > 0 && $("div.alert-danger.error-summary").css("display") !== "none" ){
-    $("a[href=\"#"+$(".tag-aree-interesse-tab").attr('id')+"\"").append("<span class=\"errore-alert custom-errore-alert\" title=\"La tab contiene degli errori\">&nbsp; <span class=\"am am-alert-triangle\"> </span> </span>");
-}
-    
-
-JS
-                    ),
+                    ]))->run(),
                     'options' => [
                         'class' => 'tag-aree-interesse-tab'
                     ]
                 ];
+                $js = <<<JS
+var oneTagPresent = '$oneTagPresent';
+if (oneTagPresent === '0') {
+    $("a[href=\"#"+$(".tag-aree-interesse-tab").attr('id')+"\"").append("<span class=\"errore-alert custom-errore-alert\" title=\"La tab contiene degli errori\">&nbsp; <span class=\"am am-alert-triangle\"> </span> </span>");
+}
+JS;
+                $this->view->registerJs($js);
             }
 
-            /** @var \lispa\amos\report\AmosReport $moduleReport */
+            /** @var \open20\amos\report\AmosReport $moduleReport */
             $moduleReport = \Yii::$app->getModule('report');
             if (isset($moduleReport) && in_array(get_class($model), $moduleReport->modelsEnabled) && !$this->hideReportTab && !$model->isNewRecord) {
                 $this->items[] = [
                     'label' => \Yii::t('amoscore', 'Reports').
                     Html::tag('span', '',
                         ['id' => 'tab-reports-bullet', 'class' => 'badge badge-default badge-panel-heading']),
-                    'content' => \lispa\amos\report\widgets\TabReportsWidget::widget([
+                    'content' => \open20\amos\report\widgets\TabReportsWidget::widget([
                         'model' => $model
                     ]),
                     'options' => ['id' => 'tab-reports']

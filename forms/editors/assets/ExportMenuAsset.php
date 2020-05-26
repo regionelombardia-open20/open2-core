@@ -1,4 +1,13 @@
 <?php
+
+/**
+ * Aria S.p.A.
+ * OPEN 2.0
+ *
+ *
+ * @package    Open20Package
+ * @category   CategoryName
+ */
 /**
 * Lombardia Informatica S.p.A.
 * OPEN 2.0
@@ -6,9 +15,10 @@
 *
 * @package    openinnovation\landing
 * @category   CategoryName
+* @author     Lombardia Informatica S.p.A.
 */
 
-namespace lispa\amos\core\forms\editors\assets;
+namespace open20\amos\core\forms\editors\assets;
 
 use yii\web\AssetBundle;
 
@@ -18,7 +28,7 @@ use yii\web\AssetBundle;
 */
 class ExportMenuAsset extends AssetBundle
 {
-    public $sourcePath = '@vendor/lispa/amos-core/forms/editors/assets/web';
+    public $sourcePath = '@vendor/open20/amos-core/forms/editors/assets/web';
 
     public $css = [
         'css/kv-export-data.css',

@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\views\toolbars
+ * @package    open20\amos\core\views\toolbars
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\views\toolbars;
+namespace open20\amos\core\views\toolbars;
 
 
 use yii\base\BaseObject;
@@ -126,7 +126,7 @@ class StatsPanel extends BaseObject implements IStatsPanel
         if ($this->disableLink) {
             return $content;
         } else {
-            return \lispa\amos\core\helpers\Html::a($content, $url, $options);
+            return \open20\amos\core\helpers\Html::a($content, $url, $options);
         }
     }
 
@@ -140,7 +140,7 @@ class StatsPanel extends BaseObject implements IStatsPanel
             'title' => $this->description,
             'href' => "javascript:$('[data-toggle=\"tab\"], [data-toggle=\"pill\"]').filter('[href=\"#' + '" . $this->url . "'.match(/#(.*)/)[1] + '\"]').tab('show');"
         ];
-        return \lispa\amos\core\helpers\Html::a(
+        return \open20\amos\core\helpers\Html::a(
             "{$this->icon} {$this->count} {$this->label}",
             $url,$options);
     }

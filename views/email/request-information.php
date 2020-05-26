@@ -1,10 +1,10 @@
 <?php
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\views\email
+ * @package    open20\amos\core\views\email
  * @category   CategoryName
  */
 
@@ -12,7 +12,7 @@
  * @var string $message
  * @var string $nameUser
  */
-use lispa\amos\core\module\BaseAmosModule;
+use open20\amos\core\module\BaseAmosModule;
 if(!isset($email)){
     $email = Yii::$app->user->email;
 }

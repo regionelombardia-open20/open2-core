@@ -1,18 +1,18 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\views\grid
+ * @package    open20\amos\core\views\grid
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\views\grid;
+namespace open20\amos\core\views\grid;
 
 //use Closure;
-use lispa\amos\core\icons\AmosIcons;
+use open20\amos\core\icons\AmosIcons;
 use kartik\base\Config;
 //use kartik\base\InputWidget;
 //use kartik\popover\PopoverX;

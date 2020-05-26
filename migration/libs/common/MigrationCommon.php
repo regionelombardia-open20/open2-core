@@ -1,22 +1,22 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\migration\libs\common
+ * @package    open20\amos\core\migration\libs\common
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\migration\libs\common;
+namespace open20\amos\core\migration\libs\common;
 
 /**
  * Class MigrationCommon
  *
  * Common class for migrations libraries. There are common methods and utilities in this class.
  *
- * @package lispa\amos\core\migration\libs\common
+ * @package open20\amos\core\migration\libs\common
  */
 class MigrationCommon
 {

@@ -1,26 +1,26 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms
+ * @package    open20\amos\core\forms
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\forms;
+namespace open20\amos\core\forms;
 
-use lispa\amos\admin\AmosAdmin;
+use open20\amos\admin\AmosAdmin;
 use yii\base\Widget;
 
 /**
  * Class ShowUserTagsWidget
- * @package lispa\amos\core\forms
+ * @package open20\amos\core\forms
  */
 class ShowUserTagsWidget extends Widget
 {
-    public $layout = "@vendor/lispa/amos-core/forms/views/widgets/widget_show_user_tags.php";
+    public $layout = "@vendor/open20/amos-core/forms/views/widgets/widget_show_user_tags.php";
     protected $userProfile;
     protected $className;
     protected $userTagList;
@@ -64,7 +64,7 @@ class ShowUserTagsWidget extends Widget
     {
         $userProfileClass = AmosAdmin::getInstance()->model('UserProfile');
         if($this->className == $userProfileClass){
-            $listaTagId = \lispa\amos\cwh\models\CwhTagOwnerInterestMm::find()
+            $listaTagId = \open20\amos\cwh\models\CwhTagOwnerInterestMm::find()
                 ->innerJoin('tag', 'tag.id = tag_id')
                 ->andWhere([
                     'record_id' => $this->userProfile,
@@ -73,7 +73,7 @@ class ShowUserTagsWidget extends Widget
                     'tag.nome' => SORT_DESC
                 ])->all();
         } else {
-            $listaTagId = \lispa\amos\tag\models\EntitysTagsMm::find()
+            $listaTagId = \open20\amos\tag\models\EntitysTagsMm::find()
                 ->joinWith('tag')
                 ->andWhere([
                     'classname' => $this->className,
@@ -93,7 +93,7 @@ class ShowUserTagsWidget extends Widget
 
     protected function getTagById($tagId)
     {
-        return \lispa\amos\tag\models\Tag::findOne($tagId);
+        return \open20\amos\tag\models\Tag::findOne($tagId);
     }
 
     /**
@@ -109,7 +109,7 @@ class ShowUserTagsWidget extends Widget
         $this->userTagList = $this->getArrayTagsId();
         $userProfileClass = AmosAdmin::getInstance()->model('UserProfile');
         if($this->className == $userProfileClass) {
-            $tagIdList = \lispa\amos\cwh\models\CwhTagOwnerInterestMm::find()
+            $tagIdList = \open20\amos\cwh\models\CwhTagOwnerInterestMm::find()
                 ->andWhere([
 //                    'classname' => $this->className,
                     'record_id' => $this->userProfile,
@@ -117,7 +117,7 @@ class ShowUserTagsWidget extends Widget
                 ->groupBy('root_id')
                 ->all();
         }else {
-            $tagIdList = \lispa\amos\tag\models\EntitysTagsMm::find()
+            $tagIdList = \open20\amos\tag\models\EntitysTagsMm::find()
                 //->select('root_id')
                 //->joinWith('tag')
                 ->andWhere([
@@ -134,7 +134,7 @@ class ShowUserTagsWidget extends Widget
             $tagRoots[] = $tagRoot['root_id'];
         }
 
-        $tagIdList = \lispa\amos\tag\models\Tag::find()
+        $tagIdList = \open20\amos\tag\models\Tag::find()
             ->andWhere([
                 'id' => $tagRoots,
             ])

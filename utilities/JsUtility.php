@@ -1,22 +1,22 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\utilities
+ * @package    open20\amos\core\utilities
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\utilities;
+namespace open20\amos\core\utilities;
 
 
 use yii\base\BaseObject;
 
 /**
  * Class JsUtility
- * @package lispa\amos\core\utilities
+ * @package open20\amos\core\utilities
  */
 class JsUtility extends BaseObject
 {
@@ -250,6 +250,7 @@ JS;
                     // var inputName = '$postName'+'['+'$postKey'+'][]';
                     var inputName = 'selected[]';
                     var selected = $("[name='"+inputName+"']"); 
+                    var genericSearch = $("[name='genericSearch']").val();
                     var selection = []; 
                     $.each (selected, function(key, value){
                         selection.push(value.value);
@@ -260,6 +261,7 @@ JS;
                         type: 'POST',
                          data: {
                            selected: selection,
+                           genericSearch: genericSearch,
                            save: 0
                         },
                        success: function(response) {
@@ -286,19 +288,22 @@ JS;
 JS;
         } else {
             $js = <<<JS
-               
                 $('body').on("click", ".pagination li a", function(e) {
                     e.preventDefault();
+                    var data = {
+                        genericSearch: $("#$gridId-search-field").val()
+                    };
                     $.ajax({
                         url: $(this).attr('href'),
                         async: true,
                         type: 'POST',
-                       success: function(response) {
+                        data: data,
+                        success: function(response) {
                             $('.form-container').html(response);
-                       }
-                    }); 
+                            $('m2mwidget-from-generic-search-hiddeninput').val(1);
+                        }
+                    });
                     return false;
-                    
                 });
 JS;
         }

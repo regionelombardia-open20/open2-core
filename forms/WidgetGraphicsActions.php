@@ -1,29 +1,29 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms
+ * @package    open20\amos\core\forms
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\forms;
+namespace open20\amos\core\forms;
 
-use lispa\amos\core\widget\WidgetGraphic;
+use open20\amos\core\widget\WidgetGraphic;
 use yii\base\Widget;
 
 /**
  * Class WidgetGraphicsActions
- * @package lispa\amos\core\forms
+ * @package open20\amos\core\forms
  */
 class WidgetGraphicsActions extends Widget
 {
     /**
      * @var string $layout Widget view
      */
-    public $layout = "@vendor/lispa/amos-core/forms/views/widgets/widget_graphics_actions.php";
+    public $layout = "@vendor/open20/amos-core/forms/views/widgets/widget_graphics_actions.php";
 
     /**
      * @var WidgetGraphic $widget Graphic widget object

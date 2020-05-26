@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\views\layouts\parts
+ * @package    open20\amos\core\views\layouts\parts
  * @category   CategoryName
  */
 
-use lispa\amos\core\icons\AmosIcons;
+use open20\amos\core\icons\AmosIcons;
 use yii\helpers\Html;
 
 //Pickup assistance params
@@ -29,7 +29,7 @@ $mailAddress = isset($assistance['email']) ? $assistance['email'] : (isset(\Yii:
         </a>
     </div>
 <?php elseif (isset(Yii::$app->modules['assistance-request'])): ?>
-    <?= $this->renderFile('@vendor/lispa/amos-assistance-request/src/views/_modal_form_request.php');?>
+    <?= $this->renderFile('@vendor/open20/amos-assistance-request/src/views/_modal_form_request.php');?>
 <?php else: ?>
     <?php if ((isset($assistance['enabled']) && $assistance['enabled']) || (!isset($assistance['enabled']) && isset(\Yii::$app->params['email-assistenza']))): ?>
         <div class="assistance">

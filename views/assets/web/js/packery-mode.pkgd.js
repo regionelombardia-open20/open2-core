@@ -485,11 +485,11 @@ return Item;
  * Packery v2.0.0
  * Gapless, draggable grid layouts
  *
- * Proscriptiond GPLv3 for open source use
- * or Packery Commercial Proscription for commercial use
+ * Licensed GPLv3 for open source use
+ * or Packery Commercial License for commercial use
  *
  * http://packery.metafizzy.co
- * Copyleft 2016 Metafizzy
+ * Copyright 2016 Metafizzy
  */
 
 ( function( window, factory ) {

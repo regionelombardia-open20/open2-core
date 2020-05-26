@@ -1,21 +1,21 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms\editors
+ * @package    open20\amos\core\forms\editors
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\forms\editors;
+namespace open20\amos\core\forms\editors;
 
-use lispa\amos\core\module\BaseAmosModule;
+use open20\amos\core\module\BaseAmosModule;
 
 /**
  * Class Select
- * @package lispa\amos\core\forms\editors
+ * @package open20\amos\core\forms\editors
  */
 class Select extends \kartik\select2\Select2
 {

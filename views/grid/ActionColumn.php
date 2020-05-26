@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\views\grid
+ * @package    open20\amos\core\views\grid
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\views\grid;
+namespace open20\amos\core\views\grid;
 
 use Yii;
 use yii\grid\ActionColumn as YiiActionColumn;
@@ -17,14 +17,14 @@ use yii\helpers\Html;
 
 /**
  * Class ActionColumn
- * @package lispa\amos\core\views\grid
+ * @package open20\amos\core\views\grid
  */
 class ActionColumn extends YiiActionColumn
 {
     /**
      * @var string $buttonClass The class of a single action columns button
      */
-    public $buttonClass = 'lispa\amos\core\views\common\Buttons';
+    public $buttonClass = 'open20\amos\core\views\common\Buttons';
 
     /**
      * @var array $viewOptions The "view" button options

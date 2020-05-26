@@ -1,26 +1,26 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\forms
+ * @package    open20\amos\core\forms
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\forms;
+namespace open20\amos\core\forms;
 
-use lispa\amos\core\exceptions\AmosException;
-use lispa\amos\core\icons\AmosIcons;
-use lispa\amos\core\interfaces\BaseContentModelInterface;
-use lispa\amos\core\interfaces\ContentModelInterface;
-use lispa\amos\core\interfaces\ModelGrammarInterface;
-use lispa\amos\core\interfaces\ModelImageInterface;
-use lispa\amos\core\interfaces\ModelLabelsInterface;
-use lispa\amos\core\interfaces\ViewModelInterface;
-use lispa\amos\core\module\BaseAmosModule;
-use lispa\amos\core\record\Record;
+use open20\amos\core\exceptions\AmosException;
+use open20\amos\core\icons\AmosIcons;
+use open20\amos\core\interfaces\BaseContentModelInterface;
+use open20\amos\core\interfaces\ContentModelInterface;
+use open20\amos\core\interfaces\ModelGrammarInterface;
+use open20\amos\core\interfaces\ModelImageInterface;
+use open20\amos\core\interfaces\ModelLabelsInterface;
+use open20\amos\core\interfaces\ViewModelInterface;
+use open20\amos\core\module\BaseAmosModule;
+use open20\amos\core\record\Record;
 use Yii;
 use yii\base\Widget;
 use yii\bootstrap\Carousel;
@@ -28,7 +28,7 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class AmosCarouselWidget
- * @package lispa\amos\core\forms
+ * @package open20\amos\core\forms
  */
 class AmosCarouselWidget extends Widget
 {
@@ -40,7 +40,7 @@ class AmosCarouselWidget extends Widget
     /**
      * @var string $singleItemView The view for a single carousel item.
      */
-    public $singleItemView = "@vendor/lispa/amos-core/forms/views/widgets/amos_carousel_widget_item";
+    public $singleItemView = "@vendor/open20/amos-core/forms/views/widgets/amos_carousel_widget_item";
 
     /**
      * @var string $carouselId
@@ -121,7 +121,7 @@ class AmosCarouselWidget extends Widget
     public function run()
     {
         if (Yii::$app->getModule('layout')) {
-            \lispa\amos\layout\assets\CarouselAsset::register($this->view);
+            \open20\amos\layout\assets\CarouselAsset::register($this->view);
         } else {
             throw new AmosException(BaseAmosModule::t('amoscore', '#amos_carousel_widget_missing_layout_module'));
         }

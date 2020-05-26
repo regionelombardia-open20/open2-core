@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\views\layouts\parts
+ * @package    open20\amos\core\views\layouts\parts
  * @category   CategoryName
  */
 
@@ -22,7 +22,7 @@ $logo = isset(Yii::$app->params['logo'])?
     : '<p>'.Yii::$app->name.'</p>';
 $logoUrl = $disablePlatformLinks ? null : Yii::$app->homeUrl;
 $logoOptions = [];
-$title = isset(Yii::$app->params['logo'])?  \lispa\amos\core\module\BaseAmosModule::t('amoscore', 'vai alla home page') : Yii::$app->name;
+$title = isset(Yii::$app->params['logo'])?  \open20\amos\core\module\BaseAmosModule::t('amoscore', 'vai alla home page') : Yii::$app->name;
 $logoOptions['title'] = $title;
 if(!isset(Yii::$app->params['logo'])){
     $logoOptions['class'] = 'title-text';
@@ -43,14 +43,14 @@ if(!isset(Yii::$app->params['logo'])){
         <?php
         $signature = Html::img(Yii::$app->params['logo-signature'], [
             'class' => 'img-responsive signature pull-right',
-            'alt' => \lispa\amos\core\module\BaseAmosModule::t('amoscore', 'logo firma')
+            'alt' => \open20\amos\core\module\BaseAmosModule::t('amoscore', 'logo firma')
         ]);
         ?>
         <?php if($disablePlatformLinks): ?>
             <?= $signature ?>
         <?php else: ?>
             <?=
-            Html::a( $signature, [Yii::$app->homeUrl,],  ['title' => \lispa\amos\core\module\BaseAmosModule::t('amoscore', 'vai alla home page')]);
+            Html::a( $signature, [Yii::$app->homeUrl,],  ['title' => \open20\amos\core\module\BaseAmosModule::t('amoscore', 'vai alla home page')]);
             ?>
         <?php endif;?>
     <?php endif; ?>

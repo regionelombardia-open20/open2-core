@@ -1,15 +1,15 @@
 <?php
 
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\migration
+ * @package    open20\amos\core\migration
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\migration;
+namespace open20\amos\core\migration;
 
 use yii\base\Exception;
 use yii\db\Migration;
@@ -18,7 +18,7 @@ use yii\db\Migration;
  * Class AmosMigrationTableCreation. This class is useful to create new table. The basic use provides the
  * override of these methods: protected function setTableName() and protected function setTableFields().
  *
- * @package lispa\amos\core\migration
+ * @package open20\amos\core\migration
  */
 class AmosMigrationTableCreation extends Migration
 {
@@ -85,15 +85,16 @@ class AmosMigrationTableCreation extends Migration
     }
     
     /**
+     * @see \yii\db\Migration::init() for more info.
      */
     public function init()
     {
+        parent::init();
         $this->db->enableSchemaCache = false;
         $this->setAddCreatedUpdatedFields(false);
         $this->setTableName();
         $this->setRawTableName($this->db->getSchema()->getRawTableName($this->tableName));
-        $this->setTableFields();
-        parent::init();
+        $this->setTableFields();  
     }
     
     /**
@@ -122,6 +123,7 @@ class AmosMigrationTableCreation extends Migration
     
     /**
      * Use this instead of function up().
+     * @see \Yii\db\Migration::safeUp() for more info.
      */
     public function safeUp()
     {
@@ -268,6 +270,7 @@ class AmosMigrationTableCreation extends Migration
     
     /**
      * Use this instead of function down().
+     * @see \Yii\db\Migration::safeDown() for more info.
      */
     public function safeDown()
     {

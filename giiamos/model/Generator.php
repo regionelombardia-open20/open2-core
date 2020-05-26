@@ -1,14 +1,14 @@
 <?php
 /**
- * Lombardia Informatica S.p.A.
+ * Aria S.p.A.
  * OPEN 2.0
  *
  *
- * @package    lispa\amos\core\giiamos\model
+ * @package    open20\amos\core\giiamos\model
  * @category   CategoryName
  */
 
-namespace lispa\amos\core\giiamos\model;
+namespace open20\amos\core\giiamos\model;
 
 use Yii;
 use yii\gii\CodeFile;
@@ -22,7 +22,7 @@ use yii\db\Schema;
 use yii\db\TableSchema;
 use yii\base\NotSupportedException;
 
-class Generator extends \lispa\amos\core\giiamos\Generator
+class Generator extends \open20\amos\core\giiamos\Generator
 //\yii\gii\generators\model\Generator
 {
     const RELATIONS_NONE        = 'none';
@@ -45,6 +45,7 @@ class Generator extends \lispa\amos\core\giiamos\Generator
 
     /**
      * @var array fully qualified interfaces name
+     * @see GeneratoConfig::getDefinition()['baseInterfaceNames']
      */
     public $interfacessel = [];
 
@@ -56,6 +57,7 @@ class Generator extends \lispa\amos\core\giiamos\Generator
 
     /**
      * @var array key-value pairs. 
+     * @see GeneratoConfig::getDefinition()['baseClassNames']
      */
     public $baseClassNames = [];
 
@@ -66,6 +68,7 @@ class Generator extends \lispa\amos\core\giiamos\Generator
 
     /**
      * @var array key-value pairs. 
+     * @see GeneratoConfig::getDefinition()['baseInterfaceNames']
      */
     public $baseInterfaceNames = [];
 
@@ -76,6 +79,7 @@ class Generator extends \lispa\amos\core\giiamos\Generator
 
     /**
      * @var array key-value pairs. 
+     * @see GeneratoConfig::getDefinition()['<baseclass name>']  
      */
     public $baseclassDynamic = [];
     public $baseActiveRecord = 'yii\db\ActiveRecord';
@@ -316,6 +320,7 @@ class Generator extends \lispa\amos\core\giiamos\Generator
      *
      * @return string
      * @since 2.0.5
+     * @see getDbConnection
      */
     public function getTablePrefix()
     {
@@ -582,6 +587,7 @@ class Generator extends \lispa\amos\core\giiamos\Generator
             $table0Schema = $db->getTableSchema($table0);
             $table1Schema = $db->getTableSchema($table1);
 
+            // @see https://github.com/yiisoft/yii2-gii/issues/166
             if ($table0Schema === null || $table1Schema === null) {
                 continue;
             }
@@ -943,6 +949,7 @@ class Generator extends \lispa\amos\core\giiamos\Generator
 
                         $strmethods .= ' /**
                                     *  @inheritdoc
+                                    *  @see '.array_pop($pathsee).'::'.$key.' 
                                     */
                                     public function '.$key.'( '.$str ? substr($str, 0, -1) : ''.') {
                                     //
@@ -1131,7 +1138,7 @@ class Generator extends \lispa\amos\core\giiamos\Generator
      * - value fully qualified interfaces name
      * 
      * [
-     *  [isCommentable] => lispa\amos\comments\models\CommentInterface,
+     *  [isCommentable] => open20\amos\comments\models\CommentInterface,
      * ]
      * 
      * @param type $baseclssel
@@ -1145,7 +1152,7 @@ class Generator extends \lispa\amos\core\giiamos\Generator
             try {
                 if (!$cls->isInterface()) {
                     if ($m->class !== $baseclssel) {
-                        if (strpos($m->class, 'lispa\amos') === 0 && strpos($m->class, 'interface') !== false) {
+                        if (strpos($m->class, 'open20\amos') === 0 && strpos($m->class, 'interface') !== false) {
                             $this->methodssel[$m->name] = $m->class;
                         }
                     }

@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * Aria S.p.A.
+ * OPEN 2.0
+ *
+ *
+ * @package    Open20Package
+ * @category   CategoryName
+ */
+
 use yii\db\Migration;
 
 class m190211_123906_create_table_models_classname extends Migration
@@ -28,15 +37,15 @@ class m190211_123906_create_table_models_classname extends Migration
                 'deleted_by' => $this->integer(),
             ], $tableOptions);
 
-            $this->insert( $this->tablename, ['classname' => 'lispa\amos\news\models\News', 'module' => 'news', 'label' => 'News']);
-            $this->insert( $this->tablename, ['classname' => 'lispa\amos\events\models\Event', 'module' => 'events', 'label' => 'Event']);
-            $this->insert( $this->tablename, ['classname' => 'lispa\amos\documenti\models\Documenti', 'module' => 'documenti',  'label' => 'Documenti']);
-            $this->insert( $this->tablename, ['classname' => 'lispa\amos\discussioni\models\DiscussioniTopic', 'module' => 'discussioni', 'label' => 'Discussioni']);
-            $this->insert( $this->tablename, ['classname' => 'lispa\amos\partnershipprofiles\models\PartnershipProfiles', 'module' => 'partnershipprofiles',  'label' => 'PartnershipProfile']);
-            $this->insert( $this->tablename, ['classname' => 'lispa\amos\een\models\EenPartnershipProposal', 'module' => 'een',  'label' => 'EenPartnershipProposal']);
-            $this->insert( $this->tablename, ['classname' => 'lispa\amos\showcaseprojects\models\ShowcaseProject', 'module' => 'showcaseprojects',  'label' => 'ShowcaseProjects']);
-            $this->insert( $this->tablename, ['classname' => 'lispa\amos\sondaggi\models\Sondaggi', 'module' => 'sondaggi',  'label' => 'Sondaggi']);
-            $this->insert( $this->tablename, ['classname' => 'lispa\amos\showcaseprojects\models\Initiative', 'module' => 'showcaseprojects', 'label' => 'Initiative']);
+            $this->insert( $this->tablename, ['classname' => 'open20\amos\news\models\News', 'module' => 'news', 'label' => 'News']);
+            $this->insert( $this->tablename, ['classname' => 'open20\amos\events\models\Event', 'module' => 'events', 'label' => 'Event']);
+            $this->insert( $this->tablename, ['classname' => 'open20\amos\documenti\models\Documenti', 'module' => 'documenti',  'label' => 'Documenti']);
+            $this->insert( $this->tablename, ['classname' => 'open20\amos\discussioni\models\DiscussioniTopic', 'module' => 'discussioni', 'label' => 'Discussioni']);
+            $this->insert( $this->tablename, ['classname' => 'open20\amos\partnershipprofiles\models\PartnershipProfiles', 'module' => 'partnershipprofiles',  'label' => 'PartnershipProfile']);
+            $this->insert( $this->tablename, ['classname' => 'open20\amos\een\models\EenPartnershipProposal', 'module' => 'een',  'label' => 'EenPartnershipProposal']);
+            $this->insert( $this->tablename, ['classname' => 'open20\amos\showcaseprojects\models\ShowcaseProject', 'module' => 'showcaseprojects',  'label' => 'ShowcaseProjects']);
+            $this->insert( $this->tablename, ['classname' => 'open20\amos\sondaggi\models\Sondaggi', 'module' => 'sondaggi',  'label' => 'Sondaggi']);
+            $this->insert( $this->tablename, ['classname' => 'open20\amos\showcaseprojects\models\Initiative', 'module' => 'showcaseprojects', 'label' => 'Initiative']);
             $this->insert( $this->tablename, ['classname' => 'amos\results\models\Result', 'module' => 'results','label' => 'Result']);
 
             $this->createTable('content_shared', [
