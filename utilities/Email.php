@@ -33,8 +33,7 @@ class Email extends BaseObject
      * @return bool
      */
     public static function sendMail(
-    $from, $to, $subject, $text, array $files = [], array $bcc = [], $params = [], $priority = 0, $use_queue = false
-    )
+    $from, $to, $subject, $text, array $files = [], array $bcc = [], $params = [], $priority = 0, $use_queue = false, $cc = [], $replyTo = [])
     {
         /** @var \open20\amos\emailmanager\AmosEmail $mailModule */
         $mailModule = Yii::$app->getModule("email");
@@ -52,7 +51,7 @@ class Email extends BaseObject
                         $errCnt++;
                     }
                 } else {
-                    if (!$mailModule->send($from, $recipient, $subject, $text, $files, $bcc, $params)) {
+                    if (!$mailModule->send($from, $recipient, $subject, $text, $files, $bcc, $params, true, $cc, $replyTo)) {
                         $errCnt++;
                     }
                 }

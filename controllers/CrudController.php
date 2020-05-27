@@ -15,8 +15,10 @@ use open20\amos\core\forms\EmailForm;
 use open20\amos\core\helpers\Html;
 use open20\amos\core\icons\AmosIcons;
 use open20\amos\core\interfaces\ModelLabelsInterface;
+use open20\amos\core\module\AmosModule;
 use open20\amos\core\module\BaseAmosModule;
 use open20\amos\core\user\User;
+use open20\amos\core\utilities\DuplicateContentUtility;
 use open20\amos\core\utilities\Email;
 use Yii;
 use yii\base\InvalidConfigException;
@@ -24,6 +26,7 @@ use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
 
@@ -50,15 +53,17 @@ abstract class CrudController extends BaseController
     public $url;
     public $parametro;
 
-    /** 
-     * Used by direct community invitation 
-     * 
-     * @var type 
+    /**
+     * Used by direct community invitation
+     * @var string|null $moduleName
      */
-    public 
-        $moduleName = null,
-        $contextModelId = null
-    ;
+    public $moduleName = null;
+
+    /**
+     * Used by direct community invitation
+     * @var int|null $contextModelId
+     */
+    public $contextModelId = null;
 
     /**
      * @var array $exportConfig Configurations to export data. DON'T SET IN Yii::$app->request->queryParams!
@@ -91,6 +96,8 @@ abstract class CrudController extends BaseController
     public function init()
     {
         parent::init();
+
+        $this->addActionsPermissionsElement('duplicate-content', 'update');
 
         if (!isset($this->modelSearch)) {
             throw new InvalidConfigException("{modelSearch} must be set in your init function");
@@ -240,9 +247,9 @@ abstract class CrudController extends BaseController
         if ($layout) {
             $this->setUpLayout($layout);
         }
-        
+
         return $this->render(
-            'index', 
+            'index',
             [
                 'dataProvider' => $this->getDataProvider(),
                 'model' => $this->getModelSearch(),
@@ -399,5 +406,79 @@ abstract class CrudController extends BaseController
             }
         }
         return $this->renderAjax($view, ['infoRequest' => $infoRequest, 'model' => $this->model]);
+    }
+
+    /**
+     * This action is useful to duplicate a content.
+     * @param int $id
+     * @return \yii\web\Response
+     * @throws InvalidConfigException
+     * @throws NotFoundHttpException
+     * @throws \open20\amos\core\exceptions\DuplicateContentException
+     * @throws \raoul2000\workflow\base\WorkflowException
+     * @throws \yii\db\Exception
+     */
+    public function actionDuplicateContent($id)
+    {
+        $this->model = $this->findModel($id);
+
+        $ok = $this->beforeDuplicateContent();
+        if (!$ok) {
+            $url = $this->duplicateContentDefaultRedirectUrl();
+            return $this->redirect($url);
+        }
+
+        $duplicateContentUtility = new DuplicateContentUtility(['model' => $this->model]);
+        $newContent = $duplicateContentUtility->duplicateContent();
+
+        if (is_null($newContent)) {
+            $url = $this->duplicateContentDefaultRedirectUrl();
+            Yii::$app->getSession()->addFlash('danger', BaseAmosModule::t('amoscore', '#duplication_action_error_duplication'));
+        } else {
+            $url = ['update', 'id' => $newContent->id];
+            $ok = $this->afterDuplicateContent();
+            if ($ok) {
+                Yii::$app->getSession()->addFlash('success', BaseAmosModule::t('amoscore', '#duplication_action_success_duplication'));
+            } else {
+                Yii::$app->getSession()->addFlash('danger', BaseAmosModule::t('amoscore', '#duplication_action_error_post_duplication_operations'));
+            }
+        }
+
+        return $this->redirect($url);
+    }
+
+    /**
+     * This method returns the default redirect url for content duplication action.
+     * @return array|mixed|string|null
+     */
+    private function duplicateContentDefaultRedirectUrl()
+    {
+        $moduleObj = $this->module;
+        $url = ($moduleObj instanceof AmosModule ? Yii::$app->session->get($moduleObj::beginCreateNewSessionKey()) : null);
+        if (is_null($url)) {
+            $url = Url::previous();
+            if (is_null($url)) {
+                $url = ['/' . $moduleObj->id . '/' . $this->id . '/index'];
+            }
+        }
+        return $url;
+    }
+
+    /**
+     * Write here the operations before duplicate the content.
+     * @return bool
+     */
+    protected function beforeDuplicateContent()
+    {
+        return true;
+    }
+
+    /**
+     * Write here the operations after duplicate the content.
+     * @return bool
+     */
+    protected function afterDuplicateContent()
+    {
+        return true;
     }
 }

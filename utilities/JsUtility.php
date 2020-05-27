@@ -243,6 +243,9 @@ JS;
      */
     public static function getM2mSecondGridPagination($gridId, $postName, $postKey, $useCheckbox = true)
     {
+
+        $genericSearch= \Yii::$app->request->post('genericSearch');
+
         if ($useCheckbox) {
             $js = <<<JS
                 $('body').on("click", ".pagination li a", function(e) {
@@ -250,7 +253,6 @@ JS;
                     // var inputName = '$postName'+'['+'$postKey'+'][]';
                     var inputName = 'selected[]';
                     var selected = $("[name='"+inputName+"']"); 
-                    var genericSearch = $("[name='genericSearch']").val();
                     var selection = []; 
                     $.each (selected, function(key, value){
                         selection.push(value.value);
@@ -261,7 +263,7 @@ JS;
                         type: 'POST',
                          data: {
                            selected: selection,
-                           genericSearch: genericSearch,
+                           genericSearch: '{$genericSearch}',
                            save: 0
                         },
                        success: function(response) {

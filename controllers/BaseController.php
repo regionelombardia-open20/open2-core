@@ -41,6 +41,15 @@ abstract class BaseController extends BackendController
     );
 
     /**
+     * @param string $action
+     * @param string $permission
+     */
+    protected function addActionsPermissionsElement($action, $permission)
+    {
+        $this->actionsPermissions[$action] = $permission;
+    }
+
+    /**
      * @return mixed
      */
     public function getModel()

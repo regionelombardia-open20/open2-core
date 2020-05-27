@@ -76,7 +76,7 @@ class M2MWidget extends Widget
     public $btnInvitationClass = 'btn btn-primary';
     public $invitationModule = null;
     public $externalInvitationEnabled = false;
-    
+
     /**
      * @var Module $moduleClassName
      */
@@ -216,6 +216,11 @@ class M2MWidget extends Widget
      *  @var string $additionalButtons
      */
     public $additionalButtons = '';
+
+    /**
+     * @var bool $m2mwidgetButtonPagination
+     */
+    public $m2mwidgetButtonPagination = false;
     
     /**
      * @throws Exception
@@ -848,6 +853,7 @@ class M2MWidget extends Widget
         $this->getView()->params['columnsArray'] = $this->createTargetColumnsArray();
 
         $Grid = $this->render($this->itemsTargetView, [
+            'widget' => $this,
             'searchModel' => $this->modelTarget,
             'viewSearch' => $this->viewSearch,
             'isModal' => $this->isModal,

@@ -132,12 +132,14 @@ trait M2MWidgetControllerTrait
         $targetObjClassName = $this->targetObjClassName;
 
         if (Yii::$app->request->getIsPost()) {
-            $model->load(Yii::$app->request->post());
-            if (isset(Yii::$app->request->post()['selected'])) {
-                $countSelection = count(Yii::$app->request->post()['selected']);
+            $post = Yii::$app->request->post();
+            $model->load($post);
+            $save = isset($post['save']) ? ($post['save']) : true;
+            if (isset($post['selected']) && $save) {
+                $countSelection = count($post['selected']);
                 if ($countSelection == 1) {
                     /** @var ActiveRecord $target */
-                    $target = $targetObjClassName::findOne(['id' => Yii::$app->request->post()['selected'][0]]);
+                    $target = $targetObjClassName::findOne(['id' => $post['selected'][0]]);
                     if (!is_null($target)) {
                         $model->$targetKey = $target->id;
                         $model->save(false);
@@ -149,7 +151,6 @@ trait M2MWidgetControllerTrait
             $event->sender = $model;
             $this->trigger(M2MEventsEnum::EVENT_AFTER_ASSOCIATE_ONE2MANY, $event);
 
-            $post = Yii::$app->getRequest()->post();
             if (!Yii::$app->getRequest()->getIsAjax() && (!isset($post['fromGenericSearch']) || (isset($post['fromGenericSearch']) && !$post['fromGenericSearch']))) {
                 $this->redirect($this->getRedirectArray($id));
             }

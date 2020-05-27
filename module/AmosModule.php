@@ -67,6 +67,11 @@ abstract class AmosModule extends \open20\amos\core\module\BaseAmosModule implem
     public $hideWidgetGraphicsActions = false;
 
     /**
+     * @var bool $enableContentDuplication If true enable the content duplication on each row in table view
+     */
+    public $enableContentDuplication = false;
+
+    /**
      * Return an instance of module
      *
      * @return AmosModule

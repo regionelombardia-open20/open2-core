@@ -86,21 +86,34 @@ class ModalUtility extends BaseObject
         $modalDescriptionText = ((isset($modalConfiguration['modalDescriptionText']) && is_string($modalConfiguration['modalDescriptionText'])) ?
             $modalConfiguration['modalDescriptionText'] :
             '');
+        $modalHeader = ((isset($modalConfiguration['modalHeader']) && is_string($modalConfiguration['modalHeader'])) ?
+            $modalConfiguration['modalHeader'] :
+            null);
         $cancelLabel = ((isset($modalConfiguration['cancelBtnLabel']) && is_string($modalConfiguration['cancelBtnLabel'])) ?
             $modalConfiguration['cancelBtnLabel'] :
             BaseAmosModule::tHtml('amoscore', '#cancel'));
-        $cancelLink = ((isset($modalConfiguration['cancelBtnLink']) && is_string($modalConfiguration['cancelBtnLink'])) ?
-            $modalConfiguration['cancelBtnLink'] :
-            null);
+        $cancelLink = null;
+        if (isset($modalConfiguration['cancelBtnLink'])) {
+            if (is_string($modalConfiguration['cancelBtnLink'])) {
+                $cancelLink = [$modalConfiguration['cancelBtnLink']];
+            } else if (is_array($modalConfiguration['cancelBtnLink'])) {
+                $cancelLink = $modalConfiguration['cancelBtnLink'];
+            }
+        }
         $cancelOptions = ((isset($modalConfiguration['cancelBtnOptions']) && is_array($modalConfiguration['cancelBtnOptions'])) ?
             $modalConfiguration['cancelBtnOptions'] :
             ['class' => 'btn btn-secondary', 'data-dismiss' => 'modal']);
         $confirmLabel = ((isset($modalConfiguration['confirmBtnLabel']) && is_string($modalConfiguration['confirmBtnLabel'])) ?
             $modalConfiguration['confirmBtnLabel'] :
             BaseAmosModule::tHtml('amoscore', '#confirm'));
-        $confirmLink = ((isset($modalConfiguration['confirmBtnLink']) && is_string($modalConfiguration['confirmBtnLink'])) ?
-            $modalConfiguration['confirmBtnLink'] :
-            null);
+        $confirmLink = null;
+        if (isset($modalConfiguration['confirmBtnLink'])) {
+            if (is_string($modalConfiguration['confirmBtnLink'])) {
+                $confirmLink = [$modalConfiguration['confirmBtnLink']];
+            } else if (is_array($modalConfiguration['confirmBtnLink'])) {
+                $confirmLink = $modalConfiguration['confirmBtnLink'];
+            }
+        }
         $confirmOptions = ((isset($modalConfiguration['confirmBtnOptions']) && is_array($modalConfiguration['confirmBtnOptions'])) ?
             $modalConfiguration['confirmBtnOptions'] :
             ['class' => 'btn btn-navigation-primary']);
@@ -109,10 +122,10 @@ class ModalUtility extends BaseObject
             ['class' => 'pull-right m-15-0']);
 
         // Buttons
-        $buttons = Html::a($cancelLabel, [$cancelLink], $cancelOptions) . Html::a($confirmLabel, [$confirmLink], $confirmOptions);
+        $buttons = Html::a($cancelLabel, $cancelLink, $cancelOptions) . Html::a($confirmLabel, $confirmLink, $confirmOptions);
 
         // Make the modal
-        Modal::begin(['id' => $modalId]);
+        Modal::begin(['id' => $modalId, 'header' => $modalHeader]);
         echo Html::tag('div', $modalDescriptionText);
         echo Html::tag('div', $buttons, $modalOptions);
         Modal::end();

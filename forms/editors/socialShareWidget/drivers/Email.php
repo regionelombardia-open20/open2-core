@@ -35,7 +35,7 @@ class Email extends Driver
      */
     protected function processShareData()
     {
-        $this->url =BaseAmosModule::t('amoscore', '#share_body_message') .static::encodeData($this->url);
+        $this->url = rawurlencode (BaseAmosModule::t('amoscore', '#share_body_message') .static::encodeData($this->url));
         $this->title = \Yii::$app->name.': '.rawurlencode($this->title);
     }
 
@@ -44,7 +44,7 @@ class Email extends Driver
      */
     public function getLink()
     {
-        $this->_link = 'mailto:?Subject={title}&Body={url}';
+        $this->_link = 'mailto:?subject={title}&body={url}';
 
         return parent::getLink();
     }

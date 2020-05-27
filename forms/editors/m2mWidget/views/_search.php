@@ -17,6 +17,7 @@ use yii\web\View;
 /**
  * @var yii\web\View $this
  * @var \yii\db\ActiveRecord $model
+ * @var \open20\amos\core\forms\editors\m2mWidget\M2MWidget $widget
  * @var string $pjaxContainerId
  * @var string $gridViewContainerId
  * @var string $gridId
@@ -48,7 +49,26 @@ $this->registerJs($js, View::POS_READY);
         </div>
 
         <div class="col-sm-6 col-lg-8">
-            <?= Html::button(BaseAmosModule::t('amoscore', 'Reset'), ['class' => 'btn btn-secondary', 'id' => $gridId . '-reset-search-btn']) ?>
+            <?php
+            if (
+                (isset(Yii::$app->params['m2mwidgetButtonPagination']) && (Yii::$app->params['m2mwidgetButtonPagination'] == true)) ||
+                ($widget->m2mwidgetButtonPagination == true)
+            ) {
+                // add to curent url disable pagination params
+                if (null == Yii::$app->getRequest()->get('disablePagination')) {
+                    // add parameter to this url
+                    $url_disable_pagination = yii\helpers\Url::current() . "&disablePagination=" . true;
+
+                    echo Html::a(BaseAmosModule::t('amoscore', 'Senza Paginazione'), [$url_disable_pagination], ['class' => 'btn btn-secondary']);
+
+                } else {
+                    $url_disable_pagination = yii\helpers\Url::current();
+
+                    echo Html::a(BaseAmosModule::t('amoscore', 'Con Paginazione'), [yii\helpers\Url::current(['disablePagination' => null])], ['class' => 'btn btn-secondary']);
+                }
+            }
+            ?>
+            <?= Html::button(BaseAmosModule::t('amoscore', '#reset_m2m_target_search_label'), ['class' => 'btn btn-secondary', 'id' => $gridId . '-reset-search-btn']) ?>
             <?= Html::button(BaseAmosModule::t('amoscore', 'Search'), ['class' => 'btn btn-navigation-primary', 'id' => $gridId . '-search-btn']) ?>
         </div>
     </div>

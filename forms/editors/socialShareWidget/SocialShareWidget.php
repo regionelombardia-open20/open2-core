@@ -36,15 +36,16 @@ class SocialShareWidget extends SocialShare
 
     public $model;
 
+    public $configuratorId;
+
     const MODE_NORMAL = 'normal';
     const MODE_DROPDOWN = 'dropdown';
 
 
-    public $wrapperTag = 'div';
-    public $wrapperOptions = ['class' => 'container-social-share'];
+    public $containerOptions = ['tag' => 'div', 'class' => 'container-social-share'];
 
-    public $linkWrapperTag = 'div';
-    public $linkWrapperOptions = ['class' => 'share-wrap-button'];
+    public $linkContainerOptions = ['tag' => 'div', 'class' => 'share-wrap-button'];
+    
 
 
     public $enableModalShare = true;
@@ -55,8 +56,11 @@ class SocialShareWidget extends SocialShare
      */
     public function init()
     {
+        if(!empty($this->configuratorId)){
+            $this->configurator = $this->configuratorId;
+        }
         $baseUrl = (!empty(\Yii::$app->params['platform']['backendUrl']) ? \Yii::$app->params['platform']['backendUrl'] : '');
-        if (!empty(\Yii::$app->components[$this->configuratorId])) {
+        if (!empty(\Yii::$app->components[$this->configurator])) {
             parent::init();
             if (empty($this->imageUrl)) {
                 $this->imageUrl = \yii\helpers\Url::to($baseUrl . "/img/img_default.jpg");
@@ -75,7 +79,7 @@ class SocialShareWidget extends SocialShare
 
         $content_id = $this->model->id;
         if($this->model->getValidatedOnce()) {
-            if (!empty(\Yii::$app->components[$this->configuratorId])) {
+            if (!empty(\Yii::$app->components[$this->configurator])) {
                 $this->setVisibleSocialNetwork();
                 $this->renderModalAjax(); //used for share on your own network
 
@@ -176,7 +180,7 @@ class SocialShareWidget extends SocialShare
     {
         $allowedSocialNetwork = [];
         $canShare = $this->canShare();
-        $socialNetworks = $this->_configurator->getSocialNetworks();
+        $socialNetworks = $this->configurator->getSocialNetworks();
         foreach ($socialNetworks as $socialName => $social) {
             $okModule = true;
             //check if the platform has che required plugin
@@ -194,7 +198,7 @@ class SocialShareWidget extends SocialShare
 
         }
 
-        $this->_configurator->socialNetworks = $allowedSocialNetwork;
+        $this->configurator->socialNetworks = $allowedSocialNetwork;
     }
 
     /**
@@ -202,7 +206,7 @@ class SocialShareWidget extends SocialShare
      */
     protected function isSocialNetworkEmpty()
     {
-        $socialNetworks = $this->_configurator->getSocialNetworks();
+        $socialNetworks = $this->configurator->getSocialNetworks();
         if (empty($socialNetworks)) {
             return true;
         }

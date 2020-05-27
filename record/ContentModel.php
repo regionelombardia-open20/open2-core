@@ -18,15 +18,15 @@ use open20\amos\core\interfaces\CrudModelInterface;
 use open20\amos\core\interfaces\FacilitatorInterface;
 use open20\amos\core\interfaces\ModelImageInterface;
 use open20\amos\core\interfaces\SearchModelInterface;
-use open20\amos\notificationmanager\record\NotifyRecord;
 use open20\amos\notificationmanager\models\NotificationChannels;
-
+use open20\amos\notificationmanager\record\NotifyRecord;
 use Yii;
-use yii\base\Model;
 use yii\base\Event;
+use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use yii\data\Pagination;
 use yii\db\ActiveQuery;
+use yii\db\ExpressionInterface;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 
@@ -530,6 +530,7 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      *
      * @param   array $params Search parameters
      * @return \yii\db\ActiveQuery
+     * @throws \yii\base\InvalidConfigException
      */
     public function baseSearch($params)
     {
@@ -545,12 +546,12 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
     }
 
     /**
-     * 
-     * @param type $params
-     * @param type $queryType
-     * @param type $limit
-     * @param type $onlyDrafts
-     * @return type
+     * @param array $params
+     * @param string $queryType
+     * @param int|null|ExpressionInterface $limit
+     * @param bool $onlyDrafts
+     * @return ActiveDataProvider|\yii\data\BaseDataProvider
+     * @throws \yii\base\InvalidConfigException
      */
     public function search($params, $queryType = null, $limit = null, $onlyDrafts = false)
     {
@@ -623,7 +624,8 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      *
      * @param array $params Array di parametri per la ricerca
      * @param int $limit
-     * @return ActiveDataProvider
+     * @return ActiveDataProvider|\yii\data\BaseDataProvider
+     * @throws \yii\base\InvalidConfigException
      */
     public function searchOwn($params, $limit = null, $onlyDrafts = false)
     {
@@ -645,7 +647,8 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      *
      * @param array $params Array di parametri per la ricerca
      * @param int $limit
-     * @return ActiveDataProvider
+     * @return ActiveDataProvider|\yii\data\BaseDataProvider
+     * @throws \yii\base\InvalidConfigException
      */
     public function searchToValidate($params, $limit = null)
     {
@@ -657,7 +660,8 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      *
      * @param array $params Array of get parameters for search
      * @param int|null $limit
-     * @return ActiveDataProvider
+     * @return ActiveDataProvider|\yii\data\BaseDataProvider
+     * @throws \yii\base\InvalidConfigException
      */
     public function searchAll($params, $limit = null)
     {
@@ -669,7 +673,8 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      *
      * @param array $params Array of get parameters for search
      * @param int|null $limit
-     * @return ActiveDataProvider
+     * @return ActiveDataProvider|\yii\data\BaseDataProvider
+     * @throws \yii\base\InvalidConfigException
      */
     public function searchAllAdmin($params, $limit = null)
     {
@@ -681,7 +686,8 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      *
      * @param array $params Array of get parameters for search
      * @param int|null $limit
-     * @return ActiveDataProvider
+     * @return ActiveDataProvider|\yii\data\BaseDataProvider
+     * @throws \yii\base\InvalidConfigException
      */
     public function searchOwnInterest($params, $limit = null)
     {
@@ -791,6 +797,7 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      * @param array $searchParamsArray Array of search words
      * @param int|null $pageSize
      * @return ActiveDataProvider
+     * @throws \yii\base\InvalidConfigException
      */
     public function globalSearch($searchParamsArray, $pageSize = 5)
     {
@@ -899,11 +906,7 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
         }
         return true;
     }
-    
-    /**
-     * 
-     * @param type $query
-     */
+
     public function setEventAfterCounter()
     {
         Event::on(
@@ -936,5 +939,4 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
             }
         }
     }
-
 }

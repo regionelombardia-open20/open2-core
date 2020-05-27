@@ -10,7 +10,6 @@
  */
 
 use open20\amos\core\forms\editors\assets\EditorsAsset;
-use open20\amos\core\forms\editors\m2mWidget\M2MWidget;
 use open20\amos\core\helpers\Html;
 use open20\amos\core\icons\AmosIcons;
 use open20\amos\core\module\BaseAmosModule;
@@ -21,6 +20,7 @@ use yii\bootstrap\Modal;
 /**
  * @var \yii\web\View $this
  * @var \yii\db\ActiveRecord $searchModel
+ * @var \open20\amos\core\forms\editors\m2mWidget\M2MWidget $widget
  * @var bool $viewSearch
  * @var bool $useCheckbox
  */
@@ -76,6 +76,7 @@ $this->registerJs($js);
 <?php if (isset($viewSearch) && ($viewSearch === true)): ?>
     <?= $this->render('_search', [
         'model' => $searchModel,
+        'widget' => $widget,
         'pjaxContainerId' => $pjaxContainerId,
         'gridViewContainerId' => $gridViewContainerId,
         'gridId' => $GridId,
@@ -85,6 +86,13 @@ $this->registerJs($js);
 <?php endif; ?>
 
 <div id="<?= $gridViewContainerId ?>">
+    <?php
+        // check if parameter disable pagination is set true
+        if( Yii::$app->getRequest()->get('disablePagination') == true){
+            $this->params['modelTargetData']->pagination = false;
+        }
+    ?>
+
     <div id="<?= $GridId ?>" data-pjax-container="<?= $pjaxContainerId ?>" data-pjax-timeout="1000">
         <?= DataProviderView::widget([
             'dataProvider' => $this->params['modelTargetData'],

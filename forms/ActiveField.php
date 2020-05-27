@@ -208,13 +208,15 @@ class ActiveField extends YiiActiveField
         }
 
         $script = <<<JS
+                
+	var init_{$this->attribute} = function() {
             var maxlength = 0;
             var schemaSize = "{$size}";
             
             if(schemaSize === "") {
                 schemaSize = 0
             }
-            
+
             if($("#{$textareaId}").attr("maxlength")===undefined){
                 maxlength = schemaSize;
                 $("#{$textareaId}").attr("maxlength", maxlength);
@@ -267,6 +269,9 @@ class ActiveField extends YiiActiveField
                 
                 $(".count-char-{$textareaId} .chars").text(numChars);
             });
+	};
+		
+	init_{$this->attribute}();
 JS;
 
         $this->form->view->registerJs($script);

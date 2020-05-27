@@ -36,6 +36,7 @@ class TextEditorWidget extends TinyMce
         'theme' => 'modern',
         'images_upload_url' => self::upload_url,
         'convert_urls' => false,
+        'allow_unsafe_link_target' => true,
         'plugins' => [
             "advlist autolink lists link charmap print preview anchor",
             "searchreplace visualblocks code fullscreen code",

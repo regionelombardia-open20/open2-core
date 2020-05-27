@@ -44,24 +44,24 @@ class ValidatorUpdateContentRule extends DefaultOwnContentRule
 //                } elseif (isset($post['id'])) {
 //                    $model = $this->instanceModel($model, $post['id']);
 //                }
-                
+
                 $data = \yii\helpers\ArrayHelper::merge(
-                    \Yii::$app->getRequest()->post(), 
+                    \Yii::$app->getRequest()->post(),
                     \Yii::$app->getRequest()->get()
                 );
-                
+
                 if (isset($data['id'])) {
                     $model = $this->instanceModel($model, $data['id']);
                 }
             }
-            
+
             if (!isset($cwhModule) || !in_array($modelClassName, $cwhModule->modelsEnabled)) {
                 return false;
             }
-            
+
             return $this->validatorContentUpdatePermission($model);
         }
-        
+
         return false;
     }
 
@@ -75,20 +75,19 @@ class ValidatorUpdateContentRule extends DefaultOwnContentRule
         // if you create a content using hidecwhtab, the model is creaed without a validator, so you cannot do the normal check for validation permission
         $cwhModule = \Yii::$app->getModule('cwh');
         $cwhEnabled = (isset($cwhModule) && in_array(get_class($model), $cwhModule->modelsEnabled) && $cwhModule->behaviors);
-        
-        /* Commentato condizione isNewRecord poichè sono controlli da fare sempre 
+
+        /* Commentato condizione isNewRecord poichè sono controlli da fare sempre
          * Commentato anche validatori poichè non dovrebbe essere vuoto (c'è sempre lo user->id)
          * E' necessario testare solo $cwhEnabled
          * Vedi PR-224 (Possibilità di decidere il livello di moderazione di una community o sotto-community (MODIFICA EVOLITIVA DI OPEN2.0)
          */
 
         //IF YOU ARE IN THE CREATION PAGE
-        if($model->isNewRecord || ($cwhEnabled && empty($model->validatori))) {
-//        if($cwhEnabled) {
+        if($cwhEnabled || $model->isNewRecord) {
             $scope = $cwhModule->getCwhScope();
             if (isset($cwhModule) && !empty($scope)) {
                 $scope = $cwhModule->getCwhScope();
-                
+
                 $communityModule = \Yii::$app->getModule('community');
                 if (isset($scope['community']) && $communityModule) {
 
@@ -117,7 +116,7 @@ class ValidatorUpdateContentRule extends DefaultOwnContentRule
             if($moduleAdmin && !empty($moduleAdmin->enableExternalFacilitator) && $moduleAdmin->enableExternalFacilitator){
                 $isFacilitatorExternal = \Yii::$app->user->can($model->getExternalFacilitatorRole());
             }
-            if(empty($scope)&&  (\Yii::$app->user->can($model->getFacilitatorRole())|| $isFacilitatorExternal) ){
+            if(empty($scope) &&  (\Yii::$app->user->can($model->getFacilitatorRole())|| $isFacilitatorExternal) ){
                return true;
             }
 
@@ -126,7 +125,7 @@ class ValidatorUpdateContentRule extends DefaultOwnContentRule
 
         /* Commentato controllo poichè non è più necessario avendo modificato la if precedente
          * Vedi PR-224 (Possibilità di decidere il livello di moderazione di una community o sotto-community (MODIFICA EVOLITIVA DI OPEN2.0)
-         * 
+         *
          * TBD Da testare perché per come era stato modificato non funzionava più il passaggio da VALIDARE a VALIDATO
          * Ad ogni modo se falliscono i test precedenti questa è l'ultima ancora di salvezza!
          */
@@ -135,7 +134,8 @@ class ValidatorUpdateContentRule extends DefaultOwnContentRule
             'queryBase' => $model::find()->distinct()
         ]);
         $queryToValidateIds = $cwhActiveQuery->getQueryCwhToValidate(false)->select($model::tableName().'.id')->column();
+
         return (in_array($model->id, $queryToValidateIds));
-		
+
     }
 }

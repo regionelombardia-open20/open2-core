@@ -38,11 +38,11 @@
         "schmunk42/yii2-giiant": "*",
         "tinymce/tinymce":"~4.9.3",
         "yiidoc/yii2-redactor": "*",
-        "yiisoft/yii2": "2.*",
+        "yiisoft/yii2": "<=2.0.32",
         "yiisoft/yii2-bootstrap": "*",
         "yiisoft/yii2-swiftmailer": "*",
-        "yiimaker/yii2-social-share": "1.4.1",
-        "yii2tech/spreadsheet": "^1.0.5"  
+        "yiimaker/yii2-social-share": "*",
+        "yii2tech/spreadsheet": "^1.0.5"
     },
     "autoload": {
         "psr-4": {

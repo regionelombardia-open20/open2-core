@@ -22,6 +22,8 @@ use open20\amos\core\utilities\StringUtils;
 use open20\amos\core\utilities\WorkflowTransitionWidgetUtility;
 use raoul2000\workflow\base\SimpleWorkflowBehavior;
 use raoul2000\workflow\base\Status;
+use raoul2000\workflow\base\WorkflowException;
+use raoul2000\workflow\helpers\WorkflowHelper;
 use Yii;
 use yii\base\Behavior;
 use yii\behaviors\TimestampBehavior;
@@ -32,6 +34,7 @@ use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 use yii\helpers\HtmlPurifier;
 use yii\helpers\Inflector;
+use yii\helpers\Url;
 use yii\web\Application as Web;
 
 /**
@@ -91,6 +94,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface
     public static function find()
     {
         $className = get_called_class();
+        /** @var ActiveRecord $model */
         $model     = new $className();
         $return    = parent::find();
         if ($model->hasAttribute('deleted_at')) {
@@ -467,7 +471,8 @@ class Record extends ActiveRecord implements StatsToolbarInterface
     }
 
     /**
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery|null
+     * @throws \yii\base\InvalidConfigException
      */
     public function getCreatedUserProfile()
     {
@@ -553,7 +558,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface
                   ON DUPLICATE KEY UPDATE updates = updates + 1, updated_at = now()"
             )->execute();
         }
-        
+
         parent::afterSave($insert, $changedAttributes);
     }
 
@@ -612,13 +617,13 @@ class Record extends ActiveRecord implements StatsToolbarInterface
     {
 
         $enablePurifyDataParam = true;
-        
+
         if (isset(Yii::$app->params['forms-purify-data']) && (Yii::$app->params['forms-purify-data'] == false)) {
             $enablePurifyDataParam = false;
         }
-        
+
         if ($enablePurifyDataParam == true){
-          
+
             if (isset(Yii::$app->params['forms-purify-data-white-models'])) {
                 $listClassModels = Yii::$app->params['forms-purify-data-white-models'];
                 if (in_array($this->className(), $listClassModels)) {
@@ -633,10 +638,11 @@ class Record extends ActiveRecord implements StatsToolbarInterface
                         // Change from 'XHTML 1.0 Strict'.
                         'HTML.Doctype' => 'XHTML 1.0 Transitional',
                         // Change from 'XHTML 1.0 Strict'.
-                        'HTML.Allowed' => 'a[href],h1,h2,h3,h4,h5,h6,b,strong,i,em,ul,ol,li,p[style],br,span,img[width|height|alt|src],iframe[width|height|src|frameborder]',
+                        'HTML.Allowed' => 'a[href|target],h1,h2,h3,h4,h5,h6,b,strong,i,em,ul,ol,li,p[style],br,span,img[width|height|alt|src],iframe[width|height|src|frameborder]',
                         // Finally add the following lines:
                         'HTML.SafeIframe' => true,
                         'URI.SafeIframeRegexp' => '%^(http://|https://|//)(www.youtube.com/embed/|player.vimeo.com/video/)%',
+                        'Attr.AllowedFrameTargets' => '_blank',
                     ];
 
                     if (!empty(\Yii::$app->params['forms-purify-data-config'])) {
@@ -647,6 +653,23 @@ class Record extends ActiveRecord implements StatsToolbarInterface
                 }
             }
         }
+
+        /** @var SimpleWorkflowBehavior $workflowBehavior */
+        $workflowBehavior = $this->findBehaviorByClassName(SimpleWorkflowBehavior::className());
+        if (!$this->isNewRecord && !is_null($workflowBehavior)) {
+            $statusAttribute = $workflowBehavior->statusAttribute;
+            $thisStatus = $this->{$statusAttribute};
+            try {
+                $ok = WorkflowHelper::isValidNextStatus($this, $thisStatus);
+            } catch (WorkflowException $exception) {
+                $this->addError($statusAttribute, BaseAmosModule::t('amoscore', '#workflow_status_error_wrong_status'));
+                return false;
+            }
+            if (!$ok) {
+                $this->addError($statusAttribute, BaseAmosModule::t('amoscore', '#workflow_status_error_status_not_valid'));
+            }
+        }
+
         return parent::beforeValidate();
     }
 
@@ -712,6 +735,25 @@ class Record extends ActiveRecord implements StatsToolbarInterface
             }
         }
         return $behaviorToReturn;
+    }
+
+    /**
+     * This method find the behavior array index by his classname.
+     * @param string $className
+     * @return mixed
+     */
+    public function findBehaviorIndexByClassName($className)
+    {
+        $behaviors = $this->getBehaviors();
+        $behaviorIndex = null;
+        foreach ($behaviors as $index => $behavior) {
+            /** @var Behavior $behavior */
+            if ($behavior->className() == $className) {
+                $behaviorIndex = $index;
+                break;
+            }
+        }
+        return $behaviorIndex;
     }
 
     /**
@@ -942,8 +984,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface
     }
 
     /**
-     * 
-     * @return type
+     * @return |null
      */
     public function getCloseCommentThread()
     {
@@ -951,8 +992,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface
     }
 
     /**
-     * 
-     * @param type $closeCommentThread
+     * @param $closeCommentThread
      */
     public function setCloseCommentThread($closeCommentThread)
     {
@@ -977,5 +1017,49 @@ class Record extends ActiveRecord implements StatsToolbarInterface
                 }
             }
         }
+    }
+
+    /**
+     * This method duplicates this content row.
+     * @return Record|null
+     * @throws \raoul2000\workflow\base\WorkflowException
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function duplicateContentRow()
+    {
+        $loggedUserId = Yii::$app->user->id;
+        $now = date('Y-m-d H:i:s');
+        $thisClassname = $this->className();
+
+        /** @var Record $newContent */
+        $newContent = Yii::createObject($thisClassname);
+        $newContent->detachBehavior('cwhBehavior');
+        $newContent->setAttributes($this->attributes);
+        $newContent->id = null;
+        $newContent->created_by = $loggedUserId;
+        $newContent->updated_by = $loggedUserId;
+        $newContent->created_at = $now;
+        $newContent->updated_at = $now;
+
+        /** @var SimpleWorkflowBehavior $workflowBehavior */
+        $workflowBehavior = null;
+
+        if (isset($newContent->behaviors['workflow'])) {
+            $workflowBehavior = $newContent->behaviors['workflow'];
+        } else {
+            $workflowBehaviorIndex = $this->findBehaviorIndexByClassName(SimpleWorkflowBehavior::className());
+            if (!is_null($workflowBehaviorIndex)) {
+                $workflowBehavior = $newContent->behaviors[$workflowBehaviorIndex];
+            }
+        }
+
+        if (!is_null($workflowBehavior)) {
+            $workflowBehavior->initStatus();
+            $newContent->status = $workflowBehavior->getWorkflow()->getInitialStatusId();
+        }
+
+        $ok = $newContent->save(false);
+
+        return ($ok ? $newContent : null);
     }
 }
