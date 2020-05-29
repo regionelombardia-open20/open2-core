@@ -51,6 +51,7 @@ class SocialShareWidget extends SocialShare
     public $enableModalShare = true;
     public $mode = self::MODE_NORMAL;
 
+    
     /**
      * @inheritdoc
      */

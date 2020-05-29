@@ -13,7 +13,6 @@ namespace open20\amos\core\utilities;
 
 use open20\amos\core\utilities\Email;
 use open20\amos\core\user\User;
-use triscovery\esperienze\Module;
 use Yii;
 
 class ViewUtility {

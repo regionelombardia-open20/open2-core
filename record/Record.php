@@ -76,6 +76,19 @@ class Record extends ActiveRecord implements StatsToolbarInterface
     public $reflectionClass = null;
 
     /**
+     * @return object|\yii\db\Connection|null
+     * @throws \yii\base\InvalidConfigException
+     */
+    public static function getDb() {
+        if(isset(\Yii::$app->params['amosDb'])) {
+            $database = \Yii::$app->params['amosDb'];
+            return \Yii::$app->get($database);
+        }
+
+        return parent::getDb();
+    }
+
+    /**
      * @inheritdoc
      */
     public function scenarios()
@@ -540,6 +553,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface
     {
         $tableName = self::getTableSchema()->name;
 
+
         $blackList = [
             'amos_user_dashboards',
             'user_lockout',
@@ -557,6 +571,56 @@ class Record extends ActiveRecord implements StatsToolbarInterface
                   VALUES ('{$tableName}', 1, now(), NULL, now(), NULL, now(), NULL)
                   ON DUPLICATE KEY UPDATE updates = updates + 1, updated_at = now()"
             )->execute();
+ 
+            /**
+             * Something was changed in my own interest areas?
+             */   
+            $whiteList = [
+                'user',                 //admin
+                'community',
+                'discussioni_topic',    //discussioni
+                'documenti',
+                'een',
+                'event', //events
+                'news',
+                'organizations',
+                'partnership_profiles',//partnershipprofiles
+                'projects',
+                'result',
+                'showcase_project',
+                'sondaggi',
+                'profilo'
+            ];
+            
+            if (in_array($tableName, $whiteList)) {
+                                
+                $classname = $this->className();
+                
+                $attributes = $this->getAttributes();
+                $created_by = null;
+                $updated_by = null;
+                
+                if (isset($attributes['created_by'])) {
+                    $created_by = $attributes['created_by'];
+                }
+                
+                if (isset($attributes['updated_by'])) {
+                    $updated_by = $attributes['updated_by'];
+                }
+                
+                \Yii::$app->db->createCommand()->setSql(
+                    "INSERT INTO 
+                        `update_contents` (`module`, `updates`, `created_at`, `created_by`, `updated_at`, `updated_by`, `deleted_at`, `deleted_by`) 
+                    VALUES (
+                        '{$tableName}', 1, now(), NULL, now(), '{$created_by}', now(), '{$updated_by}'
+                    )
+                    ON DUPLICATE KEY UPDATE 
+                        `updates` = `updates` + 1, 
+                        `updated_at` = now(),
+                        `updated_by` = '{$updated_by}' 
+                    "
+                )->execute();
+            }
         }
 
         parent::afterSave($insert, $changedAttributes);

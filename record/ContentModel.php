@@ -34,8 +34,8 @@ use yii\helpers\Url;
  * Class ContentModel
  * @package open20\amos\core\record
  */
-abstract class ContentModel extends NotifyRecord implements ContentModelInterface, CrudModelInterface, SearchModelInterface, ContentModelSearchInterface, ModelImageInterface, FacilitatorInterface
-{
+abstract class ContentModel extends NotifyRecord implements ContentModelInterface, CrudModelInterface, SearchModelInterface, ContentModelSearchInterface, ModelImageInterface, FacilitatorInterface {
+
     public $modelImage;
     public $attachments;
 
@@ -63,12 +63,11 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      * @var boolean bypassscope to search for content without added scope
      */
     public $bypassScope = false;
-    
+
     /**
      * @inheritdoc
      */
-    public function getModelImage()
-    {
+    public function getModelImage() {
         $this->modelImage = $this->hasOneFile('image')->one();
         if (empty($this->modelImage)) {
             $this->modelImage = $this->hasOneFile(lcfirst($this->modelFormName) . 'Image')->one();
@@ -85,8 +84,7 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
         $url = '/img/img_default.jpg',
         $absolute = false,
         $canCache = false
-    )
-    {
+    ) {
         $image = $this->getModelImage();
         if (!is_null($image)) {
             if ($protected) {
@@ -102,8 +100,7 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      * Getter for $this->attachments;
      * @return array|null|\yii\db\ActiveRecord
      */
-    public function getAttachments()
-    {
+    public function getAttachments() {
         if (empty($this->attachments)) {
             $query = $this->hasMultipleFiles(lcfirst($this->modelFormName) . 'Attachments');
             $query->multiple = false;
@@ -115,28 +112,25 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
     /**
      * @param $attachments
      */
-    public function setAttachments($attachments)
-    {
+    public function setAttachments($attachments) {
         $this->attachments = $attachments;
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return ArrayHelper::merge(parent::rules(), [
-            [['destinatari_pubblicazione'], 'safe'],
-            [['attachments'], 'file', 'maxFiles' => 0],
-            [['modelImage'], 'file', 'extensions' => 'jpeg, jpg, png, gif'],
+                [['destinatari_pubblicazione'], 'safe'],
+                [['attachments'], 'file', 'maxFiles' => 0],
+                [['modelImage'], 'file', 'extensions' => 'jpeg, jpg, png, gif'],
         ]);
     }
 
     /**
      * @inheritdoc
      */
-    public function scenarios()
-    {
+    public function scenarios() {
         if ($this->isSearch) {
             // bypass scenarios() implementation in the parent class
             return Model::scenarios();
@@ -148,8 +142,7 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
     /**
      * @inheritdoc
      */
-    public function behaviors()
-    {
+    public function behaviors() {
         $parentBehaviors = parent::behaviors();
         $behaviors = [];
         if (\Yii::$app->getModule('attachments')) {
@@ -170,88 +163,77 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
     /**
      * @inheritdoc
      */
-    public function getShortDescription()
-    {
+    public function getShortDescription() {
         return $this->getDescription(true);
     }
 
     /**
      * @inheritdoc
      */
-    public function getPublicatedFrom()
-    {
+    public function getPublicatedFrom() {
         return null;
     }
 
     /**
      * @inheritdoc
      */
-    public function getPublicatedAt()
-    {
+    public function getPublicatedAt() {
         return null;
     }
 
     /**
      * @inheritdoc
      */
-    public function getCategory()
-    {
+    public function getCategory() {
         return null;
     }
 
     /**
      * @inheritdoc
      */
-    public function getPluginWidgetClassname()
-    {
+    public function getPluginWidgetClassname() {
         return null;
     }
 
     /**
      * @inheritdoc
      */
-    public function getGrammar()
-    {
+    public function getGrammar() {
         return new ContentModelGrammar();
     }
 
     /**
      * @inheritdoc
      */
-    public function getToValidateStatus()
-    {
+    public function getToValidateStatus() {
         return $this->modelFormName . 'Workflow/PUBLISHREQUEST';
     }
 
     /**
      * @inheritdoc
      */
-    public function getValidatedStatus()
-    {
+    public function getValidatedStatus() {
         return $this->modelFormName . 'Workflow/PUBLISHED';
     }
 
     /**
      * @inheritdoc
      */
-    public function getDraftStatus()
-    {
+    public function getDraftStatus() {
         return $this->modelFormName . 'Workflow/DRAFT';
     }
 
     /**
      * @inheritdoc
      */
-    public function getValidatorRole()
-    {
+    public function getValidatorRole() {
         return strtoupper($this->modelFormName . '_VALIDATOR');
     }
 
     /**
      * @inheritdoc
      */
-    public function getFacilitatorRole()
-    {
+    public function getFacilitatorRole() {
         return "FACILITATOR";
     }
 
@@ -281,8 +263,7 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      * @param $url
      * @return null|string
      */
-    private function getFullUrl($url)
-    {
+    private function getFullUrl($url) {
         if (!empty($url)) {
             return Url::toRoute(["/" . $url, "id" => $this->id]);
         }
@@ -292,27 +273,24 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
     /**
      * @inheritdoc
      */
-    public function getCreateUrl()
-    {
+    public function getCreateUrl() {
         return $this->getModelModuleName() . '/' . $this->getModelControllerName() . '/create';
     }
 
     /**
      * @inheritdoc
      */
-    public function getFullCreateUrl()
-    {
+    public function getFullCreateUrl() {
         return $this->getCreateUrl();
     }
 
     /**
      * @inheritdoc
      */
-    public function getViewUrl()
-    {
+    public function getViewUrl() {
         return $this->getModelModuleName() . '/' . $this->getModelControllerName() . '/view';
     }
-	
+
     public function getBypassScope() {
         return $this->bypassScope;
     }
@@ -324,48 +302,42 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
     /**
      * @inheritdoc
      */
-    public function getFullViewUrl()
-    {
+    public function getFullViewUrl() {
         return $this->getFullUrl($this->getViewUrl());
     }
 
     /**
      * @inheritdoc
      */
-    public function getUpdateUrl()
-    {
+    public function getUpdateUrl() {
         return $this->getModelModuleName() . '/' . $this->getModelControllerName() . '/update';
     }
 
     /**
      * @inheritdoc
      */
-    public function getFullUpdateUrl()
-    {
+    public function getFullUpdateUrl() {
         return $this->getFullUrl($this->getUpdateUrl());
     }
 
     /**
      * @inheritdoc
      */
-    public function getDeleteUrl()
-    {
+    public function getDeleteUrl() {
         return $this->getModelModuleName() . '/' . $this->getModelControllerName() . '/delete';
     }
 
     /**
      * @inheritdoc
      */
-    public function getFullDeleteUrl()
-    {
+    public function getFullDeleteUrl() {
         return $this->getFullUrl($this->getDeleteUrl());
     }
 
     /**
      * @inheritdoc
      */
-    public function searchDefaultOrder($dataProvider)
-    {
+    public function searchDefaultOrder($dataProvider) {
         // Check if can use the custom module order
         if ($this->canUseModuleOrder()) {
             $dataProvider->setSort($this->createOrderClause());
@@ -382,32 +354,29 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
     /**
      * @inheritdoc
      */
-    public function searchOwnInterestsQuery($params)
-    {
+    public function searchOwnInterestsQuery($params) {
         return $this->buildQuery($params, 'own-interest');
+        
     }
 
     /**
      * @inheritdoc
      */
-    public function searchAllQuery($params)
-    {
+    public function searchAllQuery($params) {
         return $this->buildQuery($params, 'all');
     }
 
     /**
      * @inheritdoc
      */
-    public function searchCreatedByMeQuery($params)
-    {
+    public function searchCreatedByMeQuery($params) {
         return $this->buildQuery($params, 'created-by');
     }
 
     /**
      * @inheritdoc
      */
-    public function searchToValidateQuery($params)
-    {
+    public function searchToValidateQuery($params) {
         return $this->buildQuery($params, 'to-validate');
     }
 
@@ -416,8 +385,7 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      *
      * @return array
      */
-    public function searchFieldsMatch()
-    {
+    public function searchFieldsMatch() {
         return [];
     }
 
@@ -426,8 +394,7 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      *
      * @return array
      */
-    public function searchFieldsLike()
-    {
+    public function searchFieldsLike() {
         return [];
     }
 
@@ -436,8 +403,7 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      *
      * @return array
      */
-    public function searchFieldsLessEqual()
-    {
+    public function searchFieldsLessEqual() {
         return [];
     }
 
@@ -446,8 +412,7 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      *
      * @return array
      */
-    public function searchFieldsGreaterEqual()
-    {
+    public function searchFieldsGreaterEqual() {
         return [];
     }
 
@@ -456,16 +421,15 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      *
      * @param $query
      */
-    public function applySearchFilters($query)
-    {
+    public function applySearchFilters($query) {
         $searchFieldMatch = $this->searchFieldsMatch();
-        
+
         if (!empty($searchFieldMatch)) {
             foreach ($searchFieldMatch as $searchField) {
                 $query->andFilterWhere([static::tableName() . '.' . $searchField => $this->{$searchField}]);
             }
         }
-        
+
         $searchFieldLike = $this->searchFieldsLike();
         if (!empty($searchFieldLike)) {
             foreach ($searchFieldLike as $searchField) {
@@ -493,8 +457,7 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      *
      * @return array
      */
-    public function searchFieldsGlobalSearch()
-    {
+    public function searchFieldsGlobalSearch() {
         return [];
     }
 
@@ -503,9 +466,8 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      *
      * @param ActiveQuery $query
      */
-    public function getSearchQuery($query)
-    {
-
+    public function getSearchQuery($query) {
+        
     }
 
     /**
@@ -514,8 +476,7 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      *
      * @param $query
      */
-    public function getSearchQueryCwhDisabled($query)
-    {
+    public function getSearchQueryCwhDisabled($query) {
         if (!empty($this->getPublicatedFrom())) {
             $now = date('Y-m-d');
             $query->andFilterWhere(['<=', $this->getPublicatedFrom(), $now]);
@@ -532,8 +493,7 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      * @return \yii\db\ActiveQuery
      * @throws \yii\base\InvalidConfigException
      */
-    public function baseSearch($params)
-    {
+    public function baseSearch($params) {
         //init the default search values
         $this->initOrderVars();
 
@@ -541,7 +501,7 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
         $this->setOrderVars($params);
         /** @var Record $className */
         $className = $this->modelClassName;
-        
+
         return $className::find()->distinct();
     }
 
@@ -553,15 +513,14 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      * @return ActiveDataProvider|\yii\data\BaseDataProvider
      * @throws \yii\base\InvalidConfigException
      */
-    public function search($params, $queryType = null, $limit = null, $onlyDrafts = false)
-    {
+    public function search($params, $queryType = null, $limit = null, $onlyDrafts = false) {
 
         if (!empty($queryType)) {
             $query = $this->buildQuery($params, $queryType, $onlyDrafts);
         } else {
             $query = $this->baseSearch($params);
         }
-        
+
         $query->limit($limit);
 
         /** Switch off notifications - method of NotifyRecord */
@@ -627,8 +586,7 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      * @return ActiveDataProvider|\yii\data\BaseDataProvider
      * @throws \yii\base\InvalidConfigException
      */
-    public function searchOwn($params, $limit = null, $onlyDrafts = false)
-    {
+    public function searchOwn($params, $limit = null, $onlyDrafts = false) {
         return $this->search($params, 'created-by', $limit, $onlyDrafts);
     }
 
@@ -637,8 +595,7 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      *
      * @return $this
      */
-    public function validazioneAbilitata()
-    {
+    public function validazioneAbilitata() {
         return $this;
     }
 
@@ -650,8 +607,7 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      * @return ActiveDataProvider|\yii\data\BaseDataProvider
      * @throws \yii\base\InvalidConfigException
      */
-    public function searchToValidate($params, $limit = null)
-    {
+    public function searchToValidate($params, $limit = null) {
         return $this->search($params, 'to-validate', $limit);
     }
 
@@ -663,8 +619,7 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      * @return ActiveDataProvider|\yii\data\BaseDataProvider
      * @throws \yii\base\InvalidConfigException
      */
-    public function searchAll($params, $limit = null)
-    {
+    public function searchAll($params, $limit = null) {
         return $this->search($params, 'all', $limit);
     }
 
@@ -676,8 +631,7 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      * @return ActiveDataProvider|\yii\data\BaseDataProvider
      * @throws \yii\base\InvalidConfigException
      */
-    public function searchAllAdmin($params, $limit = null)
-    {
+    public function searchAllAdmin($params, $limit = null) {
         return $this->search($params, null, $limit);
     }
 
@@ -689,8 +643,7 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      * @return ActiveDataProvider|\yii\data\BaseDataProvider
      * @throws \yii\base\InvalidConfigException
      */
-    public function searchOwnInterest($params, $limit = null)
-    {
+    public function searchOwnInterest($params, $limit = null) {
         return $this->search($params, 'own-interest', $limit);
     }
 
@@ -699,22 +652,21 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      * @param string $queryType
      * @return ActiveQuery $query
      */
-    public function buildQuery($params, $queryType, $onlyDrafts = false)
-    {
+    public function buildQuery($params, $queryType, $onlyDrafts = false) {
         $validByScopeIgnoreStatus = false;
         $validByScopeIgnoreDates = false;
         if (isset($params['validByScopeIgnoreStatus'])) {
             $validByScopeIgnoreStatus = $params['validByScopeIgnoreStatus'];
             unset($params['validByScopeIgnoreStatus']);
         }
-        
+
         if (isset($params['validByScopeIgnoreDates'])) {
             $validByScopeIgnoreDates = $params['validByScopeIgnoreDates'];
             unset($params['validByScopeIgnoreDates']);
         }
-        
+
         $query = $this->baseSearch($params);
-        
+
         $classname = $this->modelClassName;
         $moduleCwh = \Yii::$app->getModule('cwh');
         $cwhActiveQuery = null;
@@ -725,10 +677,10 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
             /** @var \open20\amos\cwh\AmosCwh $moduleCwh */
             $moduleCwh->setCwhScopeFromSession();
             $cwhActiveQuery = new \open20\amos\cwh\query\CwhActiveQuery(
-                $classname, 
+                $classname,
                 [
-                    'queryBase' => $query,
-                    'bypassScope' => $this->getBypassScope()
+                'queryBase' => $query,
+                'bypassScope' => $this->getBypassScope()
                 ]
             );
             $cwhActiveQuery->validByScopeIgnoreStatus = $validByScopeIgnoreStatus;
@@ -741,7 +693,7 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
                     $query = $cwhActiveQuery->getQueryCwhOwn();
                 } else {
                     $query->andFilterWhere([
-                        static::tableName() . '.created_by' => Yii::$app->getUser()->id
+                        static::tableName() . '.created_by' => Yii::$app->user->id
                     ]);
                 }
                 if ($onlyDrafts) {
@@ -779,7 +731,7 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
                     ]);
                     $this->getSearchQueryCwhDisabled($query);
                 }
-                
+
                 break;
             case 'admin-scope':
                 if ($isSetCwh) {
@@ -788,6 +740,7 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
                 }
                 break;
         }
+
         return $query;
     }
 
@@ -799,8 +752,7 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      * @return ActiveDataProvider
      * @throws \yii\base\InvalidConfigException
      */
-    public function globalSearch($searchParamsArray, $pageSize = 5)
-    {
+    public function globalSearch($searchParamsArray, $pageSize = 5) {
 
         $dataProvider = $this->search([], 'all', null);
         $pagination = $dataProvider->getPagination();
@@ -831,11 +783,11 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
         $tagsValues = \Yii::$app->request->get('tagValues');
         if ($enableTagSearch) {
             $arrayTagIds = [];
-            if(!empty($tagsValues)) {
+            if (!empty($tagsValues)) {
                 $tagIds = ArrayHelper::merge($arrayTagIds, explode(',', $tagsValues));
                 $dataProvider->query->andFilterWhere(['t.id' => $tagIds]);
             }
-        }else {
+        } else {
             if (!empty($tagsValues)) {
                 $dataProvider->query->andWhere(0);
             }
@@ -871,8 +823,7 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      * @param object $model The model to convert into SearchResult
      * @return SearchResult
      */
-    public function convertToSearchResult($model)
-    {
+    public function convertToSearchResult($model) {
         $searchResult = new SearchResult();
         $searchResult->url = $model->getFullViewUrl();
         $searchResult->box_type = "image";
@@ -894,11 +845,11 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      *
      * @return bool
      */
-    public function getValidatedOnce()
-    {
+    public function getValidatedOnce() {
         if ($this->isNewRecord) {
             return false;
         }
+
         if ($this->getBehavior('workflow')) {
             if ($this->getBehavior('workflowLog') || $this->getBehavior('WorkflowLogFunctionsBehavior')) {
                 return !is_null($this->getStatusLastUpdateUser($this->getValidatedStatus()));
@@ -924,19 +875,6 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
         /** @var \open20\amos\notificationmanager\AmosNotify $notify */
         $notify = $this->getNotifier();
 
-        if ($notify) {
-            $query = \Yii::$app->session->get('_offQuery');
-
-            if ($query) {
-                \Yii::$app->session->get('_offQuery', null);
-
-                $notify->notificationOff(
-                    Yii::$app->getUser()->id,
-                    $this->modelClassName,
-                    $query,
-                    NotificationChannels::CHANNEL_READ
-                );
-            }
-        }
+        return true;
     }
 }

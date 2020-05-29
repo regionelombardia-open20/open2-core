@@ -177,7 +177,8 @@ class HeaderMenu
         $table            = $translateManager->getTableSchema()->name;
         $activeLanguage   = $this->getActiveLanguages($table);
         $languages        = (!empty($activeLanguage) ? $activeLanguage : []); //TODO al momento è così poi sistemiamo con il plugin
-        if (!empty($languages)) {
+        $stringLang = '';
+        if (!empty($languages) && (count($languages) > 1)) {
             $stringLang = '<div class="dropdown">'.
                 \open20\amos\core\helpers\Html::a(
                     Yii::t('amoscore', '#select_language').\open20\amos\core\icons\AmosIcons::show('chevron-down',

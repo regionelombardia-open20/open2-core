@@ -143,6 +143,17 @@ trait M2MWidgetControllerTrait
                     if (!is_null($target)) {
                         $model->$targetKey = $target->id;
                         $model->save(false);
+
+                        // Force Auto confirm for facilitator enabled?
+                        if ((isset(\Yii::$app->params['forceAutoConfirmForFacilitator']))
+                            && (\Yii::$app->params['forceAutoConfirmForFacilitator'] == true)) {
+                            \Yii::$app->runAction('/admin/user-contact/connect', [
+                                'contactId' => $id,
+                                'userId' => $target->user_id,
+                                'accept' => 1
+                            ]);
+                        }
+
                     }
                 }
             }

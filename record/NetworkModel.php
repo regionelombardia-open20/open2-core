@@ -46,7 +46,8 @@ abstract class NetworkModel extends ContentModel implements ModelNetworkInterfac
 
         if(is_null($userId))
         {
-            $userId = Yii::$app->getUser()->getId();
+//            $userId = Yii::$app->getUser()->getId();
+            $userId = Yii::$app->user->getId();
         }
 
         switch ($queryType) {
@@ -93,6 +94,7 @@ abstract class NetworkModel extends ContentModel implements ModelNetworkInterfac
                 break;
         }
         $this->filterByContext($query);
+        
         return $query;
     }
 

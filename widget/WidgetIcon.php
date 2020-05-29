@@ -31,7 +31,8 @@ class WidgetIcon extends WidgetAbstract
         $bulletCount = '',
         $dataPjaxZero = 'data-pjax="0"', 
         $attributes = '',          // @var string $attributes - additional attributes for html tag <a>
-        $disableBulletCounters = false
+        $disableBulletCounters = false,
+        $saveMicrotime = true
     ;
     
     const EVENT_AFTER_COUNT = 'EVENT_AFTER_COUNT';
@@ -144,6 +145,31 @@ class WidgetIcon extends WidgetAbstract
     public function setBulletCount($bulletCount)
     {
         $this->bulletCount = $bulletCount;
+    }
+
+    /**
+     * Reset bc only if the current page contain it
+     */
+    public function resetBulletCount() {        
+        return  in_array(
+            '/' . \Yii::$app->controller->action->getUniqueId(), 
+            $this->getUrl()
+        );
+    }
+    
+    /**
+     * Return the name of the relative WidgetIconFOO to used by cron script
+     * 
+     * @return type
+     */
+    public static function getWidgetIconName() {
+        $parts = explode('\\', self::classname());
+        
+        if (is_array($parts)) {
+            return array_pop($parts);
+        }
+        
+        return null;
     }
 
     /**
