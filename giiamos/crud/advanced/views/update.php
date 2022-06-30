@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Aria S.p.A.
+ * Lombardia Informatica S.p.A.
  * OPEN 2.0
  *
  *
@@ -21,7 +21,7 @@ $urlParams = $generator->generateUrlParams();
 
 echo "<?php\n".
  "/**
- * Aria S.p.A.
+ * Lombardia Informatica S.p.A.
  * OPEN 2.0
  *
  *

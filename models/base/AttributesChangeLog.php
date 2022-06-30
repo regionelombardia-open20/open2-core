@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Aria S.p.A.
+ * Lombardia Informatica S.p.A.
  * OPEN 2.0
  *
  *
@@ -23,6 +23,7 @@ use open20\amos\core\record\Record;
  * @property string $model_classname
  * @property string $model_id
  * @property string $model_attribute
+ * @property string $user_activity_log_id
  * @property string $old_value
  * @property string $new_value
  * @property string $created_at
@@ -52,7 +53,7 @@ abstract class AttributesChangeLog extends Record
         return [
             [['model_classname', 'model_attribute', 'old_value', 'new_value'], 'string'],
             [['created_at', 'updated_at', 'deleted_at'], 'safe'],
-            [['model_id', 'created_by', 'updated_by', 'deleted_by'], 'integer'],
+            [['user_activity_log_id', 'model_id', 'created_by', 'updated_by', 'deleted_by'], 'integer'],
         ];
     }
 

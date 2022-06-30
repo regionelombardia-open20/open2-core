@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Aria S.p.A.
+ * Lombardia Informatica S.p.A.
  * OPEN 2.0
  *
  *
@@ -14,7 +14,7 @@ use yii\helpers\StringHelper;
 <?= "<?php 
     
 /**
- * Aria S.p.A.
+ * Lombardia Informatica S.p.A.
  * OPEN 2.0
  *
  *

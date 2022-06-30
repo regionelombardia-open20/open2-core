@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Aria S.p.A.
+ * Lombardia Informatica S.p.A.
  * OPEN 2.0
  *
  *
@@ -29,7 +29,6 @@ use yii\web\View;
  * Export menu widget. Export tabular data to various formats using the `\PhpOffice\PhpSpreadsheet\Spreadsheet library
  * by reading data from a dataProvider - with configuration very similar to a GridView.
  *
- * @author Kartik Visweswaran <kartikv2@gmail.com>
  * @since  1.0
  */
 class ExportMenu extends KartikExportMenu

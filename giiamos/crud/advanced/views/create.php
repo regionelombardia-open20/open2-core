@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Aria S.p.A.
+ * Lombardia Informatica S.p.A.
  * OPEN 2.0
  *
  *
@@ -19,7 +19,7 @@ use yii\helpers\StringHelper;
 
 echo "<?php\n".
  "/**
- * Aria S.p.A.
+ * Lombardia Informatica S.p.A.
  * OPEN 2.0
  *
  *

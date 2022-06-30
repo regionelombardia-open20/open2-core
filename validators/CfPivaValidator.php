@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Aria S.p.A.
+ * Lombardia Informatica S.p.A.
  * OPEN 2.0
  *
  *
@@ -18,7 +18,6 @@ use open20\amos\core\validators\PIVAValidator;
 /**
  * Description of CfPivaValidator
  *
- * @author Cesare
  */
 class CfPivaValidator extends Validator
 {

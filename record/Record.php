@@ -1,6 +1,6 @@
 <?php
 /**
- * Aria S.p.A.
+ * Lombardia Informatica S.p.A.
  * OPEN 2.0
  *
  *
@@ -702,7 +702,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface
                         // Change from 'XHTML 1.0 Strict'.
                         'HTML.Doctype' => 'XHTML 1.0 Transitional',
                         // Change from 'XHTML 1.0 Strict'.
-                        'HTML.Allowed' => 'a[href|target],h1,h2,h3,h4,h5,h6,b,strong,i,em,ul,ol,li,p[style],br,span,img[width|height|alt|src],iframe[width|height|src|frameborder]',
+                        'HTML.Allowed' => 'a[href|target],h1,h2,h3,h4,h5,h6,b,strong,i,em,ul,ol,li,p[style],br,span[style],img[width|height|alt|src],iframe[width|height|src|frameborder]',
                         // Finally add the following lines:
                         'HTML.SafeIframe' => true,
                         'URI.SafeIframeRegexp' => '%^(http://|https://|//)(www.youtube.com/embed/|player.vimeo.com/video/)%',

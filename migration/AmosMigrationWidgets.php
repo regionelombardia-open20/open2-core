@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Aria S.p.A.
+ * Lombardia Informatica S.p.A.
  * OPEN 2.0
  *
  *
@@ -36,7 +36,6 @@ class AmosMigrationWidgets extends Migration
     ];
 
     /**
-     * @see \yii\db\Migration::init() for more info.
      */
     public function init()
     {

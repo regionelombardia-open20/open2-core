@@ -4,7 +4,7 @@ use yii\helpers\StringHelper;
 echo "<?php
    
 /**
- * Aria S.p.A.
+ * Lombardia Informatica S.p.A.
  * OPEN 2.0
  *
  *

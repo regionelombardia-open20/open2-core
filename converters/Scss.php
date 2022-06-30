@@ -1,14 +1,5 @@
 <?php
 
-/**
- * Aria S.p.A.
- * OPEN 2.0
- *
- *
- * @package    Open20Package
- * @category   CategoryName
- */
-
 namespace open20\amos\core\converters;
 
 use Yii;
@@ -16,7 +7,6 @@ use Yii;
 /**
  * Class Scss
  * @package nizsheanez\assetConverter
- * @author Andrey Izman <izmanw@gmail.com>
  */
 class Scss extends \nizsheanez\assetConverter\Parser
 {

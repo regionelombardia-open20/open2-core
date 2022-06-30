@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Aria S.p.A.
+ * Lombardia Informatica S.p.A.
  * OPEN 2.0
  *
  *
@@ -172,7 +172,6 @@ class AmosView extends View
      * @return string the rendering result
      * @throws ViewNotFoundException if the view file does not exist.
      * @throws InvalidCallException if the view cannot be resolved.
-     * @see renderFile()
      */
     public function render($view, $params = [], $context = null)
     {

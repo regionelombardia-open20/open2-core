@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Aria S.p.A.
+ * Lombardia Informatica S.p.A.
  * OPEN 2.0
  *
  *
@@ -85,7 +85,6 @@ class AmosMigrationTableCreation extends Migration
     }
     
     /**
-     * @see \yii\db\Migration::init() for more info.
      */
     public function init()
     {
@@ -123,7 +122,6 @@ class AmosMigrationTableCreation extends Migration
     
     /**
      * Use this instead of function up().
-     * @see \Yii\db\Migration::safeUp() for more info.
      */
     public function safeUp()
     {
@@ -270,7 +268,6 @@ class AmosMigrationTableCreation extends Migration
     
     /**
      * Use this instead of function down().
-     * @see \Yii\db\Migration::safeDown() for more info.
      */
     public function safeDown()
     {

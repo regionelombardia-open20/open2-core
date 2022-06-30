@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Aria S.p.A.
+ * Lombardia Informatica S.p.A.
  * OPEN 2.0
  *
  *
@@ -20,6 +20,7 @@ use yii\base\Widget;
 use yii\bootstrap\Modal;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
+use yii\web\View;
 
 /**
  * Class WizardPrevAndContinueButtonWidget
@@ -57,6 +58,11 @@ class WizardPrevAndContinueButtonWidget extends Widget
      * @var bool $permissionSave
      */
     private $permissionSave;
+
+    /**
+     * @var bool $disableLinksAfterClick If true disable all links after click. It NOT disable the continue submit button.
+     */
+    public $disableLinksAfterClick = false;
     
     /**
      * @inheritdoc
@@ -104,6 +110,9 @@ class WizardPrevAndContinueButtonWidget extends Widget
             $content = $this->renderSection($matches[0]);
             return $content === false ? $matches[0] : $content;
         }, $this->layout);
+
+        $this->registerWidgetJavascripts();
+
         return $content;
     }
     
@@ -136,12 +145,22 @@ class WizardPrevAndContinueButtonWidget extends Widget
         if (!$this->viewContinueBtn) {
             return '';
         }
-        $internalOptions = ['class' => 'btn btn-primary pull-right'];
+        $js = <<<JS
+            $('.wizard-widget-continue-btn').parents('form').on('beforeSubmit', function(event) {
+                if ($(this).find(".has-error").length === 0) {
+                    $('.wizard-widget-continue-btn').attr('disabled','disabled');
+                }
+                return true;
+            });
+JS;
+        $this->view->registerJs($js);
+        $internalOptions = ['class' => 'btn btn-primary pull-right wizard-widget-continue-btn'];
         $allOptions = ArrayHelper::merge($internalOptions, $this->continueOptions);
         if (!$this->continueLabel) {
             $this->continueLabel = BaseAmosModule::tHtml('amoscore', 'Continue');
         }
         if (!empty($this->finishUrl)) {
+            $allOptions['class'] .= ' wizard-link-btn';
             return Html::a($this->continueLabel . $this->continueGrahpic, $this->finishUrl, $allOptions);
         }
 //        if (!$this->continueGrahpic) {
@@ -160,7 +179,7 @@ class WizardPrevAndContinueButtonWidget extends Widget
             return '';
         }
         
-        $internalOptions = ['class' => 'btn btn-action-primary pull-left'];
+        $internalOptions = ['class' => 'btn btn-action-primary pull-left wizard-link-btn'];
         $allOptions = ArrayHelper::merge($internalOptions, $this->previousOptions);
         if (!$this->previousLabel) {
             $this->previousLabel = BaseAmosModule::tHtml('amoscore', 'Go back');
@@ -202,7 +221,28 @@ class WizardPrevAndContinueButtonWidget extends Widget
         );
         Modal::end();
         
-        return Html::a($btnLinkLabel, $this->cancelUrl, ['data-toggle' => 'modal', 'data-target' => '#closeWizardConfirm', 'class' => 'btn btn-secondary']);
-        
+        return Html::a($btnLinkLabel, $this->cancelUrl, ['data-toggle' => 'modal', 'data-target' => '#closeWizardConfirm', 'class' => 'btn btn-secondary wizard-link-btn']);
+    }
+
+    protected function registerWidgetJavascripts()
+    {
+        $jsContinue = <<<JS
+            $('.wizard-widget-continue-btn').parents('form').on('beforeSubmit', function(event) {
+                if ($(this).find(".has-error").length === 0) {
+                    $('.wizard-widget-continue-btn').attr('disabled', 'disabled');
+                }
+                return true;
+            });
+JS;
+        $this->view->registerJs($jsContinue, View::POS_READY);
+
+        if ($this->disableLinksAfterClick) {
+            $jsLinks = <<<JS
+                $('.wizard-link-btn').on('click', function(event) {
+                    $(this).attr('disabled', 'disabled');
+                });
+JS;
+            $this->view->registerJs($jsLinks, View::POS_READY);
+        }
     }
 }

@@ -1,13 +1,4 @@
 <?php
-
-/**
- * Aria S.p.A.
- * OPEN 2.0
- *
- *
- * @package    Open20Package
- * @category   CategoryName
- */
 /**
 * Lombardia Informatica S.p.A.
 * OPEN 2.0
@@ -15,7 +6,6 @@
 *
 * @package    openinnovation\landing
 * @category   CategoryName
-* @author     Lombardia Informatica S.p.A.
 */
 
 namespace open20\amos\core\forms\editors\assets;

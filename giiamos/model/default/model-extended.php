@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Aria S.p.A.
+ * Lombardia Informatica S.p.A.
  * OPEN 2.0
  *
  *
@@ -121,7 +121,6 @@ return [
 * Returns the text hint for the specified attribute.
 * @param string $attribute the attribute name
 * @return string the attribute hint
-* @see attributeHints
 */
 public function getAttributeHint($attribute) {
 $hints = $this->attributeHints();
@@ -440,7 +439,6 @@ foreach ($tableSchema->columns as $attribute) {
         ?>
         /**
         *  @inheritdoc
-        *  @see <?= array_pop($pathsee) ?>::<?= $key ?>
         */
         public function <?= $key ?>(<?= $str ? substr($str, 0, -1) : '' ?>) {
         //

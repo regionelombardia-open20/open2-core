@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Aria S.p.A.
+ * Lombardia Informatica S.p.A.
  * OPEN 2.0
  *
  *
@@ -161,7 +161,6 @@ class WorkflowTransitionWidget extends Widget
     private $seeStatusButtonId = false;
 
     /**
-     * @see \kartik\base\Widget::init();
      *
      * Set of the permissionSave
      */
