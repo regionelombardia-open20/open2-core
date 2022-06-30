@@ -25,6 +25,7 @@ $target = ((strlen($widget->targetUrl) > 0) ? 'target="' . $widget->targetUrl . 
 $dataModule = $widget->moduleName;
 
 use open20\amos\core\icons\AmosIcons;
+use open20\amos\core\module\BaseAmosModule;
 ?>
 
 <div class="square-box" data-code="<?= $className ?>">
@@ -37,7 +38,7 @@ use open20\amos\core\icons\AmosIcons;
         <?php endif; ?>
 
         <?php if (strlen($url) && ($widget->targetUrl == '_blank')): ?>
-            <span class="sr-only"><?= Yii::t('amoscore', 'Questo link verrà aperto in una nuova pagina') ?></span>
+            <span class="sr-only"><?= BaseAmosModule::t('amoscore', 'Questo link verrà aperto in una nuova pagina') ?></span>
         <?php endif; ?>
         <span class="badge"><?= $widget->bulletCount ? $widget->bulletCount : '' ?></span>
         <?php if (!(strpos($classSpanA, 'open-modal-dashboard') === false)) {

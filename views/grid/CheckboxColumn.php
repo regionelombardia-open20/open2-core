@@ -16,6 +16,7 @@ use yii\grid\CheckboxColumn as YiiCheckboxColumn;
 use yii\helpers\Html;
 use yii\helpers\Inflector;
 use yii\helpers\Json;
+use open20\amos\core\module\BaseAmosModule;
 
 /**
  * CheckboxColumn displays a column of checkboxes in a grid view.
@@ -65,7 +66,7 @@ class CheckboxColumn extends YiiCheckboxColumn
             return parent::renderHeaderCellContent();
         } else {
             $idGrid = (!empty($this->grid->getId()) ? $this->grid->id : $this->getHeaderCheckBoxName());
-            return '<div class="checkbox"><label for="id_header-' . $idGrid . '"><span class="sr-only">' . \Yii::t('amoscore', 'Select All') . '</span>' . Html::checkbox($this->getHeaderCheckBoxName(), false, ['class' => 'select-on-check-all', 'id' => 'id_header-' . $idGrid]) . '</label></div>';
+            return '<div class="checkbox"><label for="id_header-' . $idGrid . '"><span class="sr-only">' . BaseAmosModule::t('amoscore', 'Select All') . '</span>' . Html::checkbox($this->getHeaderCheckBoxName(), false, ['class' => 'select-on-check-all', 'id' => 'id_header-' . $idGrid]) . '</label></div>';
         }
     }
 

@@ -134,7 +134,7 @@ class ContextMenuWidget extends Widget
     {
         $modifyTitle = $this->labelModify;
         $deleteTitle =  $this->labelDelete;
-        $labelDeleteConfirm = ($this->getLabelDeleteConfirm() ? $this->getLabelDeleteConfirm() : Yii::t('amoscore', 'Sei sicuro di voler eliminare questo elemento?'));
+        $labelDeleteConfirm = ($this->getLabelDeleteConfirm() ? $this->getLabelDeleteConfirm() : BaseAmosModule::t('amoscore', 'Sei sicuro di voler eliminare questo elemento?'));
 
         $optionsModify = [
             'model' => $this->model,
@@ -190,10 +190,10 @@ class ContextMenuWidget extends Widget
      */
     protected function initLabels(){
         if(empty($this->labelModify)) {
-            $this->labelModify =  Yii::t('amoscore', 'Modifica');
+            $this->labelModify =  BaseAmosModule::t('amoscore', 'Modifica');
         }
         if(empty($this->labelDelete)) {
-            $this->labelDelete= Yii::t('amoscore', 'Cancella');
+            $this->labelDelete= BaseAmosModule::t('amoscore', 'Cancella');
         }
     }
 

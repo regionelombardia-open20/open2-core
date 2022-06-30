@@ -16,6 +16,7 @@ use yii\validators\Validator;
 use yii\httpclient\Request as HttpClientRequest;
 use yii\httpclient\Client as HttpClient;
 use Yii;
+use open20\amos\core\module\BaseAmosModule;
 
 class RecaptchaV3Validator extends Validator
 {
@@ -78,7 +79,7 @@ class RecaptchaV3Validator extends Validator
          * Setting a default error message if not explicitly set
          */
         if($this->errorMessage === null) {
-            $this->errorMessage = Yii::t('app', 'The antibot analysis returned errors. Please try to submit again your form.');
+            $this->errorMessage = BaseAmosModule::t('app', 'The antibot analysis returned errors. Please try to submit again your form.');
         }
 
         /**
@@ -204,7 +205,7 @@ class RecaptchaV3Validator extends Validator
      */
     public function clientValidateAttribute($model, $attribute, $view)
     {
-        $errorMessage = Yii::t(
+        $errorMessage = BaseAmosModule::t(
             'app',
             'The hidden captcha is empty. Please, refresh your page.',
             ['attribute' => $model->getAttributeLabel($attribute)]

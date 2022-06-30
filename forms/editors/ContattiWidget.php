@@ -18,6 +18,7 @@ use yii\base\InvalidConfigException;
 use yii\base\Widget;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use open20\amos\core\module\BaseAmosModule;
 
 class ContattiWidget extends Widget {
 
@@ -45,7 +46,7 @@ class ContattiWidget extends Widget {
     public $postKey = "contatti";
 
     protected function throwErrorMessage($field) {
-        return \Yii::t('amoscore', 'Configurazione widget non corretta, {campo} mancante', [
+        return BaseAmosModule::t('amoscore', 'Configurazione widget non corretta, {campo} mancante', [
                     'campo' => $field
         ]);
     }
@@ -170,7 +171,7 @@ class ContattiWidget extends Widget {
                                             if (\Yii::$app->getUser()->can($this->permissions['add'], ['model' => $this->model]) && $this->model['id'] != $model['id_richiedente'] && $this->model['id'] == $model['id_destinatario'] && $model['descrizione'] == 'In attesa di accettazione') {
                                                 //pr($this->model['id'] . " - " . $model['id'], 'accetta');
                                                 return Html::a('<span id="bk-btnEdit" class="ti ti-user"></span>', Yii::$app->urlManager->createUrl(['/admin/user-profile/cambia-stato-contatto', 'id' => $model['id'], 'idConnesso' => $this->model['id'], 'azione' => 'accetta', 'url' => $url]), [
-                                                            'title' => Yii::t('amoscore', 'Accetta richiesta di contatto'),
+                                                            'title' => BaseAmosModule::t('amoscore', 'Accetta richiesta di contatto'),
                                                             'class' => 'btn bk-btnEdit',
                                                 ]);
                                             } else {
@@ -182,8 +183,8 @@ class ContattiWidget extends Widget {
                                             if (\Yii::$app->getUser()->can($this->permissions['add'], ['model' => $this->model]) && $this->model['id'] != $model['id_richiedente'] && $this->model['id'] == $model['id_destinatario'] && $model['descrizione'] == 'In attesa di accettazione') {
                                                 //pr($this->model['id'] . " - " . $model['id'], 'rifiuta');
                                                 return Html::a('<span id="bk-btnDelete" class="ti ti-trash"></span>', Yii::$app->urlManager->createUrl(['/admin/user-profile/cambia-stato-contatto', 'id' => $model['id'], 'idConnesso' => $this->model['id'], 'azione' => 'rifiuta', 'url' => $url]), [
-                                                            'title' => Yii::t('amoscore', 'Rifiuta richiesta di contatto'),
-                                                            'data-confirm' => Yii::t('amoscore', 'Sei sicuro di voler rifiutare questo contatto?'),
+                                                            'title' => BaseAmosModule::t('amoscore', 'Rifiuta richiesta di contatto'),
+                                                            'data-confirm' => BaseAmosModule::t('amoscore', 'Sei sicuro di voler rifiutare questo contatto?'),
                                                             'class' => 'btn bk-btnDelete'
                                                 ]);
                                             } else {
@@ -195,8 +196,8 @@ class ContattiWidget extends Widget {
                                             if (\Yii::$app->getUser()->can($this->permissions['add'], ['model' => $this->model]) && $this->model['id'] == $model['id_richiedente'] && $this->model['id'] != $model['id_destinatario'] && $model['descrizione'] == 'In attesa di accettazione') {
                                                 //pr($this->model['id'] . " - " . $model['id'], 'annulla');
                                                 return Html::a('<span id="bk-btnDelete" class="ti ti-trash"></span>', Yii::$app->urlManager->createUrl(['/admin/user-profile/cambia-stato-contatto', 'id' => $model['id'], 'idConnesso' => $this->model['id'], 'azione' => 'annulla', 'url' => $url]), [
-                                                            'title' => Yii::t('amoscore', 'Annulla richiesta di contatto'),
-                                                            'data-confirm' => Yii::t('amoscore', 'Sei sicuro di voler cancellare questa richiesta?'),
+                                                            'title' => BaseAmosModule::t('amoscore', 'Annulla richiesta di contatto'),
+                                                            'data-confirm' => BaseAmosModule::t('amoscore', 'Sei sicuro di voler cancellare questa richiesta?'),
                                                             'class' => 'btn bk-btnDelete',
                                                 ]);
                                             } else {
@@ -208,7 +209,7 @@ class ContattiWidget extends Widget {
                                             if (\Yii::$app->getUser()->can($this->permissions['add'], ['model' => $this->model]) && ($this->model['id'] == $model['id_richiedente'] || $this->model['id'] == $model['id_destinatario']) && $model['descrizione'] == 'Attivo') {
                                                 //pr($this->model['id'] . " - " . $model['id'], 'contatta');
                                                 return Html::a('<span class="ti ti-comments"></span>', Yii::$app->urlManager->createUrl(['/comunicazioni/comunicazioni-discussioni-topic/create', 'idUtente' => $model['id'], 'url' => $url]), [
-                                                            'title' => Yii::t('amoscore', 'Contatta l\'utente'),
+                                                            'title' => BaseAmosModule::t('amoscore', 'Contatta l\'utente'),
                                                             'class' => 'btn bk-btnImport'
                                                 ]);
                                             } else {
@@ -220,8 +221,8 @@ class ContattiWidget extends Widget {
                                             if (\Yii::$app->getUser()->can($this->permissions['add'], ['model' => $this->model]) && ($this->model['id'] == $model['id_richiedente'] || $this->model['id'] == $model['id_destinatario']) && $model['descrizione'] == 'Attivo') {
                                                 //pr($this->model['id'] . " - " . $model['id'], 'termina');pr($model['id_destinatario'], 'destinatario');
                                                 return Html::a('<span id="bk-btnEdit" class="ti ti-unlink"></span>', Yii::$app->urlManager->createUrl(['/admin/user-profile/cambia-stato-contatto', 'id' => $model['id'], 'idConnesso' => $this->model['id'], 'azione' => 'termina', 'url' => $url]), [
-                                                            'title' => Yii::t('amoscore', 'Termina contatto'),
-                                                            'data-confirm' => Yii::t('amoscore', 'Sei sicuro di voler cancellare questo contatto?'),
+                                                            'title' => BaseAmosModule::t('amoscore', 'Termina contatto'),
+                                                            'data-confirm' => BaseAmosModule::t('amoscore', 'Sei sicuro di voler cancellare questo contatto?'),
                                                             'class' => 'btn bk-btnDelete'
                                                 ]);
                                             } else {
@@ -252,7 +253,7 @@ class ContattiWidget extends Widget {
                         } else {
                             echo '<div class="site-error">
                                         <div class="alert alert-danger">' .
-                            Yii::t('amoscore', 'Non sei autorizzato ad eseguire questa operazione.')
+                            BaseAmosModule::t('amoscore', 'Non sei autorizzato ad eseguire questa operazione.')
                             . '</div>   
                                     </div>';
                         }

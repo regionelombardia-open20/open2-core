@@ -23,6 +23,7 @@ use yii\helpers\Html;
 use yii\web\View;
 //use yii\widgets\ActiveForm;
 use kartik\editable\Editable as KartikEditable;
+use open20\amos\core\module\BaseAmosModule;
 
 class Editable extends KartikEditable{
     /**
@@ -65,7 +66,7 @@ class Editable extends KartikEditable{
             $this->displayValue = $value;
         }
         if ($this->valueIfNull === null || $this->valueIfNull === '') {
-            $this->valueIfNull = '<em>' . Yii::t('kveditable', '(not set)') . '</em>';
+            $this->valueIfNull = '<em>' . BaseAmosModule::t('kveditable', '(not set)') . '</em>';
         }
         if ($this->displayValue === null || $this->displayValue === '') {
             $this->displayValue = $this->valueIfNull;
@@ -100,7 +101,7 @@ class Editable extends KartikEditable{
         $this->_popoverOptions['placement'] = $this->placement;
         $this->_popoverOptions['size'] = $this->size;
         if (!isset($this->preHeader)) {
-            $this->preHeader = AmosIcons::show('edit') . Yii::t('kveditable', 'Edit') . ' ';
+            $this->preHeader = AmosIcons::show('edit') . BaseAmosModule::t('kveditable', 'Edit') . ' ';
         }
         if ($this->header == null) {
             $attribute = $this->attribute;

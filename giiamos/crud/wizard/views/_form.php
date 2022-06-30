@@ -52,8 +52,9 @@ use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
 use open20\amos\core\icons\AmosIcons;
 use yii\bootstrap\Modal;
-use yii\redactor\widgets\Redactor;
+use open20\amos\core\forms\TextEditorWidget;
 use yii\helpers\Inflector;
+use open20\amos\core\module\BaseAmosModule;
 
 /**
 * @var yii\web\View $this
@@ -157,15 +158,12 @@ use yii\helpers\Inflector;
                            \t\t\t\t'layout' => '{input} {picker} ' . ((\$model->" . $column->name . " == '')? '' : '{remove}')]
                         \t\t\t]); ?>";
                 } else if ($column->type == 'text') {
-                    echo "\n\t\t\t<?= \$form->field(\$model, '" . $column->name . "')->widget(yii\\redactor\\widgets\\Redactor::className(), [
-                            \t\t\t\t'options' => [
-                            \t\t\t\t\t'id' => '" . $column->name . "' . \$fid,
-                            \t\t\t\t\t],
-                            \t\t\t\t'clientOptions' => [
-                            \t\t\t\t'lang' => 'it',
-                            \t\t\t\t'plugins' => ['clips', 'fontcolor', 'imagemanager'],
-                            \t\t\t\t'buttons' => ['format', 'bold', 'italic', 'deleted', 'lists', 'image', 'file', 'link', 'horizontalrule'],
-                            \t\t\t\t],
+                    echo "\n\t\t\t<?= \$form->field(\$model, '" . $column->name . "')->widget(TextEditorWidget::className(),
+                [
+                \t\t\t\t\t'id' => '" . $column->name . "' . \$fid,
+                \t\t\t\t\t'clientOptions' => [
+                \t\t\t\t\t\t    'lang' => substr(\\Yii::\$app->language, 0, 2)
+                \t\t\t\t\t]
                 \t\t\t]);
                 \t\t\t?>";
                 } else if($column->type == 'smallint') {
@@ -315,7 +313,7 @@ use yii\helpers\Inflector;
         echo '<div class="clearfix"></div>';
         echo '<?php $this->endBlock(); ?>';
         echo '<?php $itemsTab[] = [
-        \'label\' => Yii::t(\''.$generator->messageCategory.'\', \''.$tabName.'\'),
+        \'label\' => BaseAmosModule::t(\''.$generator->messageCategory.'\', \''.$tabName.'\'),
         \'content\' => $this->blocks[\''.$tabNameSanitize.'\'],
         ];
         ?>';

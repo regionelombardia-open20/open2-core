@@ -25,4 +25,12 @@ class ConsoleApplication extends Application
         return $this->get('user');
     }
 
+     /**
+     * Returns the session component.
+     * @return Session the session component.
+     */
+    public function getSession()
+    {
+        return $this->get('session');
+    }
 }

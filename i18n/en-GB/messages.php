@@ -458,9 +458,4 @@ return [
     '#ZipUtility_not_string_property_password' => 'ZipUtility: password is not a string',
     '#ZipUtility_not_string_property_zip_file_extension' => 'ZipUtility: compressed file extension is not a string',
     '#ZipUtility_not_string_property_zip_file_name' => 'ZipUtility: zip file name is not a string',
-    'ti ha taggato in un commento.' => "tagged you in a comment.",
-    "Clicca qui per vederlo:" => "Click here to see it: ",
-    "Clicca qui per vedere il contenuto: " => "Click here to see the content: ",
-    'ti ha taggato in un contenuto.' => 'has tagged you in a piece of content.',
-    "Sei stato taggato in un contenuto." => "You have been tagged in a piece of content."
 ];

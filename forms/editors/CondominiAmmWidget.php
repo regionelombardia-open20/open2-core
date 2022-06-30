@@ -18,6 +18,7 @@ use yii\base\InvalidConfigException;
 use yii\base\Widget;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use open20\amos\core\module\BaseAmosModule;
 
 class CondominiAmmWidget extends Widget {
 
@@ -45,7 +46,7 @@ class CondominiAmmWidget extends Widget {
     public $postKey = "condomini";
 
     protected function throwErrorMessage($field) {
-        return \Yii::t('amoscore', 'Configurazione widget non corretta, {campo} mancante', [
+        return BaseAmosModule::t('amoscore', 'Configurazione widget non corretta, {campo} mancante', [
                     'campo' => $field
         ]);
     }
@@ -173,7 +174,7 @@ class CondominiAmmWidget extends Widget {
                                 'condominio' => function ($url, $model) {
                                     //$url = \yii\helpers\Url::current();
                                     return Html::a('<p class="btn" title="Visualizza i dettagli del condominio"><span id="bk-btnAssociaCondominio" class="ti ti-file"></span></p>', Yii::$app->urlManager->createUrl(['admin/user-profile/vedi-condominio', 'id' => $model['id'], 'utente' => $this->model['id'], 'url' => 'tab-condominio']), [
-                                                    'title' => Yii::t('amoscore', 'Visualizza i dettagli del condominio'),
+                                                    'title' => BaseAmosModule::t('amoscore', 'Visualizza i dettagli del condominio'),
                                         ]);                                    
                                 },
                                     ],

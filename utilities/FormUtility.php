@@ -33,7 +33,7 @@ class FormUtility
         return Html::tag('span', '&nbsp; ' . AmosIcons::show('alert-triangle'), [
             'id' => 'errore-alert-common',
             'class' => 'errore-alert hidden',
-            'title' => \Yii::t('amoscore', 'La tab contiene degli errori')
+            'title' => BaseAmosModule::t('amoscore', 'La tab contiene degli errori')
         ]);
     }
 

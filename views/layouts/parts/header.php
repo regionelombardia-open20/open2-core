@@ -16,6 +16,7 @@ use open20\amos\core\toolbar\NavBar;
 use open20\amos\core\utilities\CurrentUser;
 use yii\web\JsExpression;
 use yii\helpers\Url;
+use open20\amos\core\module\BaseAmosModule;
 
 /* @var $this \yii\web\View */
 ?>
@@ -49,7 +50,7 @@ $hasSlideshow = (\Yii::$app->getModule('slideshow') && isset(\Yii::$app->params[
 if ($hasSlideshow) {
     $itemsSlideshow = ['<li class="divider"></li>',
         [
-            'label' => (!empty($slideshowLabel)) ? $slideshowLabel : Yii::t('amoscore', 'Mostra introduzione'),
+            'label' => (!empty($slideshowLabel)) ? $slideshowLabel : BaseAmosModule::t('amoscore', 'Mostra introduzione'),
             'url' => '#',
             //'options' => ['onclick' => new JsExpression('$("#amos-slideshow").modal("show");') , 'class' => 'open-slideshow-modal'] TODO remove
             'options' => ['class' => 'open-slideshow-modal'] //moved js in global.js
@@ -96,14 +97,14 @@ $headerMenu->getToggleTranslate();
     if (!CurrentUser::getUserIdentity()) {
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
     } else {
-        $benvenuto = Yii::t('amoscore', 'Benvenuto utente');
+        $benvenuto = BaseAmosModule::t('amoscore', 'Benvenuto utente');
         if (NULL !== (CurrentUser::getUserProfile())) {
             if (CurrentUser::getUserProfile()->sesso == 'Maschio') {
-                $benvenuto = Yii::t('amoscore', 'Benvenuto {utente}', array(
+                $benvenuto = BaseAmosModule::t('amoscore', 'Benvenuto {utente}', array(
                     'utente' => CurrentUser::getUserProfile()
                 ));
             } elseif (CurrentUser::getUserProfile()->sesso == 'Femmina') {
-                $benvenuto = Yii::t('amoscore', 'Benvenuta {utente}', array(
+                $benvenuto = BaseAmosModule::t('amoscore', 'Benvenuta {utente}', array(
                     'utente' => CurrentUser::getUserProfile()
                 ));
             }
@@ -116,7 +117,7 @@ $headerMenu->getToggleTranslate();
         $imgAvatar = Html::img($url, [
             'class' => $roundImage['class'],
             'style' => "margin-left: " . $roundImage['margin-left'] . "%; margin-top: " . $roundImage['margin-top'] . "%;",
-            'alt' => Yii::t('amoscore', 'Avatar dell\'utente'),
+            'alt' => BaseAmosModule::t('amoscore', 'Avatar dell\'utente'),
 			'data-test' => "user-menu"
         ]);
 
@@ -129,7 +130,7 @@ $headerMenu->getToggleTranslate();
 //                    'class' => 'am-2',
 //                    'alt' => $this->title
 //                ])
-                . '<p>' . Yii::t('amoscore', '{utente}', array(
+                . '<p>' . BaseAmosModule::t('amoscore', '{utente}', array(
                     'utente' => CurrentUser::getUserProfile()
                 )) . '</p>',
             'items' => [
@@ -137,36 +138,36 @@ $headerMenu->getToggleTranslate();
                 '<li class="divider"></li>',
                 //'<li class="dropdown-header">Azioni</li>',
                 'myProfile' => $disablePlatformLinks ? '' : ([
-                    'label' => Yii::t('amoscore', 'Il mio profilo'),
+                    'label' => BaseAmosModule::t('amoscore', 'Il mio profilo'),
                     'url' => ['/admin/user-profile/update', 'id' => CurrentUser::getUserProfile()->id],
-                    'linkOptions' => ['title' => Yii::t('amoscore', 'Il mio profilo')]
+                    'linkOptions' => ['title' => BaseAmosModule::t('amoscore', 'Il mio profilo')]
                 ]),
                 [
-                    'label' => Yii::t('amoscore', 'Esci'),
+                    'label' => BaseAmosModule::t('amoscore', 'Esci'),
                     'url' => ['/site/logout'],
-                    'linkOptions' => ['data-method' => 'post', 'title' => Yii::t('amoscore', 'esci')]
+                    'linkOptions' => ['data-method' => 'post', 'title' => BaseAmosModule::t('amoscore', 'esci')]
                 ],
                 ($hasPrivacyLink || $hasCookiesLink) ?
                     '<li class="divider"></li>
-                     <li class="dropdown-header">' . Yii::t('amoscore', 'Informative') . '</li>
+                     <li class="dropdown-header">' . BaseAmosModule::t('amoscore', 'Informative') . '</li>
                      <li class="divider"></li>'
                     : '',
                 ($hasPrivacyLink) ? $privacyLink : '',
                 ($hasCookiesLink) ? $cookiesLink : '',
             ],
             'options' => ['class' => 'user-menu'],
-            'linkOptions' => ['title' => Yii::t('amoscore', 'azioni utente')]
+            'linkOptions' => ['title' => BaseAmosModule::t('amoscore', 'azioni utente')]
         ];
 
         $settings = [
             'label' => AmosIcons::show('settings', [
                     'class' => 'am-2',
-                ]) . '<span class="sr-only">' . Yii::t('amoscore', 'impostazioni') . '</span>',
+                ]) . '<span class="sr-only">' . BaseAmosModule::t('amoscore', 'impostazioni') . '</span>',
             'items' => [
-                '<li class="dropdown-header">' . Yii::t('amoscore', 'Impostazioni') . '</li>',
+                '<li class="dropdown-header">' . BaseAmosModule::t('amoscore', 'Impostazioni') . '</li>',
                 '<li class="divider"></li>',
                 [
-                    'label' => Yii::t('amoscore', 'Ordinamenti dashboard'),
+                    'label' => BaseAmosModule::t('amoscore', 'Ordinamenti dashboard'),
                     'url' => 'javascript:void(0);',
                     'visible' => (\Yii::$app->controller instanceof open20\amos\dashboard\controllers\base\DashboardController),
                     'options' =>
@@ -174,36 +175,36 @@ $headerMenu->getToggleTranslate();
                             'class' => 'enable_order',
                             'id' => 'dashboard-edit-button',
                         ],
-                    'linkOptions' => ['title' => Yii::t('amoscore', 'Impostazioni')]
+                    'linkOptions' => ['title' => BaseAmosModule::t('amoscore', 'Impostazioni')]
                 ],
                 [
-                    'label' => Yii::t('amoscore', 'Gestisci widget'),
+                    'label' => BaseAmosModule::t('amoscore', 'Gestisci widget'),
                     'url' => [
                         '/dashboard/manager',
                         'module' => $this->context->module->id,
                         'slide' => 1
                     ],
-                    'linkOptions' => ['title' => Yii::t('amoscore', 'Gestisci widget')],
+                    'linkOptions' => ['title' => BaseAmosModule::t('amoscore', 'Gestisci widget')],
                 ],
                 ($hasSlideshow) ? '<li class="divider"></li>' : '',
                 ($hasSlideshow) ? ($itemsSlideshow[1]) : '',
                 '<li class="divider"></li>',
                 //Impostare nel params dell'applicazione la versione, per esempio
                 // 'versione' => '1.0',
-                '<li class="dropdown-header pull-right">' . Yii::t('amoscore',
+                '<li class="dropdown-header pull-right">' . BaseAmosModule::t('amoscore',
                     'Versione') . ' ' . ((isset(\Yii::$app->params['versione'])) ? \Yii::$app->params['versione'] : '0.1') . '</li>',
             ],
             'options' => ['class' => 'context-menu'],
-            'linkOptions' => ['title' => Yii::t('amoscore', 'Impostazioni')]
+            'linkOptions' => ['title' => BaseAmosModule::t('amoscore', 'Impostazioni')]
         ];
 
         $deimpersonate = [
             'label' => AmosIcons::show('assignment-account', [
                     'class' => 'am-2 new-message',
-                ]) . '<span class="sr-only">' . Yii::t('amoscore', 'De-Impersonate') . '</span>',
+                ]) . '<span class="sr-only">' . BaseAmosModule::t('amoscore', 'De-Impersonate') . '</span>',
             'url' => '/admin/security/deimpersonate',
             'linkOptions' => [
-                'title' => Yii::t('amoscore', 'De-impersonate')
+                'title' => BaseAmosModule::t('amoscore', 'De-impersonate')
             ]
         ];
 
@@ -236,9 +237,9 @@ $headerMenu->getToggleTranslate();
              */
             $frontendLink = Html::tag('li',
                 Html::a(
-                    AmosIcons::show('globe-alt') . Html::tag('p', Yii::t('amoscore', '#frontend')) //TODO add translation into amos-core
+                    AmosIcons::show('globe-alt') . Html::tag('p', BaseAmosModule::t('amoscore', '#frontend')) //TODO add translation into amos-core
                     , Url::to(\Yii::$app->params['platform']['frontendUrl']),
-                    ['title' => Yii::t('amoscore', 'frontend'), 'target' => '_blank']
+                    ['title' => BaseAmosModule::t('amoscore', 'frontend'), 'target' => '_blank']
                 ),
                 ['class' => 'toFrontend']
             );

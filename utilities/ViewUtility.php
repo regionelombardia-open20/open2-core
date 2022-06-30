@@ -12,8 +12,8 @@ class ViewUtility {
      * 
      */
     public static function formatDateTime() {
-        return (isset(Yii::$app->modules['datecontrol']['displaySettings']['datetime'])) 
-            ? Yii::$app->modules['datecontrol']['displaySettings']['datetime'] 
+        return (isset(Yii::$app->modules['datecontrol'])) 
+            ? Yii::$app->modules['datecontrol']->displaySettings['datetime']
             : 'd-m-Y H:i:s A';
     }
 
@@ -22,8 +22,8 @@ class ViewUtility {
      * @return type
      */
     public static function formatDate() {
-        return (isset(Yii::$app->modules['datecontrol']['displaySettings']['date'])) 
-            ? Yii::$app->modules['datecontrol']['displaySettings']['date'] 
+        return (isset(Yii::$app->modules['datecontrol'])) 
+            ? Yii::$app->modules['datecontrol']->displaySettings['date']
             : 'd-m-Y';
     }
 

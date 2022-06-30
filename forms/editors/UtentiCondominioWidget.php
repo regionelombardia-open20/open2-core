@@ -17,6 +17,7 @@ use yii\base\InvalidConfigException;
 use yii\base\Widget;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use open20\amos\core\module\BaseAmosModule;
 
 class UtentiCondominioWidget extends Widget {
 
@@ -44,7 +45,7 @@ class UtentiCondominioWidget extends Widget {
     public $postKey = "utenti";
 
     protected function throwErrorMessage($field) {
-        return \Yii::t('amoscore', 'Configurazione widget non corretta, {campo} mancante', [
+        return BaseAmosModule::t('amoscore', 'Configurazione widget non corretta, {campo} mancante', [
                     'campo' => $field
         ]);
     }

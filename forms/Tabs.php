@@ -20,6 +20,7 @@ use yii\bootstrap\Dropdown;
 use yii\bootstrap\Tabs as BaseTabs;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use open20\amos\core\module\BaseAmosModule;
 
 /**
  * Class Tabs
@@ -123,13 +124,13 @@ JS;
                 if (empty($contentCwh)) {
                     /** if the model is enabled for tags but not for cwh tab name and label are different */
                     $this->items[] = [
-                        'label' => \Yii::t('amoscore', 'Tag aree di interesse'),
+                        'label' => BaseAmosModule::t('amoscore', 'Tag aree di interesse'),
                         'content' => $content,
                         'options' => ['id' => 'tags'],
                     ];
                 } else {
                     $this->items[] = [
-                        'label' => \Yii::t('amoscore', 'Destinatari'),
+                        'label' => BaseAmosModule::t('amoscore', 'Destinatari'),
                         'content' => $content,
                         'options' => ['id' => 'destinatari'],
                     ];
@@ -140,7 +141,7 @@ JS;
             if (($model instanceof UserProfile) && isset($moduleCwh) && isset($moduleTag) && !$this->hideTagsTab) {
                 $oneTagPresent = ($model->hasErrors('interestTagValues') ? 0 : 1);
                 $this->items[] = [
-                    'label' => \Yii::t('amoscore', 'Tag Aree di interesse'),
+                    'label' => BaseAmosModule::t('amoscore', 'Tag Aree di interesse'),
                     'content' => (new \open20\amos\cwh\widgets\TagWidgetAreeInteresse([
                     'model' => $model,
                     'attribute' => 'areeDiInteresse',
@@ -163,7 +164,7 @@ JS;
             $moduleReport = \Yii::$app->getModule('report');
             if (isset($moduleReport) && in_array(get_class($model), $moduleReport->modelsEnabled) && !$this->hideReportTab && !$model->isNewRecord) {
                 $this->items[] = [
-                    'label' => \Yii::t('amoscore', 'Reports').
+                    'label' => BaseAmosModule::t('amoscore', 'Reports').
                     Html::tag('span', '',
                         ['id' => 'tab-reports-bullet', 'class' => 'badge badge-default badge-panel-heading']),
                     'content' => \open20\amos\report\widgets\TabReportsWidget::widget([

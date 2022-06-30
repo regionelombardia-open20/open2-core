@@ -17,6 +17,7 @@ use yii\bootstrap\Modal;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use ymaker\social\share\widgets\SocialShare;
+use open20\amos\core\module\BaseAmosModule;
 
 /**
  * Class SocialShareWidget
@@ -134,7 +135,7 @@ class SocialShareWidget extends SocialShare
                     } else {
                         // SHARE INSIDE A DROPDOWN
                         echo "<div class=\"dropdown socialshared-dropdown\">
-                    <a class=\"btn dropdown-toggle\" data-toggle=\"dropdown\" href=\"\" aria-expanded=\"true\" title=\"".\Yii::t('amoscore',
+                    <a class=\"btn dropdown-toggle\" data-toggle=\"dropdown\" href=\"\" aria-expanded=\"true\" title=\"".BaseAmosModule::t('amoscore',
                             'Share')." \">"
                         .AmosIcons::show('share', ['class' => ''])
                         .Html::tag('b', '', ['class' => 'caret'])
@@ -318,7 +319,7 @@ JS;
             $this->getView()->registerJs($js);
 
             Modal::begin([
-                'header' => \Yii::t('amoscore', 'Condividi con gli utenti della tua rete'),
+                'header' => BaseAmosModule::t('amoscore', 'Condividi con gli utenti della tua rete'),
                 'headerOptions' => ['id' => 'modalHeader'],
                 'id' => 'modal-contacts-share',
                 'options' => [

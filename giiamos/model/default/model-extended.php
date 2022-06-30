@@ -10,6 +10,7 @@
  */
 use yii\helpers\Inflector;
 use yii\helpers\StringHelper;
+use open20\amos\core\module\BaseAmosModule;
 
 /**
  * This is the template for generating the model class of a specified table.
@@ -112,7 +113,7 @@ if (empty($representingColumn) && strlen($primoCampo)) {
 public function attributeHints(){
 return [
 <?php foreach ($generator->newRules as $key => $value) { ?>
-    '<?= $key ?>' => \Yii::t('amosapp', '<?= addslashes(isset($value['hints']) ? $value['hints'] : '') ?>'),
+    '<?= $key ?>' => BaseAmosModule::t('amosapp', '<?= addslashes(isset($value['hints']) ? $value['hints'] : '') ?>'),
 <?php } ?>
 ];
 }
@@ -327,7 +328,7 @@ foreach ($campis as $fieldType => $fieldNames) {
     }
     }
     if (!$isValid) {
-    $this->addError($attribute, \Yii::t('amoscore', 'The tax code is not in a permitted format'));
+    $this->addError($attribute, BaseAmosModule::t('amoscore', 'The tax code is not in a permitted format'));
     }
     }
     <?php
@@ -372,7 +373,7 @@ if (isset($arrayRules['piva_cf_azienda'])):
     }
     }
     if (!$isValid) {
-    $this->addError($attribute, \Yii::t('amoscore', 'The TAX code/VAT code is not in a permitted format'));
+    $this->addError($attribute, BaseAmosModule::t('amoscore', 'The TAX code/VAT code is not in a permitted format'));
     }
     }
 <?php endif; ?>

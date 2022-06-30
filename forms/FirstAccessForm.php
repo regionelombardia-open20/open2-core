@@ -17,6 +17,7 @@ use yii\base\Model;
 use common\models\User;
 use kartik\password\StrengthValidator;
 use yii\helpers\ArrayHelper;
+use open20\amos\core\module\BaseAmosModule;
 
 
 
@@ -76,11 +77,11 @@ class FirstAccessForm extends Model
             // username and password are both required
             [['username', 'password', 'ripetiPassword'], 'safe'],
             [['password'], StrengthValidator::className(), 'min' => 8, 'preset' => 'normal', 'userAttribute' => 'username'],
-            ['ripetiPassword', 'compare', 'compareAttribute' => 'password', 'message' => \Yii::t('amoscore',"#first_access_pwd_compare_alert")],
+            ['ripetiPassword', 'compare', 'compareAttribute' => 'password', 'message' => BaseAmosModule::t('amoscore',"#first_access_pwd_compare_alert")],
             [['username'], 'required'],
-            [['password'], 'required', 'message' => \Yii::t('amoscore',"#first_access_pwd_alert")],
+            [['password'], 'required', 'message' => BaseAmosModule::t('amoscore',"#first_access_pwd_alert")],
             [['privacy'], 'required', 'requiredValue' => 1, 'message' => Module::t('amoscore', "#first_access_privacy_alert_not_accepted") ,'on' => self::SCENARIO_CHECK_PRIVACY],
-            [['ripetiPassword'], 'required', 'message' => \Yii::t('amoscore',"#first_access_pwd_2_alert")],
+            [['ripetiPassword'], 'required', 'message' => BaseAmosModule::t('amoscore',"#first_access_pwd_2_alert")],
             [['token'], 'string']
     ];
     }

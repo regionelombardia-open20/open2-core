@@ -4,6 +4,7 @@ use open20\amos\admin\widgets\ConnectToUserWidget;
 use open20\amos\admin\widgets\SendMessageToUserWidget;
 use open20\amos\admin\models\UserContact;
 use open20\amos\core\helpers\Html;
+use open20\amos\core\module\BaseAmosModule;
 
 use yii\helpers\ArrayHelper;
 
@@ -24,12 +25,12 @@ echo \open20\amos\core\views\AmosGridView::widget([
   'columns' => [
     'Photo' => [
       'headerOptions' => [
-        'id' => \Yii::t('amoscore', 'Photo'),
+        'id' => BaseAmosModule::t('amoscore', 'Photo'),
       ],
       'contentOptions' => [
-        'headers' => \Yii::t('amoscore', 'Photo'),
+        'headers' => BaseAmosModule::t('amoscore', 'Photo'),
       ],
-      'label' => \Yii::t('amoscore', 'Photo'),
+      'label' => BaseAmosModule::t('amoscore', 'Photo'),
       'format' => 'raw',
       'value' => function ($model) {
         /** @var \open20\amos\admin\models\UserProfile $userProfile */
@@ -54,11 +55,11 @@ echo \open20\amos\core\views\AmosGridView::widget([
               
               if (($status) && ($status->status == UserContact::STATUS_INVITED)) {
                 return 
-                Html::a(\Yii::t('amoscore', 'Rifiuta invito'), 
+                Html::a(BaseAmosModule::t('amoscore', 'Rifiuta invito'), 
                 ['/admin/user-contact/connect', 'contactId' => $uid, 'userId' => $model->user_id, 'accept' => 0], 
                 ['class' => 'btn btn-navigation-primary']
                 )
-                . Html::a(\Yii::t('amoscore', 'Accetta invito'), 
+                . Html::a(BaseAmosModule::t('amoscore', 'Accetta invito'), 
                 ['/admin/user-contact/connect', 'contactId' => $uid, 'userId' => $model->user_id, 'accept' => 1], 
                 ['class' => 'btn btn-navigation-primary']
                 );
@@ -70,18 +71,18 @@ echo \open20\amos\core\views\AmosGridView::widget([
                 ->one();
                   
               if (($status) && ($status->status == UserContact::STATUS_INVITED)) {
-                return Html::tag('em', \Yii::t('amoscore', 'In attesa di accettazione della richiesta'));                        }
+                return Html::tag('em', BaseAmosModule::t('amoscore', 'In attesa di accettazione della richiesta'));                        }
               
-              return Html::a(\Yii::t('amoscore', 'collegati'), 
+              return Html::a(BaseAmosModule::t('amoscore', 'collegati'), 
                 ['/admin/user-contact/connect', 'contactId' => $model->user_id], 
-                ['class' => 'btn btn-navigation-primary', 'data-confirm' => Yii::t('amoscore', 'Vuoi collegarti?')]
+                ['class' => 'btn btn-navigation-primary', 'data-confirm' => BaseAmosModule::t('amoscore', 'Vuoi collegarti?')]
                 );
             } else {
               if(!empty($moduleChat)) {
                 return Html::a(
-                  \Yii::t('amoscore', 'Invia messaggio'),
+                  BaseAmosModule::t('amoscore', 'Invia messaggio'),
                   ['/messages', 'contactId' => $model->user_id],
-                  ['class' => 'btn btn-navigation-primary', 'data-confirm' => Yii::t('amoscore', 'Vuoi inviare un messaggio?')]);
+                  ['class' => 'btn btn-navigation-primary', 'data-confirm' => BaseAmosModule::t('amoscore', 'Vuoi inviare un messaggio?')]);
               }
             }
           }

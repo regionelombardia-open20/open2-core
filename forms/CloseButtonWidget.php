@@ -15,6 +15,7 @@ use open20\amos\core\helpers\Html;
 use Yii;
 use yii\base\Widget;
 use yii\helpers\Url;
+use open20\amos\core\module\BaseAmosModule;
 
 /**
  * Class CloseButtonWidget
@@ -110,7 +111,7 @@ class CloseButtonWidget extends Widget
         }
 
         if (!$this->getTitle()) {
-            $this->setTitle(Yii::t('amoscore', 'Chiudi'));
+            $this->setTitle(BaseAmosModule::t('amoscore', 'Chiudi'));
         }
 
         if (!$this->getBtnClass()) {

@@ -26,6 +26,7 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 use kartik\datecontrol\DateControl;
 use yii\helpers\Url;
+use open20\amos\core\module\BaseAmosModule;
 
 /**
 * @var yii\web\View $this
@@ -77,7 +78,7 @@ $this->params['breadcrumbs'][] = $this->title;
     ]) ?>
 
     <div class="btnViewContainer pull-right">
-        <?= "<?=" ?> Html::a(Yii::t('amoscore', 'Chiudi'), Url::previous(), ['class' => 'btn btn-secondary']); <?= "?>" ?>
+        <?= "<?=" ?> Html::a(BaseAmosModule::t('amoscore', 'Chiudi'), Url::previous(), ['class' => 'btn btn-secondary']); <?= "?>" ?>
     </div>
 
 </div>

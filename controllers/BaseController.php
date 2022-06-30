@@ -177,7 +177,7 @@ abstract class BaseController extends BackendController
                         $this->addFlash('warning', BaseAmosModule::t('amoscore', 'La sessione è scaduta, effettua il login'));
                         return Yii::$app->getUser()->loginRequired();
                     }
-                    throw new ForbiddenHttpException(Yii::t('amoscore',
+                    throw new ForbiddenHttpException(BaseAmosModule::t('amoscore',
                         'Non sei autorizzato a visualizzare questa pagina'));
                 }
             ],

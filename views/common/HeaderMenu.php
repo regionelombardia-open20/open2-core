@@ -14,6 +14,7 @@ use Yii;
 use lajax\translatemanager\models\Language;
 use lajax\translatemanager\widgets\ToggleTranslate;
 use \open20\amos\core\icons\AmosIcons;
+use open20\amos\core\module\BaseAmosModule;
 
 class HeaderMenu
 {
@@ -37,7 +38,7 @@ class HeaderMenu
                 $activeLanguage = $this->getActiveLanguages($table);
                 $languages      = (!empty($activeLanguage) ? $activeLanguage : []); //TODO al momento è così poi sistemiamo con il plugin
                 if (!empty($languages)) {
-                    $arrayLang = ['<li class="dropdown-header">'.Yii::t('amoscore', 'Seleziona la lingua').'</li>',
+                    $arrayLang = ['<li class="dropdown-header">'.BaseAmosModule::t('amoscore', 'Seleziona la lingua').'</li>',
                         '<li class="divider"></li>'];
                     foreach ($languages as $Lang) {
                         $arrayLang[] = [
@@ -51,22 +52,22 @@ class HeaderMenu
                 }
                 if (Yii::$app->getUser()->can('TRANSLATION_ADMINISTRATOR')) {
                     $arrayLang[] = (!empty($languages)) ? '<li class="divider"></li>' : '';
-                    $arrayLang[] = '<li class="dropdown-header">'.Yii::t('amoscore', 'Amministra le traduzioni').'</li>';
+                    $arrayLang[] = '<li class="dropdown-header">'.BaseAmosModule::t('amoscore', 'Amministra le traduzioni').'</li>';
                     $arrayLang[] = '<li class="divider"></li>';
                     $arrayLang[] = [
-                        'label' => Yii::t('amoscore', 'Lista delle lingue'),
+                        'label' => BaseAmosModule::t('amoscore', 'Lista delle lingue'),
                         'url' => ['/translatemanager/language/list'],
                     ];
                     $arrayLang[] = [
-                        'label' => Yii::t('amoscore', 'Crea una nuova lingua'),
+                        'label' => BaseAmosModule::t('amoscore', 'Crea una nuova lingua'),
                         'url' => ['/translatemanager/language/create'],
                     ];
                     $arrayLang[] = [
-                        'label' => Yii::t('amoscore', 'Fai una scansione'),
+                        'label' => BaseAmosModule::t('amoscore', 'Fai una scansione'),
                         'url' => ['/translatemanager/language/scan'],
                     ];
                     $arrayLang[] = [
-                        'label' => Yii::t('amoscore', 'Ottimizza le tabelle'),
+                        'label' => BaseAmosModule::t('amoscore', 'Ottimizza le tabelle'),
                         'url' => ['/translatemanager/language/optimizer'],
                     ];
                 }
@@ -94,7 +95,7 @@ class HeaderMenu
 
             if (Yii::$app->getUser()->can('TRANSLATION_ADMINISTRATOR')) {
                 echo ToggleTranslate::widget([
-                    'template' => '<a href="javascript:void(0);" id="toggle-translate" class="{position} '.$addClass.'" data-language="{language}" data-url="{url}" style="z-index:10000;"><div class=\'wrapper\'><span class=\'tooltip-label\'>'.Yii::t('amoscore',
+                    'template' => '<a href="javascript:void(0);" id="toggle-translate" class="{position} '.$addClass.'" data-language="{language}" data-url="{url}" style="z-index:10000;"><div class=\'wrapper\'><span class=\'tooltip-label\'>'.BaseAmosModule::t('amoscore',
                         'Traduzioni in linea').'</span>'.AmosIcons::show('translate', ['class' => 'tooltip-icon']).'</div></a><div id="translate-manager-div"></div>',
                     'position' => ToggleTranslate::POSITION_TOP_LEFT,
                 ]);
@@ -181,8 +182,8 @@ class HeaderMenu
         if (!empty($languages) && (count($languages) > 1)) {
             $stringLang = '<div class="dropdown">'.
                 \open20\amos\core\helpers\Html::a(
-                    Yii::t('amoscore', '#select_language').\open20\amos\core\icons\AmosIcons::show('chevron-down',
-                        ['title' => Yii::t('amosadmin', '#select_language')]), '#',
+                    BaseAmosModule::t('amoscore', '#select_language').\open20\amos\core\icons\AmosIcons::show('chevron-down',
+                        ['title' => BaseAmosModule::t('amosadmin', '#select_language')]), '#',
                     ['class' => 'dropdown-toggle', 'data-toggle' => 'dropdown']).
                 '<ul class="dropdown-menu">';
             foreach ($languages as $Lang) {

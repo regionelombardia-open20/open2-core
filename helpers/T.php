@@ -14,6 +14,7 @@ namespace open20\amos\core\helpers;
 
 use Yii;
 use yii\base\BaseObject;
+use open20\amos\core\module\BaseAmosModule;
 
 class T extends BaseObject
 {
@@ -38,16 +39,16 @@ class T extends BaseObject
 
     public static function tDyn($message, $params = [])
     {
-        return Yii::t(self::getCategory(), $message, $params);
+        return BaseAmosModule::t(self::getCategory(), $message, $params);
     }
 
     public static function tApp($message, $params = [])
     {
-        return Yii::t(self::$defaultCategory, $message, $params);
+        return BaseAmosModule::t(self::$defaultCategory, $message, $params);
     }
 
     public static function t($cat, $message, $params = [])
     {
-        return Yii::t($cat, $message, $params);
+        return BaseAmosModule::t($cat, $message, $params);
     }
 }

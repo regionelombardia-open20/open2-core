@@ -13,6 +13,7 @@ namespace open20\amos\core\validators;
 
 use yii\db\ActiveRecord;
 use yii\validators\Validator;
+use open20\amos\core\module\BaseAmosModule;
 
 /**
  * Description of CFValidator
@@ -130,7 +131,7 @@ class CFValidator extends Validator
             }
         }
         if (chr($s % 26 + ord('A')) != $theVar[15]) {
-            $this->addError($model, $attribute, \Yii::t('amosapp', 'Codice Fiscale non valido') );
+            $this->addError($model, $attribute, BaseAmosModule::t('amosapp', 'Codice Fiscale non valido') );
             return false;
         }
         return true;
@@ -145,8 +146,8 @@ class CFValidator extends Validator
      */
     public function clientValidateAttribute($model, $attribute, $view)
     {
-        $error_msg = \Yii::t('amosapp', 'Codice Fiscale non valido');
-        $error_format_msg = \Yii::t('amosapp', 'Il codice fiscale deve contenere 16 tra lettere e cifre');
+        $error_msg = BaseAmosModule::t('amosapp', 'Codice Fiscale non valido');
+        $error_format_msg = BaseAmosModule::t('amosapp', 'Il codice fiscale deve contenere 16 tra lettere e cifre');
         return <<<JS
         
         var cf = value.toUpperCase();

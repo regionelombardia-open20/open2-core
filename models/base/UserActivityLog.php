@@ -4,6 +4,7 @@ namespace open20\amos\core\models\base;
 
 use open20\amos\core\user\User;
 use Yii;
+use open20\amos\core\module\BaseAmosModule;
 
 /**
  * This is the base-model class for table "user_activity_log".
@@ -61,22 +62,22 @@ class  UserActivityLog extends \open20\amos\core\record\Record
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('amosadmin', 'ID'),
-            'user_id' => Yii::t('amosadmin', 'User'),
-            'type' => Yii::t('amosadmin', 'Type'),
-            'name' => Yii::t('amosadmin', 'Activity'),
-            'description' => Yii::t('amosadmin', 'Activity description'),
-            'models_classname_id' => Yii::t('amosadmin', 'Object'),
-            'record_id' => Yii::t('amosadmin', 'Record id'),
-            'attribute_before' => Yii::t('amosadmin', 'Attribute before'),
-            'attribute_after' => Yii::t('amosadmin', 'Attribute after'),
-            'exacuted_at' => Yii::t('amosadmin', 'Executed at'),
-            'created_at' => Yii::t('amosadmin', 'Created at'),
-            'updated_at' => Yii::t('amosadmin', 'Updated at'),
-            'deleted_at' => Yii::t('amosadmin', 'Deleted at'),
-            'created_by' => Yii::t('amosadmin', 'Created by'),
-            'updated_by' => Yii::t('amosadmin', 'Updated at'),
-            'deleted_by' => Yii::t('amosadmin', 'Deleted at'),
+            'id' => BaseAmosModule::t('amosadmin', 'ID'),
+            'user_id' => BaseAmosModule::t('amosadmin', 'User'),
+            'type' => BaseAmosModule::t('amosadmin', 'Type'),
+            'name' => BaseAmosModule::t('amosadmin', 'Activity'),
+            'description' => BaseAmosModule::t('amosadmin', 'Activity description'),
+            'models_classname_id' => BaseAmosModule::t('amosadmin', 'Object'),
+            'record_id' => BaseAmosModule::t('amosadmin', 'Record id'),
+            'attribute_before' => BaseAmosModule::t('amosadmin', 'Attribute before'),
+            'attribute_after' => BaseAmosModule::t('amosadmin', 'Attribute after'),
+            'exacuted_at' => BaseAmosModule::t('amosadmin', 'Executed at'),
+            'created_at' => BaseAmosModule::t('amosadmin', 'Created at'),
+            'updated_at' => BaseAmosModule::t('amosadmin', 'Updated at'),
+            'deleted_at' => BaseAmosModule::t('amosadmin', 'Deleted at'),
+            'created_by' => BaseAmosModule::t('amosadmin', 'Created by'),
+            'updated_by' => BaseAmosModule::t('amosadmin', 'Updated at'),
+            'deleted_by' => BaseAmosModule::t('amosadmin', 'Deleted at'),
         ];
     }
 

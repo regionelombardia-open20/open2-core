@@ -10,6 +10,7 @@
  */
 
 use yii\helpers\Html;
+use open20\amos\core\module\BaseAmosModule;
 
 /** @var bool|false $disablePlatformLinks  - if true all the links to dashboard, settings, etc are disabled */
 $disablePlatformLinks = isset($this->params['disablePlatformLinks']) ? $this->params['disablePlatformLinks'] : false;
@@ -22,7 +23,7 @@ $logo = isset(Yii::$app->params['logo'])?
     : '<p>'.Yii::$app->name.'</p>';
 $logoUrl = $disablePlatformLinks ? null : Yii::$app->homeUrl;
 $logoOptions = [];
-$title = isset(Yii::$app->params['logo'])?  \open20\amos\core\module\BaseAmosModule::t('amoscore', 'vai alla home page') : Yii::$app->name;
+$title = isset(Yii::$app->params['logo'])?  BaseAmosModule::t('amoscore', 'vai alla home page') : Yii::$app->name;
 $logoOptions['title'] = $title;
 if(!isset(Yii::$app->params['logo'])){
     $logoOptions['class'] = 'title-text';
@@ -43,14 +44,14 @@ if(!isset(Yii::$app->params['logo'])){
         <?php
         $signature = Html::img(Yii::$app->params['logo-signature'], [
             'class' => 'img-responsive signature pull-right',
-            'alt' => \open20\amos\core\module\BaseAmosModule::t('amoscore', 'logo firma')
+            'alt' => BaseAmosModule::t('amoscore', 'logo firma')
         ]);
         ?>
         <?php if($disablePlatformLinks): ?>
             <?= $signature ?>
         <?php else: ?>
             <?=
-            Html::a( $signature, [Yii::$app->homeUrl,],  ['title' => \open20\amos\core\module\BaseAmosModule::t('amoscore', 'vai alla home page')]);
+            Html::a( $signature, [Yii::$app->homeUrl,],  ['title' => BaseAmosModule::t('amoscore', 'vai alla home page')]);
             ?>
         <?php endif;?>
     <?php endif; ?>

@@ -17,14 +17,15 @@ namespace <?= $data_obj->ns_4class ?>;
 use open20\amos\core\widget\WidgetIcon;
 use Yii;
 use yii\helpers\ArrayHelper;
+use open20\amos\core\module\BaseAmosModule;
 
 class <?= $data_obj->widgetName ?> extends WidgetIcon {
 
     public function init() {
         parent::init();
 
-        $this->setLabel(\Yii::t('<?= $data_obj->ns_4class; ?>' , '<?= $data_obj->widgetLabel; ?>'));
-        $this->setDescription(Yii::t('<?= $data_obj->ns_4class; ?>', '<?= $data_obj->widgetDescription ?>'));
+        $this->setLabel(BaseAmosModule::t('<?= $data_obj->ns_4class; ?>' , '<?= $data_obj->widgetLabel; ?>'));
+        $this->setDescription(BaseAmosModule::t('<?= $data_obj->ns_4class; ?>', '<?= $data_obj->widgetDescription ?>'));
 
         $this->setIcon('<?= $data_obj->iconClass; ?>');
         $this->setIconFramework('<?= $data_obj->iconFramework; ?>');

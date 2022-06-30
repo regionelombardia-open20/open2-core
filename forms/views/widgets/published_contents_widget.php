@@ -14,6 +14,7 @@
 use open20\amos\core\icons\AmosIcons;
 use open20\amos\core\views\AmosGridView;
 use open20\amos\core\forms\AccordionWidget;
+use open20\amos\core\module\BaseAmosModule;
 
 ?>
 
@@ -24,7 +25,7 @@ use open20\amos\core\forms\AccordionWidget;
             'content' => AmosGridView::widget([
                 'dataProvider' =>  $widget->data,
                 'summary' => '',
-                'emptyText' => Yii::t('amoscore','Nessun elemento di questa categoria pubblicato dalla community'),
+                'emptyText' => BaseAmosModule::t('amoscore','Nessun elemento di questa categoria pubblicato dalla community'),
                 'columns' => $widget->gridViewColumns
             ]),
         ]

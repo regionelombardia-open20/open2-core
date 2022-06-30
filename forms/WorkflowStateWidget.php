@@ -13,6 +13,7 @@ namespace open20\amos\core\forms;
 
 use kartik\base\Widget;
 use kartik\select2\Select2;
+use open20\amos\core\module\BaseAmosModule;
 
 /**
  * Class WorkflowStateWidget
@@ -79,7 +80,7 @@ class WorkflowStateWidget extends Widget {
 
     public function run() {
         $content = $this->form->field($this->model, 'status')->widget(Select2::classname(), [
-            'options' => ['placeholder' => \Yii::t('amoscore', 'Digita il nome dello stato')],
+            'options' => ['placeholder' => BaseAmosModule::t('amoscore', 'Digita il nome dello stato')],
             'data' => $this->getStatuses()
         ]);
 

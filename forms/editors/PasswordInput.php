@@ -14,6 +14,7 @@ namespace open20\amos\core\forms\editors;
 use yii\helpers\Html;
 use yii\helpers\ArrayHelper;
 use Yii;
+use open20\amos\core\module\BaseAmosModule;
 
 class PasswordInput extends \kartik\password\PasswordInput
 {
@@ -53,8 +54,8 @@ class PasswordInput extends \kartik\password\PasswordInput
     {
         //TO DO: insert attribute for in label-checkbox for the accessibility
         $class = 'input-group';
-        $labelCheckbox = '<label class="label-checkbox" for="">'.Yii::t('amoscore', 'Mostra password').'</label>
-                          <label class="label-checkbox" style="display: none" for="">'.Yii::t('amoscore', 'Nascondi password').'</label>';
+        $labelCheckbox = '<label class="label-checkbox" for="">'.BaseAmosModule::t('amoscore', 'Mostra password').'</label>
+                          <label class="label-checkbox" style="display: none" for="">'.BaseAmosModule::t('amoscore', 'Nascondi password').'</label>';
         $content = '{input}<span class="input-group-addon">{toggle}</span>';
         if ($this->size === 'lg' || $this->size === 'sm') {
             $class .= ' input-group-' . $this->size;

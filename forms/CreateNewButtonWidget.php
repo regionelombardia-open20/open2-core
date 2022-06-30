@@ -15,6 +15,7 @@ use open20\amos\core\helpers\Html;
 use open20\amos\core\record\Record;
 use Yii;
 use yii\base\Widget;
+use open20\amos\core\module\BaseAmosModule;
 
 /**
  * Class CreateNewButtonWidget
@@ -77,7 +78,7 @@ class CreateNewButtonWidget extends Widget
     public function run()
     {
         if (!isset($this->createNewBtnLabel)) {
-            $this->createNewBtnLabel = Yii::t('amoscore', 'Crea nuovo');
+            $this->createNewBtnLabel = BaseAmosModule::t('amoscore', 'Crea nuovo');
         }
         $content = preg_replace_callback("/{\\w+}/", function ($matches) {
             $content = $this->renderSection($matches[0]);
@@ -117,7 +118,7 @@ class CreateNewButtonWidget extends Widget
     private function configCreateButtonOptions()
     {
         $options = [
-            'class' => 'btn btn-administration-primary',
+            'class' => 'btn btn-primary',
         ];
         if (strlen($this->getCreateButtonId())) {
             $options['id'] = $this->getCreateButtonId();

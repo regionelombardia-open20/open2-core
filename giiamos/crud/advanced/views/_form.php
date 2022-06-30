@@ -12,6 +12,7 @@ use yii\helpers\Inflector;
 use yii\helpers\StringHelper;
 use open20\amos\core\helpers\Html;
 use open20\amos\core\forms\CreatedUpdatedWidget;
+use open20\amos\core\module\BaseAmosModule;
 
 /**
  * @var yii\web\View $this
@@ -61,7 +62,7 @@ use open20\amos\core\forms\editors\Select;
 use yii\helpers\ArrayHelper;
 use open20\amos\core\icons\AmosIcons;
 use yii\bootstrap\Modal;
-use yii\redactor\widgets\Redactor;
+use open20\amos\core\forms\TextEditorWidget;
 use yii\helpers\Inflector;
 
 /**
@@ -134,7 +135,7 @@ use yii\helpers\Inflector;
             ]);
         }
 
-        echo Html::tag('h2', open20\amos\core\module\BaseAmosModule::t('amoscore', 'Settings') .
+        echo Html::tag('h2', BaseAmosModule::t('amoscore', 'Settings') .
                 CreatedUpdatedWidget::widget(['model' => $model, 'isTooltip' => true]) .
                 $reportFlagWidget, ['class' => 'subtitle-form']);
 
@@ -256,15 +257,12 @@ use yii\helpers\Inflector;
                            \t\t\t\t'layout' => '{input} {picker} ' . ((\$model->" . $column->name . " == '')? '' : '{remove}')]
                         \t\t\t]); ?>";
                 } else if ($column->type == 'text') {
-                    echo "\n\t\t\t<?= \$form->field(\$model, '" . $column->name . "')->widget(yii\\redactor\\widgets\\Redactor::className(), [
-                            \t\t\t\t'options' => [
-                            \t\t\t\t\t'id' => '" . $column->name . "' . \$fid,
-                            \t\t\t\t\t],
-                            \t\t\t\t'clientOptions' => [
-                            \t\t\t\t'language' => substr(Yii::\$app->language, 0, 2),
-                            \t\t\t\t'plugins' => ['clips', 'fontcolor', 'imagemanager'],
-                            \t\t\t\t'buttons' => ['format', 'bold', 'italic', 'deleted', 'lists', 'image', 'file', 'link', 'horizontalrule'],
-                            \t\t\t\t],
+                    echo "\n\t\t\t<?= \$form->field(\$model, '" . $column->name . "')->widget(TextEditorWidget::className(),
+                [
+                \t\t\t\t\t'id' => '" . $column->name . "' . \$fid,
+                \t\t\t\t\t'clientOptions' => [
+                \t\t\t\t\t\t    'lang' => substr(\\Yii::\$app->language, 0, 2)
+                \t\t\t\t\t]
                 \t\t\t]);
                 \t\t\t?>";
                 } else if ($column->type == 'smallint') {

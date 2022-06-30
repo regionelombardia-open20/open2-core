@@ -16,6 +16,7 @@ use open20\amos\core\icons\AmosIcons;
 use Yii;
 use yii\base\Widget;
 use yii\data\ActiveDataProvider;
+use open20\amos\core\module\BaseAmosModule;
 
 /**
  * Class PublishedContentsWidget
@@ -137,7 +138,7 @@ class PublishedContentsWidget extends Widget
                         AmosIcons::show('file', ['class' => '']),
                         Yii::$app->urlManager->createUrl($createUrlParams),
                         [
-                            'title' => Yii::t('amoscore', 'Leggi'),
+                            'title' => BaseAmosModule::t('amoscore', 'Leggi'),
                             'class' => 'btn btn-tool-secondary',
                             'target' => '_blank'
                         ],
@@ -157,7 +158,7 @@ class PublishedContentsWidget extends Widget
                         AmosIcons::show('edit', ['class' => 'btn btn-tool-secondary']),
                         Yii::$app->urlManager->createUrl($createUrlParams),
                         [
-                            'title' => Yii::t('amoscore', 'Edit'),
+                            'title' => BaseAmosModule::t('amoscore', 'Edit'),
                             'class' => 'bk-btnEdit',
                             'target' => '_blank'
                         ],
@@ -177,7 +178,7 @@ class PublishedContentsWidget extends Widget
                         AmosIcons::show('delete', ['class' => 'btn btn-tool-secondary']),
                         Yii::$app->urlManager->createUrl($createUrlParams),
                         [
-                            'title' => Yii::t('amoscore', 'Delete'),
+                            'title' => BaseAmosModule::t('amoscore', 'Delete'),
                             'class' => 'bk-btnDelete',
                             'target' => '_blank'
                         ],
@@ -190,7 +191,7 @@ class PublishedContentsWidget extends Widget
 //                        AmosIcons::show('star', ['class' => 'btn btn-tool-secondary']),
 //                                    'javascript:void(0)',
 //                                    [
-//                                        'title' => Yii::t('amoscore', 'Aggiungi/rimuovi preferito'),
+//                                        'title' => BaseAmosModule::t('amoscore', 'Aggiungi/rimuovi preferito'),
 //                                        'class' => 'bk-btnEdit',
 //                                    ],
 //                        false  //TODO replace with true once url is fine  // Verifica i permessi col nuovo metodo nella classe Html

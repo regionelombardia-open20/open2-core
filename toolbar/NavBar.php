@@ -36,9 +36,9 @@ class NavBar extends YiiNavBar
         if (!CurrentUser::getUserIdentity()) {
             $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
         } else {
-            $benvenuto = Yii::t('amoscore', 'Benvenuto utente');
+            $benvenuto = BaseAmosModule::t('amoscore', 'Benvenuto utente');
             if (NULL !== (CurrentUser::getUserProfile())) {
-                $benvenuto = Yii::t('amoscore', '{utente}', array(
+                $benvenuto = BaseAmosModule::t('amoscore', '{utente}', array(
                     'utente' => CurrentUser::getUserProfile()
                 ));
             }
@@ -55,7 +55,7 @@ class NavBar extends YiiNavBar
             if ($hasSlideshow) {
                 $itemsSlideshow = ['<li class="divider"></li>',
                     [
-                        'label' => (!empty($slideshowLabel)) ? $slideshowLabel : Yii::t('amoscore', 'Mostra introduzione'),
+                        'label' => (!empty($slideshowLabel)) ? $slideshowLabel : BaseAmosModule::t('amoscore', 'Mostra introduzione'),
                         'url' => '#',
                         'options' => ['onclick' => new JsExpression('$("#amos-slideshow").modal("show");')]
                     ],
@@ -92,7 +92,7 @@ class NavBar extends YiiNavBar
             $imgAvatar = Html::img($url, [
                 'class' => $roundImage['class'],
                 'style' => "margin-left: " . $roundImage['margin-left'] . "%; margin-top: " . $roundImage['margin-top'] . "px;",
-                'alt' => Yii::t('amoscore', 'Avatar dell\'utente, apertura menu')
+                'alt' => BaseAmosModule::t('amoscore', 'Avatar dell\'utente, apertura menu')
             ]);
 
             $menuItems = [
@@ -104,13 +104,13 @@ class NavBar extends YiiNavBar
                     'items' => [
                         '<li class="dropdown-header col-xs-12"><div class="container-round-img-xs">'.$imgAvatar.'</div><p>' . $benvenuto . '</p></li>',
                         '<li class="divider"></li>',
-                        $this->disablePlatformLinks ? '' : ['label' => \Yii::t('amoscore','Il mio profilo'),
+                        $this->disablePlatformLinks ? '' : ['label' => BaseAmosModule::t('amoscore','Il mio profilo'),
                             'url' => ['/admin/user-profile/update-profile', 'id' => CurrentUser::getUserProfile()->id],
-                            'linkOptions' => ['title' => \Yii::t('amoscore', 'il mio profilo')],
+                            'linkOptions' => ['title' => BaseAmosModule::t('amoscore', 'il mio profilo')],
                         ],
-                        ['label' => \Yii::t('amoscore','Esci'),
+                        ['label' => BaseAmosModule::t('amoscore','Esci'),
                             'url' => ['/site/logout'],
-                            'linkOptions' => ['data-method' => 'post', 'title' => \Yii::t('amoscore', 'esci')]
+                            'linkOptions' => ['data-method' => 'post', 'title' => BaseAmosModule::t('amoscore', 'esci')]
                         ],
                         $this->disablePlatformLinks ? '' : ('<li class="divider"></li>'.
                         '<li class="dropdown-header">'.
@@ -120,17 +120,17 @@ class NavBar extends YiiNavBar
                             BaseAmosModule::t('amoscore', 'Impostazioni').
                         '</li>'.
                         '<li class="divider"></li>'),
-                        $this->disablePlatformLinks ? '' : ['label' => \Yii::t('amoscore', 'Ordinamenti dashboard'),
+                        $this->disablePlatformLinks ? '' : ['label' => BaseAmosModule::t('amoscore', 'Ordinamenti dashboard'),
                             'url' => 'javascript:void(0);',
                             'options' => ['class' => 'enable_order', 'onclick' => new JsExpression('Dashboard.enableDashboardsSortable()')],
-                            'linkOptions' => ['title' => \Yii::t('amoscore', 'Ordinamenti dashboard')]
+                            'linkOptions' => ['title' => BaseAmosModule::t('amoscore', 'Ordinamenti dashboard')]
                         ],
-                        $this->disablePlatformLinks ? '' : ['label' => \Yii::t('amoscore','Gestisci widget'),
+                        $this->disablePlatformLinks ? '' : ['label' => BaseAmosModule::t('amoscore','Gestisci widget'),
                             'url' => ['/dashboard/manager',
                                 'dashboard' => isset(\Yii::$app->controller->module) && \Yii::$app->controller->module->id != 'dashboard' && !in_array(\Yii::$app->controller->module->id, $esclusioni) ? \Yii::$app->controller->module->id : 'primary',
                                 'slide' => 0
                             ],
-                            'linkOptions' => ['title' => \Yii::t('amoscore', 'gestisci widget')]
+                            'linkOptions' => ['title' => BaseAmosModule::t('amoscore', 'gestisci widget')]
                         ],
                         $this->disablePlatformLinks ? '' : (($hasSlideshow) ? '<li class="divider"></li>' : ''),
                         ($hasSlideshow) ? ($itemsSlideshow[1]) : '',
@@ -140,7 +140,7 @@ class NavBar extends YiiNavBar
                             AmosIcons::show('info-outline', [
                                 'class' => 'am-lg',
                             ]).
-                            Yii::t('amoscore', 'Informative').'</li>
+                            BaseAmosModule::t('amoscore', 'Informative').'</li>
                              <li class="divider"></li>'
                             : '',
                         ($hasPrivacyLink) ? $privacyLink : '',
@@ -148,7 +148,7 @@ class NavBar extends YiiNavBar
                         '<li class="divider"></li>',
                         //Impostare nel params dell'applicazione la versione, per esempio
                         // 'versione' => '1.0',
-                        '<li class="dropdown-header pull-right">' . Yii::t('amoscore', 'Versione') . ' ' . ((isset(\Yii::$app->params['versione'])) ? \Yii::$app->params['versione'] : '0.1' ) . '</li>',
+                        '<li class="dropdown-header pull-right">' . BaseAmosModule::t('amoscore', 'Versione') . ' ' . ((isset(\Yii::$app->params['versione'])) ? \Yii::$app->params['versione'] : '0.1' ) . '</li>',
                     ],
                 'options' => ['class' => 'hamburger context-menu hidden-sm hidden-md hidden-lg'],
                 'linkOptions' => ['title' => 'azioni utente']
@@ -173,7 +173,7 @@ class NavBar extends YiiNavBar
                 Html::a(
                     AmosIcons::show('globe-alt')
                     , Url::to(\Yii::$app->params['platform']['frontendUrl']),
-                    ['title' => Yii::t('amoscore', 'frontend'), 'target' => '_blank']
+                    ['title' => BaseAmosModule::t('amoscore', 'frontend'), 'target' => '_blank']
                 ),
                 ['class' => 'toFrontend']
             );

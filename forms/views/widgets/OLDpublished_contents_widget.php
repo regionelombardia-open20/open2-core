@@ -13,6 +13,7 @@
 
 use open20\amos\core\icons\AmosIcons;
 use open20\amos\core\views\AmosGridView;
+use open20\amos\core\module\BaseAmosModule;
 
 $this->registerCss("
     .chage-icon.btn{
@@ -58,8 +59,8 @@ $contentType = str_replace(" ", "-", $widget->modelLabel);
         <span class="title"><?= $widget->modelLabel ?></span>
         <span class="badge badge-panel-heading"><?=$widget->data->totalCount?></span>
         <div class="button-collapse pull-right" data-toggle="collapse" data-target="#collapse-<?= $contentType ?>" >
-            <span class="text-to-change-close visible"><?= Yii::t('amoscore', 'Chiudi') ?></span>
-            <span class="text-to-change-open hidden"><?= Yii::t('amoscore', 'Mostra') ?></span>
+            <span class="text-to-change-close visible"><?= BaseAmosModule::t('amoscore', 'Chiudi') ?></span>
+            <span class="text-to-change-open hidden"><?= BaseAmosModule::t('amoscore', 'Mostra') ?></span>
             <?= AmosIcons::show('caret-up',['class' => 'chage-icon btn btn-secondary']) ?>
         </div>
     </div>
@@ -68,7 +69,7 @@ $contentType = str_replace(" ", "-", $widget->modelLabel);
             <?= AmosGridView::widget([
                 'dataProvider' =>  $widget->data,
                 'summary' => '',
-                'emptyText' => Yii::t('amoscore','Nessun elemento di questa categoria pubblicato dalla community'),
+                'emptyText' => BaseAmosModule::t('amoscore','Nessun elemento di questa categoria pubblicato dalla community'),
                 'columns' => $widget->gridViewColumns
             ]); ?>
         </div>

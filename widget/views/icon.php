@@ -15,6 +15,8 @@
  * @var $asset \yii\web\AssetBundle
  */
 
+use open20\amos\core\module\BaseAmosModule;
+
 $classSpanStr = @join(' ', $widget->classSpan);
 $classSpanLi = @join(' ', $widget->classLi);
 $classSpanA = @join(' ', $widget->classA);
@@ -32,7 +34,7 @@ $dataModule = $widget->moduleName;
     <a data-module = "<?=$dataModule?>" class="<?=$classSpanA?>" href="<?= $url ?>" <?= $target ?>title="<?= $widget->description ?>" role="menuitem" class="sortableOpt1" <?= $widget->dataPjaxZero ?> <?= $widget->attributes ?>>
         <?php endif; ?>
         <?php if (strlen($url) && ($widget->targetUrl == '_blank')): ?>
-            <span class="sr-only"><?= Yii::t('amoscore', 'Questo link verrà aperto in una nuova pagina') ?></span>
+            <span class="sr-only"><?= BaseAmosModule::t('amoscore', 'Questo link verrà aperto in una nuova pagina') ?></span>
         <?php endif; ?>
         <span class="badge"><?= $widget->bulletCount ? $widget->bulletCount : '' ?></span>
         <span class="<?= $classSpanStr ?>">

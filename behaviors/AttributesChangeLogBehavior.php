@@ -21,6 +21,7 @@ use yii\base\Behavior;
 use yii\base\Event;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use open20\amos\core\module\BaseAmosModule;
 
 /**
  * Class AttributesChangeLogBehavior
@@ -239,7 +240,7 @@ class AttributesChangeLogBehavior extends Behavior
                 $class = get_class($owner);
                 $modelsClassname = ModelsClassname::find()->andWhere(['classname' => $class])->one();
                 if ($modelsClassname) {
-                    $name = \Yii::t('app', "Aggiornamento") . ' ' . $modelsClassname->label;
+                    $name = BaseAmosModule::t('app', "Aggiornamento") . ' ' . $modelsClassname->label;
                     $type = self::LOG_UPDATE_MODEL;
                     $user_id = null;
 

@@ -3,6 +3,7 @@
 namespace open20\amos\core\record;
 
 use yii\base\Model;
+use open20\amos\core\module\BaseAmosModule;
 
 /**
  * Class CmsField
@@ -89,7 +90,7 @@ class CmsField extends Model {
             $language = \Yii::$app->language;
         }
 
-        return \Yii::t($category, $message, $params, $language);
+        return BaseAmosModule::t($category, $message, $params, $language);
     }
 
 }

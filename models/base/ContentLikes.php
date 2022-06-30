@@ -3,6 +3,7 @@
 namespace open20\amos\core\models\base;
 
 use Yii;
+use open20\amos\core\module\BaseAmosModule;
 
 /**
  * This is the base-model class for table "content_likes".
@@ -50,18 +51,18 @@ class ContentLikes extends \open20\amos\core\record\Record {
    */
   public function attributeLabels() {
     return [
-      'id' => Yii::t('app', 'ID'),
-      'models_classname_id' => Yii::t('app', 'Models Classname ID'),
-      'content_id' => Yii::t('app', 'Content ID'),
-      'user_id' => Yii::t('app', 'User ID'),
-      'user_ip' => Yii::t('app', 'User Ip'),
-      'likes' => Yii::t('app', 'Likes'),
-      'created_at' => Yii::t('app', 'Created At'),
-      'updated_at' => Yii::t('app', 'Updated At'),
-      'deleted_at' => Yii::t('app', 'Deleted At'),
-      'created_by' => Yii::t('app', 'Created By'),
-      'updated_by' => Yii::t('app', 'Updated By'),
-      'deleted_by' => Yii::t('app', 'Deleted By'),
+      'id' => BaseAmosModule::t('app', 'ID'),
+      'models_classname_id' => BaseAmosModule::t('app', 'Models Classname ID'),
+      'content_id' => BaseAmosModule::t('app', 'Content ID'),
+      'user_id' => BaseAmosModule::t('app', 'User ID'),
+      'user_ip' => BaseAmosModule::t('app', 'User Ip'),
+      'likes' => BaseAmosModule::t('app', 'Likes'),
+      'created_at' => BaseAmosModule::t('app', 'Created At'),
+      'updated_at' => BaseAmosModule::t('app', 'Updated At'),
+      'deleted_at' => BaseAmosModule::t('app', 'Deleted At'),
+      'created_by' => BaseAmosModule::t('app', 'Created By'),
+      'updated_by' => BaseAmosModule::t('app', 'Updated By'),
+      'deleted_by' => BaseAmosModule::t('app', 'Deleted By'),
     ];
   }
 

@@ -28,19 +28,19 @@ $userCanDirectlyCreate = (!isset($permissionSave) || !is_string($permissionSave)
 <div class="manage col-xs-2 nop pull-right">
     <div class="dropdown">
         <a class="manage-menu" data-toggle="dropdown" href="" aria-expanded="true" title="impostazioni widget">
-            <?= AmosIcons::show('settings', ['class' => 'pull-left']) ?> <?= AmosIcons::show('chevron-down', ['class' => 'pull-right']) ?><?= '<span class="sr-only">' . Yii::t('amoscore', 'Manage Menu') . '</span>' ?>
+            <?= AmosIcons::show('settings', ['class' => 'pull-left']) ?> <?= AmosIcons::show('chevron-down', ['class' => 'pull-right']) ?><?= '<span class="sr-only">' . BaseAmosModule::t('amoscore', 'Manage Menu') . '</span>' ?>
         </a>
         <ul class="dropdown-menu pull-right">
             <li>
                 <a href="javascript:void(0);" class="graphic-widget-refresh-btn" data-btnrefresh="<?= $toRefreshSectionId ?>" title="refresh">
-                    <?= AmosIcons::show("rotate-left") ?><?= Yii::t('amoscore', 'Refresh') ?>
+                    <?= AmosIcons::show("rotate-left") ?><?= BaseAmosModule::t('amoscore', 'Refresh') ?>
                 </a>
             </li>
             <?php if (!is_null(Yii::$app->getModule('faq'))): ?>
                 <li>
                     <a href="/faq/faq/index?FaqSearch[faq_widgets_id]=<?= $widget::className() ?>" title="faq">
                         <?= AmosIcons::show("help-outline") ?>  <?= $tClassName::t('app', 'Faq') ?>
-                        <span class="sr-only"><?php echo Yii::t('amoscore', 'Faq') ?></span>
+                        <span class="sr-only"><?php echo BaseAmosModule::t('amoscore', 'Faq') ?></span>
                     </a>
                 </li>
             <?php endif; ?>

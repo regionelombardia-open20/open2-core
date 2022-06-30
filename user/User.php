@@ -19,6 +19,7 @@ use yii\base\NotSupportedException;
 use yii\helpers\ArrayHelper;
 use yii\web\IdentityInterface;
 use open20\amos\core\models\AccessTokens;
+use open20\amos\core\module\BaseAmosModule;
 
 /**
  * Class User
@@ -104,8 +105,8 @@ class User extends Record implements IdentityInterface
                     'enabled' => true,
                     'userAttribute' => 'id',
                     'type' => UserProfile::LOG_TYPE_UPDATE_PROFILE,
-                    'name' => \Yii::t('app','Aggiornamento profilo'),
-                    'description' => \Yii::t('app','Aggiornamento profilo')
+                    'name' => BaseAmosModule::t('app','Aggiornamento profilo'),
+                    'description' => BaseAmosModule::t('app','Aggiornamento profilo')
                 ]
             ];
 

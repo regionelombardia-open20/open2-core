@@ -12,6 +12,7 @@ namespace open20\amos\core\validators;
 
 use yii\validators\Validator;
 use Yii;
+use open20\amos\core\module\BaseAmosModule;
 //use yii\validators\ValidationAsset;
 
 /**
@@ -84,16 +85,16 @@ class StringHtmlValidator extends Validator
             $this->encoding = Yii::$app->charset;
         }
         if ($this->message === null) {
-            $this->message = Yii::t('yii', '{attribute} must be a string.');
+            $this->message = BaseAmosModule::t('yii', '{attribute} must be a string.');
         }
         if ($this->min !== null && $this->tooShort === null) {
-            $this->tooShort = Yii::t('yii', '{attribute} should contain at least {min, number} {min, plural, one{character} other{characters}}.');
+            $this->tooShort = BaseAmosModule::t('yii', '{attribute} should contain at least {min, number} {min, plural, one{character} other{characters}}.');
         }
         if ($this->max !== null && $this->tooLong === null) {
-            $this->tooLong = Yii::t('yii', '{attribute} should contain at most {max, number} {max, plural, one{character} other{characters}}.');
+            $this->tooLong = BaseAmosModule::t('yii', '{attribute} should contain at most {max, number} {max, plural, one{character} other{characters}}.');
         }
         if ($this->length !== null && $this->notEqual === null) {
-            $this->notEqual = Yii::t('yii', '{attribute} should contain {length, number} {length, plural, one{character} other{characters}}.');
+            $this->notEqual = BaseAmosModule::t('yii', '{attribute} should contain {length, number} {length, plural, one{character} other{characters}}.');
         }
     }
 

@@ -11,7 +11,6 @@
         "php": ">=5.4.0",
         "2amigos/yii2-google-maps-library": "^1.0.2",
         "2amigos/yii2-tinymce-widget" : "~1.1",
-        "npm-asset/tinymce-mention": "^4.0",
         "open20/amos-audit": ">=1.0",
         "open20/amos-utility": "^1.6.0",
         "bower-asset/bootstrap-tour": "*",

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Aria S.p.A.
  * OPEN 2.0
@@ -18,6 +17,7 @@ use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
+use open20\amos\admin\AmosAdmin;
 
 /**
  * Class M2MWidgetControllerTrait
@@ -74,12 +74,12 @@ trait M2MWidgetControllerTrait
      * @var string $targetUrlInvitation
      */
     private $targetUrlInvitation = '';
-    
+
     /**
      * @var bool $externalInvitationEnabled If true enable the invitation of external users.
      */
     public $externalInvitationEnabled = false;
-    
+
     /**
      * @var array $targetUrlParams
      */
@@ -131,8 +131,8 @@ trait M2MWidgetControllerTrait
         $this->trigger(M2MEventsEnum::EVENT_BEFORE_ASSOCIATE_ONE2MANY);
 
         /** @var ActiveRecord $model */
-        $startObj = Yii::createObject($this->startObjClassName);
-        $model = $startObj->findOne($id);
+        $startObj  = Yii::createObject($this->startObjClassName);
+        $model     = $startObj->findOne($id);
         $targetKey = $this->mmTargetKey;
 
         /** @var ActiveRecord $targetObjClassName */
@@ -152,24 +152,25 @@ trait M2MWidgetControllerTrait
                         $model->save(false);
 
                         // Force Auto confirm for facilitator enabled?
-                        if ((isset(\Yii::$app->params['forceAutoConfirmForFacilitator']))
-                            && (\Yii::$app->params['forceAutoConfirmForFacilitator'] == true)) {
-                            \Yii::$app->runAction('/admin/user-contact/connect', [
+                        if ((isset(\Yii::$app->params['forceAutoConfirmForFacilitator'])) && (\Yii::$app->params['forceAutoConfirmForFacilitator']
+                            == true)) {
+                            \Yii::$app->runAction('/'.AmosAdmin::getModuleName().'/user-contact/connect',
+                                [
                                 'contactId' => $id,
                                 'userId' => $target->user_id,
                                 'accept' => 1
                             ]);
                         }
-
                     }
                 }
             }
-            
-            $event = new Event;
+
+            $event         = new Event;
             $event->sender = $model;
             $this->trigger(M2MEventsEnum::EVENT_AFTER_ASSOCIATE_ONE2MANY, $event);
 
-            if (!Yii::$app->getRequest()->getIsAjax() && (!isset($post['fromGenericSearch']) || (isset($post['fromGenericSearch']) && !$post['fromGenericSearch']))) {
+            if (!Yii::$app->getRequest()->getIsAjax() && (!isset($post['fromGenericSearch']) || (isset($post['fromGenericSearch'])
+                && !$post['fromGenericSearch']))) {
                 $this->redirect($this->getRedirectArray($id));
             }
         }
@@ -202,23 +203,23 @@ trait M2MWidgetControllerTrait
 
         /** @var ActiveRecord $targetObjClassName */
         $targetObjClassName = $this->targetObjClassName;
-        $startKey = $this->mmStartKey;
-        $targetKey = $this->mmTargetKey;
+        $startKey           = $this->mmStartKey;
+        $targetKey          = $this->mmTargetKey;
         /** @var ActiveRecord $mmTableName */
-        $mmTableName = $this->mmTableName;
+        $mmTableName        = $this->mmTableName;
 
         /** @var ActiveRecord $model */
         $startObj = Yii::createObject($this->startObjClassName);
-        $model = $startObj->findOne($id);
+        $model    = $startObj->findOne($id);
 
-        $event = new Event();
+        $event         = new Event();
         $event->sender = [
             'startObj' => $model
         ];
         $this->trigger(M2MEventsEnum::EVENT_AFTER_FIND_START_OBJ_M2M, $event);
 
         if (Yii::$app->request->isPost) {
-            $post = Yii::$app->request->post();
+            $post         = Yii::$app->request->post();
             $model->load($post);
             $notInTargets = [];
             if (isset($post['selected'])) {
@@ -237,15 +238,15 @@ trait M2MWidgetControllerTrait
                              */
                             $intercect = $this->getAssociaM2mIntercect($model->id, $target->id);
                             if (is_null($intercect)) {
-                                $event = new Event();
-                                $event->sender = [
+                                $event                 = new Event();
+                                $event->sender         = [
                                     'startObj' => $model,
                                     'targetObj' => $target
                                 ];
                                 $this->trigger(M2MEventsEnum::EVENT_BEFORE_INTERCECT_M2M, $event);
                                 /** @var ActiveRecord $intercect */
-                                $intercect = new $mmTableName();
-                                $intercect->$startKey = $model->id;
+                                $intercect             = new $mmTableName();
+                                $intercect->$startKey  = $model->id;
                                 $intercect->$targetKey = $target->id;
                                 if (isset($this->mmTableAttributesDefault)) {
                                     foreach ($this->mmTableAttributesDefault as $field => $value) {
@@ -255,29 +256,49 @@ trait M2MWidgetControllerTrait
                                 $intercect->save(false);
                                 $event->sender['intercect'] = $intercect;
                                 $this->trigger(M2MEventsEnum::EVENT_AFTER_INTERCECT_M2M, $event);
+                            } else {
+                                if (isset($this->mmTableAttributesDefault) && isset($this->mmTableAttributesDefault['role'])
+                                    && isset($this->mmTableAttributesDefault['status']) && $intercect->hasAttribute('status')
+                                    && $intercect->hasAttribute('role') && $intercect->role == 'GUEST' && $intercect->status
+                                    == 'GUEST') {
+                                    $event         = new Event();
+                                    $event->sender = [
+                                        'startObj' => $model,
+                                        'targetObj' => $target
+                                    ];
+                                    $this->trigger(M2MEventsEnum::EVENT_BEFORE_INTERCECT_M2M, $event);
+                                    foreach ($this->mmTableAttributesDefault as $field => $value) {
+                                        $intercect->$field = $value;
+                                    }
+                                    $intercect->save(false);
+                                    $event->sender['intercect'] = $intercect;
+                                    $this->trigger(M2MEventsEnum::EVENT_AFTER_INTERCECT_M2M, $event);
+                                } else {
+                                    $notInTargets[] = $target->id;
+                                }
                             }
-                            $notInTargets[] = $target->id;
                         }
                     }
                 }
             }
             if (!$this->isCustomQuery()) {
                 $targets = $mmTableName::find()->andWhere([$startKey => $id])
-                    ->andWhere([$this->mmStartKey => $model->id])
-                    ->andWhere(['not in', $this->mmTargetKey, $notInTargets])->all();
+                        ->andWhere([$this->mmStartKey => $model->id])
+                        ->andWhere(['not in', $this->mmTargetKey, $notInTargets])->all();
                 foreach ($targets as $singleTarget) {
                     $singleTarget->delete();
                 }
             }
 
-            $event = new Event();
+            $event         = new Event();
             $event->sender = [
                 'notInTargets' => $notInTargets
             ];
             $this->trigger(M2MEventsEnum::EVENT_AFTER_ASSOCIATE_M2M, $event);
 
             $post = Yii::$app->getRequest()->post();
-            if (!Yii::$app->getRequest()->getIsAjax() && (!isset($post['fromGenericSearch']) || (isset($post['fromGenericSearch']) && !$post['fromGenericSearch']))) {
+            if (!Yii::$app->getRequest()->getIsAjax() && (!isset($post['fromGenericSearch']) || (isset($post['fromGenericSearch'])
+                && !$post['fromGenericSearch']))) {
                 $this->redirect($this->getRedirectArray($id));
             }
         }
@@ -307,7 +328,7 @@ trait M2MWidgetControllerTrait
         /** @var ActiveRecord $mmTableName */
         $mmTableName = $this->mmTableName;
         /** @var ActiveQuery $query */
-        $query = $mmTableName::find();
+        $query       = $mmTableName::find();
         $query->andWhere([$this->mmStartKey => $startId])
             ->andWhere([$this->mmTargetKey => $targetId]);
         if (is_array($this->mmTableAdditionalAttributesToSearch) && !empty($this->mmTableAdditionalAttributesToSearch)) {
@@ -329,10 +350,10 @@ trait M2MWidgetControllerTrait
 
         /** @var ActiveRecord $targetObjClassName */
         $targetObjClassName = $this->targetObjClassName;
-        $startKey = $this->mmStartKey;
-        $targetKey = $this->mmTargetKey;
+        $startKey           = $this->mmStartKey;
+        $targetKey          = $this->mmTargetKey;
         /** @var ActiveRecord $mmTableName */
-        $mmTableName = $this->mmTableName;
+        $mmTableName        = $this->mmTableName;
 
         /** @var ActiveRecord $model */
         $model = $this->findModel($id);
@@ -346,11 +367,11 @@ trait M2MWidgetControllerTrait
                     $target = $targetObjClassName::findOne(['id' => Yii::$app->request->post()['selected'][$index]]);
                     if (!is_null($target)) {
                         $intercect = $mmTableName::find()->andWhere([$this->mmStartKey => $model->id])
-                            ->andWhere([$this->mmTargetKey => $target->id])->one();
+                                ->andWhere([$this->mmTargetKey => $target->id])->one();
                         if (is_null($intercect)) {
                             /** @var ActiveRecord $intercect */
-                            $intercect = new $mmTableName();
-                            $intercect->$startKey = $model->id;
+                            $intercect             = new $mmTableName();
+                            $intercect->$startKey  = $model->id;
                             $intercect->$targetKey = $target->id;
                             if (isset($this->mmTableAttributesDefault)) {
                                 foreach ($this->mmTableAttributesDefault as $field => $value) {
@@ -365,8 +386,8 @@ trait M2MWidgetControllerTrait
             }
             if (!$this->isCustomQuery()) {
                 $targets = $mmTableName::find()->andWhere([$startKey => $id])
-                    ->andWhere([$this->mmStartKey => $model->id])
-                    ->andWhere(['not in', $this->mmTargetKey, $notInTargets])->all();
+                        ->andWhere([$this->mmStartKey => $model->id])
+                        ->andWhere(['not in', $this->mmTargetKey, $notInTargets])->all();
                 foreach ($targets as $singleTarget) {
                     $singleTarget->delete();
                 }
@@ -421,14 +442,17 @@ trait M2MWidgetControllerTrait
     }
 
     /**
-     * @param $id
-     * @param $targetId
+     *
+     * @param type $id
+     * @param type $targetId
+     * @param type $redirectUrl
+     * @return type
      */
-    public function actionEliminaM2m($id, $targetId)
+    public function actionEliminaM2m($id, $targetId, $redirectAction = null)
     {
         $this->trigger(M2MEventsEnum::EVENT_BEFORE_DELETE_M2M);
 
-        $mmTableClassName = "\\" . $this->mmTableName;
+        $mmTableClassName = "\\".$this->mmTableName;
 
         /** @var ActiveRecord $model */
         $model = $this->findModel($id);
@@ -440,11 +464,14 @@ trait M2MWidgetControllerTrait
 
                 $this->trigger(M2MEventsEnum::EVENT_AFTER_DELETE_M2M);
 
+                if(!empty($redirectAction)){
+                    return $this->redirect($redirectAction);
+                } else {
                 $this->redirect($this->getRedirectArray($id));
+                }
             }
         }
     }
-
 
     /**
      * @param $id
@@ -486,9 +513,9 @@ trait M2MWidgetControllerTrait
     protected function genericFindModel($ids)
     {
         /** @var ActiveRecord $mmTableName */
-        $mmTableClassName = "\\" . $this->mmTableName;
+        $mmTableClassName = "\\".$this->mmTableName;
         /** @var ActiveRecord $mmTableClassName */
-        if (($model = $mmTableClassName::findOne($ids)) !== null) {
+        if (($model            = $mmTableClassName::findOne($ids)) !== null) {
             $this->model = $model;
             return $model;
         } else {
@@ -735,7 +762,7 @@ trait M2MWidgetControllerTrait
     {
         $this->targetUrlParams = $targetUrlParams;
     }
-    
+
     /**
      * @return array
      */

@@ -7,6 +7,7 @@
  * @package    open20\amos\core\giiamos\crud
  * @category   CategoryName
  */
+use open20\amos\core\module\BaseAmosModule;
 ?>
 <style>
     [contentEditable=false]:empty:not(:focus):before {
@@ -215,7 +216,7 @@ $this->registerJs('
 //            pr($itemsField); die();
                 ?>
 
-                <?= Html::tag('label', Yii::t('giiamos', 'Elenco campi')); ?>
+                <?= Html::tag('label', BaseAmosModule::t('giiamos', 'Elenco campi')); ?>
 
                 <?=
                 Sortable::widget([
@@ -254,7 +255,7 @@ $this->registerJs('
                 ],]);
             ?>
 
-            <?= open20\amos\core\module\BaseAmosModule::t('giiamos', '&Egrave; obbligatorio scegliere il model per poter impostare la form'); ?>
+            <?= BaseAmosModule::t('giiamos', '&Egrave; obbligatorio scegliere il model per poter impostare la form'); ?>
 
 
             <?php
@@ -278,9 +279,9 @@ $this->registerJs('
 //                        'class' => 'alert-info',
 //                    ],]);
 //
-//                echo Yii::t('giiamos', '&Egrave; necessario selezionare Advanced template se si aggiungono relation fields');
+//                echo BaseAmosModule::t('giiamos', '&Egrave; necessario selezionare Advanced template se si aggiungono relation fields');
 //                \yii\bootstrap\Alert::end();
-//                echo Html::tag('label', Yii::t('giiamos', 'Elenco campi relazioni'));
+//                echo Html::tag('label', BaseAmosModule::t('giiamos', 'Elenco campi relazioni'));
 //            pr($generator->getRelationColumnNames());
             $index = 0;
             foreach ($generator->getRelationColumnNames() as $key => $values) {
@@ -293,7 +294,7 @@ $this->registerJs('
                 //                $generator->relFiledsDynamic = [$key => []];
                 //            pr($generator->relFiledsDynamic); die();
 
-                echo Html::tag('label', \Yii::t('giiamos', 'Elenco campi ' . $key));
+                echo Html::tag('label', BaseAmosModule::t('giiamos', 'Elenco campi ' . $key));
 
                 echo $form->field($generator, 'relFiledsDynamic[' . $key . '][fields]')->widget(Select2::classname(), [
                     'data' => $itemsRelField,

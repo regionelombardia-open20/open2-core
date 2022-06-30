@@ -11,6 +11,7 @@
 
 use yii\widgets\Breadcrumbs;
 use open20\amos\core\helpers\Html;
+use open20\amos\core\module\BaseAmosModule;
 
 $urlCorrente = yii\helpers\Url::current();
 $posizioneEsclusione = strpos($urlCorrente, '?');
@@ -26,7 +27,7 @@ $urlFaq = Yii::$app->getUrlManager()->createUrl(['/faq/faq', 'FaqSearch[rotte]' 
         <?=
         Breadcrumbs::widget([
             'homeLink' => [
-                'label' => Yii::t('amoscore', 'Dashboard'),
+                'label' => BaseAmosModule::t('amoscore', 'Dashboard'),
                 'url' => Yii::$app->homeUrl,
                 'encode' => false
             ],

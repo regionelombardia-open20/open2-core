@@ -4,6 +4,7 @@ namespace open20\amos\core\validators;
 
 use yii\validators\Validator;
 use Exception;
+use open20\amos\core\module\BaseAmosModule;
 
 /**
  * Phone validator class that validates phone numbers
@@ -34,14 +35,14 @@ class PhoneValidator extends Validator
                 $valid = $this->verifyNumber($newValue);
             } else {
                 $this->addError($model, $attribute,
-                    \Yii::t('amoscore',
+                    BaseAmosModule::t('amoscore',
                         'Phone number does not seem to be a valid phone number. Do you have to add +xx or 00 as prefix.'));
             }
         } else {
             $valid = $this->verifyNumber($newValue);
             if ($valid == false) {
                 $this->addError($model, $attribute,
-                    \Yii::t('amoscore', 'Phone number does not seem to be a valid phone number'));
+                    BaseAmosModule::t('amoscore', 'Phone number does not seem to be a valid phone number'));
             }
         }
 
@@ -68,9 +69,9 @@ class PhoneValidator extends Validator
 
         $nameField = trim(strip_tags($model->getAttributeLabel($attribute)));
 
-        $error_msg = \Yii::t('amoscore', 'Numero di telefono non corretto, caratteri ammessi: 0123456789 ( + - / )');
+        $error_msg = BaseAmosModule::t('amoscore', 'Numero di telefono non corretto, caratteri ammessi: 0123456789 ( + - / )');
 
-        $error_msg_required = \Yii::t('amoscore', "$nameField non può essere vuoto");
+        $error_msg_required = BaseAmosModule::t('amoscore', "$nameField non può essere vuoto");
 
         return <<<JS
 

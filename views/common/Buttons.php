@@ -19,6 +19,7 @@ use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use open20\amos\core\module\BaseAmosModule;
 
 /**
  * Class Buttons
@@ -95,8 +96,8 @@ class Buttons extends BaseObject
             if (isset($options['hide']) && $options['hide']) {
                 return '';
             }
-            $title = Yii::t('amoscore', 'Leggi');
-            $icon = AmosIcons::show('file') . '<span class="sr-only">' . Yii::t('amoscore', 'Leggi') . '</span>';
+            $title = BaseAmosModule::t('amoscore', 'Leggi');
+            $icon = AmosIcons::show('file') . '<span class="sr-only">' . BaseAmosModule::t('amoscore', 'Leggi') . '</span>';
             $label = ArrayHelper::remove($options, 'label', ($this->_isDropdown ? $icon . ' ' . $title : $icon));
             $viewUrl = $url;
             if (isset($options['url']) && is_array($options['url'])) {
@@ -132,8 +133,8 @@ class Buttons extends BaseObject
             if (isset($options['hide']) && $options['hide']) {
                 return '';
             }
-            $title = Yii::t('amoscore', 'Modifica');
-            $icon = AmosIcons::show('edit') . '<span class="sr-only">' . Yii::t('amoscore', 'Modifica') . '</span>';
+            $title = BaseAmosModule::t('amoscore', 'Modifica');
+            $icon = AmosIcons::show('edit') . '<span class="sr-only">' . BaseAmosModule::t('amoscore', 'Modifica') . '</span>';
             $label = ArrayHelper::remove($options, 'label', ($this->_isDropdown ? $icon . ' ' . $title : $icon));
             $updateUrl = $url;
             if (isset($options['url']) && is_array($options['url'])) {
@@ -169,8 +170,8 @@ class Buttons extends BaseObject
             if (isset($options['hide']) && $options['hide']) {
                 return '';
             }
-            $title = Yii::t('amoscore', 'Cancella');
-            $icon = AmosIcons::show('delete') . '<span class="sr-only">' . Yii::t('amoscore', 'Cancella') . '</span>';
+            $title = BaseAmosModule::t('amoscore', 'Cancella');
+            $icon = AmosIcons::show('delete') . '<span class="sr-only">' . BaseAmosModule::t('amoscore', 'Cancella') . '</span>';
             $label = ArrayHelper::remove($options, 'label', ($this->_isDropdown ? $icon . ' ' . $title : $icon));
             $deleteUrl = $url;
             if (isset($options['url']) && is_array($options['url'])) {
@@ -186,7 +187,7 @@ class Buttons extends BaseObject
             $options = ArrayHelper::merge(
                 [
                     'title' => $title,
-                    'data-confirm' => Yii::t('amoscore', 'Sei sicuro di voler cancellare questo elemento?'),
+                    'data-confirm' => BaseAmosModule::t('amoscore', 'Sei sicuro di voler cancellare questo elemento?'),
                     'data-method' => 'post',
                     'data-pjax' => '0'
                 ],

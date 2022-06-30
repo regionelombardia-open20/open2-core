@@ -123,7 +123,6 @@ class M2MWidget extends Widget
     public $btnAssociaId = '';
     public $btnAssociaLabel = '';
     public $btnAssociaClass = 'btn btn-primary';
-    public $btnAssociaConfirm = null;
     public $btnAdditionalAssociateLabel = '';
     public $btnAdditionalAssociateClass = 'btn btn-primary';
     public $forceListRender = false;
@@ -290,39 +289,13 @@ class M2MWidget extends Widget
 
     protected function throwErrorMessage($field)
     {
-        return \Yii::t('amoscore', 'Configurazione widget non corretta, {campo} mancante', [
+        return BaseAmosModule::t('amoscore', 'Configurazione widget non corretta, {campo} mancante', [
             'campo' => $field
         ]);
     }
 
     public function run()
     {
-        $js = <<<JS
-/**
- *
- * Bug: Html a with data-confirm inside a form should not submit a form #17624
- *
- */
-$(document).on('click', 'a[data-url-confirm]', function (e){
-        var link                = $(this);
-        var address             = link.attr('href');
-
-        krajeeDialog.confirm($(e.currentTarget).data('urlConfirm'),function (result)
-        {
-            if(result){
-                window.location.href = address;
-                return true;
-            }else{
-                return true;
-            }
-        });
-        e.preventDefault();
-        return false;
-    }
-);
-JS;
-        $this->getView()->registerJs($js);
-        
         $content = preg_replace_callback("/{\\w+}/", function ($matches) {
             $content = $this->renderSection($matches[0]);
 
@@ -369,8 +342,8 @@ JS;
     {
         $retVal = '';
         $buttons = '';
-        $btnAssociaLabel = ($this->btnAssociaLabel == '') ? Yii::t('amoscore', 'Associa') : $this->btnAssociaLabel;
-        $btnInvitationLabel = ($this->btnInvitationLabel == '') ? Yii::t('amoscore', 'Add User') : $this->btnInvitationLabel;
+        $btnAssociaLabel = ($this->btnAssociaLabel == '') ? BaseAmosModule::t('amoscore', 'Associa') : $this->btnAssociaLabel;
+        $btnInvitationLabel = ($this->btnInvitationLabel == '') ? BaseAmosModule::t('amoscore', 'Add User') : $this->btnInvitationLabel;
 
         if ($this->createAssociaButtonsEnabled) {
             if (!$this->disableCreateButton) {
@@ -413,7 +386,6 @@ JS;
                     $buttons .= Html::a($btnAssociaLabel, $url, [
                         'class' => $this->btnAssociaClass,
                         'title' => $btnAssociaLabel,
-                        'data-url-confirm' => $this->btnAssociaConfirm,
                         'id' => $associateBtnId
                     ]);
 
@@ -565,8 +537,9 @@ JS;
     {
         $retVal = '';
         $buttons = '';
+        $buttonsAssocia = '';
 
-        $btnAssociaLabel = ($this->btnAssociaLabel == '') ? Yii::t('amoscore', 'Associa') : $this->btnAssociaLabel;
+        $btnAssociaLabel = ($this->btnAssociaLabel == '') ? BaseAmosModule::t('amoscore', 'Associa') : $this->btnAssociaLabel;
 
         if ($this->createAssociaButtonsEnabled) {
             $confirm = $this->getConfirm();
@@ -599,7 +572,6 @@ JS;
                 $buttons .= Html::a($btnAssociaLabel, $url, [
                     'class' => $this->btnAssociaClass,
                     'title' => $btnAssociaLabel,
-                    'data-url-confirm' => $this->btnAssociaConfirm,
                     'id' => $associateBtnId
                 ]);
 
@@ -836,7 +808,7 @@ JS;
                     return Html::a(
                         AmosIcons::show('edit'),
                         Yii::$app->urlManager->createUrl(['/' . $moduleClassName::getModuleName() . '/' . $this->targetUrlController . '/manage-m2m-attributes', 'id' => $this->model['id'], 'targetId' => $functionModel->id]), [
-                        'title' => Yii::t('amoscore', 'Gestisci attributi'),
+                        'title' => BaseAmosModule::t('amoscore', 'Gestisci attributi'),
                         'id' => self::gestisciAttributiButtonId(),
                         'class' => 'btn btn-tools-secondary'
                     ]);
@@ -875,8 +847,8 @@ JS;
                         AmosIcons::show('delete'),
                         $urlDelete,
                         [
-                            'title' => Yii::t('amoscore', 'Elimina associazione'),
-                            'data-confirm' => Yii::t('amoscore', 'Sei sicuro di voler cancellare questo elemento?'),
+                            'title' => BaseAmosModule::t('amoscore', 'Elimina associazione'),
+                            'data-confirm' => BaseAmosModule::t('amoscore', 'Sei sicuro di voler cancellare questo elemento?'),
                             'class' => 'btn btn-danger-inverse'
                         ]
                     );
@@ -1050,7 +1022,7 @@ JS;
                 '/' . $moduleClassName::getModuleName() . '/' . $targetUrlController . '/annulla-m2m',
                 'id' => $model['id'],
                 'action' => Yii::$app->controller->action->id
-            ]), ['class' => 'btn btn-secondary', 'title' => Yii::t('amoscore', 'Annulla')]);
+            ]), ['class' => 'btn btn-secondary', 'title' => BaseAmosModule::t('amoscore', 'Annulla')]);
         }
         return $button;
     }

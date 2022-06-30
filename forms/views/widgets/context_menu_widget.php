@@ -16,16 +16,17 @@
  */
 
 use open20\amos\core\icons\AmosIcons;
+use open20\amos\core\module\BaseAmosModule;
 
 ?>
 <?php if ($atLeastOnePermission): ?>
     <div class="manage <?= $mainDivClasses ?>">
         <div class="dropdown">
             <a class="manage-menu" data-toggle="dropdown" href="" aria-expanded="true"
-               title="<?= Yii::t('amoscore', 'Menu contestuale') ?>">
+               title="<?= BaseAmosModule::t('amoscore', 'Menu contestuale') ?>">
                 <?= AmosIcons::show('settings', ['class' => 'pull-left']) ?>
                 <?= AmosIcons::show('chevron-down', ['class' => 'pull-right']) ?>
-                <span class="sr-only"><?= Yii::t('amoscore', 'Menu contestuale') ?></span>
+                <span class="sr-only"><?= BaseAmosModule::t('amoscore', 'Menu contestuale') ?></span>
             </a>
             <ul class="dropdown-menu pull-right">
                 <?php foreach ($buttons as $button): ?>

@@ -176,7 +176,7 @@ class CloseSaveButtonWidget extends Widget
             return '';
         }
         $urlClose = Url::previous();
-        $closeButtonLabel = Yii::t('amoscore', 'Annulla');
+        $closeButtonLabel = BaseAmosModule::t('amoscore', 'Annulla');
         if (isset($this->urlClose)) {
             $urlClose = $this->urlClose;
         }

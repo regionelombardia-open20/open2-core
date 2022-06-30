@@ -40,6 +40,7 @@ use open20\amos\core\forms\CloseSaveButtonWidget;
 use yii\helpers\Url;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
+use open20\amos\core\module\BaseAmosModule;
 
 /**
 * @var yii\web\View $this
@@ -92,7 +93,7 @@ use yii\helpers\ArrayHelper;
 
 
         <?= "<?php " ?>  $itemsTab[] = [
-        'label' => Yii::t('<?= $generator->messageCategory ?>', '<?= $tabName ?>'),
+        'label' => BaseAmosModule::t('<?= $generator->messageCategory ?>', '<?= $tabName ?>'),
         'content' => $this->blocks['<?= $tabNameSanitize ?>'],
         ];
         <?= " ?>" ?>

@@ -69,7 +69,7 @@ HTML;
         parent::init();
 
         if($this->showPageSummary) {
-            $this->summary = Yii::t('amoscore', 'Risultati visualizzati {count} - Risultati da {begin} a {end} su un totale di {totalCount} - Pagina {page} di {pageCount}');
+            $this->summary = BaseAmosModule::t('amoscore', 'Risultati visualizzati {count} - Risultati da {begin} a {end} su un totale di {totalCount} - Pagina {page} di {pageCount}');
         }
         else {
             $this->summary = '';

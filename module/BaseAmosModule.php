@@ -91,7 +91,7 @@ abstract class BaseAmosModule extends BaseModule implements ModuleInterface
         if (isset(\Yii::$app->locales)) {
             $language = \Yii::$app->locales[\Yii::$app->language];
         }
-        return Yii::t($category, $message, $params, $language);
+        return \Yii::t($category, $message, $params, $language);
     }
 
     /**
@@ -129,7 +129,7 @@ abstract class BaseAmosModule extends BaseModule implements ModuleInterface
     public static function tOld($category, $message, $params = [],
                                 $language = null)
     {
-        return Yii::t('amos/'.static::getModuleName().'/'.$category, $message,
+        return BaseAmosModule::t('amos/'.static::getModuleName().'/'.$category, $message,
                 $params, $language);
     }
 

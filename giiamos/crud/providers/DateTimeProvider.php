@@ -11,6 +11,7 @@
 
 namespace open20\amos\core\giiamos\crud\providers;
 
+
 class DateTimeProvider extends \schmunk42\giiant\generators\crud\providers\extensions\DateTimeProvider
 {
 
@@ -25,7 +26,7 @@ class DateTimeProvider extends \schmunk42\giiant\generators\crud\providers\exten
                 $this->generator->requires[] = 'kartik\widgets\DateTimePicker;';
                 /*return <<<EOS
 \$form->field(\$model, '{$column->name}')->widget(DateTimePicker::classname(), [
-	'options' => ['placeholder' => Yii::t('{$this->generator->messageCategory}','Inserisci un orario ...')],
+	'options' => ['placeholder' => BaseAmosModule::t('{$this->generator->messageCategory}','Inserisci un orario ...')],
 	'pluginOptions' => [
 		'autoclose' => true
 	]
@@ -33,7 +34,7 @@ class DateTimeProvider extends \schmunk42\giiant\generators\crud\providers\exten
 EOS;*/
                 return <<<EOS
 \$form->field(\$model, '{$column->name}')->widget(DateTimePicker::classname(), [
-	'options' => ['placeholder' => Yii::t('amoscore','Set time')],
+	'options' => ['placeholder' => BaseAmosModule::t('amoscore','Set time')],
 	'pluginOptions' => [
 		'autoclose' => true
 	]

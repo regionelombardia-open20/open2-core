@@ -18,6 +18,7 @@ use yii\base\InvalidConfigException;
 use yii\widgets\ActiveForm;
 use kartik\base\InputWidget;
 use kartik\field\FieldRangeAsset;
+use open20\amos\core\module\BaseAmosModule;
 
 class AmosDatePicker extends \kartik\date\DatePicker {
 
@@ -53,8 +54,8 @@ class AmosDatePicker extends \kartik\date\DatePicker {
         $icon = '<span class="glyphicon glyphicon-' . ArrayHelper::remove($options, 'icon', $icon) . '"></span>';
         $title = ArrayHelper::getValue($options, 'title', '');
         if ($title !== false && empty($title)) {
-            $options['title'] = ($type === 'picker') ? Yii::t('kvdate', 'Select date') :
-                    Yii::t('kvdate', 'Clear field');
+            $options['title'] = ($type === 'picker') ? BaseAmosModule::t('kvdate', 'Select date') :
+                    BaseAmosModule::t('kvdate', 'Clear field');
         }
         return Html::tag('span', $icon, $options);
     }

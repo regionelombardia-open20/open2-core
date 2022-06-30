@@ -17,6 +17,7 @@ namespace <?= $data_obj->ns_4class ?>;
 use open20\amos\core\widget\WidgetGraphic;
 use Yii;
 use yii\helpers\ArrayHelper;
+use open20\amos\core\module\BaseAmosModule;
 
 class WidgetGraphics<?= $data_obj->widgetName?> extends WidgetGraphic {
 
@@ -27,8 +28,8 @@ class WidgetGraphics<?= $data_obj->widgetName?> extends WidgetGraphic {
     public function init() {
         parent::init();
 
-        $this->setLabel(\Yii::t('<?= $data_obj->ns_4class; ?>' , '<?= $data_obj->widgetLabel; ?>'));
-        $this->setDescription(Yii::t('<?= $data_obj->ns_4class; ?>', '<?= $data_obj->widgetDescription ?>'));
+        $this->setLabel(BaseAmosModule::t('<?= $data_obj->ns_4class; ?>' , '<?= $data_obj->widgetLabel; ?>'));
+        $this->setDescription(BaseAmosModule::t('<?= $data_obj->ns_4class; ?>', '<?= $data_obj->widgetDescription ?>'));
     }
 
 }

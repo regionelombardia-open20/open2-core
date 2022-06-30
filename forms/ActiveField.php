@@ -17,6 +17,7 @@ use yii\bootstrap\ActiveField as YiiActiveField;
 use yii\helpers\ArrayHelper;
 use yii\helpers\BaseHtml;
 use yii\db\ActiveRecord;
+use open20\amos\core\module\BaseAmosModule;
 
 /**
  * Class ActiveField
@@ -325,7 +326,7 @@ JS;
                                             $this->labelTranslationField = str_replace($templateTranslationField,
                                                 $translationLabelField, $this->labelTranslationField);                                      
                                         } else {
-                                            $this->labelTranslationField = ' (<span class="label_translation am am-translate" title="'.\Yii::t("amostranslation",
+                                            $this->labelTranslationField = ' (<span class="label_translation am am-translate" title="'.BaseAmosModule::t("amostranslation",
                                                     "Testo traducibile direttamente scrivendo in questo campo, tradurrai nella lingua selezionata, la visualizzazione attuale è in").' '.strtoupper(substr(\Yii::$app->language,
                                                         0, 2)).'"> - '.strtoupper(substr(\Yii::$app->language, 0, 2)).'</span>)';
                                         }

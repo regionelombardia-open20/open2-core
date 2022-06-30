@@ -11,6 +11,7 @@
 
 use open20\amos\core\icons\AmosIcons;
 use yii\helpers\Html;
+use open20\amos\core\module\BaseAmosModule;
 
 //Pickup assistance params
 $assistance = isset(\Yii::$app->params['assistance']) ? \Yii::$app->params['assistance'] : [];
@@ -24,8 +25,8 @@ $mailAddress = isset($assistance['email']) ? $assistance['email'] : (isset(\Yii:
     <div class="assistance">
         <a href="<?=\Yii::$app->params['assistance-url']?>">
             <?=AmosIcons::show('assistance', ['class' => 'icon-assistance'], 'dash')?>
-            <span><?=Yii::t('amoscore','Hai bisogno di assistenza?')?></span>
-            <span class="sr-only"><?=Yii::t('amoscore','Verrà aperta una nuova finestra')?></span>
+            <span><?=BaseAmosModule::t('amoscore','Hai bisogno di assistenza?')?></span>
+            <span class="sr-only"><?=BaseAmosModule::t('amoscore','Verrà aperta una nuova finestra')?></span>
         </a>
     </div>
 <?php elseif (isset(Yii::$app->modules['assistance-request'])): ?>
@@ -35,8 +36,8 @@ $mailAddress = isset($assistance['email']) ? $assistance['email'] : (isset(\Yii:
         <div class="assistance">
             <a href="<?= $isMail ? 'mailto:' . $mailAddress : (isset($assistance['url'])? $assistance['url'] : '') ?>" target="_blank">
                 <?=AmosIcons::show('assistance', ['class' => 'icon-assistance'], 'dash')?>
-                <span><?=Yii::t('amoscore', 'Hai bisogno di assistenza?');?></span>
-                <span class="sr-only"><?=Yii::t('amoscore', 'Verrà aperta una nuova finestra')?></span>
+                <span><?=BaseAmosModule::t('amoscore', 'Hai bisogno di assistenza?');?></span>
+                <span class="sr-only"><?=BaseAmosModule::t('amoscore', 'Verrà aperta una nuova finestra')?></span>
             </a>
         </div>
     <?php endif; ?>

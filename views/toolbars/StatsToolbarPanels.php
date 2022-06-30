@@ -13,6 +13,7 @@ namespace open20\amos\core\views\toolbars;
 
 use open20\amos\core\icons\AmosIcons;
 use Yii;
+use open20\amos\core\module\BaseAmosModule;
 
 class StatsToolbarPanels
 {
@@ -26,7 +27,7 @@ class StatsToolbarPanels
         return array('comments' => new CommentStatsPanel([
             'icon' => AmosIcons::show('comments'),
             'label' => '',
-            'description' => \Yii::t('amoscore', '#StatsBar_Interventions'),
+            'description' => BaseAmosModule::t('amoscore', '#StatsBar_Interventions'),
             'count' => $count,
             'disableLink' => $disableLink,
             'url' => Yii::$app->getUrlManager()->createUrl([
@@ -49,7 +50,7 @@ class StatsToolbarPanels
             'label' => '',
             'count' => $count,
             'disableLink' => $disableLink,
-            'description' => Yii::t('amoscore', '#StatsBar_Tags'),
+            'description' => BaseAmosModule::t('amoscore', '#StatsBar_Tags'),
             'url' => Yii::$app->getUrlManager()->createUrl([
                 $model->getViewUrl(),
                 'id' => $model->getPrimaryKey(),
@@ -70,7 +71,7 @@ class StatsToolbarPanels
             'label' => '',
             'count' => $count, //calculate only attach and not principal files.
             'disableLink' => $disableLink,
-            'description' => Yii::t('amoscore', '#StatsBar_Attachments'),
+            'description' => BaseAmosModule::t('amoscore', '#StatsBar_Attachments'),
             'url' => \Yii::$app->getUrlManager()->createUrl([
                 $model->getViewUrl(),
                 'id' => $model->getPrimaryKey(),
@@ -91,7 +92,7 @@ class StatsToolbarPanels
             'label' => '',
             'count' => $count,
             'disableLink' => $disableLink,
-            'description' => Yii::t('amoscore', '#StatsBar_Reports'),
+            'description' => BaseAmosModule::t('amoscore', '#StatsBar_Reports'),
             'url' => $model->getViewUrl(),
         ]));
     }

@@ -14,6 +14,7 @@ namespace open20\amos\core\views;
 use yii\widgets\LinkPager;
 use open20\amos\core\helpers\Html;
 use yii\helpers\ArrayHelper;
+use open20\amos\core\module\BaseAmosModule;
 
 /**
  * Class AmosLinkPager
@@ -113,11 +114,11 @@ class AmosLinkPager extends LinkPager {
         $linkOptions['data-page'] = $page;
         if(!isset($linkOptions['title'])){
             if($label == '&raquo;'){
-                $linkOptions['title'] = \Yii::t('amoscore', 'Next page');
+                $linkOptions['title'] = BaseAmosModule::t('amoscore', 'Next page');
             } else if($label == '&laquo;'){
-                $linkOptions['title'] = \Yii::t('amoscore', 'Previous page');
+                $linkOptions['title'] = BaseAmosModule::t('amoscore', 'Previous page');
             } else {
-                $linkOptions['title'] = \Yii::t('amoscore', 'Page') . ' ' . $label;
+                $linkOptions['title'] = BaseAmosModule::t('amoscore', 'Page') . ' ' . $label;
             }
         }
 

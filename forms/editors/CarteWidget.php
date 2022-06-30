@@ -18,6 +18,7 @@ use yii\base\InvalidConfigException;
 use yii\base\Widget;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use open20\amos\core\module\BaseAmosModule;
 
 class CarteWidget extends Widget
 {
@@ -56,7 +57,7 @@ class CarteWidget extends Widget
 
     protected function throwErrorMessage($field)
     {
-        return \Yii::t('amoscore', 'Configurazione widget non corretta, {campo} mancante', [
+        return BaseAmosModule::t('amoscore', 'Configurazione widget non corretta, {campo} mancante', [
             'campo' => $field
         ]);
     }
@@ -185,7 +186,7 @@ class CarteWidget extends Widget
                             $url = \yii\helpers\Url::current();
                             if(\Yii::$app->getUser()->can('CLCARTE_UPDATE', ['model' => $model])){
                             return Html::a('<p class="btn bk-btnAssociaCondominio" title="Associa condominio"><span id="bk-btnAssociaCondominio" class="ti ti-pencil-alt"></span></p>', Yii::$app->urlManager->createUrl(['carte/cl-carte/associa-condominio', 'id' => $model->id, 'url' => $url]), [
-                                'title' => Yii::t('amoscore', 'Associa condominio'),
+                                'title' => BaseAmosModule::t('amoscore', 'Associa condominio'),
                             ]);
                             }
                             else{

@@ -25,6 +25,7 @@ use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+use open20\amos\core\module\BaseAmosModule;
 
 /**
  * Class BackendController
@@ -120,7 +121,7 @@ abstract class BackendController extends AmosController
             return $this->actionView($id);
         }
 
-        throw new NotFoundHttpException(\Yii::t('amosapp', 'Page not found'));
+        throw new NotFoundHttpException(BaseAmosModule::t('amosapp', 'Page not found'));
     }
 
     /**
@@ -205,7 +206,7 @@ abstract class BackendController extends AmosController
                 $rs->models_classname_id = $mid;
                 $rs->user_ip = \Yii::$app->request->getUserIP();
             }
-            $rs->likes = -1 * ($rs->likes - 1);
+            $rs->likes = -1 * ($rs->likes - 1);           
             $rs->save();
         }
 

@@ -62,6 +62,7 @@ use open20\amos\core\icons\AmosIcons;
 use open20\amos\core\helpers\Html;
 use open20\amos\core\helpers\T;
 use yii\helpers\Url;
+use open20\amos\core\module\BaseAmosModule;
 
 /**
 * <?= $controllerClass ?> implements the CRUD actions for <?= $modelClass ?> model.
@@ -75,28 +76,28 @@ public function init() {
         $this->setAvailableViews([
             'grid' => [
                 'name' => 'grid',
-                'label' => Yii::t('amoscore', '{iconaTabella}'.Html::tag('p',Yii::t('amoscore', 'Table')), [
+                'label' => BaseAmosModule::t('amoscore', '{iconaTabella}'.Html::tag('p',BaseAmosModule::t('amoscore', 'Table')), [
                     'iconaTabella' => AmosIcons::show('view-list-alt')
                 ]),                
                 'url' => '?currentView=grid'
             ],
             /*'list' => [
                 'name' => 'list',
-                'label' => Yii::t('amoscore', '{iconaLista}'.Html::tag('p',Yii::t('amoscore', 'List')), [
+                'label' => BaseAmosModule::t('amoscore', '{iconaLista}'.Html::tag('p',BaseAmosModule::t('amoscore', 'List')), [
                     'iconaLista' => AmosIcons::show('view-list')
                 ]),           
                 'url' => '?currentView=list'
             ],
             'icon' => [
                 'name' => 'icon',
-                'label' => Yii::t('amoscore', '{iconaElenco}'.Html::tag('p',Yii::t('amoscore', 'Icons')), [
+                'label' => BaseAmosModule::t('amoscore', '{iconaElenco}'.Html::tag('p',BaseAmosModule::t('amoscore', 'Icons')), [
                     'iconaElenco' => AmosIcons::show('grid')
                 ]),           
                 'url' => '?currentView=icon'
             ],
             'map' => [
                 'name' => 'map',
-                'label' => Yii::t('amoscore', '{iconaMappa}'.Html::tag('p',Yii::t('amoscore', 'Map')), [
+                'label' => BaseAmosModule::t('amoscore', '{iconaMappa}'.Html::tag('p',BaseAmosModule::t('amoscore', 'Map')), [
                     'iconaMappa' => AmosIcons::show('map')
                 ]),       
                 'url' => '?currentView=map'
@@ -105,7 +106,7 @@ public function init() {
                 'name' => 'calendar',
                 'intestazione' => '', //codice HTML per l'intestazione che verrà caricato prima del calendario,
                                       //per esempio si può inserire una funzione $model->getHtmlIntestazione() creata ad hoc
-                'label' => Yii::t('amoscore', '{iconaCalendario}'.Html::tag('p',Yii::t('amoscore', 'Calendari')), [
+                'label' => BaseAmosModule::t('amoscore', '{iconaCalendario}'.Html::tag('p',BaseAmosModule::t('amoscore', 'Calendari')), [
                     'iconaMappa' => AmosIcons::show('calendar')
                 ]),       
                 'url' => '?currentView=calendar'
@@ -210,10 +211,10 @@ foreach((array) $<?= Inflector::id2camel($key, '_') ?>MmPost as $relazionato){
    
     endforeach; 
     ?>
-Yii::$app->getSession()->addFlash('success', Yii::t('amoscore', 'Item created'));
+Yii::$app->getSession()->addFlash('success', BaseAmosModule::t('amoscore', 'Item created'));
 return $this->redirect(['index']);
 } else {
-Yii::$app->getSession()->addFlash('danger', Yii::t('amoscore', 'Item not created, check data'));
+Yii::$app->getSession()->addFlash('danger', BaseAmosModule::t('amoscore', 'Item not created, check data'));
 return $this->render('create', [
 'model' => $model,
 'fid' => NULL,
@@ -299,10 +300,10 @@ foreach((array) $<?= Inflector::id2camel($key, '_') ?>MmPost as $relazionato){
    
     endforeach; 
     ?>
-//Yii::$app->getSession()->addFlash('success', Yii::t('amoscore', 'Item created'));
+//Yii::$app->getSession()->addFlash('success', BaseAmosModule::t('amoscore', 'Item created'));
 return json_encode($model->toArray());
 } else {
-//Yii::$app->getSession()->addFlash('danger', Yii::t('amoscore', 'Item not created, check data'));
+//Yii::$app->getSession()->addFlash('danger', BaseAmosModule::t('amoscore', 'Item not created, check data'));
 return $this->renderAjax('_formAjax', [
 'model' => $model,
 'fid' => $fid,
@@ -367,10 +368,10 @@ if($model->save()){
         } 
     endforeach; 
     ?>
-Yii::$app->getSession()->addFlash('success', Yii::t('amoscore', 'Item updated'));
+Yii::$app->getSession()->addFlash('success', BaseAmosModule::t('amoscore', 'Item updated'));
 return $this->redirect(['index']);
 } else {
-Yii::$app->getSession()->addFlash('danger', Yii::t('amoscore', 'Item not updated, check data'));
+Yii::$app->getSession()->addFlash('danger', BaseAmosModule::t('amoscore', 'Item not updated, check data'));
 return $this->render('update', [
 'model' => $model,
 'fid' => NULL,
@@ -406,9 +407,9 @@ if($model){
 //In caso di soft delete attiva è consigliato modificare la funzione oppure utilizzare il forceDelete() che non andrà 
 //mai a buon fine in caso di dipendenze presenti sul record da cancellare
 $model->delete();
-Yii::$app->getSession()->addFlash('success', Yii::t('amoscore', 'Item deleted'));
+Yii::$app->getSession()->addFlash('success', BaseAmosModule::t('amoscore', 'Item deleted'));
 } else {
-Yii::$app->getSession()->addFlash('danger', Yii::t('amoscore', 'Item not found'));
+Yii::$app->getSession()->addFlash('danger', BaseAmosModule::t('amoscore', 'Item not found'));
 }
 return $this->redirect(['index']);
 }

@@ -13,6 +13,7 @@ namespace open20\amos\core\behaviors;
 
 use yii\base\Behavior;
 use yii\base\Exception;
+use open20\amos\core\module\BaseAmosModule;
 
 /**
  * Class VersionableBehaviour
@@ -33,7 +34,7 @@ class VersionableBehaviour extends Behavior
         parent::init();
 
         if (!$this->versionTable) {
-            throw new Exception(\Yii::t('amoscore', 'Version table not defined'));
+            throw new Exception(BaseAmosModule::t('amoscore', 'Version table not defined'));
         }
 
 

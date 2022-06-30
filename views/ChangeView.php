@@ -34,7 +34,7 @@ class ChangeView extends Dropdown
     public $dropdownLabel;
     public $dropdownTag = 'div';
     public $dropdownOptions = [
-        "class" => "btn btn-tools-primary dropdown-toggle",
+        "class" => "btn btn-tertiary dropdown-toggle",
         "role" => "button", "id" => "bk-btnChangeView",
         "data-toggle" => "dropdown", "aria-expanded" => "true"
     ];

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Aria S.p.A.
  * OPEN 2.0
@@ -39,18 +38,31 @@ class PermissionHelper
      */
     public static function findPermissionModelAction($modelName, $action)
     {
-        $permission = strtoupper($modelName) . '_' . strtoupper($action);
+        $permission          = strtoupper($modelName).'_'.strtoupper($action);
         $permissionsAvaiable = \Yii::$app->authManager->getPermissions();
         if (isset($permissionsAvaiable[$permission])) {
             return $permission;
         } else {
             if (isset(self::$exceptionActionMap[strtoupper($action)])) {
-                return strtoupper($modelName) . '_' . self::$exceptionActionMap[strtoupper($action)];
+                return strtoupper($modelName).'_'.self::$exceptionActionMap[strtoupper($action)];
             } else {
                 return null;
             }
-            $permission = strtoupper($modelName) . '-' . strtoupper($action);
+            $permission = strtoupper($modelName).'-'.strtoupper($action);
         }
     }
 
+    public static function checkPermissionModelByUser($model, $action)
+    {
+        if (!\Yii::$app->user->isGuest) {
+            $permission  = strtoupper(StringHelper::baseName(get_class($model)).'_'.$action);
+            $permission2 = get_class($model).'_'.strtoupper($action);
+            if (\Yii::$app->user->can($permission, ['model' => $model])) {
+                return true;
+            } else if (\Yii::$app->user->can($permission2, ['model' => $model])) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

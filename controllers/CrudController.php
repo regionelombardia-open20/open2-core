@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Aria S.p.A.
  * OPEN 2.0
@@ -29,7 +28,6 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
-
 /**
  * Class CrudController
  *
@@ -41,12 +39,11 @@ use yii\web\NotFoundHttpException;
 abstract class CrudController extends BaseController
 {
     const BEFORE_FINDMODEL_EVENT = "beforeFindModel";
-    const AFTER_FINDMODEL_EVENT = "afterFindModel";
+    const AFTER_FINDMODEL_EVENT  = "afterFindModel";
 
     public $otherViewAvailable = false;
-
     public $dataProvider;
-    public $gridViewColumns = null;
+    public $gridViewColumns    = null;
     public $modelSearch;
     public $currentView;
     public $availableViews;
@@ -106,7 +103,7 @@ abstract class CrudController extends BaseController
             throw new InvalidConfigException("{availableViews}: gridView,listView,mapView,calendarView.. must be set");
         }
 
-        $this->moduleName = Yii::$app->request->get('moduleName');
+        $this->moduleName     = Yii::$app->request->get('moduleName');
         $this->contextModelId = Yii::$app->request->get('contextModelId');
 
         $this->initCurrentView();
@@ -119,23 +116,24 @@ abstract class CrudController extends BaseController
      */
     public function behaviors()
     {
-        $behaviors = ArrayHelper::merge(parent::behaviors(), [
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'actions' => ['request-information'],
-                        'allow' => true,
-                        'roles' => ['@']
+        $behaviors = ArrayHelper::merge(parent::behaviors(),
+                [
+                'access' => [
+                    'class' => AccessControl::className(),
+                    'rules' => [
+                        [
+                            'actions' => ['request-information'],
+                            'allow' => true,
+                            'roles' => ['@']
+                        ],
                     ],
                 ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'request-information' => ['post', 'get']
+                'verbs' => [
+                    'class' => VerbFilter::className(),
+                    'actions' => [
+                        'request-information' => ['post', 'get']
+                    ]
                 ]
-            ]
         ]);
 
         //pr(array_keys($behaviors));die;
@@ -149,7 +147,7 @@ abstract class CrudController extends BaseController
         $this->setCurrentView($currentView);
 
         if ($currentViewName = Yii::$app->request->getQueryParam('currentView')) {
-            $views = array_keys($this->getAvailableViews());
+            $views     = array_keys($this->getAvailableViews());
             $viewToSet = (in_array($currentViewName, $views) ? $currentViewName : $currentView['name']);
             $this->setCurrentView($this->getAvailableView($viewToSet));
         }
@@ -173,7 +171,9 @@ abstract class CrudController extends BaseController
             $this->setAvailableViews([
                 'grid' => [
                     'name' => 'grid',
-                    'label' => Yii::t('amoscore', '{iconaTabella}' . Html::tag('p', Yii::t('amoscore', 'Table')), [
+                    'label' => BaseAmosModule::t('amoscore',
+                        '{iconaTabella}'.Html::tag('p', BaseAmosModule::t('amoscore', 'Table')),
+                        [
                         'iconaTabella' => AmosIcons::show('view-list-alt')
                     ]),
                     'url' => '?currentView=grid'
@@ -225,10 +225,9 @@ abstract class CrudController extends BaseController
 
     public function can($strPermission)
     {
-        return (Yii::$app->user->can(strtoupper($this->getModelName() . '_' . $strPermission))
-            ||
-            Yii::$app->user->can(get_class($this->getModel()) . '_' . strtoupper($strPermission))
-        );
+        return (Yii::$app->user->can(strtoupper($this->getModelName().'_'.$strPermission)) ||
+            Yii::$app->user->can(get_class($this->getModel()).'_'.strtoupper($strPermission))
+            );
     }
 
     /**
@@ -249,8 +248,8 @@ abstract class CrudController extends BaseController
         }
 
         return $this->render(
-            'index',
-            [
+                'index',
+                [
                 'dataProvider' => $this->getDataProvider(),
                 'model' => $this->getModelSearch(),
                 'currentView' => $this->getCurrentView(),
@@ -259,7 +258,7 @@ abstract class CrudController extends BaseController
                 'parametro' => ($this->parametro) ? $this->parametro : null,
                 'moduleName' => ($this->moduleName) ? $this->moduleName : null,
                 'contextModelId' => ($this->contextModelId) ? $this->contextModelId : null,
-            ]
+                ]
         );
     }
 
@@ -321,12 +320,12 @@ abstract class CrudController extends BaseController
     protected function findModel($id)
     {
         /** @var \open20\amos\core\record\Record $model */
-        $model = null;
+        $model    = null;
         $modelObj = $this->getModelObj();
 
         $modelObj->id = $id;
         $modelObj->trigger(self::BEFORE_FINDMODEL_EVENT);
-        if (($model = $modelObj->findOne($id)) === null) {
+        if (($model        = $modelObj->findOne($id)) === null) {
             throw new NotFoundHttpException(BaseAmosModule::t('amoscore', 'The requested page does not exist.'));
         }
         $this->setModelObj($model);
@@ -357,9 +356,9 @@ abstract class CrudController extends BaseController
      */
     public function actionRequestInformation($id)
     {
-        $this->model = $this->findModel($id);
-        $view = '@vendor/open20/amos-core/forms/views/information_request';
-        $infoRequest = new EmailForm();
+        $this->model  = $this->findModel($id);
+        $view         = '@vendor/open20/amos-core/forms/views/information_request';
+        $infoRequest  = new EmailForm();
         $this->layout = false;
         if (Yii::$app->getRequest()->isAjax && Yii::$app->request->isPost) {
             $post = Yii::$app->request->post();
@@ -384,12 +383,12 @@ abstract class CrudController extends BaseController
                     } else {
                         $subject = BaseAmosModule::t('amoscore', '#info_request_subject');
                         if ($this->model instanceof ModelLabelsInterface) {
-                            $subject .= $this->model->getGrammar()->getArticleSingular() . ' ' . $this->model->getGrammar()->getModelSingularLabel() . ' ';
+                            $subject .= $this->model->getGrammar()->getArticleSingular().' '.$this->model->getGrammar()->getModelSingularLabel().' ';
                         }
-                        $subject .= '"' . $this->model->getTitle() . '"';
+                        $subject .= '"'.$this->model->getTitle().'"';
                     }
                     $templatePath = !empty($infoRequest->templatePath) ? $infoRequest->templatePath : '@vendor/open20/amos-core/views/email/request-information';
-                    $text = $this->renderMailPartial($templatePath,
+                    $text         = $this->renderMailPartial($templatePath,
                         ['message' => $infoRequest->message, 'email' => $fromMail, 'nameUser' => $fromName]);
                     if (isset(Yii::$app->params['email-assistenza'])) {
                         //use default platform email assistance
@@ -429,18 +428,21 @@ abstract class CrudController extends BaseController
         }
 
         $duplicateContentUtility = new DuplicateContentUtility(['model' => $this->model]);
-        $newContent = $duplicateContentUtility->duplicateContent();
+        $newContent              = $duplicateContentUtility->duplicateContent();
 
         if (is_null($newContent)) {
             $url = $this->duplicateContentDefaultRedirectUrl();
-            Yii::$app->getSession()->addFlash('danger', BaseAmosModule::t('amoscore', '#duplication_action_error_duplication'));
+            Yii::$app->getSession()->addFlash('danger',
+                BaseAmosModule::t('amoscore', '#duplication_action_error_duplication'));
         } else {
             $url = ['update', 'id' => $newContent->id];
-            $ok = $this->afterDuplicateContent();
+            $ok  = $this->afterDuplicateContent();
             if ($ok) {
-                Yii::$app->getSession()->addFlash('success', BaseAmosModule::t('amoscore', '#duplication_action_success_duplication'));
+                Yii::$app->getSession()->addFlash('success',
+                    BaseAmosModule::t('amoscore', '#duplication_action_success_duplication'));
             } else {
-                Yii::$app->getSession()->addFlash('danger', BaseAmosModule::t('amoscore', '#duplication_action_error_post_duplication_operations'));
+                Yii::$app->getSession()->addFlash('danger',
+                    BaseAmosModule::t('amoscore', '#duplication_action_error_post_duplication_operations'));
             }
         }
 
@@ -454,11 +456,12 @@ abstract class CrudController extends BaseController
     private function duplicateContentDefaultRedirectUrl()
     {
         $moduleObj = $this->module;
-        $url = ($moduleObj instanceof AmosModule ? Yii::$app->session->get($moduleObj::beginCreateNewSessionKey()) : null);
+        $url       = ($moduleObj instanceof AmosModule ? Yii::$app->session->get($moduleObj::beginCreateNewSessionKey())
+                : null);
         if (is_null($url)) {
             $url = Url::previous();
             if (is_null($url)) {
-                $url = ['/' . $moduleObj->id . '/' . $this->id . '/index'];
+                $url = ['/'.$moduleObj->id.'/'.$this->id.'/index'];
             }
         }
         return $url;
@@ -480,5 +483,14 @@ abstract class CrudController extends BaseController
     protected function afterDuplicateContent()
     {
         return true;
+    }
+
+    /**
+     *
+     * @return array Array of links e.g. [['Create da me' => '/module/controller/action']]; Implement it in your controller
+     */
+    public static function getManageLinks()
+    {
+        return [];
     }
 }

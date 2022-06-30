@@ -2,8 +2,11 @@
 
 use open20\amos\core\helpers\Html;
 use open20\amos\core\icons\AmosIcons;
+use open20\amos\core\module\BaseAmosModule;
 
 use yii\bootstrap\Modal;
+$module = \Yii::$app->controller->module->id;
+$controller = \Yii::$app->controller->id;
 
 $js = <<<JS
 $(document).ready(function () {
@@ -18,10 +21,11 @@ $(document).ready(function () {
     uid = $('#like-uid').data('key');
     cid = $('#like-cid').data('key');
     mid = $('#like-mid').data('key');
+    action = '/$module/$controller/'+this.id;
     act = this.id;
-  
+
     $.ajax({
-      url: act,
+      url: action,
       async: true,
       type: 'get',
       dataType: 'json',
@@ -59,9 +63,9 @@ $this->registerJs($js);
           <a class="btn"><?= AmosIcons::show('heart', [], 'dash') ?></a>
       </span>
         <span class="like-wrap-piacea">
-          <a class="btn" id="like-to"><?= \Yii::t('amosapp','Piace a') . ' ' ?><span id="n-piacea" class="likeme">
+          <a class="btn" id="like-to"><?= BaseAmosModule::t('amosapp','Piace a') . ' ' ?><span id="n-piacea" class="likeme">
                   <?= $tot ?>
-              </span><?= ' ' . \Yii::t('amosapp', 'utenti') ?>
+              </span><?= ' ' . BaseAmosModule::t('amosapp', 'utenti') ?>
           </a>
   </span>
     </div>
@@ -73,7 +77,7 @@ $this->registerJs($js);
 <?php
 Modal::begin([
     'id' => 'openModelUsers',
-    'header' => AmosIcons::show('heart', [], 'dash') . ' ' .Yii::t('app', 'Piace a'),
+    'header' => AmosIcons::show('heart', [], 'dash') . ' ' .BaseAmosModule::t('app', 'Piace a'),
 //    'size' => Modal::SIZE_LARGE
 ]);
 echo Html::tag('div', '', ['id' => 'openmodal-preview']);

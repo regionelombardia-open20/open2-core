@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Aria S.p.A.
  * OPEN 2.0
@@ -34,8 +33,9 @@ use yii\helpers\Url;
  * Class ContentModel
  * @package open20\amos\core\record
  */
-abstract class ContentModel extends NotifyRecord implements ContentModelInterface, CrudModelInterface, SearchModelInterface, ContentModelSearchInterface, ModelImageInterface, FacilitatorInterface {
-
+abstract class ContentModel extends NotifyRecord implements ContentModelInterface, CrudModelInterface, SearchModelInterface,
+    ContentModelSearchInterface, ModelImageInterface, FacilitatorInterface
+{
     public $modelImage;
     public $attachments;
 
@@ -67,10 +67,11 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
     /**
      * @inheritdoc
      */
-    public function getModelImage() {
+    public function getModelImage()
+    {
         $this->modelImage = $this->hasOneFile('image')->one();
         if (empty($this->modelImage)) {
-            $this->modelImage = $this->hasOneFile(lcfirst($this->modelFormName) . 'Image')->one();
+            $this->modelImage = $this->hasOneFile(lcfirst($this->modelFormName).'Image')->one();
         }
         return $this->modelImage;
     }
@@ -79,12 +80,9 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      * @inheritdoc
      */
     public function getModelImageUrl(
-        $size = 'original',
-        $protected = true,
-        $url = '/img/img_default.jpg',
-        $absolute = false,
-        $canCache = false
-    ) {
+    $size = 'original', $protected = true, $url = '/img/img_default.jpg', $absolute = false, $canCache = false
+    )
+    {
         $image = $this->getModelImage();
         if (!is_null($image)) {
             if ($protected) {
@@ -100,10 +98,11 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      * Getter for $this->attachments;
      * @return array|null|\yii\db\ActiveRecord
      */
-    public function getAttachments() {
+    public function getAttachments()
+    {
         if (empty($this->attachments)) {
-            $query = $this->hasMultipleFiles(lcfirst($this->modelFormName) . 'Attachments');
-            $query->multiple = false;
+            $query             = $this->hasMultipleFiles(lcfirst($this->modelFormName).'Attachments');
+            $query->multiple   = false;
             $this->attachments = $query->one();
         }
         return $this->attachments;
@@ -112,15 +111,18 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
     /**
      * @param $attachments
      */
-    public function setAttachments($attachments) {
+    public function setAttachments($attachments)
+    {
         $this->attachments = $attachments;
     }
 
     /**
      * @inheritdoc
      */
-    public function rules() {
-        return ArrayHelper::merge(parent::rules(), [
+    public function rules()
+    {
+        return ArrayHelper::merge(parent::rules(),
+                [
                 [['destinatari_pubblicazione'], 'safe'],
                 [['attachments'], 'file', 'maxFiles' => 0],
                 [['modelImage'], 'file', 'extensions' => 'jpeg, jpg, png, gif'],
@@ -130,7 +132,8 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
     /**
      * @inheritdoc
      */
-    public function scenarios() {
+    public function scenarios()
+    {
         if ($this->isSearch) {
             // bypass scenarios() implementation in the parent class
             return Model::scenarios();
@@ -142,9 +145,10 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
     /**
      * @inheritdoc
      */
-    public function behaviors() {
+    public function behaviors()
+    {
         $parentBehaviors = parent::behaviors();
-        $behaviors = [];
+        $behaviors       = [];
         if (\Yii::$app->getModule('attachments')) {
             $behaviors['fileBehavior'] = [
                 'class' => \open20\amos\attachments\behaviors\FileBehavior::className()
@@ -163,77 +167,88 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
     /**
      * @inheritdoc
      */
-    public function getShortDescription() {
+    public function getShortDescription()
+    {
         return $this->getDescription(true);
     }
 
     /**
      * @inheritdoc
      */
-    public function getPublicatedFrom() {
+    public function getPublicatedFrom()
+    {
         return null;
     }
 
     /**
      * @inheritdoc
      */
-    public function getPublicatedAt() {
+    public function getPublicatedAt()
+    {
         return null;
     }
 
     /**
      * @inheritdoc
      */
-    public function getCategory() {
+    public function getCategory()
+    {
         return null;
     }
 
     /**
      * @inheritdoc
      */
-    public function getPluginWidgetClassname() {
+    public function getPluginWidgetClassname()
+    {
         return null;
     }
 
     /**
      * @inheritdoc
      */
-    public function getGrammar() {
+    public function getGrammar()
+    {
         return new ContentModelGrammar();
     }
 
     /**
      * @inheritdoc
      */
-    public function getToValidateStatus() {
-        return $this->modelFormName . 'Workflow/PUBLISHREQUEST';
+    public function getToValidateStatus()
+    {
+        return $this->modelFormName.'Workflow/PUBLISHREQUEST';
     }
 
     /**
      * @inheritdoc
      */
-    public function getValidatedStatus() {
-        return $this->modelFormName . 'Workflow/PUBLISHED';
+    public function getValidatedStatus()
+    {
+        return $this->modelFormName.'Workflow/PUBLISHED';
     }
 
     /**
      * @inheritdoc
      */
-    public function getDraftStatus() {
-        return $this->modelFormName . 'Workflow/DRAFT';
+    public function getDraftStatus()
+    {
+        return $this->modelFormName.'Workflow/DRAFT';
     }
 
     /**
      * @inheritdoc
      */
-    public function getValidatorRole() {
-        return strtoupper($this->modelFormName . '_VALIDATOR');
+    public function getValidatorRole()
+    {
+        return strtoupper($this->modelFormName.'_VALIDATOR');
     }
 
     /**
      * @inheritdoc
      */
-    public function getFacilitatorRole() {
+    public function getFacilitatorRole()
+    {
         return "FACILITATOR";
     }
 
@@ -251,7 +266,7 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
     public function getCwhValidationStatuses()
     {
         $validationStatuses = [];
-        $validatedStatus = $this->getValidatedStatus();
+        $validatedStatus    = $this->getValidatedStatus();
         if (!is_null($validatedStatus)) {
             $validationStatuses[] = $validatedStatus;
         }
@@ -263,9 +278,10 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      * @param $url
      * @return null|string
      */
-    private function getFullUrl($url) {
+    private function getFullUrl($url)
+    {
         if (!empty($url)) {
-            return Url::toRoute(["/" . $url, "id" => $this->id]);
+            return Url::toRoute(["/".$url, "id" => $this->id]);
         }
         return null;
     }
@@ -273,71 +289,82 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
     /**
      * @inheritdoc
      */
-    public function getCreateUrl() {
-        return $this->getModelModuleName() . '/' . $this->getModelControllerName() . '/create';
+    public function getCreateUrl()
+    {
+        return $this->getModelModuleName().'/'.$this->getModelControllerName().'/create';
     }
 
     /**
      * @inheritdoc
      */
-    public function getFullCreateUrl() {
+    public function getFullCreateUrl()
+    {
         return $this->getCreateUrl();
     }
 
     /**
      * @inheritdoc
      */
-    public function getViewUrl() {
-        return $this->getModelModuleName() . '/' . $this->getModelControllerName() . '/view';
+    public function getViewUrl()
+    {
+        return $this->getModelModuleName().'/'.$this->getModelControllerName().'/view';
     }
 
-    public function getBypassScope() {
+    public function getBypassScope()
+    {
         return $this->bypassScope;
     }
 
-    public function setBypassScope($bypassScope) {
+    public function setBypassScope($bypassScope)
+    {
         $this->bypassScope = $bypassScope;
     }
 
     /**
      * @inheritdoc
      */
-    public function getFullViewUrl() {
+    public function getFullViewUrl()
+    {
         return $this->getFullUrl($this->getViewUrl());
     }
 
     /**
      * @inheritdoc
      */
-    public function getUpdateUrl() {
-        return $this->getModelModuleName() . '/' . $this->getModelControllerName() . '/update';
+    public function getUpdateUrl()
+    {
+        return $this->getModelModuleName().'/'.$this->getModelControllerName().'/update';
     }
 
     /**
      * @inheritdoc
      */
-    public function getFullUpdateUrl() {
+    public function getFullUpdateUrl()
+    {
         return $this->getFullUrl($this->getUpdateUrl());
     }
 
     /**
      * @inheritdoc
      */
-    public function getDeleteUrl() {
-        return $this->getModelModuleName() . '/' . $this->getModelControllerName() . '/delete';
+    public function getDeleteUrl()
+    {
+        return $this->getModelModuleName().'/'.$this->getModelControllerName().'/delete';
     }
 
     /**
      * @inheritdoc
      */
-    public function getFullDeleteUrl() {
+    public function getFullDeleteUrl()
+    {
         return $this->getFullUrl($this->getDeleteUrl());
     }
 
     /**
      * @inheritdoc
      */
-    public function searchDefaultOrder($dataProvider) {
+    public function searchDefaultOrder($dataProvider)
+    {
         // Check if can use the custom module order
         if ($this->canUseModuleOrder()) {
             $dataProvider->setSort($this->createOrderClause());
@@ -354,29 +381,32 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
     /**
      * @inheritdoc
      */
-    public function searchOwnInterestsQuery($params) {
+    public function searchOwnInterestsQuery($params)
+    {
         return $this->buildQuery($params, 'own-interest');
-        
     }
 
     /**
      * @inheritdoc
      */
-    public function searchAllQuery($params) {
+    public function searchAllQuery($params)
+    {
         return $this->buildQuery($params, 'all');
     }
 
     /**
      * @inheritdoc
      */
-    public function searchCreatedByMeQuery($params) {
+    public function searchCreatedByMeQuery($params)
+    {
         return $this->buildQuery($params, 'created-by');
     }
 
     /**
      * @inheritdoc
      */
-    public function searchToValidateQuery($params) {
+    public function searchToValidateQuery($params)
+    {
         return $this->buildQuery($params, 'to-validate');
     }
 
@@ -385,7 +415,8 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      *
      * @return array
      */
-    public function searchFieldsMatch() {
+    public function searchFieldsMatch()
+    {
         return [];
     }
 
@@ -394,7 +425,8 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      *
      * @return array
      */
-    public function searchFieldsLike() {
+    public function searchFieldsLike()
+    {
         return [];
     }
 
@@ -403,7 +435,8 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      *
      * @return array
      */
-    public function searchFieldsLessEqual() {
+    public function searchFieldsLessEqual()
+    {
         return [];
     }
 
@@ -412,7 +445,8 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      *
      * @return array
      */
-    public function searchFieldsGreaterEqual() {
+    public function searchFieldsGreaterEqual()
+    {
         return [];
     }
 
@@ -421,33 +455,34 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      *
      * @param $query
      */
-    public function applySearchFilters($query) {
+    public function applySearchFilters($query)
+    {
         $searchFieldMatch = $this->searchFieldsMatch();
 
         if (!empty($searchFieldMatch)) {
             foreach ($searchFieldMatch as $searchField) {
-                $query->andFilterWhere([static::tableName() . '.' . $searchField => $this->{$searchField}]);
+                $query->andFilterWhere([static::tableName().'.'.$searchField => $this->{$searchField}]);
             }
         }
 
         $searchFieldLike = $this->searchFieldsLike();
         if (!empty($searchFieldLike)) {
             foreach ($searchFieldLike as $searchField) {
-                $query->andFilterWhere(['like', static::tableName() . '.' . $searchField, $this->{$searchField}]);
+                $query->andFilterWhere(['like', static::tableName().'.'.$searchField, $this->{$searchField}]);
             }
         }
 
         $searchFieldLessEqual = $this->searchFieldsLessEqual();
         if (!empty($searchFieldLessEqual)) {
             foreach ($searchFieldLessEqual as $searchField) {
-                $query->andFilterWhere(['<=', static::tableName() . '.' . $searchField, $this->{$searchField}]);
+                $query->andFilterWhere(['<=', static::tableName().'.'.$searchField, $this->{$searchField}]);
             }
         }
 
         $searchFieldGreaterEqual = $this->searchFieldsGreaterEqual();
         if (!empty($searchFieldGreaterEqual)) {
             foreach ($searchFieldGreaterEqual as $searchField) {
-                $query->andFilterWhere(['>=', static::tableName() . '.' . $searchField, $this->{$searchField}]);
+                $query->andFilterWhere(['>=', static::tableName().'.'.$searchField, $this->{$searchField}]);
             }
         }
     }
@@ -457,7 +492,8 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      *
      * @return array
      */
-    public function searchFieldsGlobalSearch() {
+    public function searchFieldsGlobalSearch()
+    {
         return [];
     }
 
@@ -466,7 +502,8 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      *
      * @param ActiveQuery $query
      */
-    public function getSearchQuery($query) {
+    public function getSearchQuery($query)
+    {
         
     }
 
@@ -476,13 +513,17 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      *
      * @param $query
      */
-    public function getSearchQueryCwhDisabled($query) {
+    public function getSearchQueryCwhDisabled($query)
+    {
         if (!empty($this->getPublicatedFrom())) {
             $now = date('Y-m-d');
             $query->andFilterWhere(['<=', $this->getPublicatedFrom(), $now]);
             if (!empty($this->getPublicatedAt())) {
                 $query->andFilterWhere(['>=', $this->getPublicatedAt(), $now]);
             }
+        }
+        if (!empty($this->getFieldVisibleByGuest())) {
+            $query->andFilterWhere([$this->getFieldVisibleByGuest() => 1]);
         }
     }
 
@@ -493,7 +534,8 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      * @return \yii\db\ActiveQuery
      * @throws \yii\base\InvalidConfigException
      */
-    public function baseSearch($params) {
+    public function baseSearch($params)
+    {
         //init the default search values
         $this->initOrderVars();
 
@@ -510,10 +552,12 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      * @param string $queryType
      * @param int|null|ExpressionInterface $limit
      * @param bool $onlyDrafts
+     * @param integer $pageSize
      * @return ActiveDataProvider|\yii\data\BaseDataProvider
      * @throws \yii\base\InvalidConfigException
      */
-    public function search($params, $queryType = null, $limit = null, $onlyDrafts = false) {
+    public function search($params, $queryType = null, $limit = null, $onlyDrafts = false, $pageSize = null)
+    {
 
         if (!empty($queryType)) {
             $query = $this->buildQuery($params, $queryType, $onlyDrafts);
@@ -529,12 +573,13 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
         $dp_params = ['query' => $query,];
         if ($limit) {
             $dp_params ['pagination'] = false;
+        } else if (!empty($pageSize)) {
+            $dp_params['pagination']['pageSize'] = $pageSize;
         }
 
         //set the data provider
         $dataProvider = new ActiveDataProvider($dp_params);
         $dataProvider = $this->searchDefaultOrder($dataProvider);
-
         if (!($this->load($params) && $this->validate())) {
             return $dataProvider;
         }
@@ -545,16 +590,16 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
             $this->setTagValues($tagValues);
             if (is_array($tagValues) && !empty($tagValues)) {
                 $orQueries = null;
-                $i = 0;
+                $i         = 0;
                 foreach ($tagValues as $rootId => $tagId) {
                     if (!empty($tagId)) {
                         if ($i == 0) {
                             $query->innerJoin('entitys_tags_mm entities_tag',
-                                "entities_tag.classname = '" . addslashes($this->modelClassName) . "' AND entities_tag.record_id=" . static::tableName() . ".id");
+                                "entities_tag.classname = '".addslashes($this->modelClassName)."' AND entities_tag.record_id=".static::tableName().".id");
                             $orQueries[] = 'or';
                         }
-                        $tags = explode(',', $tagId);
-                        $tags = array_unique($tags);
+                        $tags        = explode(',', $tagId);
+                        $tags        = array_unique($tags);
                         $orQueries[] = ['and', ["entities_tag.tag_id" => $tags], ['entities_tag.root_id' => $rootId], ['entities_tag.deleted_at' => null]];
                         $i++;
                     }
@@ -566,9 +611,9 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
         }
 
         $query->andFilterWhere([
-            'created_by' => $this->created_by,
-            'updated_by' => $this->updated_by,
-            'deleted_by' => $this->deleted_by,
+            $this->tableName().'.created_by' => $this->created_by,
+            $this->tableName().'.updated_by' => $this->updated_by,
+            $this->tableName().'.deleted_by' => $this->deleted_by,
         ]);
 
         $this->applySearchFilters($query);
@@ -586,7 +631,8 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      * @return ActiveDataProvider|\yii\data\BaseDataProvider
      * @throws \yii\base\InvalidConfigException
      */
-    public function searchOwn($params, $limit = null, $onlyDrafts = false) {
+    public function searchOwn($params, $limit = null, $onlyDrafts = false)
+    {
         return $this->search($params, 'created-by', $limit, $onlyDrafts);
     }
 
@@ -595,7 +641,8 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      *
      * @return $this
      */
-    public function validazioneAbilitata() {
+    public function validazioneAbilitata()
+    {
         return $this;
     }
 
@@ -607,7 +654,8 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      * @return ActiveDataProvider|\yii\data\BaseDataProvider
      * @throws \yii\base\InvalidConfigException
      */
-    public function searchToValidate($params, $limit = null) {
+    public function searchToValidate($params, $limit = null)
+    {
         return $this->search($params, 'to-validate', $limit);
     }
 
@@ -619,7 +667,8 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      * @return ActiveDataProvider|\yii\data\BaseDataProvider
      * @throws \yii\base\InvalidConfigException
      */
-    public function searchAll($params, $limit = null) {
+    public function searchAll($params, $limit = null)
+    {
         return $this->search($params, 'all', $limit);
     }
 
@@ -631,7 +680,8 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      * @return ActiveDataProvider|\yii\data\BaseDataProvider
      * @throws \yii\base\InvalidConfigException
      */
-    public function searchAllAdmin($params, $limit = null) {
+    public function searchAllAdmin($params, $limit = null)
+    {
         return $this->search($params, null, $limit);
     }
 
@@ -643,7 +693,8 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      * @return ActiveDataProvider|\yii\data\BaseDataProvider
      * @throws \yii\base\InvalidConfigException
      */
-    public function searchOwnInterest($params, $limit = null) {
+    public function searchOwnInterest($params, $limit = null)
+    {
         return $this->search($params, 'own-interest', $limit);
     }
 
@@ -652,9 +703,10 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      * @param string $queryType
      * @return ActiveQuery $query
      */
-    public function buildQuery($params, $queryType, $onlyDrafts = false) {
+    public function buildQuery($params, $queryType, $onlyDrafts = false)
+    {
         $validByScopeIgnoreStatus = false;
-        $validByScopeIgnoreDates = false;
+        $validByScopeIgnoreDates  = false;
         if (isset($params['validByScopeIgnoreStatus'])) {
             $validByScopeIgnoreStatus = $params['validByScopeIgnoreStatus'];
             unset($params['validByScopeIgnoreStatus']);
@@ -667,8 +719,8 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
 
         $query = $this->baseSearch($params);
 
-        $classname = $this->modelClassName;
-        $moduleCwh = \Yii::$app->getModule('cwh');
+        $classname      = $this->modelClassName;
+        $moduleCwh      = \Yii::$app->getModule('cwh');
         $cwhActiveQuery = null;
 
         $isSetCwh = !is_null($moduleCwh) && in_array($classname, $moduleCwh->modelsEnabled);
@@ -676,7 +728,7 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
         if ($isSetCwh) {
             /** @var \open20\amos\cwh\AmosCwh $moduleCwh */
             $moduleCwh->setCwhScopeFromSession();
-            $cwhActiveQuery = new \open20\amos\cwh\query\CwhActiveQuery(
+            $cwhActiveQuery                           = new \open20\amos\cwh\query\CwhActiveQuery(
                 $classname,
                 [
                 'queryBase' => $query,
@@ -684,8 +736,11 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
                 ]
             );
             $cwhActiveQuery->validByScopeIgnoreStatus = $validByScopeIgnoreStatus;
-            $cwhActiveQuery->validByScopeIgnoreDates = $validByScopeIgnoreDates;
+            $cwhActiveQuery->validByScopeIgnoreDates  = $validByScopeIgnoreDates;
         }
+
+        $isLogged = !\Yii::$app->user->isGuest;
+
 
         switch ($queryType) {
             case 'created-by':
@@ -693,21 +748,21 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
                     $query = $cwhActiveQuery->getQueryCwhOwn();
                 } else {
                     $query->andFilterWhere([
-                        static::tableName() . '.created_by' => Yii::$app->user->id
+                        static::tableName().'.created_by' => Yii::$app->user->id
                     ]);
                 }
                 if ($onlyDrafts) {
                     $query->andWhere([
-                        static::tableName() . '.status' => $this->getDraftStatus()
+                        static::tableName().'.status' => $this->getDraftStatus()
                     ]);
                 }
                 break;
             case 'all':
-                if ($isSetCwh) {
-                    $query = $cwhActiveQuery->getQueryCwhAll();
+                if ($isSetCwh && $isLogged) {
+                    $query = $cwhActiveQuery->getQueryCwhAll(null, null, true);
                 } else {
                     $query->andWhere([
-                        static::tableName() . '.status' => $this->getValidatedStatus()
+                        static::tableName().'.status' => $this->getValidatedStatus()
                     ]);
                     $this->getSearchQueryCwhDisabled($query);
                 }
@@ -717,7 +772,7 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
                     $query = $cwhActiveQuery->getQueryCwhToValidate();
                 } else {
                     $query->andWhere([
-                        static::tableName() . '.status' => $this->getToValidateStatus()
+                        static::tableName().'.status' => $this->getToValidateStatus()
                     ]);
                     $this->getSearchQueryCwhDisabled($query);
                 }
@@ -727,7 +782,7 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
                     $query = $cwhActiveQuery->getQueryCwhOwnInterest();
                 } else {
                     $query->andWhere([
-                        static::tableName() . '.status' => $this->getValidatedStatus()
+                        static::tableName().'.status' => $this->getValidatedStatus()
                     ]);
                     $this->getSearchQueryCwhDisabled($query);
                 }
@@ -752,10 +807,11 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      * @return ActiveDataProvider
      * @throws \yii\base\InvalidConfigException
      */
-    public function globalSearch($searchParamsArray, $pageSize = 5) {
+    public function globalSearch($searchParamsArray, $pageSize = 5)
+    {
 
         $dataProvider = $this->search([], 'all', null);
-        $pagination = $dataProvider->getPagination();
+        $pagination   = $dataProvider->getPagination();
         if (!$pagination) {
             $pagination = new Pagination();
             $dataProvider->setPagination($pagination);
@@ -763,11 +819,12 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
         $pagination->setPageSize($pageSize);
 
         // Verifico se il modulo supporta i TAG e, in caso, ricerco anche fra quelli
-        $moduleTag = \Yii::$app->getModule('tag');
+        $moduleTag       = \Yii::$app->getModule('tag');
         $enableTagSearch = !is_null($moduleTag) && in_array($this->modelClassName, $moduleTag->modelsEnabled);
 
         if ($enableTagSearch) {
-            $dataProvider->query->leftJoin('entitys_tags_mm e_tag', "e_tag.record_id=" . static::tableName() . ".id AND e_tag.deleted_at IS NULL AND e_tag.classname='" . addslashes($this->modelClassName) . "'");
+            $dataProvider->query->leftJoin('entitys_tags_mm e_tag',
+                "e_tag.record_id=".static::tableName().".id AND e_tag.deleted_at IS NULL AND e_tag.classname='".addslashes($this->modelClassName)."'");
 
 //            if (Yii::$app->db->schema->getTableSchema('tag__translation')) {
 //                // Esiste la tabella delle traduzioni dei TAG. Uso quella per la ricerca
@@ -801,7 +858,7 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
             if (!empty($searchFieldGlobal)) {
                 $orQueries[] = 'or';
                 foreach ($searchFieldGlobal as $searchField) {
-                    $orQueries[] = ['like', static::tableName() . '.' . $searchField, $searchString];
+                    $orQueries[] = ['like', static::tableName().'.'.$searchField, $searchString];
                 }
             }
 
@@ -823,13 +880,14 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      * @param object $model The model to convert into SearchResult
      * @return SearchResult
      */
-    public function convertToSearchResult($model) {
-        $searchResult = new SearchResult();
-        $searchResult->url = $model->getFullViewUrl();
+    public function convertToSearchResult($model)
+    {
+        $searchResult           = new SearchResult();
+        $searchResult->url      = $model->getFullViewUrl();
         $searchResult->box_type = "image";
-        $searchResult->id = $model->id;
-        $searchResult->titolo = $model->getTitle();
-        $publicationDate = $this->getPublicatedAt();
+        $searchResult->id       = $model->id;
+        $searchResult->titolo   = $model->getTitle();
+        $publicationDate        = $this->getPublicatedAt();
         if (!is_null($publicationDate)) {
             $searchResult->data_pubblicazione = $model->created_at;
         } else {
@@ -845,7 +903,8 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      *
      * @return bool
      */
-    public function getValidatedOnce() {
+    public function getValidatedOnce()
+    {
         if ($this->isNewRecord) {
             return false;
         }
@@ -862,8 +921,7 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
     {
         Event::on(
             \open20\amos\core\widget\WidgetIcon::className(),
-            \open20\amos\core\widget\WidgetIcon::EVENT_AFTER_COUNT,
-            [$this, 'notificationOffAfterCount']
+            \open20\amos\core\widget\WidgetIcon::EVENT_AFTER_COUNT, [$this, 'notificationOffAfterCount']
         );
     }
 
@@ -876,5 +934,14 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
         $notify = $this->getNotifier();
 
         return true;
+    }
+
+    /**
+     *
+     * @return type
+     */
+    public function getFieldVisibleByGuest()
+    {
+        return null;
     }
 }

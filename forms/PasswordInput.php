@@ -29,14 +29,14 @@ class PasswordInput extends KartikPasswordInput
     {
         $class = 'password-input-group';
 
-        $content = '{input}<span class="input-group-addon eye-toggle-box am am-eye-off" title="'. Yii::t('amoscore','#hide_show_password') .'"></span>';
+        $content = '{input}<span class="input-group-addon eye-toggle-box am am-eye-off" title="'. BaseAmosModule::t('amoscore','#hide_show_password') .'"></span>';
 
         if ($this->size === 'lg' || $this->size === 'sm') {
             $class .= ' input-group-' . $this->size;
         }
 
         if ($this->togglePlacement === 'left') {
-            $content = '<span class="input-group-addon eye-toggle-box am am-eye-off" title="'. Yii::t('amoscore','#hide_show_password') .'"></span>{input}';
+            $content = '<span class="input-group-addon eye-toggle-box am am-eye-off" title="'. BaseAmosModule::t('amoscore','#hide_show_password') .'"></span>{input}';
         }
 
         $view = $this->getView();

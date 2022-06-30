@@ -8,22 +8,21 @@
  * @package    open20\amos\core\forms\views
  * @category   CategoryName
  */
-
 use open20\amos\core\module\BaseAmosModule;
 use open20\amos\core\forms\ActiveForm;
 use open20\amos\core\helpers\Html;
 use yii\bootstrap\Modal;
+use open20\amos\core\forms\TextEditorWidget;
 
 /**
  * @var \open20\amos\core\forms\EmailForm $infoRequest
  * @var integer $modelId
  */
-
 /** @var \open20\amos\core\controllers\CrudController $controller */
 $controller = Yii::$app->controller;
 
 /** @var \open20\amos\core\module\AmosModule $controller->module */
-$url = '/'. $controller->module->getUniqueId().'/'.$controller->id .'/request-information?id='.$modelId;
+$url              = '/'.$controller->module->getUniqueId().'/'.$controller->id.'/request-information?id='.$modelId;
 $formErrorMessage = BaseAmosModule::t('amoscore', '#info_request_form_error');
 
 $js = <<<JS
@@ -85,48 +84,53 @@ Modal::begin([
     'id' => 'info-request-modal',
     'size' => Modal::SIZE_LARGE
 ]);
-
 ?>
 
-    <div id="info-request-container">
+<div id="info-request-container">
 
-        <?php $form = ActiveForm::begin(['id' => 'info-request-form', 'action' => $url]); ?>
-        <div class="col-lg-12 col-sm-12 alert alert-danger hidden " id="form-errors"><?= $formErrorMessage ?></div>
+    <?php $form = ActiveForm::begin(['id' => 'info-request-form', 'action' => $url]); ?>
+    <div class="col-lg-12 col-sm-12 alert alert-danger hidden " id="form-errors"><?= $formErrorMessage ?></div>
 
-        <div class="hidden">
-            <?= $form->field($infoRequest, 'userIdTo')->hiddenInput(['value' => $infoRequest->userIdTo])->label(false) ?>
-            <?= $form->field($infoRequest, 'attributeTo')->hiddenInput(['value' => $infoRequest->attributeTo])->label(false) ?>
-            <?= $form->field($infoRequest, 'templatePath')->hiddenInput(['value' => $infoRequest->templatePath])->label(false) ?>
-            <?= $form->field($infoRequest, 'subject')->hiddenInput(['value' => $infoRequest->subject])->label(false) ?>
-        </div>
-
-        <div class="row">
-            <div class="col-lg-12 col-sm-12">
-                <?= $form->field($infoRequest, 'message')->widget(\yii\redactor\widgets\Redactor::className(), [
-                    'options' => [
-                        'placeholder' => BaseAmosModule::t('amoscore', '#info_request_placeholder')
-                    ],
-                    'clientOptions' => [
-                        'buttonsHide' => [
-                            'image',
-                            'file'
-                        ],
-                        'lang' => substr(Yii::$app->language, 0, 2)
-                    ]
-                ]) ?>
-            </div>
-        </div>
-
-        <div class='bk-btnFormContainer'>
-            <?= Html::submitButton(BaseAmosModule::t('amoscore', '#send_email'), [
-                'class' => 'btn btn-primary',
-                'id' => 'send-infoRequest',
-            ]) ?>
-            <?= Html::a(BaseAmosModule::t('amoscore', 'Annulla'), null,
-                ['class' => 'btn btn-secondary', 'data-dismiss' => 'modal']) ?>
-        </div>
-        <?php ActiveForm::end(); ?>
+    <div class="hidden">
+        <?= $form->field($infoRequest, 'userIdTo')->hiddenInput(['value' => $infoRequest->userIdTo])->label(false) ?>
+        <?= $form->field($infoRequest, 'attributeTo')->hiddenInput(['value' => $infoRequest->attributeTo])->label(false) ?>
+        <?= $form->field($infoRequest, 'templatePath')->hiddenInput(['value' => $infoRequest->templatePath])->label(false) ?>
+        <?= $form->field($infoRequest, 'subject')->hiddenInput(['value' => $infoRequest->subject])->label(false) ?>
     </div>
+
+    <div class="row">
+        <div class="col-lg-12 col-sm-12">
+            <?=
+            $form->field($infoRequest, 'message')->widget(TextEditorWidget::className(),
+                [
+                'clientOptions' => [
+                    'placeholder' => BaseAmosModule::t('amoscore', '#info_request_placeholder'),
+                    'buttonsHide' => [
+                        'image',
+                        'file'
+                    ],
+                    'lang' => substr(Yii::$app->language, 0, 2)
+                ]
+            ])
+            ?>
+        </div>
+    </div>
+
+    <div class='bk-btnFormContainer'>
+        <?=
+        Html::submitButton(BaseAmosModule::t('amoscore', '#send_email'),
+            [
+            'class' => 'btn btn-primary',
+            'id' => 'send-infoRequest',
+        ])
+        ?>
+        <?=
+        Html::a(BaseAmosModule::t('amoscore', 'Annulla'), null,
+            ['class' => 'btn btn-secondary', 'data-dismiss' => 'modal'])
+        ?>
+    </div>
+<?php ActiveForm::end(); ?>
+</div>
 
 <?php
 Modal::end();
@@ -136,9 +140,9 @@ Modal::begin([
     'id' => 'info-request-response-modal',
 ]);
 ?>
-    <div id="response-text" class="m-b-30">
-        <!-- filled by javascript -->
-    </div>
+<div id="response-text" class="m-b-30">
+    <!-- filled by javascript -->
+</div>
 <?php
 Modal::end();
 ?>

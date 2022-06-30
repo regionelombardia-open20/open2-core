@@ -12,6 +12,7 @@
 use yii\db\ActiveRecordInterface;
 use yii\helpers\StringHelper;
 use yii\helpers\Inflector;
+use open20\amos\core\module\BaseAmosModule;
 
 /**
  * This is the template for generating a CRUD controller class file.
@@ -216,10 +217,10 @@ if($this->model->save()){
 
 endforeach;
 ?>
-Yii::$app->getSession()->addFlash('success', Yii::t('amoscore', 'Item created'));
+Yii::$app->getSession()->addFlash('success', BaseAmosModule::t('amoscore', 'Item created'));
 return $this->redirect(['update', 'id' => $this->model->id]);
 } else {
-Yii::$app->getSession()->addFlash('danger', Yii::t('amoscore', 'Item not created, check data'));
+Yii::$app->getSession()->addFlash('danger', BaseAmosModule::t('amoscore', 'Item not created, check data'));
 }
 } 
 
@@ -293,10 +294,10 @@ if($this->model->save()){
 
 endforeach;
 ?>
-//Yii::$app->getSession()->addFlash('success', Yii::t('amoscore', 'Item created'));
+//Yii::$app->getSession()->addFlash('success', BaseAmosModule::t('amoscore', 'Item created'));
 return json_encode($this->model->toArray());
 } else {
-//Yii::$app->getSession()->addFlash('danger', Yii::t('amoscore', 'Item not created, check data'));
+//Yii::$app->getSession()->addFlash('danger', BaseAmosModule::t('amoscore', 'Item not created, check data'));
 }
 } 
 
@@ -342,10 +343,10 @@ if($this->model->save()){
         } 
     endforeach; 
     ?>
-Yii::$app->getSession()->addFlash('success', Yii::t('amoscore', 'Item updated'));
+Yii::$app->getSession()->addFlash('success', BaseAmosModule::t('amoscore', 'Item updated'));
 return $this->redirect(['update', 'id' => $this->model->id]);
 } else {
-Yii::$app->getSession()->addFlash('danger', Yii::t('amoscore', 'Item not updated, check data'));
+Yii::$app->getSession()->addFlash('danger', BaseAmosModule::t('amoscore', 'Item not updated, check data'));
 }
 } 
 

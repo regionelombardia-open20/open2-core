@@ -8,6 +8,7 @@ use open20\amos\core\interfaces\ContentModelInterface;
 use yii\base\BaseObject;
 use yii\helpers\ArrayHelper;
 use ymaker\social\share\configurators\Configurator;
+use open20\amos\core\module\BaseAmosModule;
 
 /**
  * Configurator for social network drivers.
@@ -57,7 +58,7 @@ class ConfiguratorSocialShare extends Configurator
                 'facebook' => [
                     'class' => \open20\amos\core\forms\editors\socialShareWidget\drivers\Facebook::class,
                     'label' => \yii\helpers\Html::tag('span', '',
-                        ['class' => 'ic ic-facebook', 'title' => \Yii::t('amoscore', 'Share with facebook')]),
+                        ['class' => 'ic ic-facebook', 'title' => BaseAmosModule::t('amoscore', 'Share with facebook')]),
                     'options' => ['class' => 'fb', 'onclick' => ($haveAnalytics ? "__gaTracker('send', 'event', 'Facebook', 'Share', '".$url."', '".$isFrontend."');"
                             : "return false;")],
                     'visibility' => ConfiguratorSocialShare::VISIBILITY_ONLY_PUBLIC_CONTENT
@@ -65,7 +66,7 @@ class ConfiguratorSocialShare extends Configurator
                 'twitter' => [
                     'class' => \open20\amos\core\forms\editors\socialShareWidget\drivers\Twitter::class,
                     'label' => \yii\helpers\Html::tag('span', '',
-                        ['class' => 'ic ic-twitter', 'title' => \Yii::t('amoscore', 'Share with twitter')]),
+                        ['class' => 'ic ic-twitter', 'title' => BaseAmosModule::t('amoscore', 'Share with twitter')]),
                     'options' => ['class' => 'tw', 'onclick' => ($haveAnalytics ? "__gaTracker('send', 'event', 'Twitter', 'Share', '".$url."', '".$isFrontend."');"
                             : "return false;")],
                     'visibility' => ConfiguratorSocialShare::VISIBILITY_ONLY_PUBLIC_CONTENT
@@ -78,7 +79,7 @@ class ConfiguratorSocialShare extends Configurator
                 'linkedIn' => [
                     'class' => \open20\amos\core\forms\editors\socialShareWidget\drivers\LinkedIn::class,
                     'label' => \yii\helpers\Html::tag('span', '',
-                        ['class' => 'ic ic-linkedin', 'title' => \Yii::t('amoscore', 'Share with linkedin')]),
+                        ['class' => 'ic ic-linkedin', 'title' => BaseAmosModule::t('amoscore', 'Share with linkedin')]),
                     'options' => ['class' => 'lk', 'onclick' => ($haveAnalytics ? "__gaTracker('send', 'event', 'LinkedIn', 'Share', '".$url."', '".$isFrontend."');"
                             : "return false;")
                     ],
@@ -87,7 +88,7 @@ class ConfiguratorSocialShare extends Configurator
                 'telegram' => [
                     'class' => \open20\amos\core\forms\editors\socialShareWidget\drivers\Telegram::class,
                     'label' => \yii\helpers\Html::tag('span', '',
-                        ['class' => 'ic ic-telegram', 'title' => \Yii::t('amoscore', 'Share with Telegram')]),
+                        ['class' => 'ic ic-telegram', 'title' => BaseAmosModule::t('amoscore', 'Share with Telegram')]),
                     'options' => ['class' => 'tg', 'onclick' => ($haveAnalytics ? "__gaTracker('send', 'event', 'Telegram', 'Share', '".$url."', '".$isFrontend."');"
                             : "return false;")],
                     'visibility' => ConfiguratorSocialShare::VISIBILITY_ONLY_MOBILE,
@@ -95,7 +96,7 @@ class ConfiguratorSocialShare extends Configurator
                 'whatsApp' => [
                     'class' => \open20\amos\core\forms\editors\socialShareWidget\drivers\WhatsApp::class,
                     'label' => \yii\helpers\Html::tag('span', '',
-                        ['class' => 'ic ic-whatsapp', 'title' => \Yii::t('amoscore', 'Share with WhatsApp')]),
+                        ['class' => 'ic ic-whatsapp', 'title' => BaseAmosModule::t('amoscore', 'Share with WhatsApp')]),
                     'options' => ['class' => 'wa', 'onclick' => ($haveAnalytics ? "__gaTracker('send', 'event', 'WhatsApp', 'Share', '".$url."', '".$isFrontend."');"
                             : "return false;")],
                     'visibility' => ConfiguratorSocialShare::VISIBILITY_ONLY_MOBILE
@@ -103,7 +104,7 @@ class ConfiguratorSocialShare extends Configurator
                 'email' => [
                     'class' => \open20\amos\core\forms\editors\socialShareWidget\drivers\Email::class,
                     'label' => \yii\helpers\Html::tag('span', '',
-                        ['class' => 'ic ic-mail', 'title' => \Yii::t('amoscore', 'Share with email')]),
+                        ['class' => 'ic ic-mail', 'title' => BaseAmosModule::t('amoscore', 'Share with email')]),
                     'options' => ['class' => 'email', 'onclick' => ($haveAnalytics ? "__gaTracker('send', 'event', 'Email', 'Share', '".$url."', '".$isFrontend."');"
                             : "return false;")],
                     'visibility' => ConfiguratorSocialShare::VISIBILITY_ONLY_PUBLIC_CONTENT
@@ -111,7 +112,7 @@ class ConfiguratorSocialShare extends Configurator
                 'ownNetwork' => [
                     'class' => \open20\amos\core\forms\editors\socialShareWidget\drivers\OwnNetwork::class,
                     'label' => \yii\helpers\Html::tag('span', '',
-                        ['class' => 'ic ic-user open-modal', 'title' => \Yii::t('amoscore',
+                        ['class' => 'ic ic-user open-modal', 'title' => BaseAmosModule::t('amoscore',
                             'Share with your own network')]),
                     'options' => ['class' => 'own-network', 'onclick' => ($haveAnalytics ? "__gaTracker('send', 'event', 'OwnNetwork', 'Share', '".$url."', '".$isFrontend."');"
                             : "return false;")],
