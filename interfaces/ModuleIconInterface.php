@@ -12,13 +12,13 @@
 namespace open20\amos\core\interfaces;
 
 /**
- * Interface SearchModuleInterface
+ * Interface ModuleIconInterface
  * @package open20\amos\core\interfaces
  */
-interface SearchModuleInterface extends ModuleIconInterface
+interface ModuleIconInterface
 {
     /**
-     * @return string The name of the search model class
+     * @return string The module icon name
      */
-    public static function getModelSearchClassName();
+    public static function getModuleIconName();
 }

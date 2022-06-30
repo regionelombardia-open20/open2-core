@@ -33,4 +33,5 @@ class M2MEventsEnum
     const EVENT_BEFORE_RENDER_ASSOCIATE_ONE2MANY = 'beforeRenderAssociateOne2Many';
     const EVENT_BEFORE_INTERCECT_M2M = 'beforeIntercectM2m';
     const EVENT_AFTER_INTERCECT_M2M = 'afterIntercectM2m';
+    const EVENT_AFTER_FIND_START_OBJ_M2M = 'afterFindStartObjM2m';
 }

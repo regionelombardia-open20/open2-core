@@ -93,10 +93,10 @@ class User extends Record implements IdentityInterface
      */
     public function behaviors()
     {
-
+        $behaviors = parent::behaviors();
         $adminModule = \Yii::$app->getModule('admin');
         if ($adminModule && !empty($adminModule->enableAttributeChangeLog)) {
-            $attrChangeLog = ['AttributesChangeLogBehavior' => [
+            $behaviors['AttributesChangeLogBehavior'] = [
                 'class' => AttributesChangeLogBehavior::className(),
                 'attributesToLog' => ['email'],
                 'configUserActivityLog' => [
@@ -106,12 +106,9 @@ class User extends Record implements IdentityInterface
                     'name' => \Yii::t('app','Aggiornamento profilo'),
                     'description' => \Yii::t('app','Aggiornamento profilo')
                 ]
-            ]];
+            ];
 
         }
-        $behaviors = ArrayHelper::merge(parent::behaviors(),
-            $attrChangeLog
-        );
         return $behaviors;
     }
 

@@ -19,6 +19,7 @@ use open20\amos\core\module\Module;
 use open20\amos\core\record\Record;
 use open20\amos\core\utilities\JsUtility;
 use open20\amos\core\views\AmosGridView;
+use open20\amos\core\views\DataProviderView;
 use Yii;
 use yii\base\Event;
 use yii\base\Exception;
@@ -88,6 +89,8 @@ class M2MWidget extends Widget
     public $itemsMittente = [];
     public $itemsSenderPageSize = 20;
     public $pageParam = 'page';
+    public $itemsMittentePagination = null;
+    public $itemsTargetPagination = null;
     public $itemsMittenteActionColumns = [];
     public $mittenteFooter = '';
 
@@ -122,6 +125,7 @@ class M2MWidget extends Widget
     public $btnAssociaId = '';
     public $btnAssociaLabel = '';
     public $btnAssociaClass = 'btn btn-primary';
+    public $btnAssociaConfirm = null;
     public $btnAdditionalAssociateLabel = '';
     public $btnAdditionalAssociateClass = 'btn btn-primary';
     public $forceListRender = false;
@@ -164,6 +168,16 @@ class M2MWidget extends Widget
      * @var array|null $listView - option for data provider list view
      */
     public $listView = null;
+    
+    /**
+     * @var array|null $iconView - option for data provider icon view
+     */
+    public $iconView = null;
+
+    /**
+     * @var array $itemMittenteDisableColumnsOrder
+     */
+    public $itemMittenteDisableColumnsOrder = false;
 
     /**
      * @var array $itemMittenteDefaultOrder
@@ -246,11 +260,16 @@ class M2MWidget extends Widget
                 }
                 $this->modelTargetData = $this->modelTarget->{$this->modelTargetSearch['action']}(\Yii::$app->request->getQueryParams());
             } else {
+                if (!is_null($this->itemsTargetPagination)) {
+                    $targetPagination = $this->itemsTargetPagination;
+                } else {
+                    $targetPagination = [
+                        'defaultPageSize' => $this->isModal ? 10 : 20
+                    ];
+                }
                 $this->modelTargetData = new ActiveDataProvider([
                     'query' => $this->modelTargetSearch['query'],
-                    'pagination' => [
-                        'defaultPageSize' => $this->isModal ? 10 : 20
-                    ]
+                    'pagination' => $targetPagination
                 ]);
             }
         }
@@ -285,6 +304,32 @@ class M2MWidget extends Widget
 
     public function run()
     {
+        $js = <<<JS
+/**
+ *
+ * Bug: Html a with data-confirm inside a form should not submit a form #17624
+ *
+ */
+$(document).on('click', 'a[data-url-confirm]', function (e){
+        var link                = $(this);
+        var address             = link.attr('href');
+
+        krajeeDialog.confirm($(e.currentTarget).data('urlConfirm'),function (result)
+        {
+            if(result){
+                window.location.href = address;
+                return true;
+            }else{
+                return true;
+            }
+        });
+        e.preventDefault();
+        return false;
+    }
+);
+JS;
+        $this->getView()->registerJs($js);
+        
         $content = preg_replace_callback("/{\\w+}/", function ($matches) {
             $content = $this->renderSection($matches[0]);
 
@@ -341,7 +386,10 @@ class M2MWidget extends Widget
                     'urlCreateNew' => $this->createNewTargetUrl,
                     'checkPermWithNewMethod' => $this->checkPermWithNewMethod,
                     'createButtonId' => self::creaButtonId(),
-                    'createNewBtnLabel' => $this->createNewBtnLabel
+                    'createNewBtnLabel' => $this->createNewBtnLabel,
+                    'otherOptions' => [
+                        'title' => $this->createNewBtnLabel
+                    ]
                 ];
                 if (isset($this->model)) {
                     $createOptions['model'] = $this->model;
@@ -372,6 +420,7 @@ class M2MWidget extends Widget
                     $buttons .= Html::a($btnAssociaLabel, $url, [
                         'class' => $this->btnAssociaClass,
                         'title' => $btnAssociaLabel,
+                        'data-url-confirm' => $this->btnAssociaConfirm,
                         'id' => $associateBtnId
                     ]);
 
@@ -523,7 +572,6 @@ class M2MWidget extends Widget
     {
         $retVal = '';
         $buttons = '';
-        $buttonsAssocia = '';
 
         $btnAssociaLabel = ($this->btnAssociaLabel == '') ? Yii::t('amoscore', 'Associa') : $this->btnAssociaLabel;
 
@@ -558,6 +606,7 @@ class M2MWidget extends Widget
                 $buttons .= Html::a($btnAssociaLabel, $url, [
                     'class' => $this->btnAssociaClass,
                     'title' => $btnAssociaLabel,
+                    'data-url-confirm' => $this->btnAssociaConfirm,
                     'id' => $associateBtnId
                 ]);
 
@@ -656,34 +705,68 @@ class M2MWidget extends Widget
      */
     public function renderItemsMittente()
     {
-        $columns = ArrayHelper::merge(
-            $this->itemsMittente,
-            $this->getRelationAttributesArray(),
-            $this->createActionColumnButtons()
-        );
-
-        return AmosGridView::widget([
-            'id' => $this->gridId . '-first',
+        
+        if(!is_null($this->iconView)){
+            return $this->renderItemsIcons();
+        }else{
+            $columns = ArrayHelper::merge(
+                $this->itemsMittente,
+                $this->getRelationAttributesArray(),
+                $this->createActionColumnButtons()
+            );
+            return AmosGridView::widget([
+                'id' => $this->gridId . '-first',
+                'dataProvider' => $this->getItemsMittenteDataProvider(),
+                'columns' => $columns,
+                'showPageSummary' => $this->showPageSummary,
+                'showPager' => $this->showPager,
+                'showHeader' => $this->showHeader,
+            ]);
+        }
+    }
+    
+    /**
+     *
+     * Renders the data models for the icon view.
+     */
+    public function renderItemsIcons(){
+        
+        $icon = [
+            'name' => 'icon',
+            'label' => BaseAmosModule::t('amoscore', '{iconaElenco}' . Html::tag('p', BaseAmosModule::t('amoscore', 'Icone')), [
+                'iconaElenco' => AmosIcons::show('grid')
+            ]),
+            'url' => '?currentView=icon'
+        ];
+        
+        $dataProviderViewWidgetConf = [
             'dataProvider' => $this->getItemsMittenteDataProvider(),
-            'columns' => $columns,
-            'showPageSummary' => $this->showPageSummary,
-            'showPager' => $this->showPager,
-            'showHeader' => $this->showHeader,
-        ]);
+            'currentView' => $icon,
+            'iconView' => [
+                'itemView' => $this->iconView
+            ],
+        ];
+        return DataProviderView::widget($dataProviderViewWidgetConf);
     }
 
     private function getItemsMittenteDataProvider()
     {
         if (is_null($this->itemsMittenteDataProvider)) {
+            if (!is_null($this->itemsMittentePagination)) {
+                $pagination = $this->itemsMittentePagination;
+            } else {
                 $pagination = [
                     'pageSize' => $this->itemsSenderPageSize,
                     'pageParam' => $this->pageParam
                 ];
+            }
             $this->itemsMittenteDataProvider = new ActiveDataProvider([
                 'query' => $this->modelData,
                 'pagination' => $pagination
             ]);
-            if (isset($this->itemMittenteDefaultOrder)) {
+            if ($this->itemMittenteDisableColumnsOrder === true) {
+                $this->itemsMittenteDataProvider->setSort(false);
+            } else if (isset($this->itemMittenteDefaultOrder)) {
                 $this->itemsMittenteDataProvider->setSort([
                     'defaultOrder' => $this->itemMittenteDefaultOrder
                 ]);
@@ -699,9 +782,13 @@ class M2MWidget extends Widget
             'query' => $this->modelData,
             'pagination' => $pagination
         ]);
-        $itemsMittenteDataProviderDownLoad->setSort([
-            'defaultOrder' => $this->itemMittenteDefaultOrder
-        ]);
+        if ($this->itemMittenteDisableColumnsOrder === true) {
+            $itemsMittenteDataProviderDownLoad->setSort(false);
+        } else if (isset($this->itemMittenteDefaultOrder)) {
+            $itemsMittenteDataProviderDownLoad->setSort([
+                'defaultOrder' => $this->itemMittenteDefaultOrder
+            ]);
+        }
         return $itemsMittenteDataProviderDownLoad;
     }
 
@@ -828,7 +915,6 @@ class M2MWidget extends Widget
      */
     public function renderHiddenInputTarget()
     {
-
         if ($this->renderTargetCheckbox) {
             $hiddenInputSection = "";
             foreach ($this->modelDataArr as $id => $label) {
@@ -859,7 +945,8 @@ class M2MWidget extends Widget
             'isModal' => $this->isModal,
             'firstGridId' => $this->gridId,
             'useCheckbox' => $this->renderTargetCheckbox,
-            'listView' => $this->listView
+            'listView' => $this->listView,
+            'iconView' => $this->iconView
         ]);
 
         return $Grid;
@@ -1017,7 +1104,7 @@ class M2MWidget extends Widget
             });
          }
 JS
-                , \yii\web\View::POS_END);
+                , View::POS_END);
         }
 
         $confirm = $isActionUpdate ? "customDialogM2m(event)" : null;

@@ -14,6 +14,7 @@ use open20\amos\core\behaviors\BlameableBehavior;
 use open20\amos\core\behaviors\EJsonBehavior;
 use open20\amos\core\behaviors\SoftDeleteByBehavior;
 use open20\amos\core\behaviors\VersionableBehaviour;
+use open20\amos\core\interfaces\CrudModelInterface;
 use open20\amos\core\interfaces\StatsToolbarInterface;
 use open20\amos\core\interfaces\WorkflowModelInterface;
 use open20\amos\core\module\AmosModule;
@@ -47,7 +48,7 @@ use yii\web\Application as Web;
  *
  * @package open20\amos\core\record
  */
-class Record extends ActiveRecord implements StatsToolbarInterface
+class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInterface
 {
     const SCENARIO_FAKE_REQUIRED = 'scenario_fake_required';
 
@@ -559,7 +560,9 @@ class Record extends ActiveRecord implements StatsToolbarInterface
             'user_lockout',
             'user_profile',
             'translation_user_preference',
-            'amos_workflow_transitions_log'
+            'amos_workflow_transitions_log',
+            'token_users',
+            'token_group',
         ];
 
         //Caching table name
@@ -571,7 +574,9 @@ class Record extends ActiveRecord implements StatsToolbarInterface
                   VALUES ('{$tableName}', 1, now(), NULL, now(), NULL, now(), NULL)
                   ON DUPLICATE KEY UPDATE updates = updates + 1, updated_at = now()"
             )->execute();
- 
+        }
+        
+        if (\Yii::$app instanceof \yii\web\Application && \Yii::$app->user->id) {
             /**
              * Something was changed in my own interest areas?
              */   
@@ -607,7 +612,15 @@ class Record extends ActiveRecord implements StatsToolbarInterface
                 if (isset($attributes['updated_by'])) {
                     $updated_by = $attributes['updated_by'];
                 }
-                
+
+                if(is_null($updated_by)){
+                    $updated_by = \Yii::$app->user->id;
+                }
+
+                if(is_null($created_by)){
+                    $created_by = \Yii::$app->user->id;
+                }
+
                 \Yii::$app->db->createCommand()->setSql(
                     "INSERT INTO 
                         `update_contents` (`module`, `updates`, `created_at`, `created_by`, `updated_at`, `updated_by`, `deleted_at`, `deleted_by`) 
@@ -702,7 +715,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface
                         // Change from 'XHTML 1.0 Strict'.
                         'HTML.Doctype' => 'XHTML 1.0 Transitional',
                         // Change from 'XHTML 1.0 Strict'.
-                        'HTML.Allowed' => 'a[href|target],h1,h2,h3,h4,h5,h6,b,strong,i,em,ul,ol,li,p[style],br,span[style],img[width|height|alt|src],iframe[width|height|src|frameborder]',
+                          'HTML.Allowed' => 'a[href|target|style],h1[style],h2[style],h3[style],h4[style],h5[style],h6[style],b,strong,i,em,ul[style],ol[style],li[style],p[style],br,span[style],img[width|height|alt|src|style],iframe[width|height|src|frameborder]',
                         // Finally add the following lines:
                         'HTML.SafeIframe' => true,
                         'URI.SafeIframeRegexp' => '%^(http://|https://|//)(www.youtube.com/embed/|player.vimeo.com/video/)%',
@@ -1045,6 +1058,91 @@ class Record extends ActiveRecord implements StatsToolbarInterface
             $isFirst             = false;
         }
         return $modelControllerName;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getBasicUrl()
+    {
+        return $this->getModelModuleName() . '/' . $this->getModelControllerName() . '/';
+    }
+
+    /**
+     * Returns the full url to the action with the model id.
+     * @param $url
+     * @return null|string
+     */
+    protected function getBasicFullUrl($url)
+    {
+        if (!empty($url)) {
+            return Url::toRoute(["/" . $url, "id" => $this->id]);
+        }
+        return null;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getCreateUrl()
+    {
+        return $this->getBasicUrl() . 'create';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getFullCreateUrl()
+    {
+        return $this->getCreateUrl();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getViewUrl()
+    {
+        return $this->getBasicUrl() . 'view';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getFullViewUrl()
+    {
+        return $this->getBasicFullUrl($this->getViewUrl());
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getUpdateUrl()
+    {
+        return $this->getBasicUrl() . 'update';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getFullUpdateUrl()
+    {
+        return $this->getBasicFullUrl($this->getUpdateUrl());
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getDeleteUrl()
+    {
+        return $this->getBasicUrl() . 'delete';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getFullDeleteUrl()
+    {
+        return $this->getBasicFullUrl($this->getDeleteUrl());
     }
 
     /**

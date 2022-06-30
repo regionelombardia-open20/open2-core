@@ -38,10 +38,10 @@ class TextEditorWidget extends TinyMce
         'convert_urls' => false,
         'allow_unsafe_link_target' => true,
         'plugins' => [
-            "advlist autolink lists link charmap print preview anchor",
-            "searchreplace visualblocks code fullscreen code",
-            "insertdatetime media table contextmenu paste textcolor image insertdatetime",
-            "placeholder"
+            "",
+            "",
+            "contextmenu paste",
+            ""
         ],
         'toolbar' => "fullscreen | undo redo code | styleselect | bold italic strikethrough forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media insertdatetime | removeformat",
         'branding' => false,

@@ -12,6 +12,7 @@
 namespace open20\amos\core\behaviors;
 
 use open20\amos\admin\models\UserProfile;
+use open20\amos\core\migration\libs\common\MigrationCommon;
 use open20\amos\core\models\AttributesChangeLog;
 use open20\amos\core\models\ModelsClassname;
 use open20\amos\core\models\UserActivityLog;
@@ -74,8 +75,9 @@ class AttributesChangeLogBehavior extends Behavior
 
             $userActivityLog = $this->saveUserActivityLog($event, $owner);
             $oldAttributes = $owner->getOldAttributes();
+            $this->attributesToLog = array_unique($this->attributesToLog);
             foreach ($this->attributesToLog as $attributeName) {
-                $oldValue = (($event->name == ActiveRecord::EVENT_AFTER_INSERT) ? null : $oldAttributes[$attributeName]);
+                $oldValue = ((($event->name != ActiveRecord::EVENT_AFTER_INSERT) && isset($oldAttributes[$attributeName])) ? $oldAttributes[$attributeName] : null);
                 $newValue = $owner->{$attributeName};
                 if ($oldValue != $newValue) {
                     $fieldsLog = new AttributesChangeLog();
