@@ -10,6 +10,7 @@
 
 namespace open20\amos\core\module;
 
+use open20\amos\core\helpers\BreadcrumbHelper;
 use open20\amos\core\widget\WidgetAbstract;
 use ReflectionClass;
 use ReflectionException;
@@ -218,7 +219,7 @@ abstract class AmosModule extends BaseAmosModule implements ModuleInterface
     public function getFrontEndMenu()
     {
         $menu = "";
-        
+        BreadcrumbHelper::reset();
         return $menu;
     }
 
@@ -252,7 +253,7 @@ abstract class AmosModule extends BaseAmosModule implements ModuleInterface
                         'class' => 'nav-link'.' '.'active',
                         'target' => '_self',
                         'title' => $title,
-                        'href' => $link,
+                        'href' => '/site/to-menu-url?url=' .  $link,
                     ]
                 ),
                 [

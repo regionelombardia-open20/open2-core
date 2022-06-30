@@ -67,7 +67,7 @@ var checkSessionValidation = function(options){
             cssClass: (type == 1 ? 'btn btn-warning' : 'btn btn-danger'),
             action: function(dialog) {
               dialog.close();
-              $(location).attr('href','/admin/security/reset-dashboard-by-scope');
+              window.location.href = '/admin/security/reset-dashboard-by-scope';
             }
           }]
         });

@@ -19,6 +19,7 @@ use open20\amos\core\module\Module;
 use open20\amos\core\record\Record;
 use open20\amos\core\utilities\JsUtility;
 use open20\amos\core\views\AmosGridView;
+use open20\amos\core\views\DataProviderView;
 use Yii;
 use yii\base\Event;
 use yii\base\Exception;
@@ -164,6 +165,11 @@ class M2MWidget extends Widget
      * @var array|null $listView - option for data provider list view
      */
     public $listView = null;
+    
+    /**
+     * @var array|null $iconView - option for data provider icon view
+     */
+    public $iconView = null;
 
     /**
      * @var array $itemMittenteDefaultOrder
@@ -659,20 +665,48 @@ class M2MWidget extends Widget
      */
     public function renderItemsMittente()
     {
-        $columns = ArrayHelper::merge(
-            $this->itemsMittente,
-            $this->getRelationAttributesArray(),
-            $this->createActionColumnButtons()
-        );
-
-        return AmosGridView::widget([
-            'id' => $this->gridId . '-first',
+        
+        if(!is_null($this->iconView)){
+            return $this->renderItemsIcons();
+        }else{
+            $columns = ArrayHelper::merge(
+                $this->itemsMittente,
+                $this->getRelationAttributesArray(),
+                $this->createActionColumnButtons()
+            );
+            return AmosGridView::widget([
+                'id' => $this->gridId . '-first',
+                'dataProvider' => $this->getItemsMittenteDataProvider(),
+                'columns' => $columns,
+                'showPageSummary' => $this->showPageSummary,
+                'showPager' => $this->showPager,
+                'showHeader' => $this->showHeader,
+            ]);
+        }
+    }
+    
+    /**
+     * 
+     * Renders the data models for the icon view.
+     */
+    public function renderItemsIcons(){
+        
+        $icon = [
+            'name' => 'icon',
+            'label' => BaseAmosModule::t('amoscore', '{iconaElenco}' . Html::tag('p', BaseAmosModule::t('amoscore', 'Icone')), [
+                'iconaElenco' => AmosIcons::show('grid')
+            ]),
+            'url' => '?currentView=icon'
+        ];
+        
+        $dataProviderViewWidgetConf = [
             'dataProvider' => $this->getItemsMittenteDataProvider(),
-            'columns' => $columns,
-            'showPageSummary' => $this->showPageSummary,
-            'showPager' => $this->showPager,
-            'showHeader' => $this->showHeader,
-        ]);
+            'currentView' => $icon,
+            'iconView' => [
+                'itemView' => $this->iconView
+            ],       
+        ];
+        return DataProviderView::widget($dataProviderViewWidgetConf);
     }
 
     private function getItemsMittenteDataProvider()
@@ -862,7 +896,8 @@ class M2MWidget extends Widget
             'isModal' => $this->isModal,
             'firstGridId' => $this->gridId,
             'useCheckbox' => $this->renderTargetCheckbox,
-            'listView' => $this->listView
+            'listView' => $this->listView,
+            'iconView' => $this->iconView 
         ]);
 
         return $Grid;
@@ -1020,7 +1055,7 @@ class M2MWidget extends Widget
             });
          }
 JS
-                , \yii\web\View::POS_END);
+                , View::POS_END);
         }
 
         $confirm = $isActionUpdate ? "customDialogM2m(event)" : null;

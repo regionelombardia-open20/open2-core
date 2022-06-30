@@ -612,7 +612,15 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
                 if (isset($attributes['updated_by'])) {
                     $updated_by = $attributes['updated_by'];
                 }
-                
+
+                if(is_null($updated_by)){
+                    $updated_by = \Yii::$app->user->id;
+                }
+
+                if(is_null($created_by)){
+                    $created_by = \Yii::$app->user->id;
+                }
+
                 \Yii::$app->db->createCommand()->setSql(
                     "INSERT INTO 
                         `update_contents` (`module`, `updates`, `created_at`, `created_by`, `updated_at`, `updated_by`, `deleted_at`, `deleted_by`) 
