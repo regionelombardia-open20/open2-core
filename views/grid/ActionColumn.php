@@ -61,6 +61,16 @@ class ActionColumn extends YiiActionColumn
      * @var bool $useOnly_additionalParams
      */
     public $useOnly_additionalParams = false;
+    
+    /**
+     * @var \Closure|null $beforeRenderParent
+     */
+    public $beforeRenderParent = null;
+    
+    /**
+     * @var \Closure|null $afterRenderParent
+     */
+    public $afterRenderParent = null;
 
     /**
      * @inheritdoc
@@ -86,8 +96,23 @@ class ActionColumn extends YiiActionColumn
                 }
             }
         }
-
-        $renderDataCellContent = parent:: renderDataCellContent($model, $key, $index);
+    
+        if (!is_null($this->beforeRenderParent) && ($this->beforeRenderParent instanceof \Closure)) {
+            $beforeRenderParentRes = call_user_func($this->beforeRenderParent, $model, $key, $index);
+            if (is_array($key)) {
+                $key['beforeRenderParentRes'] = $beforeRenderParentRes;
+            } else {
+                $tmp_array_key = ['id' => $key];
+                $key = array_merge($tmp_array_key, ['beforeRenderParentRes' => $beforeRenderParentRes]);
+            }
+        }
+        
+        $renderDataCellContent = parent::renderDataCellContent($model, $key, $index);
+        
+        if (!is_null($this->afterRenderParent) && ($this->afterRenderParent instanceof \Closure)) {
+            call_user_func($this->afterRenderParent, $model, $key, $index);
+        }
+        
         return Html::tag('div', $renderDataCellContent, ['class' => 'bk-elementActions container-action']) . Html::tag('div', '', ['class' => 'clearfix']);
     }
 

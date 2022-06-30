@@ -104,7 +104,6 @@ $this->registerJs($js);
     }
     ?>
 
-    <div id="<?= $GridId ?>" data-pjax-container="<?= $pjaxContainerId ?>" data-pjax-timeout="1000">
         <?=
         DataProviderView::widget([
             'dataProvider' => $this->params['modelTargetData'],
@@ -119,5 +118,4 @@ $this->registerJs($js);
             'listView' => $listViewArray
         ])
         ?>
-    </div>
 </div>

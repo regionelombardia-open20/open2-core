@@ -172,6 +172,11 @@ class M2MWidget extends Widget
     public $iconView = null;
 
     /**
+     * @var array $itemMittenteDisableColumnsOrder
+     */
+    public $itemMittenteDisableColumnsOrder = false;
+
+    /**
      * @var array $itemMittenteDefaultOrder
      */
     public $itemMittenteDefaultOrder = null;
@@ -720,7 +725,9 @@ class M2MWidget extends Widget
                 'query' => $this->modelData,
                 'pagination' => $pagination
             ]);
-            if (isset($this->itemMittenteDefaultOrder)) {
+            if ($this->itemMittenteDisableColumnsOrder === true) {
+                $this->itemsMittenteDataProvider->setSort(false);
+            } else if (isset($this->itemMittenteDefaultOrder)) {
                 $this->itemsMittenteDataProvider->setSort([
                     'defaultOrder' => $this->itemMittenteDefaultOrder
                 ]);
@@ -736,9 +743,13 @@ class M2MWidget extends Widget
             'query' => $this->modelData,
             'pagination' => $pagination
         ]);
-        $itemsMittenteDataProviderDownLoad->setSort([
-            'defaultOrder' => $this->itemMittenteDefaultOrder
-        ]);
+        if ($this->itemMittenteDisableColumnsOrder === true) {
+            $itemsMittenteDataProviderDownLoad->setSort(false);
+        } else if (isset($this->itemMittenteDefaultOrder)) {
+            $itemsMittenteDataProviderDownLoad->setSort([
+                'defaultOrder' => $this->itemMittenteDefaultOrder
+            ]);
+        }
         return $itemsMittenteDataProviderDownLoad;
     }
 

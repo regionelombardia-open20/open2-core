@@ -137,7 +137,7 @@ class ItemAndCardHeaderWidget extends Widget
     }
 
     /**
-     * @return string
+     * @return bool
      */
     public function getPublicationDateNotPresent()
     {
@@ -145,7 +145,7 @@ class ItemAndCardHeaderWidget extends Widget
     }
 
     /**
-     * @param string $publicationDateNotPresent
+     * @param bool $publicationDateNotPresent
      */
     public function setPublicationDateNotPresent($publicationDateNotPresent)
     {
