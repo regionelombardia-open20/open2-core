@@ -12,6 +12,7 @@
 namespace open20\amos\core\views;
 
 use open20\amos\core\controllers\CrudController;
+use open20\amos\core\module\BaseAmosModule;
 use Yii;
 use yii\base\Widget;
 use yii\helpers\ArrayHelper;
@@ -32,6 +33,7 @@ class DataProviderView extends Widget
     public $viewCalendarClass = 'open20\amos\core\views\CalendarView';
     public $viewGanttClass = 'open20\amos\core\views\GanttView';
     public $dataProvider;
+	public $showPageSummary = true;
     public $gridView;
     public $listView;
     public $iconView;
@@ -54,7 +56,13 @@ class DataProviderView extends Widget
     {
         parent::init();
         $listViewLayout = $this->render('@vendor/open20/amos-layout/src/views/layouts/fullsize/parts/yii2/views/listViewLayout');
-        $listViewLayoutSummary = $this->render('@vendor/open20/amos-layout/src/views/layouts/fullsize/parts/yii2/views/parts/_listViewLayoutSummary');
+        
+        if($this->showPageSummary) {
+                $listViewLayoutSummary = $this->render('@vendor/open20/amos-layout/src/views/layouts/fullsize/parts/yii2/views/parts/_listViewLayoutSummary');
+        }
+        else {
+            $listViewLayoutSummary = $this->render('@vendor/open20/amos-layout/src/views/layouts/fullsize/parts/yii2/views/parts/_listViewLayoutSummaryWithoutPagination');
+        }
 
         $controller = \Yii::$app->controller;
         $appControllerIsCrudController = ($controller instanceof CrudController);
@@ -68,6 +76,7 @@ class DataProviderView extends Widget
             }
             $controller->setGridViewColumns($columns);
         }
+		
 
         if (isset($this->listView)) {
             $this->listView['layout'] = $listViewLayout;

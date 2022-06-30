@@ -12,6 +12,7 @@ namespace open20\amos\core\utilities;
 
 use Yii;
 use yii\base\BaseObject;
+use yii\log\Logger;
 
 /**
  * Class Email
@@ -33,31 +34,39 @@ class Email extends BaseObject
      * @return bool
      */
     public static function sendMail(
-    $from, $to, $subject, $text, array $files = [], array $bcc = [], $params = [], $priority = 0, $use_queue = false, $cc = [], $replyTo = [])
+    $from, $to, $subject, $text, array $files = [], array $bcc = [], $params = [], $priority = 0, $use_queue = false,
+    $cc = [], $replyTo = [])
     {
-        /** @var \open20\amos\emailmanager\AmosEmail $mailModule */
-        $mailModule = Yii::$app->getModule("email");
-        $errCnt     = 0;
-        if (isset($mailModule)) {
-            if (is_string($to)) {
-                $to = [$to];
-            } elseif (!is_string($to) && !is_array($to)) {
-                return false;
-            }
-            foreach ($to as $recipient) {
-                /** @var string $recipient */
-                if ($use_queue) {
-                    if (!$mailModule->queue($from, $recipient, $subject, $text, $files, $bcc, $params, $priority)) {
-                        $errCnt++;
-                    }
-                } else {
-                    if (!$mailModule->send($from, $recipient, $subject, $text, $files, $bcc, $params, true, $cc, $replyTo)) {
-                        $errCnt++;
+        try {
+
+            /** @var \open20\amos\emailmanager\AmosEmail $mailModule */
+            $mailModule = Yii::$app->getModule("email");
+            $errCnt     = 0;
+            if (isset($mailModule)) {
+                if (is_string($to)) {
+                    $to = [$to];
+                } elseif (!is_string($to) && !is_array($to)) {
+                    return false;
+                }
+                foreach ($to as $recipient) {
+                    /** @var string $recipient */
+                    if ($use_queue) {
+                        if (!$mailModule->queue($from, $recipient, $subject, $text, $files, $bcc, $params, $priority)) {
+                            $errCnt++;
+                        }
+                    } else {
+                        if (!$mailModule->send($from, $recipient, $subject, $text, $files, $bcc, $params, true, $cc,
+                                $replyTo)) {
+                            $errCnt++;
+                        }
                     }
                 }
-            }
 
-            return (($errCnt) ? false : true);
+                return (($errCnt) ? false : true);
+            }
+        } catch (Exception $ex) {
+            \Yii::getLogger()->log($ex->getTraceAsString(), Logger::LEVEL_ERROR);
+            return false;
         }
 
         return false;
@@ -73,6 +82,7 @@ class Email extends BaseObject
      */
     public static function renderMailPartial($view, $params = [], $user_id = null)
     {
+        $value = '';
         if (is_null($user_id)) {
             $user_id = \Yii::$app->getUser()->id;
         }

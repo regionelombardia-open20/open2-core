@@ -475,6 +475,10 @@ class PositionalBreadcrumbHelper extends Component
      */
     public static function createCrumbParentCommunities($community)
     {
+        $actionJoinCommunity = 'join';
+        if(\Yii::$app->params['befe']){
+            $actionJoinCommunity = 'join/open-join';
+        }
         $communityParent = $community;
         $parentCommunities = [];
         while (!empty($communityParent->parent_id)) {
@@ -500,8 +504,8 @@ class PositionalBreadcrumbHelper extends Component
                 'title' => $parentCom->getTitle(),
                 'module' => 'community',
                 'controller' => 'community',
-                'url' => '/community/join?id=' . $parentCom->id,
-                'route' => '/community/join?id=' . $parentCom->id,
+                'url' => "/community/$actionJoinCommunity?id=" . $parentCom->id,
+                'route' => "/community/$actionJoinCommunity?id=" . $parentCom->id,
             ];
             $parentsCrumb [] = self::createCrumb($url_param, self::TYPE_BREAD_COMMUNITY);
         }
@@ -515,6 +519,10 @@ class PositionalBreadcrumbHelper extends Component
      */
     public static function createCrumbCommunity($currentController)
     {
+        $actionJoinCommunity = 'join';
+        if(\Yii::$app->params['befe']){
+            $actionJoinCommunity = 'join/open-join';
+        }
         $moduleCwh = \Yii::$app->getModule('cwh');
         $community_id = null;
         isset($moduleCwh) ? $scope = $moduleCwh->getCwhScope() : null;
@@ -531,8 +539,8 @@ class PositionalBreadcrumbHelper extends Component
                     'title' => $community->getTitle(),
                     'module' => 'community',
                     'controller' => 'community',
-                    'url' => '/community/join?id=' . $community_id,
-                    'route' => '/community/join?id=' . $community_id,
+                    'url' => "/community/$actionJoinCommunity?id=" . $community_id,
+                    'route' => "/community/$actionJoinCommunity?id=" . $community_id,
                     'remove_action' => isset($remove_action) ? $remove_action : null,
                     'template' => isset($template) ? $template : null,
                 ];

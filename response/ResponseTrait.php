@@ -114,6 +114,9 @@ trait ResponseTrait {
      */
     public function addSafetyHeaders() {
         $headers = $this->getHeaders();
+        $headers->set('Server', "");
+        $headers->set('X-Powered-By', "");
+                
         $this->addContentSecurityPolicy($headers);
         $this->addStrictTransportSecurity($headers);
         $this->addContentTypeOptions($headers);
