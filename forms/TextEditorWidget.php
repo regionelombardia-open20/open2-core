@@ -11,9 +11,8 @@
 namespace open20\amos\core\forms;
 
 use dosamigos\tinymce\TinyMce;
-use dosamigos\tinymce\TinyMceAsset;
-use open20\amos\core\assets\TnyMentionAsset;
 use dosamigos\tinymce\TinyMceLangAsset;
+use open20\amos\core\assets\TnyMentionAsset;
 use open20\amos\core\module\Module;
 use open20\amos\core\utilities\StringUtils;
 use yii\helpers\ArrayHelper;
@@ -29,6 +28,26 @@ class TextEditorWidget extends TinyMce
 
     public $language      = 'en';
     private $tinyMCELabel;
+
+
+    /**
+     *
+     * MENTIONS - URL to action to search for a user
+     *
+     * 'mentions' => [
+     *      'url' => null
+     *  ]
+     *
+     * MENTIONS - params TextEditor widget to enable mentions
+     *
+     * 'textEditor' => [
+     *      "mentions" => [
+     *          'enable' => true,
+     *      ]
+     * ]
+     *
+     */
+
     public $clientOptions = [
         'menubar' => false,
         'paste_data_images' => true,
@@ -51,6 +70,11 @@ class TextEditorWidget extends TinyMce
         'branding' => false,
         'paste_block_drop' => true,
         'paste_as_text' => true,
+
+        // URL to action to search for a user
+        'mentions' => [
+            'url' => null
+        ]
     ];
 
     /**
@@ -122,6 +146,7 @@ JS;
         }
     }
 
+
     /**
      *
      * @param array $config
@@ -150,7 +175,7 @@ JS;
 
                 $mentionElementMethod = <<<JS
             function(item) {
-                console.log(item.user_id); 
+                console.log(item.user_id);
                 return '<a href="'+item.url+'">@' + item.name + '</a>&nbsp;';
             }
 JS;
@@ -233,8 +258,14 @@ JS;
             $config['clientOptions']['max_chars'] = $config['options']['maxlength'];
         }
 
-
+        // MENTIONS - plugin enable
+        if( \Yii::$app->params['textEditor']['mentions']['enable'] ){
+            $config['clientOptions']['plugins'][] = "mention";
+        }
 
         return $config;
     }
+
+
+
 }

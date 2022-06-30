@@ -641,11 +641,45 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
             return false;
         }
 
+        // checking for tagging user_profile
+		if(!$this->isNewRecord){
+
+            if( isset(\Yii::$app->params['mention-models-enabled'])
+                && is_array(\Yii::$app->params['mention-models-enabled'])
+                && array_key_exists($this->className(),\Yii::$app->params['mention-models-enabled'])
+            ){
+
+                $user_profile_ids = [];
+
+                if (method_exists($this, 'getValidatedStatus')) {
+
+                    if ($this->getValidatedStatus() == $this->status) {
+                        // extract user_profile id filtered..
+                        $user_profile_ids = $this->checkNewMentionIds();
+                    }
+                }else {
+                    $user_profile_ids = $this->checkNewMentionIds();
+                }
+
+                // get all UserProfile for sending a mail
+                $user_profiles = \open20\amos\admin\models\UserProfile::find()
+                                ->andWhere(['id' => $user_profile_ids])
+                                ->all();
+
+                // send email for user_profiles
+                $this->sendEmailForUserProfiles($user_profiles);
+            }
+		}
+		
+
+
+
+
         return parent::beforeSave($insert);
     }
 
     /**
-     * 
+     *
      */
     protected function setUseBullet()
     {
@@ -1772,6 +1806,153 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
     public function setModuleObj($moduleObj)
     {
         $this->moduleObj = $moduleObj;
+    }
+
+    
+    /**
+     * Method to get user ID from text for tagged users
+     *
+     * @param string | text | $text
+     *
+     * @return array | $ids
+     */
+    public static function getMentionUserIdFromText($text){
+
+        $ids        = [];
+        $occurrence = '>@';
+        $count      = substr_count($text, $occurrence);
+        $text       = $text;
+
+        // loop for each occurrence found within the text
+        for ($i = 0; $i < $count; $i++) {
+
+            $pos = strpos($text, $occurrence);
+
+            if ($pos !== false) {
+                $newStr = substr($text, 0, $pos);
+
+                $text = substr($text, $pos + 3);
+                $pos2 = strrpos($newStr, '<a href="');
+
+                $newStr2 = substr($newStr, $pos2 + 9);
+                $posF    = strpos($newStr2, '"');
+
+                $link     = substr($newStr2, 0, $posF);
+                $parseUrl = parse_url($link);
+                if (!empty($parseUrl) && !empty($parseUrl['query'])) {
+                    $kv = explode('=', $parseUrl['query']);
+                    if (!empty($kv[0]) && $kv[0] == 'id' && !empty($kv[1])) {
+                        $ids[] = $kv[1];
+                    }
+                }
+            }
+        }
+        
+        return $ids;
+    }
+
+
+    /**
+     * Method to get UserProfile id
+     * filtered based on the difference between the old id tagging and the new id tagging from the text field
+     * filtered by user_profile -> notify_tagging_user_in_content
+     *
+     * @return array | $user_profile_ids
+     */
+	protected function checkNewMentionIds(){
+
+	    $user_profile_ids = [];
+
+        foreach(\Yii::$app->params['mention-models-enabled'][$this->className()] as $v){
+
+            if(array_key_exists($v, $this->dirtyAttributes)){
+
+                $beforeIds = self::getMentionUserIdFromText($this->oldAttributes[$v]);
+                $afterIds = self::getMentionUserIdFromText($this->$v);
+
+                // check if this model has been validated
+                $count = \open20\amos\workflow\models\WorkflowTransitionsLog::find()
+                    ->andWhere(['classname' => $this->className()])
+                    ->andWhere(['owner_primary_key' => $this->id])
+                    ->count();
+       
+                // create an array of user_profile_id to send an email tag notification
+                $user_profile_ids = [];
+
+                if( $count == 0 ){
+
+                    // all afterIds
+                    $user_profile_ids = $afterIds;
+
+                }else{
+
+                    // extract all ids from $ afterIds where they are not in $ beforeIds
+                    foreach ($afterIds as $key => $value) {
+                        if( !in_array($value, $beforeIds) ){
+                            $user_profile_ids[] = $value;
+                        }
+                    }
+                }
+
+                // filter of user profiles that have set notify_tagging_user_in_content
+                $user_profiles = ArrayHelper::getColumn(
+                    \open20\amos\admin\models\UserProfile::find()
+                        ->select('id')
+                        ->andWhere(['id' => $user_profile_ids])
+                        ->andWhere(['notify_tagging_user_in_content' => 1])
+                        ->andWhere(['deleted_at' => null])
+                        ->all(),
+
+                    function($element){
+                        return $element['id'];
+                    }
+                );
+            }
+        }
+        
+        return $user_profile_ids;
+	}
+
+
+    /**
+     * Method to send email to list UserProfile
+     *
+     * @param string $modelContext
+     * @param string $model
+     * @param string $email_assistance
+     * @param model | \open20\amos\admin\models\UserProfile | $user_profiles
+     *
+     * @return void
+     */
+    public function sendEmailForUserProfiles($user_profiles, $modelContext = null, $model = null){
+
+        // create email for tagging user_profile
+        $email_assistance = \Yii::$app->params['email-assistenza'];
+        $subject = "Sei stato taggato in un commento";
+
+        $email = new \open20\amos\core\utilities\Email;
+  
+        try {
+            
+            foreach ($user_profiles as $key => $user_profile) {
+
+                $message = \Yii::$app->controller->renderMailPartial('@vendor/open20/amos-core/views/email/content_tagging_user', [
+                    'model' => $this ?? $model,
+                    'contextModel' => $this ?? $modelContext,
+                    'model_field' => $v,
+                    'user' => $user_profile->user
+                ]);
+
+                $email->sendMail($email_assistance, [$user_profile->user->email], $subject, $message);
+            }
+            
+        } catch (\Throwable $th) {
+            echo "<pre>";
+            print_r($th->getMessage());
+            echo "</pre>";
+            
+            \Yii::getLogger()->log($th->getMessage(), \yii\log\Logger::LEVEL_ERROR);
+        }
     }
 
     /**

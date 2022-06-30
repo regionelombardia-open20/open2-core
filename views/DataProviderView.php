@@ -76,8 +76,18 @@ class DataProviderView extends Widget
             }
         }
 
+        if (isset($this->iconView)) {
+            $this->iconView['layout'] = $listViewLayout;
+             if (is_null($this->iconView['summary'])) {
+                $this->iconView['summary'] = $listViewLayoutSummary;
+            }
+        }
+
         if (isset($this->gridView)) {
             $this->gridView['layout'] = $listViewLayout;
+            if (is_null($this->gridView['summary'])) {
+                $this->gridView['summary'] = $listViewLayoutSummary;
+            }
         }
 
         // ADVANCED EXPORT - With this options the developer can configure the export for specific columns instead of the grid view columns.

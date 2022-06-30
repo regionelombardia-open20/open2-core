@@ -138,6 +138,15 @@ class SocialShareWidget extends SocialShare
                         echo $labelShare;
                         parent::run();
                         echo "<div hidden id='social-share-model' data-classname='' data-key='$content_id'></div>";
+                        if ($this->model->hasMethod('getOgImageUrl')) {
+                            echo "<div style='display:none'>" .
+                                Html::img(
+                                    $this->model->getOgImageUrl(),
+                                    [
+                                    ]
+                                )
+                                . "</div>";
+                        }
                     } else {
                         // SHARE INSIDE A DROPDOWN
                         echo $labelShare;
@@ -150,6 +159,17 @@ class SocialShareWidget extends SocialShare
                         parent::run();
                         echo "</ul></div>"
                             . "<div hidden id='social-share-model' data-classname='' data-key='$content_id'></div>";
+
+                        if ($this->model->hasMethod('getOgImageUrl')) {
+                            echo "<div style='display:none'>" .
+                            Html::img(
+                                $this->model->getOgImageUrl(),
+                                [
+                                ]
+                            )
+                            . "</div>";
+                        }
+
                     }
                 }
             }
@@ -343,7 +363,7 @@ JS;
                 'headerOptions' => ['id' => 'modalHeader'],
                 'id' => 'modal-contacts-share',
                 'options' => [
-                    'data-url' => Url::current([],true),
+                    'data-url' => Url::current([], true),
                     'data-content-class' => $this->model->className(),
                     'data-content-id' => $this->model->id
                 ],

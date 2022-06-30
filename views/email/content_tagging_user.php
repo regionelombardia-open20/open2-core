@@ -44,57 +44,69 @@ if (($contextModel instanceof BaseContentModelInterface) || $contextModel->hasMe
 ?>
 
 <div style="border:1px solid #cccccc;padding:10px;margin-bottom: 10px;background-color: #ffffff;margin-top:20px">
-    
+    <div style="color:#000000;">
+        <h2 style="font-size:2em;line-height: 1;margin:0;padding:10px 0;">
+            <?= Html::a($linkText, $link, ['style' => 'color: green;']); ?>
+        </h2>
+    </div>
+
     <div style="box-sizing:border-box;font-size:13px;font-weight:normal;">
         
         Ciao <?= $user->userProfile->getNomeCognome() ?>,
         <br>
 
         <?php 
-            if($model->isNewRecord){
-                if(empty($model->created_by))
-                {
-                        $model->created_by = Yii::$app->user->id;
-                }
+            if( !$model->isNewRecord ){
                 echo $model->getCreatedUserProfile()->one()->getNomeCognome(); 
-            }
-            else
-            {
-                $model->updated_by = Yii::$app->user->id;
-                echo $model->getUpdatedUserProfile()->one()->getNomeCognome();
             }
         ?>
 
-        <?= BaseAmosModule::t('amoscore', 'ti ha taggato in un contenuto.') ?>
+        <?= BaseAmosModule::t('amoscore', 'ti ha taggato in un commento.') ?>
            
         <br>
     </div>
 
     <div style="margin-top:20px">
-          <?php
-            $moduleCwh  = Yii::$app->getModule('cwh');
-            $moduleCommunity = Yii::$app->getModule('community');
-            $scope = null;
-            $communityId = null;
-            if (!empty($moduleCwh)) {
-                /** @var \open20\amos\cwh\AmosCwh $moduleCwh */
-                $scope = $moduleCwh->getCwhScope();
-            }
-            if (!empty($scope)) {
-                if (isset($scope['community'])) {
-                    $communityId = $scope['community'];
-                }
-            }
-            $baseUrl = (!empty(\Yii::$app->params['platform']['backendUrl']) ? \Yii::$app->params['platform']['backendUrl'] : '');
-            if(!is_null($communityId) && $moduleCommunity->enableOpenJoin)
-            {
-                $link = $baseUrl. "/community/join/open-join?id=" . $communityId . "&subscribe=1&urlRedirect=".$link . "&contentId=". $contextModel->id . "&contextClassName=" . str_replace('\\', '\\\\', $model->className());
-            }else{
-                $link = $baseUrl. "/myactivities/my-activities/read?id=" . $contextModel->id . "&contextClassName=" . str_replace('\\', '\\\\', $model->className()) . "&url=".$link;
-            }
           
-           ?>
-        <?= BaseAmosModule::t('amoscore', 'Clicca qui per vedere il contenuto: ') ?> <?= Html::a($linkText, $link, ['style' => 'color: green;']); ?>
+        <?= BaseAmosModule::t('amoscore', 'Clicca qui per vederlo:') ?> <?= Html::a($linkText, $link, ['style' => 'color: green;']); ?>
+    </div>
+
+    <div style="box-sizing:border-box;padding-bottom: 5px;color:#000000;">
+        <div style="margin-top:20px;">
+            <div style="display: flex;width: 100%;">
+                <div style="width: 50px; height: 50px; overflow: hidden;-webkit-border-radius: 50%; -moz-border-radius: 50%; border-radius: 50%;float: left;">
+                    <?php
+                        $layout = '{publisher}';
+                        if ($model instanceof ModelContentInterface) {
+                            $layout = '{publisher}{publishingRules}{targetAdv}';
+                        }
+                    ?>
+                    <?php if ($model->getCreatedUserProfile() != null): ?>
+                        <?php
+                            if( !$model->isNewRecord ){
+                                echo \open20\amos\admin\widgets\UserCardWidget::widget([
+                                    'model' => $model->getCreatedUserProfile()->one(),
+                                    'onlyAvatar' => true,
+                                    'absoluteUrl' => true
+                                ]);
+                            }
+                        ?>
+                    <?php endif; ?>
+                </div>
+
+                <div style="margin-left: 20px;">
+                    <?=
+                        \open20\amos\core\forms\PublishedByWidget::widget([
+                            'model' => $model,
+                            'modelContext' => $contextModel,
+                            'layout' => $layout,
+                        ]) 
+                    ?>
+
+                    <!-- <span style="font-weight:normal;">< ?= $model->$model_field ?></span> -->
+                </div>
+            </div>
+        </div>
     </div>
 
 </div>
