@@ -88,9 +88,9 @@ if (($contextModel instanceof BaseContentModelInterface) || $contextModel->hasMe
             $baseUrl = (!empty(\Yii::$app->params['platform']['backendUrl']) ? \Yii::$app->params['platform']['backendUrl'] : '');
             if(!is_null($communityId) && $moduleCommunity->enableOpenJoin)
             {
-                $link = $baseUrl. "/community/join/open-join?id=" . $communityId . "&subscribe=1&urlRedirect=".$link . "&contentId=". $model->id . "&contextClassName=" . str_replace('\\', '\\\\', $model->className());
+                $link = $baseUrl. "/community/join/open-join?id=" . $communityId . "&subscribe=1&urlRedirect=".$link . "&contentId=". $contextModel->id . "&contextClassName=" . str_replace('\\', '\\\\', $model->className());
             }else{
-                $link = $baseUrl. "/myactivities/my-activities/read?id=" . $model->id . "&url=".$link;
+                $link = $baseUrl. "/myactivities/my-activities/read?id=" . $contextModel->id . "&contextClassName=" . str_replace('\\', '\\\\', $model->className()) . "&url=".$link;
             }
           
            ?>
