@@ -89,6 +89,8 @@ class M2MWidget extends Widget
     public $itemsMittente = [];
     public $itemsSenderPageSize = 20;
     public $pageParam = 'page';
+    public $itemsMittentePagination = null;
+    public $itemsTargetPagination = null;
     public $itemsMittenteActionColumns = [];
     public $mittenteFooter = '';
 
@@ -258,11 +260,16 @@ class M2MWidget extends Widget
                 }
                 $this->modelTargetData = $this->modelTarget->{$this->modelTargetSearch['action']}(\Yii::$app->request->getQueryParams());
             } else {
+                if (!is_null($this->itemsTargetPagination)) {
+                    $targetPagination = $this->itemsTargetPagination;
+                } else {
+                    $targetPagination = [
+                        'defaultPageSize' => $this->isModal ? 10 : 20
+                    ];
+                }
                 $this->modelTargetData = new ActiveDataProvider([
                     'query' => $this->modelTargetSearch['query'],
-                    'pagination' => [
-                        'defaultPageSize' => $this->isModal ? 10 : 20
-                    ]
+                    'pagination' => $targetPagination
                 ]);
             }
         }
@@ -719,7 +726,7 @@ JS;
     }
     
     /**
-     * 
+     *
      * Renders the data models for the icon view.
      */
     public function renderItemsIcons(){
@@ -737,7 +744,7 @@ JS;
             'currentView' => $icon,
             'iconView' => [
                 'itemView' => $this->iconView
-            ],       
+            ],
         ];
         return DataProviderView::widget($dataProviderViewWidgetConf);
     }
@@ -745,10 +752,14 @@ JS;
     private function getItemsMittenteDataProvider()
     {
         if (is_null($this->itemsMittenteDataProvider)) {
+            if (!is_null($this->itemsMittentePagination)) {
+                $pagination = $this->itemsMittentePagination;
+            } else {
                 $pagination = [
                     'pageSize' => $this->itemsSenderPageSize,
                     'pageParam' => $this->pageParam
                 ];
+            }
             $this->itemsMittenteDataProvider = new ActiveDataProvider([
                 'query' => $this->modelData,
                 'pagination' => $pagination
@@ -904,7 +915,6 @@ JS;
      */
     public function renderHiddenInputTarget()
     {
-
         if ($this->renderTargetCheckbox) {
             $hiddenInputSection = "";
             foreach ($this->modelDataArr as $id => $label) {
@@ -936,7 +946,7 @@ JS;
             'firstGridId' => $this->gridId,
             'useCheckbox' => $this->renderTargetCheckbox,
             'listView' => $this->listView,
-            'iconView' => $this->iconView 
+            'iconView' => $this->iconView
         ]);
 
         return $Grid;
