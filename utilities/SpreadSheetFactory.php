@@ -483,26 +483,26 @@ class SpreadSheetFactory
                         $model->setTableName($table);
 
                         for ($col = $colToStart; $col <= $highestColumnIndex; ++$col) {
-
                             $key  = mb_strtolower($worksheet->getCellByColumnAndRow($col, 1)->getValue());
-                            $cell = $worksheet->getCellByColumnAndRow($col, $row);
-
-                            $dateattr = 'data_';
-                            $pos      = strpos($key, $dateattr);
-                            if ($pos !== false) {
-                                $worksheet->getStyle($cell->getColumn().$row)
-                                    ->getNumberFormat()
-                                    ->setFormatCode(NumberFormat::FORMAT_DATE_DATETIME);
+                            if(!empty($key) && $key!=""){
+                                $cell = $worksheet->getCellByColumnAndRow($col, $row);
+                                $dateattr = 'data_';
+                                $pos      = strpos($key, $dateattr);
+                                if ($pos !== false) {
+                                    $worksheet->getStyle($cell->getColumn().$row)
+                                        ->getNumberFormat()
+                                        ->setFormatCode(NumberFormat::FORMAT_DATE_DATETIME);
+                                }
+                                $value = $cell->getValue();
+                                if (Date::isDateTime($cell)) {
+                                    $value       = Date::excelToDateTimeObject($value);
+                                    $model->$key = date_format($value, 'Y-m-d H:i:s');
+                                } else {
+                                    $model->$key = $value;
+                                }
+                                unset($key);
+                                unset($cell);
                             }
-                            $value = $cell->getValue();
-                            if (Date::isDateTime($cell)) {
-                                $value       = Date::excelToDateTimeObject($value);
-                                $model->$key = date_format($value, 'Y-m-d H:i:s');
-                            } else {
-                                $model->$key = $value;
-                            }
-                            unset($key);
-                            unset($cell);
                         }
                         $model->save();
                     }
