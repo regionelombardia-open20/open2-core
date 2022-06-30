@@ -57,10 +57,14 @@ class CurrentUser extends BaseObject
     {
         $ret = true;
 
-        if (!Yii::$app->getUser()->getIsGuest() &&
-            (isset(Yii::$app->params['platformConfigurations']['guestUserId']) ? Yii::$app->getUser()->id
-                != Yii::$app->params['platformConfigurations']['guestUserId'] : false)) {
-            $ret = false;
+        if(isset(Yii::$app->params['platformConfigurations']['guestUserId'])) {
+            if (!Yii::$app->getUser()->getIsGuest() &&
+                (isset(Yii::$app->params['platformConfigurations']['guestUserId']) ? Yii::$app->getUser()->id
+                    != Yii::$app->params['platformConfigurations']['guestUserId'] : false)) {
+                $ret = false;
+            }
+        }else {
+            $ret = \Yii::$app->user->isGuest;
         }
 
         return $ret;

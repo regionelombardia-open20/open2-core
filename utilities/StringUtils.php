@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Aria S.p.A.
  * OPEN 2.0
@@ -30,6 +29,7 @@ final class StringUtils
      * @var integer
      */
     const INDEX_NOT_FOUND = -1;
+
     // @codeCoverageIgnoreStart
 
     /**
@@ -105,7 +105,7 @@ final class StringUtils
             return $str;
         }
         $lastIndex = self::length($str) - 1;
-        $lastChar = self::charAt($str, $lastIndex);
+        $lastChar  = self::charAt($str, $lastIndex);
         if ("\n" === $lastChar) {
             if ("\r" === self::charAt($str, $lastIndex - 1)) {
                 --$lastIndex;
@@ -255,9 +255,7 @@ final class StringUtils
      */
     public static function lowerCase($str)
     {
-        return (true === self::isEmpty($str))
-            ? $str
-            : strtolower($str);
+        return (true === self::isEmpty($str)) ? $str : strtolower($str);
     }
 
     /**
@@ -276,9 +274,7 @@ final class StringUtils
      */
     public static function upperCase($str)
     {
-        return (true === self::isEmpty($str))
-            ? $str
-            : strtoupper($str);
+        return (true === self::isEmpty($str)) ? $str : strtoupper($str);
     }
 
     /**
@@ -309,18 +305,12 @@ final class StringUtils
      */
     public static function replaceReg($text, $search, $replace, $max = -1)
     {
-        if ((true === self::isEmpty($text))
-            || (true === self::isEmpty($search))
-            || (null === $replace)
-            || (0 === $max)
+        if ((true === self::isEmpty($text)) || (true === self::isEmpty($search)) || (null === $replace) || (0 === $max)
         ) {
             return $text;
         }
         return \preg_replace(
-            '/' . \preg_quote($search) . '/',
-            $replace,
-            $text,
-            $max
+            '/'.\preg_quote($search).'/', $replace, $text, $max
         );
     }
 
@@ -352,24 +342,18 @@ final class StringUtils
      */
     public static function replace($text, $search, $replace, $max = null)
     {
-        if ((true === self::isEmpty($text))
-            || (true === self::isEmpty($search))
-            || (null === $replace)
-            || (0 === $max)
+        if ((true === self::isEmpty($text)) || (true === self::isEmpty($search)) || (null === $replace) || (0 === $max)
         ) {
             return $text;
         }
         return str_replace(
-            $search,
-            $replace,
-            $text,
-            $max
+            $search, $replace, $text, $max
         );
     }
-
     /* -------------------------------------------------------------------------
      * Trim
      * ---------------------------------------------------------------------- */
+
     /**
      * Removes control characters (char &lt;= 32) from both ends of a `string`,
      * handling `null` by returning `null`.
@@ -391,9 +375,7 @@ final class StringUtils
      */
     public static function trim($str)
     {
-        return (true === self::isEmpty($str))
-            ? $str
-            : self::trimToEmpty($str);
+        return (true === self::isEmpty($str)) ? $str : self::trimToEmpty($str);
     }
 
     /**
@@ -441,14 +423,12 @@ final class StringUtils
     public static function trimToNull($str)
     {
         $str = self::trimToEmpty($str);
-        return (true === self::isEmpty($str))
-            ? null
-            : $str;
+        return (true === self::isEmpty($str)) ? null : $str;
     }
-
     /* -------------------------------------------------------------------------
      * Strip
      * ---------------------------------------------------------------------- */
+
     /**
      * Strips any of a set of characters from the start and end of a `string`.
      *
@@ -478,9 +458,7 @@ final class StringUtils
      */
     public static function strip($str, $chars)
     {
-        return (true === self::isEmpty($str))
-            ? $str
-            : self::stripEnd(self::stripStart($str, $chars), $chars);
+        return (true === self::isEmpty($str)) ? $str : self::stripEnd(self::stripStart($str, $chars), $chars);
     }
 
     /**
@@ -505,9 +483,7 @@ final class StringUtils
      */
     public static function stripToEmpty($str)
     {
-        return (null === $str)
-            ? self::EMPTY_STR
-            : self::strip($str, null);
+        return (null === $str) ? self::EMPTY_STR : self::strip($str, null);
     }
 
     /**
@@ -533,9 +509,7 @@ final class StringUtils
     public static function stripToNull($str)
     {
         $str = self::strip($str, null);
-        return (0 === self::length($str))
-            ? null
-            : $str;
+        return (0 === self::length($str)) ? null : $str;
     }
 
     /**
@@ -568,9 +542,7 @@ final class StringUtils
         if (true === self::isEmpty($str)) {
             return $str;
         }
-        return (null === $chars)
-            ? \ltrim($str)
-            : \ltrim($str, $chars);
+        return (null === $chars) ? \ltrim($str) : \ltrim($str, $chars);
     }
 
     /**
@@ -603,14 +575,12 @@ final class StringUtils
         if (true === self::isEmpty($str)) {
             return $str;
         }
-        return (null === $chars)
-            ? \rtrim($str)
-            : \rtrim($str, $chars);
+        return (null === $chars) ? \rtrim($str) : \rtrim($str, $chars);
     }
-
     /* -------------------------------------------------------------------------
      * Compare
      * ---------------------------------------------------------------------- */
+
     /**
      * Compares two `string`s lexicographically.
      *
@@ -654,10 +624,10 @@ final class StringUtils
     {
         return \strcasecmp($str2, $str1);
     }
-
     /* -------------------------------------------------------------------------
      * Equals
      * ---------------------------------------------------------------------- */
+
     /**
      * Compares two `string`s, returning `true` if they are equal.
      *
@@ -678,9 +648,7 @@ final class StringUtils
      */
     public static function equal($str1, $str2)
     {
-        return (null === $str1)
-            ? (null === $str2)
-            : ($str1 === $str2);
+        return (null === $str1) ? (null === $str2) : ($str1 === $str2);
     }
 
     /**
@@ -704,9 +672,7 @@ final class StringUtils
      */
     public static function equalsIgnoreCase($str1, $str2)
     {
-        return (null === $str1)
-            ? (null === $str2)
-            : (self::lowercase($str1) === self::lowercase($str2));
+        return (null === $str1) ? (null === $str2) : (self::lowercase($str1) === self::lowercase($str2));
     }
 
     /**
@@ -746,9 +712,7 @@ final class StringUtils
             return $startPos;
         }
         $pos = \strpos($str, $search, $startPos);
-        return (false === $pos)
-            ? -1
-            : $pos;
+        return (false === $pos) ? -1 : $pos;
     }
 
     /**
@@ -767,7 +731,7 @@ final class StringUtils
             return -1;
         }
         $lengthSearch = self::length($search);
-        $lengthStr = self::length($str);
+        $lengthStr    = self::length($str);
         if ((0 === $lengthSearch) && ($startPos >= $lengthStr)) {
             return $lengthStr;
         }
@@ -816,14 +780,12 @@ final class StringUtils
             return $startPos;
         }
         $pos = \strrpos($str, $search, $startPos);
-        return (false === $pos)
-            ? -1
-            : $pos;
+        return (false === $pos) ? -1 : $pos;
     }
-
     /* -------------------------------------------------------------------------
      * Split
      * ---------------------------------------------------------------------- */
+
     /**
      * Splits the provided text into an `array` with a maximum length,
      * separators specified.
@@ -1002,8 +964,7 @@ final class StringUtils
             return self::EMPTY_STR;
         }
         $pos = self::lastIndexOf($str, $separator);
-        if (self::INDEX_NOT_FOUND === $pos
-            || (self::length($str) - self::length($separator)) === $pos
+        if (self::INDEX_NOT_FOUND === $pos || (self::length($str) - self::length($separator)) === $pos
         ) {
             return self::EMPTY_STR;
         }
@@ -1079,8 +1040,7 @@ final class StringUtils
      */
     public static function substringBeforeLast($str, $separator)
     {
-        if ((true === self::isEmpty($str))
-            || (true === self::isEmpty($separator))
+        if ((true === self::isEmpty($str)) || (true === self::isEmpty($separator))
         ) {
             return $str;
         }
@@ -1129,17 +1089,17 @@ final class StringUtils
         $startPos = self::indexOf($str, $open);
         if (self::INDEX_NOT_FOUND !== $startPos) {
             $startPos += self::length($open);
-            $endPos = self::indexOf($str, $close, $startPos);
+            $endPos   = self::indexOf($str, $close, $startPos);
             if (self::INDEX_NOT_FOUND !== $endPos) {
                 $result = self::substring($str, $startPos, $endPos);
             }
         }
         return $result;
     }
-
     /* -------------------------------------------------------------------------
      * Capitalizing
      * ---------------------------------------------------------------------- */
+
     /**
      * Capitalizes a `string` changing the first letter to upper case.
      *
@@ -1181,10 +1141,10 @@ final class StringUtils
     {
         return \lcfirst($str);
     }
-
     /* -------------------------------------------------------------------------
      * Repeating
      * ---------------------------------------------------------------------- */
+
     /**
      * Repeats a `string` the specified number of times to form a new `string`,
      * with a specified `string` injected each time.
@@ -1210,17 +1170,17 @@ final class StringUtils
         if ((null === $str) || (null === $separator)) {
             $result = \str_repeat($str, $repeat);
         } else {
-            $result = \str_repeat($str . $separator, $repeat);
+            $result = \str_repeat($str.$separator, $repeat);
             if (true === self::isNotEmpty($str)) {
                 $result = self::removeEnd($result, $separator);
             }
         }
         return $result;
     }
-
     /* -------------------------------------------------------------------------
      * Remove
      * ---------------------------------------------------------------------- */
+
     /**
      * Checks if a `string` ends with a specified suffix.
      *
@@ -1242,11 +1202,8 @@ final class StringUtils
      */
     public static function endsWith($str, $suffix)
     {
-        return ((null === $str) && (null === $suffix))
-            ? true
-            : self::substring(
-                $str,
-                self::length($str) - self::length($suffix)
+        return ((null === $str) && (null === $suffix)) ? true : self::substring(
+                $str, self::length($str) - self::length($suffix)
             ) === $suffix;
     }
 
@@ -1270,14 +1227,12 @@ final class StringUtils
      */
     public static function startsWith($str, $prefix)
     {
-        return ((null === $str) && (null === $prefix))
-            ? true
-            : self::substring($str, 0, self::length($prefix)) === $prefix;
+        return ((null === $str) && (null === $prefix)) ? true : self::substring($str, 0, self::length($prefix)) === $prefix;
     }
-
     /* -------------------------------------------------------------------------
      * Remove
      * ---------------------------------------------------------------------- */
+
     /**
      * Removes a substring only if it is at the end of a source `string`,
      * otherwise returns the source `string`.
@@ -1302,16 +1257,13 @@ final class StringUtils
      */
     public static function removeEnd($str, $remove)
     {
-        if ((true === self::isEmpty($str))
-            || (true === self::isEmpty($remove))
+        if ((true === self::isEmpty($str)) || (true === self::isEmpty($remove))
         ) {
             return $str;
         }
         if (true === self::endsWith($str, $remove)) {
             return self::substring(
-                $str,
-                0,
-                self::length($str) - self::length($remove)
+                    $str, 0, self::length($str) - self::length($remove)
             );
         }
         return $str;
@@ -1341,8 +1293,7 @@ final class StringUtils
      */
     public static function removeStart($str, $remove)
     {
-        if ((true === self::isEmpty($str))
-            || (true === self::isEmpty($remove))
+        if ((true === self::isEmpty($str)) || (true === self::isEmpty($remove))
         ) {
             return $str;
         }
@@ -1369,7 +1320,7 @@ final class StringUtils
      */
     public static function containsWord($str, $word)
     {
-        return !!preg_match('#\\b' . preg_quote($word, '#') . '\\b#i', $str);
+        return !!preg_match('#\\b'.preg_quote($word, '#').'\\b#i', $str);
     }
 
     /**
@@ -1405,7 +1356,7 @@ final class StringUtils
             }
 
             //Return it
-            return $asString . "...";
+            return $asString."...";
         } else {
             return $asString;
         }
@@ -1418,5 +1369,81 @@ final class StringUtils
     public static function splitAtUpperCase($str)
     {
         return preg_split('/(?=[A-Z])/', $str, -1, PREG_SPLIT_NO_EMPTY);
+    }
+
+    /**
+     *
+     * @param string $str
+     * @param integer $len
+     * @param string $end
+     * @return string
+     */
+    public static function truncateHTML($str, $len, $end = '&hellip;')
+    {
+        //find all tags
+        $tagPattern = '/(<\/?)([\w]*)(\s*[^>]*)>?|&[\w#]+;/i';  //match html tags and entities
+        preg_match_all($tagPattern, $str, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
+        //WSDDebug::dump($matches); exit;
+        $i          = 0;
+        //loop through each found tag that is within the $len, add those characters to the len,
+        //also track open and closed tags
+        // $matches[$i][0] = the whole tag string  --the only applicable field for html enitities
+        // IF its not matching an &htmlentity; the following apply
+        // $matches[$i][1] = the start of the tag either '<' or '</'
+        // $matches[$i][2] = the tag name
+        // $matches[$i][3] = the end of the tag
+        //$matces[$i][$j][0] = the string
+        //$matces[$i][$j][1] = the str offest
+
+        while ($matches[$i][0][1] < $len && !empty($matches[$i])) {
+
+            $len = $len + strlen($matches[$i][0][0]);
+            if (substr($matches[$i][0][0], 0, 1) == '&') $len = $len - 1;
+
+
+            //if $matches[$i][2] is undefined then its an html entity, want to ignore those for tag counting
+            //ignore empty/singleton tags for tag counting
+            if (!empty($matches[$i][2][0]) && !in_array($matches[$i][2][0],
+                    array('br', 'img', 'hr', 'input', 'param', 'link'))) {
+                //double check
+                if (substr($matches[$i][3][0], -1) != '/' && substr($matches[$i][1][0], -1) != '/')
+                        $openTags[] = $matches[$i][2][0];
+                elseif (end($openTags) == $matches[$i][2][0]) {
+                    array_pop($openTags);
+                } else {
+                    $warnings[] = "html has some tags mismatched in it:  $str";
+                }
+            }
+
+
+            $i++;
+        }
+
+        $closeTags = '';
+
+        if (!empty($openTags)) {
+            $openTags = array_reverse($openTags);
+            foreach ($openTags as $t) {
+                $closeTagString .= "</".$t.">";
+            }
+        }
+
+        if (strlen($str) > $len) {
+            // Finds the last space from the string new length
+            $lastWord = strpos($str, ' ', $len);
+            if ($lastWord) {
+                //truncate with new len last word
+                $str            = substr($str, 0, $lastWord);
+                //finds last character
+                $last_character = (substr($str, -1, 1));
+                //add the end text
+                $truncated_html = ($last_character == '.' ? $str : ($last_character == ',' ? substr($str, 0, -1) : $str).$end);
+            }
+            //restore any open tags
+            $truncated_html .= $closeTagString;
+        } else $truncated_html = $str;
+
+
+        return $truncated_html;
     }
 }

@@ -59,7 +59,8 @@ class ConfiguratorSocialShare extends Configurator
                     'label' => \yii\helpers\Html::tag('span', '',
                         ['class' => 'ic ic-facebook', 'title' => \Yii::t('amoscore', 'Share with facebook')]),
                     'options' => ['class' => 'fb', 'onclick' => ($haveAnalytics ? "__gaTracker('send', 'event', 'Facebook', 'Share', '".$url."', '".$isFrontend."');"
-                            : "return false;")]
+                            : "return false;")],
+                    'visibility' => ConfiguratorSocialShare::VISIBILITY_ONLY_PUBLIC_CONTENT
                 ],
                 'twitter' => [
                     'class' => \open20\amos\core\forms\editors\socialShareWidget\drivers\Twitter::class,

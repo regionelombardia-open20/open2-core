@@ -129,6 +129,8 @@ class SocialShareWidget extends SocialShare
                             .'</style>';
                         }
                         parent::run();
+                        echo "<div hidden id='social-share-model' data-classname='' data-key='$content_id'></div>";
+
                     } else {
                         // SHARE INSIDE A DROPDOWN
                         echo "<div class=\"dropdown socialshared-dropdown\">
@@ -320,7 +322,7 @@ JS;
                 'headerOptions' => ['id' => 'modalHeader'],
                 'id' => 'modal-contacts-share',
                 'options' => [
-                    'data-url' => Url::current(),
+                    'data-url' => Url::current([],true),
                     'data-content-class' => $this->model->className(),
                     'data-content-id' => $this->model->id
                 ],

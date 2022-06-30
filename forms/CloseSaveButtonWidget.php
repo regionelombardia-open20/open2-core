@@ -13,6 +13,7 @@ namespace open20\amos\core\forms;
 
 use open20\amos\core\helpers\Html;
 use open20\amos\core\helpers\PermissionHelper;
+use open20\amos\core\module\BaseAmosModule;
 use open20\amos\core\record\Record;
 use Yii;
 use yii\base\Widget;
@@ -30,8 +31,8 @@ class CloseSaveButtonWidget extends Widget
     public $buttonSaveLabel;
     public $buttonNewSaveLabel;
     public $buttonTitleSave = '';
-    public $buttonClassSave = 'btn btn-navigation-primary';
-    public $buttonClassClose = 'btn btn-secondary undo-edit';
+    public $buttonClassSave = 'btn btn-outline-primary';
+    public $buttonClassClose = 'btn btn-outline-primary';
     public $buttonId;
     public $dataConfirm;
     public $dataTarget;
@@ -65,10 +66,10 @@ class CloseSaveButtonWidget extends Widget
     public function initVariablesI18n()
     {
         if (empty($this->buttonSaveLabel)) {
-            $this->setSaveLabel(\Yii::t('amoscore', '#save'));
+            $this->setSaveLabel(BaseAmosModule::t('amoscore', '#save'));
         }
         if (empty($this->buttonNewSaveLabel)) {
-            $this->buttonNewSaveLabel = \Yii::t('amoscore', '#create');
+            $this->buttonNewSaveLabel = BaseAmosModule::t('amoscore', '#create');
         }
     }
 

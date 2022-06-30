@@ -25,7 +25,6 @@ use yii\helpers\ArrayHelper;
  */
 class MapWidget extends Widget
 {
-
     /**
      * @var array $coordinates - ['lat' => $latitude, 'lng' => $longitude]
      */
@@ -40,6 +39,11 @@ class MapWidget extends Widget
      * @var string $position - address for coordinates research - eg. 'Via NomeDellaVia 999, NomeCittà'
      */
     public $position;
+    
+    /**
+     * @var string $placeId - google string that identify place - eg. ChIJ3REr3gtOfkcRLitxU655Ozw
+     */
+    public $placeId;
 
     /**
      * @var int $zoom - zoom if coordinates found (no default used)
@@ -82,8 +86,10 @@ class MapWidget extends Widget
     public function run()
     {
 
-        if($this->position){
+        if ($this->position){
             $gmap = MapsUtility::getMapPosition($this->position);
+        } elseif ($this->placeId) {
+            $gmap = MapsUtility::getMapPositionByPlaceId($this->placeId);
         } else {
             $gmap = $this->coordinates;
         }

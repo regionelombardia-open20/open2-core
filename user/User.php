@@ -18,6 +18,7 @@ use Yii;
 use yii\base\NotSupportedException;
 use yii\helpers\ArrayHelper;
 use yii\web\IdentityInterface;
+use open20\amos\core\models\AccessTokens;
 
 /**
  * Class User
@@ -125,7 +126,13 @@ class User extends Record implements IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
+        $Token = AccessTokens::findOne(['access_token' => $token]);
+
+        if ($Token) {
+            return $Token->user;
+        }
+
+        return false;
     }
 
     /**

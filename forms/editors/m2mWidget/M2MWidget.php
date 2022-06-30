@@ -89,8 +89,6 @@ class M2MWidget extends Widget
     public $itemsMittente = [];
     public $itemsSenderPageSize = 20;
     public $pageParam = 'page';
-    public $itemsMittentePagination = null;
-    public $itemsTargetPagination = null;
     public $itemsMittenteActionColumns = [];
     public $mittenteFooter = '';
 
@@ -125,7 +123,6 @@ class M2MWidget extends Widget
     public $btnAssociaId = '';
     public $btnAssociaLabel = '';
     public $btnAssociaClass = 'btn btn-primary';
-    public $btnAssociaConfirm = null;
     public $btnAdditionalAssociateLabel = '';
     public $btnAdditionalAssociateClass = 'btn btn-primary';
     public $forceListRender = false;
@@ -260,16 +257,11 @@ class M2MWidget extends Widget
                 }
                 $this->modelTargetData = $this->modelTarget->{$this->modelTargetSearch['action']}(\Yii::$app->request->getQueryParams());
             } else {
-                if (!is_null($this->itemsTargetPagination)) {
-                    $targetPagination = $this->itemsTargetPagination;
-                } else {
-                    $targetPagination = [
-                        'defaultPageSize' => $this->isModal ? 10 : 20
-                    ];
-                }
                 $this->modelTargetData = new ActiveDataProvider([
                     'query' => $this->modelTargetSearch['query'],
-                    'pagination' => $targetPagination
+                    'pagination' => [
+                        'defaultPageSize' => $this->isModal ? 10 : 20
+                    ]
                 ]);
             }
         }
@@ -304,32 +296,6 @@ class M2MWidget extends Widget
 
     public function run()
     {
-        $js = <<<JS
-/**
- *
- * Bug: Html a with data-confirm inside a form should not submit a form #17624
- *
- */
-$(document).on('click', 'a[data-url-confirm]', function (e){
-        var link                = $(this);
-        var address             = link.attr('href');
-
-        krajeeDialog.confirm($(e.currentTarget).data('urlConfirm'),function (result)
-        {
-            if(result){
-                window.location.href = address;
-                return true;
-            }else{
-                return true;
-            }
-        });
-        e.preventDefault();
-        return false;
-    }
-);
-JS;
-        $this->getView()->registerJs($js);
-        
         $content = preg_replace_callback("/{\\w+}/", function ($matches) {
             $content = $this->renderSection($matches[0]);
 
@@ -420,7 +386,6 @@ JS;
                     $buttons .= Html::a($btnAssociaLabel, $url, [
                         'class' => $this->btnAssociaClass,
                         'title' => $btnAssociaLabel,
-                        'data-url-confirm' => $this->btnAssociaConfirm,
                         'id' => $associateBtnId
                     ]);
 
@@ -572,6 +537,7 @@ JS;
     {
         $retVal = '';
         $buttons = '';
+        $buttonsAssocia = '';
 
         $btnAssociaLabel = ($this->btnAssociaLabel == '') ? Yii::t('amoscore', 'Associa') : $this->btnAssociaLabel;
 
@@ -606,7 +572,6 @@ JS;
                 $buttons .= Html::a($btnAssociaLabel, $url, [
                     'class' => $this->btnAssociaClass,
                     'title' => $btnAssociaLabel,
-                    'data-url-confirm' => $this->btnAssociaConfirm,
                     'id' => $associateBtnId
                 ]);
 
@@ -726,7 +691,7 @@ JS;
     }
     
     /**
-     *
+     * 
      * Renders the data models for the icon view.
      */
     public function renderItemsIcons(){
@@ -744,7 +709,7 @@ JS;
             'currentView' => $icon,
             'iconView' => [
                 'itemView' => $this->iconView
-            ],
+            ],       
         ];
         return DataProviderView::widget($dataProviderViewWidgetConf);
     }
@@ -752,14 +717,10 @@ JS;
     private function getItemsMittenteDataProvider()
     {
         if (is_null($this->itemsMittenteDataProvider)) {
-            if (!is_null($this->itemsMittentePagination)) {
-                $pagination = $this->itemsMittentePagination;
-            } else {
                 $pagination = [
                     'pageSize' => $this->itemsSenderPageSize,
                     'pageParam' => $this->pageParam
                 ];
-            }
             $this->itemsMittenteDataProvider = new ActiveDataProvider([
                 'query' => $this->modelData,
                 'pagination' => $pagination
@@ -915,6 +876,7 @@ JS;
      */
     public function renderHiddenInputTarget()
     {
+
         if ($this->renderTargetCheckbox) {
             $hiddenInputSection = "";
             foreach ($this->modelDataArr as $id => $label) {
@@ -946,7 +908,7 @@ JS;
             'firstGridId' => $this->gridId,
             'useCheckbox' => $this->renderTargetCheckbox,
             'listView' => $this->listView,
-            'iconView' => $this->iconView
+            'iconView' => $this->iconView 
         ]);
 
         return $Grid;

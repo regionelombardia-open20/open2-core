@@ -22,7 +22,7 @@ class Email extends AbstractDriver
      */
     protected function processShareData()
     {
-        $this->url   = rawurlencode(BaseAmosModule::t('amoscore', '#share_body_message').static::encodeData($this->url));
+        $this->url   = rawurlencode(BaseAmosModule::t('amoscore', '#share_body_message').' '.$this->url);
         $this->title = \Yii::$app->name.': '.rawurlencode($this->title);       
     }
 

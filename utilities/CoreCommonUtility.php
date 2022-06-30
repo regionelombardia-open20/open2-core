@@ -11,6 +11,9 @@
 
 namespace open20\amos\core\utilities;
 
+use open20\amos\core\migration\libs\common\MigrationCommon;
+use yii\log\Logger;
+
 /**
  * Class CoreCommonUtility
  * @package open20\amos\core\utilities
@@ -31,5 +34,20 @@ class CoreCommonUtility
             !empty(\Yii::$app->params['seeLoginFormAllowedIps']) &&
             in_array($_SERVER['REMOTE_ADDR'], \Yii::$app->params['seeLoginFormAllowedIps'])
         );
+    }
+    
+    /**
+     * This method add an error message for each type of application, console or web.
+     * @param string $errorMsg
+     */
+    public static function printErrorMessage($errorMsg)
+    {
+        if (\Yii::$app instanceof \yii\web\Application) {
+            \Yii::$app->getSession()->addFlash('danger', $errorMsg);
+        } elseif (\Yii::$app instanceof \yii\console\Application) {
+            MigrationCommon::printConsoleMessage($errorMsg);
+        } else {
+            \Yii::getLogger()->log($errorMsg, Logger::LEVEL_ERROR);
+        }
     }
 }

@@ -12,8 +12,8 @@
 namespace open20\amos\core\utilities;
 
 use open20\amos\core\module\BaseAmosModule;
-use yii\base\BaseObject;
 use Yii;
+use yii\base\BaseObject;
 use yii\helpers\Json;
 
 /**
@@ -22,7 +22,7 @@ use yii\helpers\Json;
  */
 class MapsUtility extends BaseObject
 {
-
+    
     /**
      * Get latitude and longitude of a place.
      * @param string $position - Place to search coordinates
@@ -37,17 +37,17 @@ class MapsUtility extends BaseObject
         if (!$position) {
             $position = 'Roma';
         }
-        if (!is_null(Yii::$app->params['googleMapsApiKey'])){
+        if (!is_null(Yii::$app->params['googleMapsApiKey'])) {
             $googleMapsKey = Yii::$app->params['googleMapsApiKey'];
-        } elseif (Yii::$app->params['google_places_api_key']){
+        } elseif (Yii::$app->params['google_places_api_key']) {
             $googleMapsKey = Yii::$app->params['google_places_api_key'];
-        } elseif(!is_null(Yii::$app->params['google-maps']) && !is_null(Yii::$app->params['google-maps']['key'])){
+        } elseif (!is_null(Yii::$app->params['google-maps']) && !is_null(Yii::$app->params['google-maps']['key'])) {
             $googleMapsKey = Yii::$app->params['google-maps']['key'];
         } else {
             Yii::$app->session->addFlash('warning', BaseAmosModule::t('amoscore', 'Errore di comunicazione con google: impossibile trovare la posizione nella mappa.'));
             return [];
         }
-
+        
         $GeoCoderParams = urlencode($position);
         $UrlGeocoder = "https://maps.googleapis.com/maps/api/geocode/json?address=$GeoCoderParams&key=$googleMapsKey";
         $origin = [];
@@ -56,25 +56,25 @@ class MapsUtility extends BaseObject
         } catch (\Exception $exception) {
             return $origin;
         }
-
+        
         if ($ResulGeocoding['status'] == 'OK') {
             if (isset($ResulGeocoding['results']) && isset($ResulGeocoding['results'][0])) {
                 $Indirizzo = $ResulGeocoding['results'][0];
-
+                
                 if (isset($Indirizzo['geometry'])) {
                     $Location = $Indirizzo['geometry']['location'];
-
+                    
                     if (isset($Location['lat'])) {
                         $origin['lat'] = $Location['lat'];
                     }
                     if (isset($Location['lng'])) {
                         $origin['lng'] = $Location['lng'];
                     }
-
+                    
                 }
             }
         }
-
+        
         if (empty($origin)) {
             $pos = strpos($position, ',');
             if ($pos) {
@@ -86,5 +86,56 @@ class MapsUtility extends BaseObject
         }
         return $origin;
     }
-
+    
+    /**
+     * Get latitude and longitude of a place by place id.
+     * @param string $placeId - Place to search coordinates
+     * @return array $origin - empty array if coordinates not found, otherwise array with structure
+     * $origin = [
+     *      'lat' => '41.1234',  // the Latitude of $position
+     *      'lng' => '9.657'    // the longitude of $position
+     * ]
+     */
+    public static function getMapPositionByPlaceId($placeId = '')
+    {
+        if (!$placeId) {
+            return [];
+        }
+        
+        if (!is_null(Yii::$app->params['googleMapsApiKey'])) {
+            $googleMapsKey = Yii::$app->params['googleMapsApiKey'];
+        } elseif (Yii::$app->params['google_places_api_key']) {
+            $googleMapsKey = Yii::$app->params['google_places_api_key'];
+        } elseif (!is_null(Yii::$app->params['google-maps']) && !is_null(Yii::$app->params['google-maps']['key'])) {
+            $googleMapsKey = Yii::$app->params['google-maps']['key'];
+        } else {
+            Yii::$app->session->addFlash('warning', BaseAmosModule::t('amoscore', 'Errore di comunicazione con google: impossibile trovare la posizione nella mappa.'));
+            return [];
+        }
+        
+        $placeId = urlencode($placeId);
+        $UrlGeocoder = "https://maps.googleapis.com/maps/api/place/details/json?placeid=$placeId&key=$googleMapsKey";
+        $origin = [];
+        
+        try {
+            $contents = file_get_contents($UrlGeocoder);
+            $ResulGeocoding = Json::decode($contents);
+        } catch (\Exception $exception) {
+            return $origin;
+        }
+        
+        if ($ResulGeocoding['status'] == 'OK') {
+            if (isset($ResulGeocoding['result']) && isset($ResulGeocoding['result']['geometry']) && isset($ResulGeocoding['result']['geometry']['location'])) {
+                $Location = $ResulGeocoding['result']['geometry']['location'];
+                if (isset($Location['lat'])) {
+                    $origin['lat'] = $Location['lat'];
+                }
+                if (isset($Location['lng'])) {
+                    $origin['lng'] = $Location['lng'];
+                }
+            }
+        }
+        
+        return $origin;
+    }
 }
