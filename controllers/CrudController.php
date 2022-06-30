@@ -436,7 +436,7 @@ abstract class CrudController extends BaseController
                 BaseAmosModule::t('amoscore', '#duplication_action_error_duplication'));
         } else {
             $url = ['update', 'id' => $newContent->id];
-            $ok  = $this->afterDuplicateContent();
+            $ok  = $this->afterDuplicateContent($newContent);
             if ($ok) {
                 Yii::$app->getSession()->addFlash('success',
                     BaseAmosModule::t('amoscore', '#duplication_action_success_duplication'));
@@ -478,9 +478,10 @@ abstract class CrudController extends BaseController
 
     /**
      * Write here the operations after duplicate the content.
-     * @return bool
+     * @param type $model
+     * @return boolean
      */
-    protected function afterDuplicateContent()
+    protected function afterDuplicateContent($model = null)
     {
         return true;
     }

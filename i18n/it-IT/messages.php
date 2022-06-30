@@ -460,6 +460,7 @@ return [
     'partnershipprofiles' => 'proposte di collaborazione',
     'admin' => 'utenti',
     'documenti' => 'documenti',
+    '#you_have_been_tagged' => 'Sei stato taggato in un commento',
     '#workflow_status_error_status_not_valid' => 'Stato del workflow non valido',
     '#workflow_status_error_wrong_status' => 'Stato del workflow errato',
     '#ZipUtility_exec_error_command_line_error' => 'ZipUtility: errore linea di comando',

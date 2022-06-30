@@ -1934,7 +1934,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
 
         // create email for tagging user_profile
         $email_assistance = \Yii::$app->params['email-assistenza'];
-        $subject = "Sei stato taggato in un commento";
+        $subject = BaseAmosModule::t('amoscore',"#you_have_been_tagged");
 
         $email = new \open20\amos\core\utilities\Email;
   
@@ -1943,8 +1943,8 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
             foreach ($user_profiles as $key => $user_profile) {
 
                 $message = \Yii::$app->controller->renderMailPartial('@vendor/open20/amos-core/views/email/content_tagging_user', [
-                    'model' => $this ?? $model,
-                    'contextModel' => $this ?? $modelContext,
+                    'model' => $model ?? $this,
+                    'contextModel' => $modelContext ?? $this,
                     'model_field' => $v,
                     'user' => $user_profile->user
                 ]);
@@ -1953,10 +1953,6 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
             }
             
         } catch (\Throwable $th) {
-            echo "<pre>";
-            print_r($th->getMessage());
-            echo "</pre>";
-            
             \Yii::getLogger()->log($th->getMessage(), \yii\log\Logger::LEVEL_ERROR);
         }
     }
