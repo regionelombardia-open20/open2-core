@@ -297,32 +297,6 @@ class M2MWidget extends Widget
 
     public function run()
     {
-        $js = <<<JS
-/**
- *
- * Bug: Html a with data-confirm inside a form should not submit a form #17624
- *
- */
-$(document).on('click', 'a[data-url-confirm]', function (e){
-        var link                = $(this);
-        var address             = link.attr('href');
-
-        krajeeDialog.confirm($(e.currentTarget).data('urlConfirm'),function (result)
-        {
-            if(result){
-                window.location.href = address;
-                return true;
-            }else{
-                return true;
-            }
-        });
-        e.preventDefault();
-        return false;
-    }
-);
-JS;
-        $this->getView()->registerJs($js);
-        
         $content = preg_replace_callback("/{\\w+}/", function ($matches) {
             $content = $this->renderSection($matches[0]);
 
