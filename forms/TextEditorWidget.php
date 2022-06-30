@@ -18,6 +18,7 @@ use open20\amos\core\module\Module;
 use open20\amos\core\utilities\StringUtils;
 use yii\helpers\ArrayHelper;
 use yii\web\View;
+use open20\amos\core\assets\TnyMentionAsset;
 
 /**
  * Class TextEditorWidget
@@ -29,6 +30,25 @@ class TextEditorWidget extends TinyMce
 
     public $language = 'en';
     private $tinyMCELabel;
+
+
+    /**
+     * 
+     * MENTIONS - URL to action to search for a user
+     * 
+     * 'mentions' => [
+     *      'url' => null
+     *  ]
+     * 
+     * MENTIONS - params TextEditor widget to enable mentions
+     * 
+     * 'textEditor' => [
+     *      "mentions" => [
+     *          'enable' => true,
+     *      ]
+     * ]
+     * 
+     */
 
     public $clientOptions = [
         'menubar' => false,
@@ -43,8 +63,14 @@ class TextEditorWidget extends TinyMce
             "insertdatetime media table contextmenu paste textcolor image insertdatetime",
             "placeholder"
         ],
+        'image_advtab' => true,
         'toolbar' => "fullscreen | undo redo code | styleselect | bold italic strikethrough forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media insertdatetime | removeformat",
         'branding' => false,
+
+        // URL to action to search for a user
+        'mentions' => [
+            'url' => null
+        ]
     ];
 
     /**
@@ -53,6 +79,7 @@ class TextEditorWidget extends TinyMce
      */
     public function __construct($config = array())
     {
+
         $config = $this->evaluateConfiguration($config);
         parent::__construct($config);
     }
@@ -65,6 +92,7 @@ class TextEditorWidget extends TinyMce
     {
 
         parent::registerClientScript();
+        TnyMentionAsset::register($this->view);
 
         $view = $this->getView();
 
@@ -106,6 +134,7 @@ JS;
         }
     }
 
+
     /**
      *
      * @param array $config
@@ -113,6 +142,56 @@ JS;
      */
     protected function evaluateConfiguration($config = array())
     {
+
+        try {
+            if (class_exists('open20\amos\admin\AmosAdmin')) {
+
+                // default mention action url
+                $adminName = \open20\amos\admin\AmosAdmin::getModuleName();
+                $mention_action_url = "/$adminName/user-profile/find-name-user-by-cwh";
+
+                // platform params for textEditor mentions
+                if( \Yii::$app->params['textEditor']['mentions']['enable'] ){
+
+                    // check if exist mention action url exist from parmas configuration
+                    if( null != $config['clientOptions']['mentions']['url'] ){
+                        $mention_action_url = $config['clientOptions']['mentions']['url'];
+                    }
+
+                    $mentionMethod = <<<JS
+                    function(query, process, delimiter) {
+                        // Do your ajax call
+                        // When using multiple delimiters you can alter the query depending on the delimiter used
+                        if (delimiter === '@') {
+                        
+                            $.getJSON("$mention_action_url", {name: query}, function (data) {
+                                //call process to show the result
+                                process(data)
+                            });
+                        }
+                    }
+JS;
+
+                    $mentionElementMethod = <<<JS
+                        function(item) {
+                            console.log(item.user_id); 
+                            return '<a href="'+item.url+'">@' + item.name + '</a>&nbsp;';
+                        }
+JS;
+
+                    $this->clientOptions['mentions'] = [
+                        'source' => new \yii\web\JsExpression($mentionMethod),
+                        'insert' => new \yii\web\JsExpression($mentionElementMethod)
+                    ];
+                }
+
+            }
+
+        } catch (\Exception $e) {
+
+        }
+
+
         if(empty($config['clientOptions']['wordcount'])) {
             $this->clientOptions['plugins'][] = "charactercount";
             $this->tinyMCELabel = Module::t('amoscore', '#tinyMCECharsCount');
@@ -152,6 +231,14 @@ JS;
             $config['clientOptions']['max_chars'] = $config['options']['maxlength'];
         }
 
+        // MENTIONS - plugin enable
+        if( \Yii::$app->params['textEditor']['mentions']['enable'] ){
+            $config['clientOptions']['plugins'][] = "mention";
+        }
+
         return $config;
     }
+
+
+
 }

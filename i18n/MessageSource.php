@@ -81,7 +81,13 @@ class MessageSource extends DbMessageSource
             } elseif (isset($module['class'])) {
                 $reflectionClass = new \ReflectionClass($module['class']);
                 if ($reflectionClass->isSubclassOf(AmosModule::className())) {
-                    $amodModule = \Yii::createObject($reflectionClass->getName(), [$key]);
+                    $className = $reflectionClass->getName();
+
+                    if(method_exists($className, 'getInstance')) {
+                        $amodModule = $className::getInstance();
+                    } else {
+                        $amodModule = \Yii::createObject($reflectionClass->getName(), [$key]);
+                    }
                 }
             }
         } catch (Exception $ex) {

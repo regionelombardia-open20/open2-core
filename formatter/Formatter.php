@@ -173,9 +173,7 @@ class Formatter extends YiiFormatter
         if (!($end instanceof \DateTime)) {
             $end = new \DateTime($start);
         }
-
-        $interval = $end->diff($start);
-
+        $interval = $start->diff($end);
         $doPlural = function ($nb, $str) {
             switch ($str) {
                 case 'year':
@@ -251,11 +249,15 @@ class Formatter extends YiiFormatter
                     return BaseAmosModule::t('amoscore', 'tomorrow at').' '.$start->format('H:i');
                 }
             }
+            if ($interval->invert == 0) {
+                if ($interval->h < 6) {
 
-            if ($interval->h < 6) {
-                $format[] = '%h '.$doPlural($interval->h, 'hour');
+                    $format[] = '%h ' . $doPlural($interval->h, 'hour');
+                } else {
+                    return BaseAmosModule::t('amoscore', 'today at') . ' ' . $start->format('H:i');
+                }
             } else {
-                return BaseAmosModule::t('amoscore', 'today at').' '.$start->format('H:i');
+                return BaseAmosModule::t('amoscore', 'today at') . ' ' . $start->format('H:i');
             }
         } elseif ($interval->i !== 0) {
             $format[] = '%i '.$doPlural($interval->i, 'minute');
@@ -290,9 +292,12 @@ class Formatter extends YiiFormatter
                 if ($this->isValidTimeStamp($value)) {
                     $value = date('Y-m-d H:i:s', $value);
                 }
-                $dStart = new \DateTime($value);
-                $dEnd   = new \DateTime();
+                $dStart = new \DateTime($value, new \DateTimeZone($this->timeZone) );
+                $dEnd   = new \DateTime('now', new \DateTimeZone($this->timeZone));
+					
                 return $this->formatDateDiff($dStart, $dEnd);
+				
+				
             } elseif ($format == 'humanalwaysdatetime') {
                 if ($this->isValidTimeStamp($value)) {
                     $value = date('Y-m-d H:i:s', $value);

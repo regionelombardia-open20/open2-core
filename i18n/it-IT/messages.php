@@ -464,4 +464,6 @@ return [
     '#ZipUtility_not_string_property_password' => 'ZipUtility: password non è una stringa',
     '#ZipUtility_not_string_property_zip_file_extension' => 'ZipUtility: estensione del file compresso non è una stringa',
     '#ZipUtility_not_string_property_zip_file_name' => 'ZipUtility: nome del file zip non è una stringa',
+    'ti ha taggato in un commento.' => "ti ha taggato in un commento.",
+    "Clicca qui per vederlo:" => "Clicca qui per vederlo: "
 ];

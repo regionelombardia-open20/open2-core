@@ -50,8 +50,9 @@ class ClassUtility extends BaseObject
         return $ret;
     }
     
-    public static function getClassBasename(BaseObject $obj)
+    public static function getClassBasename($obj)
     {
-        return basename(str_replace('\\', '/', $obj->className()));
+        $class = is_object($obj) ? $obj->className() : $obj;
+        return basename(str_replace('\\', '/', $class));
     }
 }

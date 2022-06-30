@@ -11,6 +11,7 @@
 
 namespace open20\amos\core\forms;
 
+use open20\amos\admin\AmosAdmin;
 use open20\amos\admin\models\UserProfile;
 use open20\amos\admin\widgets\UserCardWidget;
 use open20\amos\core\helpers\Html;
@@ -356,7 +357,8 @@ class ItemAndCardHeaderWidget extends Widget
         $html = '';
 
         if (!is_null($this->_contentCreator)) {
-            $moduleAdmin = \Yii::$app->getModule('admin');
+            /** @var AmosAdmin $moduleAdmin */
+            $moduleAdmin = AmosAdmin::instance();
             if (!empty($moduleAdmin)) {
                 $userCardWidgetConf = [
                     'model' => $this->_contentCreator,
@@ -430,8 +432,15 @@ class ItemAndCardHeaderWidget extends Widget
      */
     public function getCreatorLink()
     {
+        if (!$this->creatorLinkEnabled()) {
+            return null;
+        }
         $contentCreatorUserProfile = $this->getContentCreator();
-        return ($this->creatorLinkEnabled() ? $contentCreatorUserProfile->getFullViewUrl() : null);
+        if ($this->absoluteUrlAvatar) {
+            return \Yii::$app->getUrlManager()->createAbsoluteUrl($contentCreatorUserProfile->getFullViewUrl());
+        } else {
+            return $contentCreatorUserProfile->getFullViewUrl();
+        }
     }
 
     /**
