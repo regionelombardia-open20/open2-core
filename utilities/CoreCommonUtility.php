@@ -32,7 +32,7 @@ class CoreCommonUtility
             isset(\Yii::$app->params['seeLoginFormAllowedIps']) &&
             is_array(\Yii::$app->params['seeLoginFormAllowedIps']) &&
             !empty(\Yii::$app->params['seeLoginFormAllowedIps']) &&
-            in_array($_SERVER['REMOTE_ADDR'], \Yii::$app->params['seeLoginFormAllowedIps'])
+            (in_array($_SERVER['REMOTE_ADDR'], \Yii::$app->params['seeLoginFormAllowedIps']) || in_array($_SERVER['HTTP_X_FORWARDED_FOR'], \Yii::$app->params['seeLoginFormAllowedIps']))
         );
     }
     

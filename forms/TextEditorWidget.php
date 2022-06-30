@@ -157,18 +157,14 @@ JS;
                     if( null != $config['clientOptions']['mentions']['url'] ){
                         $mention_action_url = $config['clientOptions']['mentions']['url'];
                     }
-                    $className = null;
-                    if(!is_null(\Yii::$app->controller->getModelObj()))
-                    {
-                        $className = str_replace('\\', '\\\\', \Yii::$app->controller->getModelObj()->className());
-                    } 
+
                     $mentionMethod = <<<JS
                     function(query, process, delimiter) {
                         // Do your ajax call
                         // When using multiple delimiters you can alter the query depending on the delimiter used
                         if (delimiter === '@') {
                         
-                            $.getJSON("$mention_action_url", {name: query, className: "$className"}, function (data) {
+                            $.getJSON("$mention_action_url", {name: query}, function (data) {
                                 //call process to show the result
                                 process(data)
                             });
