@@ -727,6 +727,9 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
                     }
 
                     $this->$key = HtmlPurifier::process(trim($this->$key), $config);
+                    if(!empty(\Yii::$app->params['forms-purify-data-enable-amp']) && \Yii::$app->params['forms-purify-data-enable-amp'] == true){
+                        $this->$key = str_replace('&amp;', '&', $this->$key);
+                    }
                 }
             }
         }
