@@ -31,8 +31,8 @@ class CloseSaveButtonWidget extends Widget
     public $buttonSaveLabel;
     public $buttonNewSaveLabel;
     public $buttonTitleSave = '';
-    public $buttonClassSave = 'btn btn-outline-primary';
-    public $buttonClassClose = 'btn btn-outline-primary';
+    public $buttonClassSave = 'btn btn-primary';
+    public $buttonClassClose = 'btn btn-secondary';
     public $buttonId;
     public $dataConfirm;
     public $dataTarget;

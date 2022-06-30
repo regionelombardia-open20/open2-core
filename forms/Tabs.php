@@ -68,8 +68,8 @@ class Tabs extends BaseTabs
     protected function renderItems()
     {
         $headers = [];
-        $panes   = [];
-        $model   = null;
+        $panes = [];
+        $model = null;
 
         if (!$this->hasActiveTab() && !empty($this->items)) {
             $this->items[0]['active'] = true;
@@ -82,7 +82,7 @@ class Tabs extends BaseTabs
         }
         if (count(\yii\base\Widget::$stack) && isset($model)) {
             /*             * @var \open20\amos\cwh\AmosCwh $moduleCwh */
-            $moduleCwh  = \Yii::$app->getModule('cwh');
+            $moduleCwh = \Yii::$app->getModule('cwh');
             $contentCwh = '';
             if (isset($moduleCwh) && in_array(get_class($model), $moduleCwh->modelsEnabled) && $moduleCwh->behaviors && !$this->hideCwhTab) {
                 if ($this->newCwhView) {
@@ -92,25 +92,25 @@ class Tabs extends BaseTabs
                 }
                 $contentCwh = \Yii::$app->controller->renderFile($cwhView,
                     [
-                    'model' => $model,
-                    'form' => \yii\base\Widget::$stack[0],
-                    'moduleCwh' => $moduleCwh
-                ]);
-                $content    .= $contentCwh;
+                        'model' => $model,
+                        'form' => \yii\base\Widget::$stack[0],
+                        'moduleCwh' => $moduleCwh
+                    ]);
+                $content .= $contentCwh;
             }
 
             /*             * @var AmosTag $moduleTag */
             $moduleTag = \Yii::$app->getModule('tag');
             if (isset($moduleTag) && in_array(get_class($model), $moduleTag->modelsEnabled) && $moduleTag->behaviors && !$this->hideTagsTab) {
                 $contentTag = \open20\amos\tag\widgets\TagWidget::widget([
-                        'model' => $model,
-                        'attribute' => 'tagValues',
-                        'form' => \yii\base\Widget::$stack[0],
-                        'options' => [
-                            'class' => 'tag-aree-interesse-tab'
-                        ]
+                    'model' => $model,
+                    'attribute' => 'tagValues',
+                    'form' => \yii\base\Widget::$stack[0],
+                    'options' => [
+                        'class' => 'tag-aree-interesse-tab'
+                    ]
                 ]);
-                $content    .= $contentTag ;
+                $content .= $contentTag;
                 $js = <<<JS
 if($(".tag-tab .kv-selected").length === 0 && $("div.alert-danger.error-summary").length > 0 ){
     $("a[href=\"#"+$(".tag-tab").attr('id')+"\"").append("<span class=\"errore-alert custom-errore-alert\" title=\"La tab contiene degli errori\">&nbsp; <span class=\"am am-alert-triangle\"> </span> </span>");
@@ -121,6 +121,26 @@ JS;
             }
 
             if (strlen($content) && !($model instanceof UserProfile) && !$this->hideTagsTab) {
+                $js = <<<JS
+                function setAmostag(){
+                    var regola = $('#cwh-regola_pubblicazione').val();
+                    if(regola === '1'){
+                        $('#amos-tag').hide();
+                    }
+                    else{
+                        $('#amos-tag').show();
+                    }
+                }
+                
+                $('#cwh-regola_pubblicazione').change(function(){
+                    setAmostag();
+                });
+                setAmostag();
+                
+                
+JS;
+                $this->view->registerJs($js);
+
                 if (empty($contentCwh)) {
                     /** if the model is enabled for tags but not for cwh tab name and label are different */
                     $this->items[] = [
@@ -143,12 +163,13 @@ JS;
                 $this->items[] = [
                     'label' => BaseAmosModule::t('amoscore', 'Tag Aree di interesse'),
                     'content' => (new \open20\amos\cwh\widgets\TagWidgetAreeInteresse([
-                    'model' => $model,
-                    'attribute' => 'areeDiInteresse',
-                    'form' => \yii\base\Widget::$stack[0],
+                        'model' => $model,
+                        'attribute' => 'areeDiInteresse',
+                        'form' => \yii\base\Widget::$stack[0],
                     ]))->run(),
                     'options' => [
-                        'class' => 'tag-aree-interesse-tab'
+                        'class' => 'tag-aree-interesse-tab',
+                        'id' => 'tab-tags'
                     ]
                 ];
                 $js = <<<JS
@@ -164,9 +185,9 @@ JS;
             $moduleReport = \Yii::$app->getModule('report');
             if (isset($moduleReport) && in_array(get_class($model), $moduleReport->modelsEnabled) && !$this->hideReportTab && !$model->isNewRecord) {
                 $this->items[] = [
-                    'label' => BaseAmosModule::t('amoscore', 'Reports').
-                    Html::tag('span', '',
-                        ['id' => 'tab-reports-bullet', 'class' => 'badge badge-default badge-panel-heading']),
+                    'label' => BaseAmosModule::t('amoscore', 'Reports') .
+                        Html::tag('span', '',
+                            ['id' => 'tab-reports-bullet', 'class' => 'badge badge-default badge-panel-heading']),
                     'content' => \open20\amos\report\widgets\TabReportsWidget::widget([
                         'model' => $model
                     ]),
@@ -182,10 +203,10 @@ JS;
             if (!array_key_exists('label', $item)) {
                 throw new InvalidConfigException("The 'label' option is required.");
             }
-            $encodeLabel   = isset($item['encode']) ? $item['encode'] : $this->encodeLabels;
-            $label         = $encodeLabel ? Html::encode($item['label']) : $item['label'];
+            $encodeLabel = isset($item['encode']) ? $item['encode'] : $this->encodeLabels;
+            $label = $encodeLabel ? Html::encode($item['label']) : $item['label'];
             $headerOptions = array_merge($this->headerOptions, ArrayHelper::getValue($item, 'headerOptions', []));
-            $linkOptions   = array_merge($this->linkOptions, ArrayHelper::getValue($item, 'linkOptions', []));
+            $linkOptions = array_merge($this->linkOptions, ArrayHelper::getValue($item, 'linkOptions', []));
 
             if (isset($item['items'])) {
                 $label .= ' <b class="caret"></b>';
@@ -197,15 +218,15 @@ JS;
 
                 Html::addCssClass($linkOptions, 'dropdown-toggle');
                 $linkOptions['data-toggle'] = 'dropdown';
-                $header                     = Html::a($label, "#", $linkOptions)."\n"
-                    .Dropdown::widget([
+                $header = Html::a($label, "#", $linkOptions) . "\n"
+                    . Dropdown::widget([
                         'items' => $item['items'],
                         'clientOptions' => false,
                         'view' => $this->getView()
-                ]);
+                    ]);
             } else {
-                $options       = array_merge($this->itemOptions, ArrayHelper::getValue($item, 'options', []));
-                $options['id'] = ArrayHelper::getValue($options, 'id', $this->options['id'].'-tab'.$n);
+                $options = array_merge($this->itemOptions, ArrayHelper::getValue($item, 'options', []));
+                $options['id'] = ArrayHelper::getValue($options, 'id', $this->options['id'] . '-tab' . $n);
 
                 Html::addCssClass($options, 'tab-pane');
                 if (ArrayHelper::remove($item, 'active')) {
@@ -217,7 +238,7 @@ JS;
                     $header = Html::a($label, $item['url'], $linkOptions);
                 } else {
                     $linkOptions['data-toggle'] = 'tab';
-                    $header                     = Html::a($label, '#'.$options['id'], $linkOptions);
+                    $header = Html::a($label, '#' . $options['id'], $linkOptions);
                 }
 
                 if ($this->renderTabContent) {
@@ -229,7 +250,7 @@ JS;
         }
 
         return Html::tag('ul', implode("\n", $headers), $this->options)
-            .($this->renderTabContent ? "\n".Html::tag('div', implode("\n", $panes),
-                ['id' => 'bk-formDefault', 'class' => 'tab-content']) : '');
+            . ($this->renderTabContent ? "\n" . Html::tag('div', implode("\n", $panes),
+                    ['id' => 'bk-formDefault', 'class' => 'tab-content']) : '');
     }
 }

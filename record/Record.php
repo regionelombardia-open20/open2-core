@@ -32,6 +32,8 @@ use yii\data\ActiveDataProvider;
 use yii\data\Pagination;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use yii\db\Expression;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\helpers\HtmlPurifier;
 use yii\helpers\Inflector;
@@ -53,6 +55,12 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
     const SCENARIO_FAKE_REQUIRED = 'scenario_fake_required';
 
     public static $modulesChainBehavior = [];
+    public $useBullet                   = false;
+
+    const BULLET_TYPE_ALL = 1;
+    const BULLET_TYPE_OWN = 2;
+
+    protected static $myTags = null;
 
     /**
      * @var array Array of order fields get from the config file of the module
@@ -99,6 +107,12 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
      * @var bool $moduleBackendobjects
      */
     public $moduleBackendobjects;
+
+    /**
+     * Bypass check in ValidatorUpdateContentRule
+     * @var bool $byBassRuleCwh
+     */
+    public $byBassRuleCwh = false;
 
     /**
      * @return object|\yii\db\Connection|null
@@ -615,6 +629,8 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
     {
         $isDemo = $this->isDemo();
 
+        $this->setUseBullet();
+
         if ($isDemo && (Yii::$app instanceof Web) && $this->inBlackList()) {
             $key     = 'success';
             $message = BaseAmosModule::t('amoscore', 'In Demo non &eacute; possibile modificare i contenuti');
@@ -626,6 +642,22 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
         }
 
         return parent::beforeSave($insert);
+    }
+
+    /**
+     * 
+     */
+    protected function setUseBullet()
+    {
+        if ($this->isNewRecord) {
+            $this->useBullet = true;
+        } else {
+            if (array_key_exists('status', $this->getDirtyAttributes())) {
+                $this->useBullet = true;
+            } else {
+                $this->useBullet = false;
+            }
+        }
     }
 
     /**
@@ -658,26 +690,302 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
             )->execute();
         }
 
-        if (\Yii::$app instanceof \yii\web\Application && \Yii::$app->user->id) {
+        $this->updateBullets($tableName);
+
+        parent::afterSave($insert, $changedAttributes);
+    }
+
+    /**
+     *
+     * @param int $type
+     * @param bool $reset
+     * @param string $tableName
+     * @param bool $general
+     * @param bool $enabled_only_by_community
+     * @return int
+     */
+    public function getBullet($type = 1, $reset = false, $tableName = null, $general = false,
+                              $enabled_only_by_community = false)
+    {
+        $enabled = true;
+        if ($enabled_only_by_community == true) {
+            $enabled = (self::checkScope() == 0 ? false : true);
+        }
+        if (!\Yii::$app->user->isGuest && $enabled == true) {
+            if (empty($tableName)) {
+                $tableName = self::getTableSchema()->name;
+            }
+
+            $result = self::getBulletType($type, $tableName, $reset, $general, $enabled_only_by_community);
+
+            return $result['bullet'];
+        } else return 0;
+    }
+
+    /**
+     *
+     * @param int $type
+     * @param bool $reset
+     * @param string $tableName
+     * @param bool $general
+     * @param bool $enabled_only_by_community
+     * @return int
+     */
+    public static function getStaticBullet($type = 1, $reset = false, $tableName, $general = false,
+                                           $enabled_only_by_community = false)
+    {
+        $enabled = true;
+        if ($enabled_only_by_community == true) {
+            $enabled = (self::checkScope() == 0 ? false : true);
+        }
+        if (!\Yii::$app->user->isGuest && $enabled == true) {
+
+            $result = self::getBulletType($type, $tableName, $reset, $general, $enabled_only_by_community);
+
+            return $result['bullet'];
+        } else return 0;
+    }
+
+    /**
+     *
+     * @param int $type
+     * @param string $tableName
+     * @param bool $reset
+     * @param bool $general
+     * @return array
+     */
+    public static function getBulletType($type, $tableName, $reset, $general = false)
+    {
+        $result       = null;
+        $community_id = self::checkScope();
+        $userId       = \Yii::$app->user->id;
+
+        switch ($type) {
+            case self::BULLET_TYPE_ALL:
+
+                if ($community_id > 0 && $general == false) {
+                    $result = \Yii::$app->db->createCommand()->setSql(
+                            "SELECT
+                            IF(count(U.updated_at) = 0, 0, IF(sum(B.user_id) is null, 1, IF(count(B.user_id) >= count(U.updated_at), 0, 1))) as bullet
+                        FROM
+                            notification_update U
+                        LEFT JOIN
+                            notification_user B
+                        ON
+                            (U.module = B.module AND B.user_id = {$userId} AND B.publication_rule in (3,4) AND (U.updated_at < B.updated_at) AND U.community_id = B.community_id)
+                        WHERE
+                            U.community_id = {$community_id} AND U.deleted_at is null AND U.module = '{$tableName}'"
+                        )->queryOne();
+                    /*        pr( "SELECT
+                      IF(count(U.updated_at) = 0, 0, IF(sum(B.user_id) is null, 1, IF(count(B.user_id) > 0, 0, 1))) as bullet
+                      FROM
+                      notification_update U
+                      LEFT JOIN
+                      notification_user B
+                      ON
+                      (U.module = B.module AND B.user_id = {$userId} AND B.publication_rule in (3,4) AND (U.updated_at < B.updated_at) AND U.community_id = B.community_id)
+                      WHERE
+                      U.community_id = {$community_id} AND U.deleted_at is null"); */
+                } else {
+
+                    $result = \Yii::$app->db->createCommand()->setSql(
+                            "SELECT
+                            IF(count(U.updated_at) = 0, 0, IF(sum(B.user_id) is null, 1, IF(count(B.user_id) >= count(U.updated_at), 0, 1))) as bullet
+                        FROM
+                            notification_update U
+                        LEFT JOIN
+                            notification_user B
+                        ON
+                            U.module = B.module AND B.user_id = {$userId} AND (U.updated_at < B.updated_at) AND (B.publication_rule in (1,2,3,4))
+                        WHERE
+                            U.module = '{$tableName}' AND U.deleted_at is null"
+                        )->queryOne();
+                }
+
+                if ($reset) {
+                    if (!empty($community_id)) {
+                        \Yii::$app->db->createCommand()->setSql(
+                            "INSERT INTO
+                                    `notification_user`
+                                    (`user_id`,`module`, `publication_rule`, `community_id`, `created_at`,
+                                    `created_by`, `updated_at`, `updated_by`, `deleted_at`, `deleted_by`)
+                                VALUES
+                                    ({$userId}, '{$tableName}', 3, {$community_id}, now(),
+                                        '{$userId}', now(), '{$userId}', null, null),
+                                    ({$userId}, '{$tableName}', 4, {$community_id}, now(),
+                                        '{$userId}', now(), '{$userId}', null, null)
+                                ON DUPLICATE KEY UPDATE
+                                    `updated_at` = now()"
+                        )->execute();
+                    } else {
+                        \Yii::$app->db->createCommand()->setSql(
+                            "INSERT INTO
+                                    `notification_user`
+                                    (`user_id`,`module`, `publication_rule`, `community_id`, `created_at`,
+                                    `created_by`, `updated_at`, `updated_by`, `deleted_at`, `deleted_by`)
+                                VALUES
+                                    ({$userId}, '{$tableName}', 1, {$community_id}, now(),
+                                        '{$userId}', now(), '{$userId}', null, null),
+                                    ({$userId}, '{$tableName}', 2, {$community_id}, now(),
+                                        '{$userId}', now(), '{$userId}', null, null),
+                                             ({$userId}, '{$tableName}', 3, {$community_id}, now(),
+                                        '{$userId}', now(), '{$userId}', null, null),
+                                             ({$userId}, '{$tableName}', 4, {$community_id}, now(),
+                                        '{$userId}', now(), '{$userId}', null, null)
+                                ON DUPLICATE KEY UPDATE
+                                    `updated_at` = now()"
+                        )->execute();
+
+                        \Yii::$app->db->createCommand()->setSql(
+                            "UPDATE
+                                    `notification_user`
+                                SET
+                                    `updated_at` = now()
+                                WHERE
+                                    `user_id` = {$userId} AND `module` = '{$tableName}'"
+                        )->execute();
+                    }
+                    $query     = (new \yii\db\Query())->from('notification_update')
+                        ->andWhere(['module' => $tableName])
+                        ->andFilterWhere(['community_id' => $community_id])
+                        ->select('content_id AS id');
+                    $classname = get_called_class();
+                    self::setOffChannelRead($userId, $classname, $query);
+                }
+                break;
+            case self::BULLET_TYPE_OWN:
+
+                $sqlTag        = "SELECT `tag_id` FROM `cwh_tag_owner_interest_mm` WHERE `record_id` = {$userId} AND `deleted_at` IS NULL";
+                $myTags        = \yii\helpers\ArrayHelper::map(\Yii::$app->db->createCommand()->setSql($sqlTag)->queryAll(),
+                        'tag_id', 'tag_id');
+                $conditions    = [];
+                $conditionsNot = [];
+                if (!empty($myTags)) {
+                    foreach ($myTags as $tg) {
+                        $conditions[]    = new Expression("FIND_IN_SET('$tg',U.tags) > 0");
+                        $conditionsNot[] = new Expression("FIND_IN_SET('$tg',U.tags) = 0");
+                    }
+                }
+
+                $conditions    = "U.publication_rule in (2,4) ".(!empty($conditions) ? " and (".implode(' or ',
+                        $conditions).")" : "");
+                $conditionsNot = "U.publication_rule in (2,4) ".(!empty($conditionsNot) ? " and (".implode(' or ',
+                        $conditionsNot).")" : "");
+                $allConditions = self::getAllConditionsForQueryByTag($userId);
+                $conditions    = $allConditions[0];
+                $conditionsNot = $allConditions[1];
+
+                $queryOwn = new Query();
+                $queryOwn->select(new Expression("IF(count(U.updated_at) = 0, 0, IF(sum(B.user_id) is null, 1, IF(count(B.user_id) >= count(U.updated_at), 0, 1))) as bullet"))
+                    ->from("notification_update U")
+                    ->leftJoin("notification_user B",
+                        "U.module = B.module AND B.user_id = {$userId} AND (U.updated_at < B.updated_at) AND U.community_id = B.community_id")
+                    ->andWhere([
+                        'OR',
+                        ['U.publication_rule' => [1, 3]],
+                        $conditions,
+                    ])
+                    ->andWhere(['U.module' => $tableName])
+                    ->andWhere(['U.deleted_at' => null]);
+                if ($general == false) {
+                    $queryOwn->andFilterWhere(['U.community_id' => $community_id]);
+                }
+
+
+                $queryAll = new Query();
+                $queryAll->select(new Expression("IF(count(U.updated_at) = 0, 0, IF(sum(B.user_id) is null, 1, IF(count(B.user_id) >= count(U.updated_at), 0, 1))) as bullet"))
+                    ->from("notification_update U")
+                    ->leftJoin("notification_user B",
+                        "U.module = B.module AND B.user_id = {$userId} AND (U.updated_at < B.updated_at) AND U.community_id = B.community_id")
+                    ->andWhere([
+                        'OR',
+                        ['U.publication_rule' => [1, 3]],
+                        $conditionsNot,
+                    ])
+                    ->andWhere(['U.deleted_at' => null])
+                    ->andWhere(['U.module' => $tableName])
+                    ->andFilterWhere(['U.community_id' => $community_id]);
+
+
+                $result    = $queryOwn->one();
+                $resultAll = $queryAll->one();
+
+                if ($reset) {
+                    if (!empty($community_id)) {
+                        \Yii::$app->db->createCommand()->setSql(
+                            "INSERT INTO
+                                    `notification_user`
+                                    (`user_id`,`module`, `publication_rule`, `community_id`, `created_at`,
+                                    `created_by`, `updated_at`, `updated_by`, `deleted_at`, `deleted_by`)
+                                VALUES
+                                    ({$userId}, '{$tableName}', 3, {$community_id}, now(),
+                                        '{$userId}', now(), '{$userId}', null, null),
+                                    ({$userId}, '{$tableName}', 4, {$community_id}, now(),
+                                        '{$userId}', now(), '{$userId}', null, null)
+                                ON DUPLICATE KEY UPDATE
+                                    `updated_at` = now()"
+                        )->execute();
+                    } else {
+                        if ($resultAll['bullet'] == 0) {
+                            \Yii::$app->db->createCommand()->setSql(
+                                "INSERT INTO
+                                    `notification_user`
+                                    (`user_id`,`module`, `publication_rule`, `community_id`, `created_at`,
+                                    `created_by`, `updated_at`, `updated_by`, `deleted_at`, `deleted_by`)
+                                VALUES
+                                    ({$userId}, '{$tableName}', 1, {$community_id}, now(),
+                                    '{$userId}', now(), '{$userId}', null, null),
+                                    ({$userId}, '{$tableName}', 2, {$community_id}, now(),
+                                    '{$userId}', now(), '{$userId}', null, null),
+                                         ({$userId}, '{$tableName}', 3, {$community_id}, now(),
+                                    '{$userId}', now(), '{$userId}', null, null),
+                                         ({$userId}, '{$tableName}', 4, {$community_id}, now(),
+                                    '{$userId}', now(), '{$userId}', null, null)
+                                ON DUPLICATE KEY UPDATE
+                                    `updated_at` = now()"
+                            )->execute();
+                        } else {
+                            \Yii::$app->db->createCommand()->setSql(
+                                "INSERT INTO
+                                    `notification_user`
+                                    (`user_id`,`module`, `publication_rule`, `community_id`, `created_at`,
+                                    `created_by`, `updated_at`, `updated_by`, `deleted_at`, `deleted_by`)
+                                VALUES
+                                    ({$userId}, '{$tableName}', 2, {$community_id}, now(),
+                                        '{$userId}', now(), '{$userId}', null, null),
+                                    ({$userId}, '{$tableName}', 4, {$community_id}, now(),
+                                        '{$userId}', now(), '{$userId}', null, null)
+                                ON DUPLICATE KEY UPDATE
+                                    `updated_at` = now()"
+                            )->execute();
+                        }
+                    }
+                    $query     = (new \yii\db\Query())->from('notification_update')
+                        ->andWhere(['module' => $tableName])
+                        ->andFilterWhere(['community_id' => $community_id])
+                        ->select('content_id AS id');
+                    $classname = get_called_class();
+                    self::setOffChannelRead($userId, $classname, $query);
+                }
+
+                break;
+        }
+
+        return $result;
+    }
+
+    /**
+     *
+     * @param type $tableName
+     */
+    public function updateBullets($tableName)
+    {
+        if (\Yii::$app instanceof \yii\web\Application && \Yii::$app->user->id && $this->useBullet) {
+
             /**
              * Something was changed in my own interest areas?
              */
-            $whiteList = [
-                'user', //admin
-                'community',
-                'discussioni_topic', //discussioni
-                'documenti',
-                'een',
-                'event', //events
-                'news',
-                'organizations',
-                'partnership_profiles', //partnershipprofiles
-                'projects',
-                'result',
-                'showcase_project',
-                'sondaggi',
-                'profilo'
-            ];
+            $whiteList = self::getWhiteListBulletCount();
 
             if (in_array($tableName, $whiteList)) {
 
@@ -697,28 +1005,116 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
 
                 if (is_null($updated_by)) {
                     $updated_by = \Yii::$app->user->id;
+                    $updated_by = 1;
                 }
 
                 if (is_null($created_by)) {
                     $created_by = \Yii::$app->user->id;
                 }
 
-                \Yii::$app->db->createCommand()->setSql(
-                    "INSERT INTO 
-                        `update_contents` (`module`, `updates`, `created_at`, `created_by`, `updated_at`, `updated_by`, `deleted_at`, `deleted_by`) 
-                    VALUES (
-                        '{$tableName}', 1, now(), NULL, now(), '{$created_by}', now(), '{$updated_by}'
-                    )
-                    ON DUPLICATE KEY UPDATE 
-                        `updates` = `updates` + 1, 
-                        `updated_at` = now(),
-                        `updated_by` = '{$updated_by}' 
-                    "
-                )->execute();
+
+                $moduleCwh = \Yii::$app->getModule('cwh');
+
+                $formName = $this->formName();
+                $post     = \Yii::$app->request->post();
+
+                $community_id = self::checkScope();
+                $tags         = [];
+                $network      = (property_exists($this, 'regola_pubblicazione') ? $this->regola_pubblicazione : 0);
+                if ($network == null) {
+                    $network = 0;
+                }
+
+                if (!empty($formName) && !empty($post) && !empty($post[$formName])) {
+                    $tags = $post[$formName]['tagValues'];
+                }
+                $saveTag      = false;
+                $allTagByRoot = [];
+                if (method_exists($this, 'getValidatedStatus')) {
+                    if ($this->getValidatedStatus() == $this->status) {
+                        if (!empty($tags) && is_array($tags)) {
+                            foreach ($tags as $tag) {
+                                if (!empty($tag)) {
+                                    $allTagByRoot[] = $tag;
+                                }
+                            }
+                            if (!empty($allTagByRoot)) {
+                                $saveTag = true;
+                                $tagText = implode(',', $allTagByRoot);
+                                \Yii::$app->db->createCommand()->setSql(
+                                    "INSERT INTO
+                                            `notification_update`
+                                            (`module`,`content_id`, `publication_rule`, `tags`, `community_id`, `created_at`,
+                                            `created_by`, `updated_at`, `updated_by`, `deleted_at`, `deleted_by`)
+                                        VALUES ('{$tableName}', {$this->id} , {$network}, '{$tagText}', {$community_id}, now(),
+                                            '{$created_by}', now(), '{$updated_by}', null, null)
+                                        ON DUPLICATE KEY UPDATE
+                                            `updated_at` = now(),
+                                            `updated_by` = '{$updated_by}'"
+                                )->execute();
+                            }
+                        }
+                        if ($saveTag == false) {
+                            \Yii::$app->db->createCommand()->setSql(
+                                "INSERT INTO
+                                            `notification_update`
+                                            (`module`,`content_id`, `publication_rule`, `tags`, `community_id`, `created_at`,
+                                            `created_by`, `updated_at`, `updated_by`, `deleted_at`, `deleted_by`)
+                                        VALUES ('{$tableName}', {$this->id} , {$network}, null, {$community_id}, now(),
+                                            '{$created_by}', now(), '{$updated_by}', null, null)
+                                        ON DUPLICATE KEY UPDATE
+                                            `updated_at` = now(),
+                                            `updated_by` = '{$updated_by}'"
+                            )->execute();
+                        }
+                    }
+                }
             }
         }
+    }
 
-        parent::afterSave($insert, $changedAttributes);
+    /**
+     *
+     * @return integer
+     */
+    public static function checkScope()
+    {
+        $community_id = 0;
+        $moduleCwh    = \Yii::$app->getModule('cwh');
+
+        if (!empty($moduleCwh)) {
+            /** @var \open20\amos\cwh\AmosCwh $moduleCwh */
+            $scope = $moduleCwh->getCwhScope();
+            if (!empty($scope)) {
+                if (!empty($scope['community'])) {
+                    $community_id = $scope['community'];
+                }
+            }
+        }
+        return $community_id;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getWhiteListBulletCount()
+    {
+        return [
+            'user', //admin
+            'community',
+            'discussioni_topic', //discussioni
+            'documenti',
+            'een',
+            'event', //events
+            'news',
+            'organizations',
+            'partnership_profiles', //partnershipprofiles
+            'projects',
+            'result',
+            'showcase_project',
+            'sondaggi',
+            'profilo'
+        ];
     }
 
     /**
@@ -797,11 +1193,12 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
                         // Change from 'XHTML 1.0 Strict'.
                         'HTML.Doctype' => 'XHTML 1.0 Transitional',
                         // Change from 'XHTML 1.0 Strict'.
-                        'HTML.Allowed' => 'hr,a[href|target|style],h1[style],h2[style],h3[style],h4[style],h5[style],h6[style],b,strong,i,em,ul[style],ol[style],li[style],p[style],br,span[style],img[width|height|alt|src|style],iframe[width|height|src|frameborder]',
+                        'HTML.Allowed' => 'a[href|target|style],h1[style],h2[style],h3[style],h4[style],h5[style],h6[style],b,strong,i,em,ul[style],ol[style],li[style],p[style],br,span[style],img[width|height|alt|src|style],iframe[width|height|src|frameborder],sup,sub',
                         // Finally add the following lines:
                         'HTML.SafeIframe' => true,
                         'URI.SafeIframeRegexp' => '%^(http://|https://|//)(www.youtube.com/embed/|player.vimeo.com/video/)%',
                         'Attr.AllowedFrameTargets' => '_blank',
+                        'CSS.AllowTricky' => true,
                     ];
 
                     if (!empty(\Yii::$app->params['forms-purify-data-config'])) {
@@ -809,6 +1206,10 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
                     }
 
                     $this->$key = HtmlPurifier::process(trim($this->$key), $config);
+                    if (!empty(\Yii::$app->params['forms-purify-data-enable-amp']) && \Yii::$app->params['forms-purify-data-enable-amp']
+                        == true) {
+                        $this->$key = str_replace('&amp;', '&', $this->$key);
+                    }
                 }
             }
         }
@@ -1185,7 +1586,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
      */
     public function getViewUrl()
     {
-        if (!empty($this->usePrettyUrl) && ($this->usePrettyUrl == true)) {
+        if (!empty($this->usePrettyUrl) && ($this->usePrettyUrl == true) && $this->hasMethod('getPrettyUrl') && !empty($this->getPrettyUrl())) {
             return $this->getBasicUrl();
         } else {
             return $this->getBasicUrl().'view';
@@ -1197,7 +1598,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
      */
     public function getFullViewUrl()
     {
-        if (!empty($this->usePrettyUrl) && ($this->usePrettyUrl == true)) {
+        if (!empty($this->usePrettyUrl) && ($this->usePrettyUrl == true) && $this->hasMethod('getPrettyUrl') && !empty($this->getPrettyUrl())) {
             return Url::toRoute(["/".$this->getViewUrl()."/".$this->id."/".$this->getPrettyUrl()]);
         } else if (!empty($this->useFrontendView) && ($this->useFrontendView == true) && method_exists($this,
                 'getBackendobjectsUrl')) {
@@ -1271,9 +1672,9 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
 
                     // salvare l'aggioamento della community
                 }
-            } 
+            }
         }
-    } 
+    }
 
     /**
      * This method duplicates this content row.
@@ -1371,5 +1772,68 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
     public function setModuleObj($moduleObj)
     {
         $this->moduleObj = $moduleObj;
+    }
+
+    /**
+     * @param array $tags
+     */
+    public static function setMyTags($tags)
+    {
+        if (empty(self::$myTags)) {
+            self::$myTags = $tags;
+        }
+    }
+
+    /**
+     *
+     * @return array|null
+     */
+    public static function getMyTags()
+    {
+        return self::$myTags;
+    }
+
+    /**
+     * @param integer $userId
+     * @return array
+     */
+    public static function getAllConditionsForQueryByTag($userId)
+    {
+        if (empty(self::getMyTags())) {
+            $sqlTag = "SELECT `tag_id` FROM `cwh_tag_owner_interest_mm` WHERE `record_id` = {$userId} AND `deleted_at` IS NULL";
+            $myTags = \yii\helpers\ArrayHelper::map(\Yii::$app->db->createCommand()->setSql($sqlTag)->queryAll(),
+                    'tag_id', 'tag_id');
+            self::setMyTags($myTags);
+        } else {
+            $myTags = self::getMyTags();
+        }
+
+        $conditions    = [];
+        $conditionsNot = [];
+        if (!empty($myTags)) {
+            foreach ($myTags as $tg) {
+                $conditions[]    = new Expression("FIND_IN_SET('$tg',U.tags) > 0");
+                $conditionsNot[] = new Expression("FIND_IN_SET('$tg',U.tags) = 0");
+            }
+        }
+
+        $conditions    = "U.publication_rule in (2,4) ".(!empty($conditions) ? " and (".implode(' or ', $conditions).")"
+                : "");
+        $conditionsNot = "U.publication_rule in (2,4) ".(!empty($conditionsNot) ? " and (".implode(' or ',
+                $conditionsNot).")" : "");
+
+        return [$conditions, $conditionsNot];
+    }
+
+    public static function setOffChannelRead($userId, $classname, $query)
+    {
+        $notifier = Yii::$app->getModule('notify');
+        if ($notifier) {
+            // Turn off counter
+            $notifier->notificationOff(
+                $userId, $classname, $query,
+                \open20\amos\notificationmanager\models\NotificationChannels::CHANNEL_READ
+            );
+        }
     }
 }

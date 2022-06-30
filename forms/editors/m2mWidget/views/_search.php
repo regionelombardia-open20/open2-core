@@ -32,8 +32,14 @@ $submitId = 'm2mwidget-generic-search-submit-btn';
 
 $js = JsUtility::getM2mSecondGridSearch($gridId, $this->params['postName'], $this->params['postKey'], $isModal, $useCheckbox);
 $this->registerJs($js, View::POS_READY);
+\open20\amos\layout\assets\SpinnerWaitAsset::register($this);
 
 ?>
+
+<?php if ($this->params['showSpinner']): ?>
+    <div class="loading" id="loader"></div>
+<?php endif; ?>
+
 <div class="m2mwidget-generic-search">
     <div class="col-xs-12 nop m-15-0">
         <div class="col-sm-6 col-lg-4 nop">

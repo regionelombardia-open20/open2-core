@@ -46,7 +46,7 @@ yii.validation.texteditor = (function ($) {
         },
 
         string: function (value, messages, options) {
-            var tmpTextValue = value.replace(/\\n/g, "\\r\\n");
+            var tmpTextValue = value.replace(/(<([^>]+)>)/gi,"").trim();
             var textValue = stripHtml(tmpTextValue);
 
             if (options.skipOnEmpty && pub.isEmpty(value)) {

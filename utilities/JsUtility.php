@@ -30,9 +30,12 @@ class JsUtility extends BaseObject
     {
 
         $js = <<<JS
-        
+
+        $('.loading').hide();
+
         function searchM2mFirstGrid$searchPostName(){
             var textToSearch = $("#search-$gridId").val();
+            $('.loading').show();
             $.ajax({
                 url: '$url',
                 async: true,
@@ -43,18 +46,21 @@ class JsUtility extends BaseObject
                 },
                success: function(response) {
                   $('#$gridId').html(response);
+               },
+               complete: function() {
+                   $('.loading').hide();
                }
-            }); 
+            });
         }
-        
-        $('#$gridId').on("click", "#search-btn-$gridId", function(e) {    
-            e.preventDefault(); 
+
+        $('#$gridId').on("click", "#search-btn-$gridId", function(e) {
+            e.preventDefault();
             searchM2mFirstGrid$searchPostName();
             return false;
         });
 
-         $('#$gridId').on("click", "#reset-search-btn-$gridId", function(e) {    
-             e.preventDefault(); 
+         $('#$gridId').on("click", "#reset-search-btn-$gridId", function(e) {
+             e.preventDefault();
              $("#search-$gridId").val('');
              searchM2mFirstGrid$searchPostName();
              return false;
@@ -67,7 +73,7 @@ class JsUtility extends BaseObject
                 return false;
             }
         });
-         
+
          $('body').on("click", "#$gridId-first .pagination li a", function(e) {
             e.preventDefault();
             var textToSearch = $("#search-$gridId").val();
@@ -77,21 +83,25 @@ class JsUtility extends BaseObject
             };
             var urlPag = $(this).attr('href');
             var pageParams = urlPag.substring(urlPag.indexOf('&'));
+            $('.loading').show();
             $.pjax({
                 type: 'POST',
                 url: '$url'+pageParams,
                 container: '#$gridId',
                 replace: false,
                 push: false,
-                data: data
+                data: data,
+                complete: function() {
+                    $('.loading').hide();
+                }
             });
             return false;
         });
-         
+
           // used to sort via ajax without loosing the search
          $('body').on("click", "#$gridId-first thead th a", function(e) {
             e.preventDefault();
-                        
+
             var urlOrigin = window.location.origin;
             var urlOrder = new URL(urlOrigin + $(this).attr('href'));
             var sort = urlOrder.searchParams.get("sort");
@@ -103,6 +113,7 @@ class JsUtility extends BaseObject
             else {
                  sortParam = '?sort='+sort
             }
+            $('.loading').show();
             $.ajax({
                 url: '$url'+ sortParam,
                 async: true,
@@ -113,8 +124,11 @@ class JsUtility extends BaseObject
                 },
                success: function(response) {
                   $('#$gridId').html(response);
+               },
+               complete: function() {
+                    $('.loading').hide();
                }
-            }); 
+            });
         });
 JS;
         return $js;
@@ -132,8 +146,11 @@ JS;
         $paramsJson = json_encode($params);
 
         $js = <<<JS
+            $('.loading').hide();
+
             $('#$gridId').on("click", "#$gridId-btn-associate", function(e) {
-                 e.preventDefault(); 
+                 e.preventDefault();
+                 $('.loading').show();
                  $.ajax({
                       url: '$urlTo',
                       async: true,
@@ -142,8 +159,11 @@ JS;
                       success: function(response) {
                           $('#$gridId-modal-container').html(response);
                           $('#$gridId-modal').modal('show');
+                      },
+                      complete: function() {
+                          $('.loading').hide();
                       }
-                 }); 
+                 });
                  return false;
             });
 JS;
@@ -160,16 +180,19 @@ JS;
     public static function getM2mModalSave($gridId, $postName, $postKey)
     {
         $js = <<<JS
+                $('.loading').hide();
+
                 $('#$gridId-modal').on("click", ".save-modal", function(e) {
-                    e.preventDefault(); 
+                    e.preventDefault();
                     // var inputName = '$postName'+'['+'$postKey'+'][]';
                     var inputName = 'selected[]';
-                    var selected = $("[name='"+inputName+"']"); 
-                    var selection = []; 
+                    var selected = $("[name='"+inputName+"']");
+                    var selection = [];
                     $.each (selected, function(key, value){
                         selection.push(value.value);
                     });
                     var hrefValue = $(this).attr('href');
+                    $('.loading').show();
                     $.ajax({
                         url: hrefValue,
                         async: true,
@@ -182,21 +205,25 @@ JS;
                             $('#$gridId-modal').modal('hide');
                             $('.modal-backdrop').remove();
                             $("#reset-search-btn-$gridId").click();
+                        },
+                        complete: function(response) {
+                            $('.loading').hide();
                         }
                     });
                     return false;
                 });
-                
+
                 $('#$gridId-modal').on("click", ".pagination li a", function(e) {
                     e.preventDefault();
                     // var inputName = '$postName'+'['+'$postKey'+'][]';
                     var inputName = 'selected[]';
-                    var selected = $("[name='"+inputName+"']"); 
-                    var selection = []; 
+                    var selected = $("[name='"+inputName+"']");
+                    var selection = [];
                     var searchValue = $('#community-members-grid-association-search-field').val();
                     $.each (selected, function(key, value){
                         selection.push(value.value);
                     });
+                    $('.loading').show();
                     $.ajax({
                         url: $(this).attr('href'),
                         async: true,
@@ -221,13 +248,16 @@ JS;
                                     $('.hiddenInputContainer').append('<input type="hidden" name="'+inputName+'"value="'+id+'">');
                                 }
                             });
-                            
+
                             $('#$gridId-modal').css("display", "block");
                             $('#$gridId-modal').addClass('in');
                             $('.modal-backdrop').remove();
                             $('#$gridId-modal').modal('show');
+                        },
+                        complete: function() {
+                            $('.loading').hide();
                         }
-                    }); 
+                    });
                     return false;
                 });
 JS;
@@ -245,16 +275,19 @@ JS;
     {
         if ($useCheckbox) {
             $js = <<<JS
+                $('.loading').hide();
+
                 $('body').on("click", ".pagination li a", function(e) {
                     e.preventDefault();
                     // var inputName = '$postName'+'['+'$postKey'+'][]';
                     var inputName = 'selected[]';
-                    var selected = $("[name='"+inputName+"']"); 
+                    var selected = $("[name='"+inputName+"']");
                     var selection = [];
                     var genericSearchVal = $("#$gridId-search-field").val();
                     $.each (selected, function(key, value){
                         selection.push(value.value);
                     });
+                    $('.loading').show();
                     $.ajax({
                         url: $(this).attr('href'),
                         async: true,
@@ -280,10 +313,13 @@ JS;
                                   $('.hiddenInputContainer').append('<input type="hidden" name="'+inputName+'"value="'+id+'">');
                                }
                             });
+                       },
+                       complete: function() {
+                           $('.loading').hide();
                        }
-                    }); 
+                    });
                     return false;
-                    
+
                 });
 JS;
         } else {
@@ -324,19 +360,21 @@ JS;
         if (!$isModal) {
 
             $js = <<<JS
-                $('body').on("click", "#$gridId-search-btn", function(e) {    
+                $('.loading').hide();
+
+                $('body').on("click", "#$gridId-search-btn", function(e) {
                     e.preventDefault();
                     searchM2m();
                     return false;
-                 
+
                 });
 
-                $('body').on("click", "#$gridId-reset-search-btn", function(e) {    
+                $('body').on("click", "#$gridId-reset-search-btn", function(e) {
                     e.preventDefault();
                     $("#$gridId-search-field").val('');
                     searchM2m();
                     return false;
-                 
+
                 });
                 $('body').on("keypress", "#$gridId-search-field", function(e) {
                     if(e.which == 13) {
@@ -351,8 +389,8 @@ JS;
                 function searchM2m(){
                     // var inputName = '$postName'+'['+'$postKey'+'][]';
                     var inputName = 'selected[]';
-                    var selected = $("[name='"+inputName+"']"); 
-                    var selection = []; 
+                    var selected = $("[name='"+inputName+"']");
+                    var selection = [];
                     $.each (selected, function(key, value){
                         selection.push(value.value);
                     });
@@ -362,6 +400,7 @@ JS;
                         save: 0
                     };
                     var urlTo = window.location.href;
+                    $('.loading').show();
                     $.ajax({
                         url: urlTo,
                         async: true,
@@ -383,8 +422,11 @@ JS;
                                   $('.hiddenInputContainer').append('<input type="hidden" name="'+inputName+'"value="'+id+'">');
                                }
                             });
+                       },
+                       complete: function() {
+                           $('.loading').hide();
                        }
-                    }); 
+                    });
                 }
 JS;
             } else {
@@ -394,6 +436,7 @@ JS;
                         genericSearch: $("#$gridId-search-field").val()
                     };
                     var urlTo = window.location.href;
+                    $('.loading').show();
                     $.ajax({
                         url: urlTo,
                         async: true,
@@ -402,8 +445,11 @@ JS;
                        success: function(response) {
                             $('.form-container').html(response);
                             $('m2mwidget-from-generic-search-hiddeninput').val(1);
+                       },
+                       complete: function() {
+                           $('.loading').hide();
                        }
-                    }); 
+                    });
                 }
 JS;
             }
@@ -413,21 +459,21 @@ JS;
 
             $modalId = str_replace('association', 'modal', $gridId);
             $js = <<<JS
-                $('#$modalId').on("click", "#$gridId-search-btn", function(e) {    
+                $('#$modalId').on("click", "#$gridId-search-btn", function(e) {
                     e.preventDefault();
                     searchM2mModal();
                     return false;
-                 
+
                 });
 
-                $('#$modalId').on("click", "#$gridId-reset-search-btn", function(e) {    
+                $('#$modalId').on("click", "#$gridId-reset-search-btn", function(e) {
                     e.preventDefault();
                     $("#$gridId-search-field").val('');
                     searchM2mModal();
                     return false;
-                 
+
                 });
-               
+
                 $('#$modalId').on("keypress", "#$gridId-search-field", function(e) {
                     if(e.which == 13) {
                          e.preventDefault();
@@ -438,8 +484,8 @@ JS;
                 function searchM2mModal(){
                     // var inputName = '$postName'+'['+'$postKey'+'][]';
                     var inputName = 'selected[]';
-                    var selected = $("[name='"+inputName+"']"); 
-                    var selection = []; 
+                    var selected = $("[name='"+inputName+"']");
+                    var selection = [];
                     $.each (selected, function(key, value){
                         selection.push(value.value);
                     });
@@ -449,6 +495,7 @@ JS;
                         save: 0
                     };
                     var urlTo = $("#$modalId").find('.save-modal').attr('href');
+                    $('.loading').show();
                     $.ajax({
                         url: urlTo+'&viewM2MWidgetGenericSearch=1',
                         async: true,
@@ -473,8 +520,11 @@ JS;
                             $('#$modalId').addClass('in');
                             $('.modal-backdrop').remove();
                             $('#$modalId').modal('show');
+                       },
+                       complete: function() {
+                           $('.loading').hide();
                        }
-                    }); 
+                    });
                 }
 JS;
         }

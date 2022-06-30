@@ -26,8 +26,10 @@ class LinkedIn extends AbstractDriver
      */
     protected function processShareData()
     {
-        $this->url         = $this->url;
-        
+//        $this->url         = $this->url;
+        $this->url         = static::encodeData($this->url);
+
+
         if (\is_string($this->siteName)) {
             $this->appendToData('siteName', $this->siteName);
         }

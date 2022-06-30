@@ -188,16 +188,21 @@ class Formatter extends YiiFormatter
                     $str = $nb > 1 ? BaseAmosModule::t('amoscore', 'days') : BaseAmosModule::t('amoscore', 'day');
                     break;
                 case 'hour':
-                    $str = $nb > 1 ? BaseAmosModule::t('amoscore', 'hours') : BaseAmosModule::t('amoscore', 'hour');
+                    $str = abs($nb) > 1 ? BaseAmosModule::t('amoscore', 'hours') : BaseAmosModule::t('amoscore', 'hour');
                     break;
                 case 'minute':
-                    $str = $nb > 1 ? BaseAmosModule::t('amoscore', 'minutes') : BaseAmosModule::t('amoscore', 'minute');
+                    $str = abs($nb) > 1 ? BaseAmosModule::t('amoscore', 'minutes') : BaseAmosModule::t('amoscore',
+                            'minute');
                     break;
                 case 'second':
                     $str = $nb > 1 ? BaseAmosModule::t('amoscore', 'seconds') : BaseAmosModule::t('amoscore', 'second');
                     break;
             }
-            return $str.' '.BaseAmosModule::t('amoscore', 'ago');
+            if ($nb < 0) {
+                return [BaseAmosModule::t('amoscore', 'fra'), $str];
+            } else {
+                return $str.' '.BaseAmosModule::t('amoscore', 'ago');
+            }
         };
 
         /*
@@ -253,12 +258,22 @@ class Formatter extends YiiFormatter
             }
 
             if ($interval->h < 6) {
-                $format[] = '%h '.$doPlural($interval->h, 'hour');
+                if ($interval->invert) {
+                    $format[] = '%h '.$doPlural($interval->h, 'hour');
+                } else {
+                    $preFormat = $doPlural(-intval($interval->h), 'hour');
+                    $format[]  = $preFormat[0].' %h '.$preFormat[1];
+                }
             } else {
                 return BaseAmosModule::t('amoscore', 'today at').' '.$start->format('H:i');
             }
         } elseif ($interval->i !== 0) {
-            $format[] = '%i '.$doPlural($interval->i, 'minute');
+            if ($interval->invert) {
+                $format[] = '%i '.$doPlural($interval->i, 'minute');
+            } else {
+                $preFormat = $doPlural(-intval($interval->i), 'minute');
+                $format[]  = $preFormat[0].' %i '.$preFormat[1];
+            }
         } elseif ($interval->s >= 0) {
             return BaseAmosModule::t('amoscore', 'now');
             /*

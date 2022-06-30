@@ -15,6 +15,7 @@ namespace open20\amos\core\helpers;
 class Crumb
 {
     public $label = '';
+    public $title = '';
     public $url = '';
     public $controller = null;
     public $model = null;
@@ -24,6 +25,7 @@ class Crumb
     public $params = null;
     public $remove_action = null;
     public $visible = true;
+    public $isIndex = false;
 
     /**
      * @return array

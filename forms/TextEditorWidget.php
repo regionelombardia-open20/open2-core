@@ -45,6 +45,8 @@ class TextEditorWidget extends TinyMce
             "contextmenu paste",
         ],
         'image_advtab' => true,
+        'style_formats_merge' => true,
+        'extended_valid_elements' => 'a[href|target=_blank|src|style|title|alt|class]',
         'toolbar' => "fullscreen | undo redo code | styleselect | bold italic strikethrough forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media insertdatetime | removeformat",
         'branding' => false,
         'paste_block_drop' => true,
@@ -79,7 +81,7 @@ class TextEditorWidget extends TinyMce
 
         $pluginPlaceholder = <<<JS
             tinymce.PluginManager.add("placeholder",function(a){a.on("init",function(){function d(){!a.settings.readonly==!0&&c.hide(),a.execCommand("mceFocus",!1)}function e(){""==a.getContent()?c.show():c.hide()}function f(){c.hide()}var c=new b;e(),tinymce.DOM.bind(c.el,"click",d),a.on("focus",d),a.on("blur",e),a.on("change",e),a.on("setContent",e),a.on("keydown",f)});var b=function(){var b=a.getElement().getAttribute("placeholder")||a.settings.placeholder,c=a.settings.placeholder_attrs||{style:{position:"absolute",top:"5px",left:0,color:"#888",padding:"1%",width:"98%",overflow:"hidden","white-space":"pre-wrap"}},d=a.getContentAreaContainer();tinymce.DOM.setStyle(d,"position","relative"),this.el=tinymce.DOM.add(d,a.settings.placeholder_tag||"label",c,b)};b.prototype.hide=function(){tinymce.DOM.setStyle(this.el,"display","none")},b.prototype.show=function(){tinymce.DOM.setStyle(this.el,"display","")}});
-            tinymce.PluginManager.add("charactercount",function(e){var n=this;function a(){e.theme.panel.find("#charactercount").text(["$this->tinyMCELabel",n.getCount()])}e.on("init",function(){var t=e.theme.panel&&e.theme.panel.find("#statusbar")[0];t&&window.setTimeout(function(){t.insert({type:"label",name:"charactercount",text:["$this->tinyMCELabel",n.getCount()],classes:"charactercount",disabled:e.settings.readonly},0),e.on("setcontent beforeaddundo",a),e.on("keyup",function(t){a()})},0)}),n.getCount=function(){return function(t){var e=document.createElement("textarea");return e.innerHTML=t,e.value}(e.getContent({format:"raw"})).replace(/(<([^>]+)>)/gi,"").trim().length}});
+            tinymce.PluginManager.add("charactercount",function(e){var n=this;function a(){e.theme.panel.find("#charactercount").text(["$this->tinyMCELabel",n.getCount()])}e.on("init",function(){var t=e.theme.panel&&e.theme.panel.find("#statusbar")[0];t&&window.setTimeout(function(){t.insert({type:"label",name:"charactercount",text:["$this->tinyMCELabel",n.getCount()],classes:"charactercount",disabled:e.settings.readonly},0),e.on("setcontent beforeaddundo",a),e.on("keyup",function(t){a()})},0)}),n.getCount=function(){return function(t){var e=document.createElement("textarea");return e.innerHTML=t,e.value}(e.getContent({format:"html"})).replace(/(<([^>]+)>)/gi,"").trim().length}});
 JS;
         if (!empty($this->tinyMCELabel)) {
             $tinyLabelCharsCounter = <<<JS
@@ -172,6 +174,18 @@ JS;
             }
             if (isset($config['clientOptions']['mobile'])) {
                 $this->clientOptions['mobile'] = $config['clientOptions']['mobile'];
+            } else {
+                $mobile_options                            = array();
+                $mobile_options['mobile']['menubar']       = true;
+                $mobile_options['mobile']['plugins']       = ['autosave', 'lists', 'autolink'];
+                $mobile_options['mobile']['theme']         = 'mobile';
+                $mobile_options['mobile']['content_style'] = 'body {background-color: white;}';
+                $mobile_options['mobile']['toolbar']       = [
+                    'fullscreen', 'undo redo code', 'styleselect ',
+                    'bold italic strikethrough forecolor backcolor',
+                    'link image media insertdatetime', 'removeformat'
+                ];
+                $this->clientOptions                       = ArrayHelper::merge($this->clientOptions, $mobile_options);
             }
         } else {
             $mobile_options                            = array();
@@ -191,10 +205,20 @@ JS;
         }
 
         if (empty($config['clientOptions']['wordcount'])) {
-            $this->clientOptions['plugins'][] = "charactercount";
+            if(is_array($config['clientOptions']['plugins'])){
+            	$config['clientOptions']['plugins'][] = "charactercount";
+            }else{
+                $config['clientOptions']['plugins'] = [$config['clientOptions']['plugins']];
+                $config['clientOptions']['plugins'][] = "charactercount";
+            }
             $this->tinyMCELabel               = Module::t('amoscore', '#tinyMCECharsCount');
         } else {
-            $this->clientOptions['plugins'][] = "wordcount";
+            if(is_array($config['clientOptions']['plugins'])){
+                $config['clientOptions']['plugins'][] = "wordcount";
+            }else{
+                $config['clientOptions']['plugins'] = [$config['clientOptions']['plugins']];
+                $config['clientOptions']['plugins'][] = "wordcount";
+            }
         }
 
         if (!isset($config['language'])) {

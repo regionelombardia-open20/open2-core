@@ -17,18 +17,18 @@ use yii\console\Application;
 use yii\web\User;
 
 /**
- * Class ConsoleApplication
+ * Class CmsConsoleApplication
  * @package open20\amos\core\applications
  */
-class ConsoleApplication extends Application implements ApplicationInterface
+class CmsConsoleApplication extends Application implements ApplicationInterface
 {
     /**
      * @inheritdoc
      */
     public function init()
     {
-        Yii::setAlias('@webroot', '@backend/web');
-        Yii::setAlias('@web', '@backend/web');
+        Yii::setAlias('@webroot', '@frontend/web');
+        Yii::setAlias('@web', '@frontend/web');
         parent::init();
     }
 

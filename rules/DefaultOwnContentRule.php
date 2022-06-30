@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Aria S.p.A.
  * OPEN 2.0
@@ -32,7 +31,7 @@ class DefaultOwnContentRule extends Rule
             $model = $params['model'];
             if (!$model->id) {
                 $post = \Yii::$app->getRequest()->post();
-                $get = \Yii::$app->getRequest()->get();
+                $get  = \Yii::$app->getRequest()->get();
                 if (isset($get['id'])) {
                     $model = $this->instanceModel($model, $get['id']);
                 } elseif (isset($post['id'])) {
@@ -53,6 +52,12 @@ class DefaultOwnContentRule extends Rule
     protected function instanceModel($model, $modelId)
     {
         $modelClass = $model->className();
+        if (\Yii::$app->controller->id.'/'.\Yii::$app->controller->action->id == 'file/delete') {
+            $file = \open20\amos\attachments\models\File::findOne($modelId);
+            if (!empty($file)) {
+                $modelId = $file->itemId;
+            }
+        }
         /** @var Record $modelClass */
         $instancedModel = $modelClass::findOne($modelId);
         if (!is_null($instancedModel)) {

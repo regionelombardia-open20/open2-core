@@ -29,7 +29,82 @@ use yii\db\ActiveQuery;
 abstract class NetworkModel extends ContentModel implements ModelNetworkInterface
 {
 
+    const ROOT_NETWORKS = 'root_networks';
+    
+    /**
+     * @param bool $insert
+     * @param array $changedAttributes
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function afterSave($insert, $changedAttributes){
+        parent::afterSave($insert, $changedAttributes);
+        self::saveTagNetwork($insert, $this);
+    }
 
+    /**
+     * @param $insert
+     * @throws \yii\base\InvalidConfigException
+     */
+    public static function saveTagNetwork($insert, $model){
+        $moduleCwh = \Yii::$app->getModule('cwh');
+        if($moduleCwh){
+            $cwhConfig = CwhConfig::find()->andWhere(['classname' => get_class($model)])->one();
+            if($cwhConfig){
+                if($insert){
+                    /** @var  $root \open20\amos\tag\models\Tag*/
+                    $root = \open20\amos\tag\models\Tag::find()->andWhere(['codice' => NetworkModel::ROOT_NETWORKS])->one();
+                    if($root){
+                        $nome = $model->getTitle();
+                        $model->createTag($root, $nome, $cwhConfig);
+                    }
+                }
+            }
+        }
+    }
+
+
+    /**
+     * @param \open20\amos\tag\models\Tag $parent
+     * @param string $nome
+     * @return \open20\amos\tag\models\Tag|null
+     */
+    private function createTag($parent, $nome, $cwhConfig)
+    {
+        $codice = '';
+        $node = new \open20\amos\tag\models\Tag();
+        $node->nome = $nome;
+        $node->codice = $codice;
+        $node->descrizione = '';
+        $node->icon = '';
+        $node->icon_type = 1;
+        $node->active = 1;
+        $node->activeOrig = $node->active;
+        $node->selected = 0;
+        $node->disabled = 0;
+        $node->readonly = 0;
+        $node->visible = 1;
+        $node->collapsed = 0;
+        $node->movable_u = 1;
+        $node->movable_d = 1;
+        $node->movable_l = 1;
+        $node->movable_r = 1;
+        $node->removable = 1;
+        $node->removable_all = 0;
+        $node->is_network = true;
+        $node->cwh_config_id = $cwhConfig->id;
+        $node->network_record_id = $this->id;
+        $node->appendTo($parent);
+
+        if (!$node->save()) {
+            return null;
+        }
+
+        return $node;
+    }
+
+    /**
+     * @return bool
+     */
     public function hasSubNetworks()
     {
         return false;
@@ -46,7 +121,6 @@ abstract class NetworkModel extends ContentModel implements ModelNetworkInterfac
 
         if(is_null($userId))
         {
-//            $userId = Yii::$app->getUser()->getId();
             $userId = Yii::$app->user->getId();
         }
 

@@ -66,10 +66,15 @@ HTML;
      */
     public function init()
     {
+        $listViewLayout = $this->render('@vendor/open20/amos-layout/src/views/layouts/fullsize/parts/yii2/views/listViewLayout');
         parent::init();
 
+        $this->layout = $listViewLayout;
         if($this->showPageSummary) {
-            $this->summary = BaseAmosModule::t('amoscore', 'Risultati visualizzati {count} - Risultati da {begin} a {end} su un totale di {totalCount} - Pagina {page} di {pageCount}');
+//            $this->summary = BaseAmosModule::t('amoscore', 'Risultati visualizzati {count} - Risultati da {begin} a {end} su un totale di {totalCount} - Pagina {page} di {pageCount}');
+            $this->summary =
+                "<p>". BaseAmosModule::t('amoscore', 'Visualizzati {count} elementi di {totalCount} totali')."</p>"
+                ."<p>" . BaseAmosModule::t('amoscore','Pagina {page} di {pageCount}')."</p>";
         }
         else {
             $this->summary = '';

@@ -197,13 +197,24 @@ class MessageSource extends DbMessageSource
          * Active languages
          */
         if (is_null(static::$languages)) {
-            static::$languages = Language::findAll(['status' => true]);
+            $languages = Language::find()->andWhere(['status' => true]);
+            if ($this->enableCaching) {
+                $languages = \open20\amos\core\record\CachedActiveQuery::instance($languages);
+                $languages->cache($this->cachingDuration, $this->cache);
+            }
+            $languages         = $languages->all();
+            static::$languages = $languages;
         }
 
         /**
          * Find for existing source text
          */
-        $currentTranslation = LanguageSource::findOne(['category' => $category, 'message' => $message]);
+        $currentTranslationQ = LanguageSource::find()->andWhere(['category' => $category, 'message' => $message]);
+        if ($this->enableCaching) {
+            $currentTranslationQ = \open20\amos\core\record\CachedActiveQuery::instance($currentTranslationQ);
+            $currentTranslationQ->cache($this->cachingDuration, $this->cache);
+        }
+        $currentTranslation = $currentTranslationQ->one();
 
         /**
          * If not exists create a new one
@@ -240,10 +251,15 @@ class MessageSource extends DbMessageSource
              * If the text is translated then insert the row
              */
             if (isset($translatedTexts[$message])) {
-                $translationExists = LanguageTranslate::findOne([
-                        'id' => $currentTranslation->id,
-                        'language' => $singleLanguage->language_id
+                $translationExistsQ = LanguageTranslate::find()->andWhere([
+                    'id' => $currentTranslation->id,
+                    'language' => $singleLanguage->language_id
                 ]);
+                if ($this->enableCaching) {
+                    $translationExistsQ = \open20\amos\core\record\CachedActiveQuery::instance($translationExistsQ);
+                    $translationExistsQ->cache($this->cachingDuration, $this->cache);
+                }
+                $translationExists = $translationExistsQ->one();
 
                 /**
                  * Create new one if not exists

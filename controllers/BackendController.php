@@ -48,11 +48,11 @@ abstract class BackendController extends AmosController
                     'class' => AccessControl::className(),
                     'rules' => [
                         [
-                            'actions' => ['public'],
+                            'actions' => ['public',  'share-ajax'],
                             'allow' => true,
                         ],
                         [
-                            'actions' => ['like', 'like-to', 'get-counter', 'share-ajax'],
+                            'actions' => ['like', 'like-to', 'get-counter'],
                             'allow' => true,
                             'roles' => ['@']  // for all log in users
                         ],
@@ -151,8 +151,9 @@ abstract class BackendController extends AmosController
      */
     public function actionShareAjax($id)
     {
-        $obj = $this->getModelObj();
         \Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $obj = $this->getModelObj();
 
         if ($obj) {
             $classname = get_class($obj);
@@ -206,7 +207,7 @@ abstract class BackendController extends AmosController
                 $rs->models_classname_id = $mid;
                 $rs->user_ip = \Yii::$app->request->getUserIP();
             }
-            $rs->likes = -1 * ($rs->likes - 1);           
+            $rs->likes = -1 * ($rs->likes - 1);
             $rs->save();
         }
 

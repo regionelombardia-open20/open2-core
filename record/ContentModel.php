@@ -325,7 +325,7 @@ abstract class ContentModel extends NotifyRecord implements ContentModelInterfac
      */
     public function getFullViewUrl()
     {
-        if (!empty($this->usePrettyUrl) && ($this->usePrettyUrl == true)) {
+        if (!empty($this->usePrettyUrl) && ($this->usePrettyUrl == true) && $this->hasMethod('getPrettyUrl') && !empty($this->getPrettyUrl())) {
             return Url::toRoute(["/".$this->getViewUrl()."/".$this->id."/".$this->getPrettyUrl()]);
         } else if (!empty($this->useFrontendView) && ($this->useFrontendView == true) && method_exists($this,
                 'getBackendobjectsUrl')) {

@@ -13,6 +13,7 @@ namespace open20\amos\core\migration;
 
 use open20\amos\core\migration\libs\common\MigrationCommon;
 use open20\amos\core\module\BaseAmosModule;
+use open20\amos\translation\models\LanguageTranslateUserFields;
 use lajax\translatemanager\models\Language;
 use lajax\translatemanager\models\LanguageSource;
 use lajax\translatemanager\models\LanguageTranslate;
@@ -105,6 +106,7 @@ class AmosMigrationTranslations extends Migration
         'language' => self::FIELD_TYPE_STRING,
         'removeSource' => self::FIELD_TYPE_BOOL,
         'update' => self::FIELD_TYPE_BOOL,
+        'updateWithUserField' => self::FIELD_TYPE_BOOL,
         'newTranslation' => self::FIELD_TYPE_STRING,
         'oldTranslation' => self::FIELD_TYPE_STRING
     ];
@@ -143,6 +145,7 @@ class AmosMigrationTranslations extends Migration
         'language',
         'removeSource',
         'update',
+        'updateWithUserField',
         'newTranslation',
         'oldTranslation'
     ];
@@ -432,7 +435,27 @@ class AmosMigrationTranslations extends Migration
     {
         return LanguageTranslate::findOne(['id' => $languageSourceId, 'language' => $language]);
     }
-    
+
+    /**
+     * Add if not exist a record to language_translate_user_fields.
+     * @param string $languageSourceId The language source id.
+     * @param string $language The translate language.
+     * @return void
+     */
+    private function addLanguageUserField($languageSourceId, $language)
+    {
+        $modelUserField = LanguageTranslateUserFields::findOne(['language_translate_id' => $languageSourceId, 'language_translate_language' => $language ]);
+        if (empty($modelUserField)) {
+            $now = date('Y-m-d H:i:s');
+            $modelUserField = new LanguageTranslateUserFields();
+            $modelUserField->language_translate_id = $languageSourceId;
+            $modelUserField->language_translate_language = $language;
+            $modelUserField->created_at = $now;
+            $modelUserField->save(false);
+            MigrationCommon::printConsoleMessage(BaseAmosModule::t('amoscore', 'Language translate user field created for') . ': (' . $languageSourceId . '; ' . $language . ') ');
+        }
+    }
+
     /**
      * Method useful to add a single translation configuration.
      * @param string $language The general language of the configurations.
@@ -446,6 +469,9 @@ class AmosMigrationTranslations extends Migration
         if (!is_null($languageSource)) {
             if (isset($translationConf['update']) && $translationConf['update']) {
                 $ok = $this->updateLanguageTranslate($languageSource->id, $language, $translationConf['newTranslation']);
+                if ($ok && isset($translationConf['updateWithUserField']) && $translationConf['updateWithUserField']) {
+                    $this->addLanguageUserField($languageSource->id, $language);
+                }
             } else {
                 $ok = $this->addLanguageTranslate($languageSource->id, $language, $translationConf['translation']);
             }

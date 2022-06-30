@@ -157,11 +157,11 @@ class Html extends \yii\helpers\Html
             $realActionId = trim(strtoupper(end($splittedUrl)));
             $realModelClassName = (isset($options['model']) ? get_class($options['model']) : NULL);
         } else {
-            list($controllerObj, $actionId) = \Yii::$app->createController($url);
+            $baseUrl = explode("?", $url);
+            list($controllerObj, $actionId) = \Yii::$app->createController($baseUrl[0]);
             $realModelClassName = (isset($controllerObj->modelClassName) ? $controllerObj->modelClassName : '');
             $splittedModelClassName = explode("\\", $realModelClassName);
-            $splittedActionId = explode("?", $actionId);
-            $realActionId = trim(strtoupper($splittedActionId[0]));
+            $realActionId = trim(strtoupper($actionId));
         }
         if (!$realActionId) {
             $realActionId = 'INDEX';

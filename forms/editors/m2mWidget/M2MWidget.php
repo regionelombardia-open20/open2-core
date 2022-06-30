@@ -70,7 +70,7 @@ class M2MWidget extends Widget
     public $postKey = '';
     public $modelDataArrFromTo = [];
 
-    
+
     /** @var string $targetUrlInvitation The url of invitations page */
     public $targetUrlInvitation = null;
     public $btnInvitationLabel = '';
@@ -123,7 +123,6 @@ class M2MWidget extends Widget
     public $btnAssociaId = '';
     public $btnAssociaLabel = '';
     public $btnAssociaClass = 'btn btn-primary';
-    public $btnAssociaConfirm = null;
     public $btnAdditionalAssociateLabel = '';
     public $btnAdditionalAssociateClass = 'btn btn-primary';
     public $forceListRender = false;
@@ -158,6 +157,11 @@ class M2MWidget extends Widget
     public $isModal = false;
 
     /**
+     * @var bool $showSpinner - Shows embedded spinner during PJAX requests
+     */
+    public $showSpinner = false;
+
+    /**
      * @var string $itemsTargetView
      */
     public $itemsTargetView = 'm2mwidget_grid';
@@ -166,7 +170,7 @@ class M2MWidget extends Widget
      * @var array|null $listView - option for data provider list view
      */
     public $listView = null;
-    
+
     /**
      * @var array|null $iconView - option for data provider icon view
      */
@@ -233,7 +237,7 @@ class M2MWidget extends Widget
      * @var bool $m2mwidgetButtonPagination
      */
     public $m2mwidgetButtonPagination = false;
-    
+
     /**
      * @throws Exception
      */
@@ -286,6 +290,15 @@ class M2MWidget extends Widget
 //        if (!$this->postName) {
 //            $this->postName = $this->model->formName();
 //        }
+    }
+    
+    
+    /**
+    * setter setItemsMittenteDataProvider
+    */
+
+    public function setItemsMittenteDataProvider($item){
+            $this->itemsMittenteDataProvider = $item;
     }
 
     protected function throwErrorMessage($field)
@@ -387,12 +400,11 @@ class M2MWidget extends Widget
                     $buttons .= Html::a($btnAssociaLabel, $url, [
                         'class' => $this->btnAssociaClass,
                         'title' => $btnAssociaLabel,
-                        'data-url-confirm' => $this->btnAssociaConfirm,
                         'id' => $associateBtnId
                     ]);
 
                     $urlTo = Yii::$app->urlManager->createUrl($url);
-                    
+
                 }
 
                 if ($this->externalInvitationEnabled) {
@@ -413,7 +425,7 @@ class M2MWidget extends Widget
                         ]
                     );
                 }
-                
+
                 if ($this->isModal) {
                     $buttons .= Html::tag('div', '', ['id' => $this->gridId . '-modal-container']);
                     $js = JsUtility::getM2mAssociateBtnModal($this->gridId, $urlTo);
@@ -494,10 +506,10 @@ class M2MWidget extends Widget
             }
 
             if (!empty($this->additionalButtons)) {
-                $buttons = '<div class="col-xs-12 nop"><div class="col-sm-6 btn-add-admin">' . $buttons . '</div><div class="col-sm-6 btn-search-admin">' .
+                $buttons = '<div class="row"><div class="col-sm-12 col-md-6 btn-add-admin">' . $buttons . '</div><div class="col-sm-12 col-md-6 btn-search-admin">' .
                         $downloadButton . $this->additionalButtons;
             } else {
-                $buttons = '<div class="col-xs-12 nop"><div class="col-sm-6 btn-add-admin">' . $buttons . '</div><div class="col-sm-6 btn-search-admin">' .
+                $buttons = '<div class="row"><div class="col-sm-12 col-md-6 btn-add-admin">' . $buttons . '</div><div class="col-sm-12 col-md-6 btn-search-admin">' .
                         $downloadButton;
             }
 
@@ -539,6 +551,7 @@ class M2MWidget extends Widget
     {
         $retVal = '';
         $buttons = '';
+        $buttonsAssocia = '';
 
         $btnAssociaLabel = ($this->btnAssociaLabel == '') ? BaseAmosModule::t('amoscore', 'Associa') : $this->btnAssociaLabel;
 
@@ -550,7 +563,7 @@ class M2MWidget extends Widget
                     'checkPermWithNewMethod' => true,
                     'createButtonId' => self::creaButtonId(),
                     'createNewBtnLabel' => $this->createNewBtnLabel,
-                    'btnClasses' => 'btn btn-primary btn-m2m'
+                    'btnClasses' => 'btn btn-primary'
                 ];
                 if (isset($this->model)) {
                     $createOptions['model'] = $this->model;
@@ -573,7 +586,6 @@ class M2MWidget extends Widget
                 $buttons .= Html::a($btnAssociaLabel, $url, [
                     'class' => $this->btnAssociaClass,
                     'title' => $btnAssociaLabel,
-                    'data-url-confirm' => $this->btnAssociaConfirm,
                     'id' => $associateBtnId
                 ]);
 
@@ -629,12 +641,12 @@ class M2MWidget extends Widget
                         'class' => 'btn btn-danger-inverse',
                         'alt' => BaseAmosModule::t('amoscore', 'Cancel search')
                     ]),
-                ['class' => 'col-xs-12 nop m2mwidget-search-mini']);
+                ['class' => 'm2mwidget-search-mini']);
         }
 
         $retVal .= Html::tag('div',
             (!empty($this->titleWidget) ? Html::tag('h2', $this->titleWidget) : '')
-            . $buttonsAssocia, ['class' => 'col-xs-12 nop']);
+            . $buttonsAssocia);
         if (strlen($buttons)) {
             $retVal .= Html::tag('div', $buttons, ['class' => 'container-tools']);
         }
@@ -672,7 +684,7 @@ class M2MWidget extends Widget
      */
     public function renderItemsMittente()
     {
-        
+
         if(!is_null($this->iconView)){
             return $this->renderItemsIcons();
         }else{
@@ -691,13 +703,13 @@ class M2MWidget extends Widget
             ]);
         }
     }
-    
+
     /**
-     * 
+     *
      * Renders the data models for the icon view.
      */
     public function renderItemsIcons(){
-        
+
         $icon = [
             'name' => 'icon',
             'label' => BaseAmosModule::t('amoscore', '{iconaElenco}' . Html::tag('p', BaseAmosModule::t('amoscore', 'Icone')), [
@@ -705,13 +717,13 @@ class M2MWidget extends Widget
             ]),
             'url' => '?currentView=icon'
         ];
-        
+
         $dataProviderViewWidgetConf = [
             'dataProvider' => $this->getItemsMittenteDataProvider(),
             'currentView' => $icon,
             'iconView' => [
                 'itemView' => $this->iconView
-            ],       
+            ],
         ];
         return DataProviderView::widget($dataProviderViewWidgetConf);
     }
@@ -737,7 +749,7 @@ class M2MWidget extends Widget
         }
         return $this->itemsMittenteDataProvider;
     }
-	
+
     private function getItemsMittenteDataProviderDownLoad() {
         $pagination = false;
 
@@ -899,6 +911,7 @@ class M2MWidget extends Widget
         $this->getView()->params['modelDataArr'] = $this->modelDataArr;
         $this->getView()->params['modelTargetData'] = $this->modelTargetData;
         $this->getView()->params['postKey'] = $this->postKey;
+        $this->getView()->params['showSpinner'] = $this->showSpinner;
         $this->getView()->params['postName'] = $this->postName;
         $this->getView()->params['columnsArray'] = $this->createTargetColumnsArray();
 
@@ -910,7 +923,7 @@ class M2MWidget extends Widget
             'firstGridId' => $this->gridId,
             'useCheckbox' => $this->renderTargetCheckbox,
             'listView' => $this->listView,
-            'iconView' => $this->iconView 
+            'iconView' => $this->iconView
         ]);
 
         return $Grid;
@@ -1059,12 +1072,12 @@ class M2MWidget extends Widget
             Yii::$app->view->registerJs(<<<JS
         function customDialogM2m(e) {
             e.preventDefault();
-            yii.confirm("$messageDialog", 
-            function() { 
-                    return window.location.href = e.target.href; 
-                    }, 
-            function() { 
-                return false; 
+            yii.confirm("$messageDialog",
+            function() {
+                    return window.location.href = e.target.href;
+                    },
+            function() {
+                return false;
             });
          }
 JS

@@ -211,6 +211,18 @@ class ModalUtility extends BaseObject
         $modalId = ((isset($modalConfiguration['id']) && is_string($modalConfiguration['id'])) ?
             $modalConfiguration['id'] :
             self::createAlertModalDefaultId());
+        $modalHeaderClass = ((isset($modalConfiguration['headerClass']) && is_string($modalConfiguration['headerClass'])) ?
+            $modalConfiguration['headerClass'] :
+            '');
+        if (isset($modalConfiguration['headerOnlyText']) && ($modalConfiguration['headerOnlyText'] === true)) {
+            $modalHeaderText = ((isset($modalConfiguration['headerText']) && is_string($modalConfiguration['headerText'])) ?
+                $modalConfiguration['headerText'] :
+                null);
+        } else {
+            $modalHeaderText = ((isset($modalConfiguration['headerText']) && is_string($modalConfiguration['headerText'])) ?
+                Html::tag('h3', $modalConfiguration['headerText'], ['class' => 'modal-title']) :
+                Html::tag('h3', '', ['class' => 'modal-title']));
+        }
         $modalDescriptionText = ((isset($modalConfiguration['modalDescriptionText']) && is_string($modalConfiguration['modalDescriptionText'])) ?
             $modalConfiguration['modalDescriptionText'] :
             '');
@@ -231,7 +243,11 @@ class ModalUtility extends BaseObject
         $buttons = Html::a($btnLabel, $btnLink, $btnOptions);
 
         // Make the modal
-        Modal::begin(['id' => $modalId]);
+        Modal::begin([
+            'id' => $modalId,
+            'header' => $modalHeaderText,
+            'headerOptions' => ['class' => $modalHeaderClass],
+        ]);
         echo Html::tag('div', $modalDescriptionText, []);
         echo Html::tag('div', $buttons, $modalOptions);
         Modal::end();

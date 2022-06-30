@@ -12,6 +12,7 @@
 namespace open20\amos\core\rules;
 
 use open20\amos\core\record\Record;
+use open20\amos\admin\AmosAdmin;
 use Yii;
 
 /**
@@ -55,7 +56,7 @@ class ValidatorUpdateContentRule extends DefaultOwnContentRule
                 }
             }
 
-            if (!isset($cwhModule) || !in_array($modelClassName, $cwhModule->modelsEnabled)) {
+            if ((!isset($cwhModule) || !in_array($modelClassName, $cwhModule->modelsEnabled)) && (property_exists($model, 'byBassRuleCwh') && $model->byBassRuleCwh == false)) {
                 return false;
             }
 
@@ -111,7 +112,7 @@ class ValidatorUpdateContentRule extends DefaultOwnContentRule
                 return true;
             }
 
-            $moduleAdmin = \Yii::$app->getModule('admin');
+            $moduleAdmin = \Yii::$app->getModule(AmosAdmin::getModuleName());
             $isFacilitatorExternal = false;
             if($moduleAdmin && !empty($moduleAdmin->enableExternalFacilitator) && $moduleAdmin->enableExternalFacilitator){
                 $isFacilitatorExternal = \Yii::$app->user->can($model->getExternalFacilitatorRole());
@@ -122,6 +123,8 @@ class ValidatorUpdateContentRule extends DefaultOwnContentRule
 
 
         }
+
+        try{
 
         /* Commentato controllo poichè non è più necessario avendo modificato la if precedente
          * Vedi PR-224 (Possibilità di decidere il livello di moderazione di una community o sotto-community (MODIFICA EVOLITIVA DI OPEN2.0)
@@ -136,6 +139,9 @@ class ValidatorUpdateContentRule extends DefaultOwnContentRule
         $queryToValidateIds = $cwhActiveQuery->getQueryCwhToValidate(false)->select($model::tableName().'.id')->column();
 
         return (in_array($model->id, $queryToValidateIds));
+        } catch (\open20\amos\cwh\exceptions\CwhException $ex) {
+            return false;
+        }
 
     }
 }

@@ -39,82 +39,82 @@ class ItemAndCardHeaderWidget extends Widget
      * @var string $layout Widget view
      */
     public $layout = "@vendor/open20/amos-core/forms/views/widgets/item_and_card_header_widget.php";
-    
+
     /**
      * @var Record $model
      */
     private $_model = null;
-    
+
     /**
      * @var bool $_publicationDateField Model field that contains the publication date.
      */
     private $_publicationDateField = null;
-    
+
     /**
      * @var bool $_publicationDateNotPresent If true skip the render of the publication date.
      */
     private $_publicationDateNotPresent = false;
-    
-    /**
-     * @var bool $_publicationDateAsDateTime If true the publication date will be displayed ad date time.
-     */
-    private $_publicationDateAsDateTime = false;
-    
+
     /**
      * @var bool $_hideInteractionMenu If true hide all interaction menu. Default to false.
      */
     private $_hideInteractionMenu = false;
-    
+
     /**
      * @var array $_interactionMenuButtons List of the enabled buttons in the interaction menu. If not set, the default buttons will be displayed.
      */
     private $_interactionMenuButtons = [];
-    
+
     /**
      * @var array $_interactionMenuButtonsHide List of the disabled buttons in the interaction menu. If not set, the default buttons will be displayed.
      */
     private $_interactionMenuButtonsHide = [];
-    
+
     /**
      * @var UserProfile $_contentCreator The object that contains the profile of the content creator.
      */
     private $_contentCreator = null;
-    
+
     /**
      * @var bool $showPrevalentPartnershipAndTargets
      */
     public $showPrevalentPartnershipAndTargets = false;
-    
+
+     /**
+     * @var bool $showPrevalentPartnership
+     */
+    public $showPrevalentPartnership = false;
+
     /**
      * @var string $customContent
      */
     public $customContent = null;
-    
+
     /**
      * @var bool $truncateLongWords
      */
     public $truncateLongWords = false;
-    
+
     /**
      * @var bool $absoluteUrlAvatar
      */
     public $absoluteUrlAvatar = false;
-    
+
     /**
      * @var bool $checkReadPermissionForUserLink If true check if the logged user can access the view of the content creator. If false the view link is always enabled.
      */
     public $checkReadPermissionForUserLink = true;
-    
+
     /**
      * @var bool $enableLink If true enable links on creator avatar and name.
      */
     public $enableLink = true;
-    
+
     /**
      * @var bool $hideCreatorNameSurname If true hide the name and surname of the content creator.
      */
     public $hideCreatorNameSurname = false;
-    
+
     /**
      * @var string $customCreatorAvatarUrl Custom creator avatar url.
      */
@@ -129,30 +129,30 @@ class ItemAndCardHeaderWidget extends Widget
      * @var array $creatorLinkOptions
      */
     public $creatorNameLinkOptions = [];
-    
+
     /**
      * @inheritdoc
      */
     public function init()
     {
         parent::init();
-        
+
         if (is_null($this->_model)) {
             throw new \Exception(BaseAmosModule::t('amoscore', 'Model mancante'));
         }
-        
+
         if (!$this->getPublicationDateNotPresent() && !$this->isHideInteractionMenu() && (is_null($this->_publicationDateField)
                 || !is_string($this->_publicationDateField) || !strlen($this->_publicationDateField))) {
             throw new \Exception(BaseAmosModule::t('amoscore',
                 'Variabile contenente il nome del campo della data di pubblicazione del contenuto mancante o non settata correttamente'));
         }
-        
+
         $this->_contentCreator = $this->_model->createdUserProfile;
         if (is_null($this->_contentCreator)) {
             $this->_contentCreator = UserProfile::findOne(['user_id' => 1]);
         }
     }
-    
+
     /**
      * @return bool
      */
@@ -160,7 +160,7 @@ class ItemAndCardHeaderWidget extends Widget
     {
         return $this->_publicationDateNotPresent;
     }
-    
+
     /**
      * @param bool $publicationDateNotPresent
      */
@@ -168,23 +168,7 @@ class ItemAndCardHeaderWidget extends Widget
     {
         $this->_publicationDateNotPresent = $publicationDateNotPresent;
     }
-    
-    /**
-     * @return bool
-     */
-    public function isPublicationDateAsDateTime()
-    {
-        return $this->_publicationDateAsDateTime;
-    }
-    
-    /**
-     * @param bool $publicationDateAsDateTime
-     */
-    public function setPublicationDateAsDateTime($publicationDateAsDateTime)
-    {
-        $this->_publicationDateAsDateTime = $publicationDateAsDateTime;
-    }
-    
+
     /**
      * @return bool
      */
@@ -192,7 +176,7 @@ class ItemAndCardHeaderWidget extends Widget
     {
         return $this->_hideInteractionMenu;
     }
-    
+
     /**
      * @param bool $hideInteractionMenu
      */
@@ -200,7 +184,7 @@ class ItemAndCardHeaderWidget extends Widget
     {
         $this->_hideInteractionMenu = $hideInteractionMenu;
     }
-    
+
     /**
      * @return Record
      */
@@ -208,7 +192,7 @@ class ItemAndCardHeaderWidget extends Widget
     {
         return $this->_model;
     }
-    
+
     /**
      * @param Record $model
      */
@@ -216,7 +200,7 @@ class ItemAndCardHeaderWidget extends Widget
     {
         $this->_model = $model;
     }
-    
+
     /**
      * @param array $Target
      * @return mixed
@@ -228,7 +212,7 @@ class ItemAndCardHeaderWidget extends Widget
         $model = $modelClass->findOne($Target['record_id']);
         return $model;
     }
-    
+
     /**
      * @param $nodes
      * @return string
@@ -239,7 +223,7 @@ class ItemAndCardHeaderWidget extends Widget
         $targetsCollection = \open20\amos\cwh\models\CwhNodi::findAll([
             'id' => $nodes
         ]);
-        
+
         $targetArr = [];
         /** @var CwhNodi $target */
         foreach ($targetsCollection as $target) {
@@ -252,10 +236,10 @@ class ItemAndCardHeaderWidget extends Widget
 //            }
             $targetArr[] = $targetString . $this->findNode($target)->toStringWithCharLimit(-1);
         }
-        
+
         return implode(', ', $targetArr);
     }
-    
+
     /**
      * @param $validators
      * @return string
@@ -266,7 +250,7 @@ class ItemAndCardHeaderWidget extends Widget
         $validatorsCollection = \open20\amos\cwh\models\CwhNodi::findAll([
             'id' => $validators
         ]);
-        
+
         $validatorsArr = [];
         /** @var CwhNodi $target */
         foreach ($validatorsCollection as $singleValidator) {
@@ -281,10 +265,10 @@ class ItemAndCardHeaderWidget extends Widget
                 $validatorsArr[] = $targetString . $this->findNode($singleValidator)->toStringWithCharLimit(-1);
             }
         }
-        
+
         return implode(', ', $validatorsArr);
     }
-    
+
     /**
      * @param $validators
      * @return string
@@ -295,7 +279,7 @@ class ItemAndCardHeaderWidget extends Widget
         $validatorsCollection = \open20\amos\cwh\models\CwhNodi::findAll([
             'id' => $validators
         ]);
-        
+
         $validatorsArr = [];
         /** @var CwhNodi $target */
         foreach ($validatorsCollection as $singleValidator) {
@@ -312,11 +296,11 @@ class ItemAndCardHeaderWidget extends Widget
                 $validatorsArr[] = $targetString . $model->toStringWithCharLimit(-1);
             }
         }
-        
+
         return implode(', ', $validatorsArr);
     }
-    
-    
+
+
     /**
      * @inheritdoc
      */
@@ -324,7 +308,7 @@ class ItemAndCardHeaderWidget extends Widget
     {
         $content = '';
         $targets = '';
-        
+
         try {
             $targets = $this->model->getTargets();
         } catch (\Exception $exception) {
@@ -332,13 +316,13 @@ class ItemAndCardHeaderWidget extends Widget
                 $targets = $this->model->destinatari;
             }
         }
-        
+
         if ($targets) {
             $content = $this->getNodesAsString($targets);
         } else {
             $content .= "";
         }
-        
+
         $targetString = null;
         if (!empty($this->model->validatori)) {
             $validatorName = $this->getValidatorName($this->model->validatori);
@@ -346,7 +330,7 @@ class ItemAndCardHeaderWidget extends Widget
                 $targetString = $validatorName;
             }
         }
-        
+
         $contentToRender = [
             'contentCreatorAvatar' => $this->makeContentCreatorAvatar(),
             'contentCreatorNameSurname' => $this->retrieveUserNameAndSurname(),
@@ -357,21 +341,26 @@ class ItemAndCardHeaderWidget extends Widget
             'publicatonDate' => $this->makePublicationDate(),
             'model' => $this->getModel(),
             'customContent' => $this->customContent,
-        
+            
         ];
-        
-        if ($this->showPrevalentPartnershipAndTargets) {
+        if ($this->showPrevalentPartnership) {
+            $contentToRender = array_merge($contentToRender, [
+                'contentPrevalentPartnership' => $this->retrievePrevalentPartnership() != "" ? $this->retrievePrevalentPartnership() : null
+            ]);
+        }
+        else if ($this->showPrevalentPartnershipAndTargets) {
             $contentToRender = array_merge($contentToRender, [
                 'contentPrevalentPartnership' => $this->retrievePrevalentPartnership() != "" ? $this->retrievePrevalentPartnership() : null,
                 'contentCreatorTargets' => $targetString
             ]);
         }
-        
+        else{};
+
         $contentToRender['widget'] = $this;
-        
+
         return $this->renderFile($this->getLayout(), $contentToRender);
     }
-    
+
     /**
      * @return string
      */
@@ -379,7 +368,7 @@ class ItemAndCardHeaderWidget extends Widget
     {
         return $this->layout;
     }
-    
+
     /**
      * This method create the HTML to show the content creator avatar.
      * @return string
@@ -387,7 +376,7 @@ class ItemAndCardHeaderWidget extends Widget
     private function makeContentCreatorAvatar()
     {
         $html = '';
-        
+
         if (!is_null($this->_contentCreator)) {
             /** @var AmosAdmin $moduleAdmin */
             $moduleAdmin = AmosAdmin::instance();
@@ -444,7 +433,7 @@ class ItemAndCardHeaderWidget extends Widget
         }
         return $html;
     }
-    
+
     /**
      * This method returns the link title for the link to the user profile view.
      * @return string
@@ -453,7 +442,7 @@ class ItemAndCardHeaderWidget extends Widget
     {
         return BaseAmosModule::t('amoscore', 'Apri il profilo di {user_profile_name}', ['user_profile_name' => ($this->truncateLongWords ? $this->getContentCreator()->__toString() : $this->getContentCreator()->getNomeCognome())]);
     }
-    
+
     /**
      * @return UserProfile
      */
@@ -461,7 +450,7 @@ class ItemAndCardHeaderWidget extends Widget
     {
         return $this->_contentCreator;
     }
-    
+
     /**
      * @return bool
      */
@@ -473,7 +462,7 @@ class ItemAndCardHeaderWidget extends Widget
         $contentCreatorUserProfile = $this->getContentCreator();
         return (!$this->checkReadPermissionForUserLink || (\Yii::$app instanceof \yii\console\Application) || \Yii::$app->user->can('USERPROFILE_READ', $contentCreatorUserProfile));
     }
-    
+
     /**
      * @return string
      */
@@ -489,7 +478,7 @@ class ItemAndCardHeaderWidget extends Widget
             return $contentCreatorUserProfile->getFullViewUrl();
         }
     }
-    
+
     /**
      * @return string
      */
@@ -511,7 +500,7 @@ class ItemAndCardHeaderWidget extends Widget
             return Html::tag('strong', $contentCreatorNameSurname);
         }
     }
-    
+
     /**
      * This method creates a string that contains the name and surname of the user whose ID is contained in the parameter.
      * @return string
@@ -531,7 +520,7 @@ class ItemAndCardHeaderWidget extends Widget
         }
         return $nameSurname;
     }
-    
+
     /**
      * This method creates a string that contains the prevalent partnership of the user whose ID is contained in the parameter.
      * @return string
@@ -547,7 +536,7 @@ class ItemAndCardHeaderWidget extends Widget
         }
         return $prevalentPartnershipName;
     }
-    
+
     /**
      * @return array
      */
@@ -555,7 +544,7 @@ class ItemAndCardHeaderWidget extends Widget
     {
         return $this->_interactionMenuButtons;
     }
-    
+
     /**
      * @param array $interactionMenuButtons
      */
@@ -563,7 +552,7 @@ class ItemAndCardHeaderWidget extends Widget
     {
         $this->_interactionMenuButtons = $interactionMenuButtons;
     }
-    
+
     /**
      * @return array
      */
@@ -571,7 +560,7 @@ class ItemAndCardHeaderWidget extends Widget
     {
         return $this->_interactionMenuButtonsHide;
     }
-    
+
     /**
      * @param array $interactionMenuButtonsHide
      */
@@ -579,7 +568,7 @@ class ItemAndCardHeaderWidget extends Widget
     {
         $this->_interactionMenuButtonsHide = $interactionMenuButtonsHide;
     }
-    
+
     /**
      * This method format the publication date field of the model ad a date. If the publication date is not present in the model returns an empty string.
      * @return string
@@ -589,15 +578,11 @@ class ItemAndCardHeaderWidget extends Widget
         $publicationDate = '';
         if (!$this->getPublicationDateNotPresent()) {
             $publicationDateModelField = $this->getPublicationDateField();
-            if ($this->isPublicationDateAsDateTime()) {
-                $publicationDate = \Yii::$app->getFormatter()->asDatetime($this->getModel()->{$publicationDateModelField}, 'humanalwaysdatetime');
-            } else {
-                $publicationDate = \Yii::$app->getFormatter()->asDate($this->getModel()->{$publicationDateModelField});
-            }
+            $publicationDate = \Yii::$app->getFormatter()->asDate($this->getModel()->{$publicationDateModelField});
         }
         return $publicationDate;
     }
-    
+
     /**
      * @return string
      */
@@ -605,7 +590,7 @@ class ItemAndCardHeaderWidget extends Widget
     {
         return $this->_publicationDateField;
     }
-    
+
     /**
      * @param string $publicationDateField
      */

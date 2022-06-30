@@ -1447,11 +1447,11 @@ class Generator extends \open20\amos\core\giiamos\Generator {
                 $obj = \Yii::createObject(['class' => $class]);
                 $obj->generator = $this;
                 $this->_p[] = $obj;
-                //BaseAmosModule::trace("Initialized provider '{$class}'", __METHOD__);
+                //Yii::trace("Initialized provider '{$class}'", __METHOD__);
             }
         }
 
-        BaseAmosModule::trace("CRUD providers initialized for model '{$this->modelClass}'", __METHOD__);
+        Yii::trace("CRUD providers initialized for model '{$this->modelClass}'", __METHOD__);
     }
 
     /**
@@ -1468,7 +1468,7 @@ class Generator extends \open20\amos\core\giiamos\Generator {
         }
         $code = $this->callProviderQueue(__FUNCTION__, $attribute, $model, $this);
         if ($code !== null) {
-            BaseAmosModule::trace("found provider for '{$attribute}'", __METHOD__);
+            Yii::trace("found provider for '{$attribute}'", __METHOD__);
 
             return $code;
         } else {
@@ -1487,7 +1487,7 @@ class Generator extends \open20\amos\core\giiamos\Generator {
         }
         $code = $this->callProviderQueue(__FUNCTION__, $attribute, $model, $this);
         if ($code) {
-            BaseAmosModule::trace("found provider for '{$attribute}'", __METHOD__);
+            Yii::trace("found provider for '{$attribute}'", __METHOD__);
         }
 
         return $code;
@@ -1499,7 +1499,7 @@ class Generator extends \open20\amos\core\giiamos\Generator {
         }
         $code = $this->callProviderQueue(__FUNCTION__, $attribute, $model, $this);
         if ($code) {
-            BaseAmosModule::trace("found provider for '{$attribute}'", __METHOD__);
+            Yii::trace("found provider for '{$attribute}'", __METHOD__);
         }
 
         return $code;
@@ -1511,10 +1511,10 @@ class Generator extends \open20\amos\core\giiamos\Generator {
         }
         $code = $this->callProviderQueue(__FUNCTION__, $attribute, $model, $this);
         if ($code !== null) {
-            BaseAmosModule::trace("found provider for '{$attribute}'", __METHOD__);
+            Yii::trace("found provider for '{$attribute}'", __METHOD__);
         } else {
             $code = $this->shorthandAttributeFormat($attribute, $model);
-            BaseAmosModule::trace("using standard formatting for '{$attribute}'", __METHOD__);
+            Yii::trace("using standard formatting for '{$attribute}'", __METHOD__);
         }
 
         return $code;
@@ -1526,7 +1526,7 @@ class Generator extends \open20\amos\core\giiamos\Generator {
         }
         $code = $this->callProviderQueue(__FUNCTION__, $attribute, $model, $this);
         if ($code !== null) {
-            BaseAmosModule::trace("found provider for '{$attribute}'", __METHOD__);
+            Yii::trace("found provider for '{$attribute}'", __METHOD__);
 
             return $code;
         }
@@ -1546,7 +1546,7 @@ class Generator extends \open20\amos\core\giiamos\Generator {
         }
         $code = $this->callProviderQueue(__FUNCTION__, $attribute, $model, $this);
         if ($code !== null) {
-            BaseAmosModule::trace("found provider for '{$attribute}'", __METHOD__);
+            Yii::trace("found provider for '{$attribute}'", __METHOD__);
 
             return $code;
         }
@@ -1592,20 +1592,20 @@ class Generator extends \open20\amos\core\giiamos\Generator {
         }
         $code = $this->callProviderQueue(__FUNCTION__, $name, $model, $this);
         if ($code) {
-            BaseAmosModule::trace("found provider for partial view '{name}'", __METHOD__);
+            Yii::trace("found provider for partial view '{name}'", __METHOD__);
         }
 
         return $code;
     }
 
     public function relationGrid($name, $relation, $showAllRecords = false) {
-        BaseAmosModule::trace("calling provider queue for '$name'", __METHOD__);
+        Yii::trace("calling provider queue for '$name'", __METHOD__);
 
         return $this->callProviderQueue(__FUNCTION__, $name, $relation, $showAllRecords);
     }
 
     public function relationGridEditable($name, $relation, $showAllRecords = false) {
-        BaseAmosModule::trace("calling provider queue for '$name'", __METHOD__);
+        Yii::trace("calling provider queue for '$name'", __METHOD__);
 
         return $this->callProviderQueue(__FUNCTION__, $name, $relation, $showAllRecords);
     }
@@ -1618,11 +1618,11 @@ class Generator extends \open20\amos\core\giiamos\Generator {
 
         $column = $this->getColumnByAttribute($attribute, $model);
         if (!$column) {
-            BaseAmosModule::trace("No column for '{$attribute}' found", __METHOD__);
+            Yii::trace("No column for '{$attribute}' found", __METHOD__);
 
             return;
         } else {
-            BaseAmosModule::trace("Table column detected for '{$attribute}'", __METHOD__);
+            Yii::trace("Table column detected for '{$attribute}'", __METHOD__);
         }
         if ($column->phpType === 'boolean') {
             $format = 'boolean';
@@ -1661,7 +1661,7 @@ class Generator extends \open20\amos\core\giiamos\Generator {
                         $argsString = $args;
                     }
                     $msg = 'Using provider ' . get_class($obj) . '::' . $func . ' ' . $argsString;
-                    BaseAmosModule::trace($msg, __METHOD__);
+                    Yii::trace($msg, __METHOD__);
 
                     return $c;
                 }

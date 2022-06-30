@@ -31,7 +31,7 @@ class WizardPrevAndContinueButtonWidget extends Widget
     /**
      * @var string $layout
      */
-    public $layout = '<div class="bk-btnFormContainer col-xs-12 nop"><div class="col-sm-6 nop">{buttonPrevious}</div><div class="col-sm-6 nop">{buttonContinue}{buttonCancel}</div></div>';
+    public $layout = '<div class="bk-btnFormContainer"><div class="pull-left">{buttonPrevious}{buttonCancel}</div><div class="pull-right">{buttonContinue}</div></div>';
     public $continueLabel = '';
     public $continueGrahpic = '';
     public $continueOptions = [];
@@ -154,7 +154,7 @@ class WizardPrevAndContinueButtonWidget extends Widget
             });
 JS;
         $this->view->registerJs($js);
-        $internalOptions = ['class' => 'btn btn-primary pull-right wizard-widget-continue-btn'];
+        $internalOptions = ['class' => 'btn btn-primary wizard-widget-continue-btn'];
         $allOptions = ArrayHelper::merge($internalOptions, $this->continueOptions);
         if (!$this->continueLabel) {
             $this->continueLabel = BaseAmosModule::tHtml('amoscore', 'Continue');
@@ -179,7 +179,7 @@ JS;
             return '';
         }
         
-        $internalOptions = ['class' => 'btn btn-action-primary pull-left wizard-link-btn'];
+        $internalOptions = ['class' => 'btn btn-outline-primary wizard-link-btn'];
         $allOptions = ArrayHelper::merge($internalOptions, $this->previousOptions);
         if (!$this->previousLabel) {
             $this->previousLabel = BaseAmosModule::tHtml('amoscore', 'Go back');
@@ -214,7 +214,7 @@ JS;
         echo Html::tag('div', $modalDescriptionText);
         echo Html::tag('div',
             Html::a(BaseAmosModule::tHtml('amoscore', '#cancel'), null, ['class' => 'btn btn-secondary', 'data-dismiss' => 'modal']) .
-            Html::a($modalConfirmBtnLabel, [$this->cancelUrl], ['class' => 'btn btn-navigation-primary']),
+            Html::a($modalConfirmBtnLabel, [$this->cancelUrl], ['class' => 'btn btn-danger']),
             [
                 'class' => 'pull-right m-15-0'
             ]

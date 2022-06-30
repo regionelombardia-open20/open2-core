@@ -10,6 +10,7 @@
 
 namespace open20\amos\core\forms\editors\socialShareWidget;
 
+use open20\amos\admin\AmosAdmin;
 use open20\amos\core\components\ConfiguratorSocialShare;
 use open20\amos\core\icons\AmosIcons;
 use open20\amos\core\interfaces\ContentModelInterface;
@@ -37,17 +38,17 @@ class SocialShareWidget extends SocialShare
     public $model;
     public $configuratorId;
 
-    const MODE_NORMAL   = 'normal';
+    const MODE_NORMAL = 'normal';
     const MODE_DROPDOWN = 'dropdown';
 
-    public $containerOptions     = ['tag' => 'div', 'class' => 'container-social-share'];
+    public $containerOptions = ['tag' => 'div', 'class' => 'container-social-share'];
     public $linkContainerOptions = ['tag' => 'div', 'class' => 'share-wrap-button'];
-    public $enableModalShare     = true;
-    public $mode                 = self::MODE_NORMAL;
+    public $enableModalShare = true;
+    public $mode = self::MODE_NORMAL;
     public $quote;
-    public $isProtected          = true;
-    public $isComment            = false;
-    public $isRedationalContent  = false;
+    public $isProtected = true;
+    public $isComment = false;
+    public $isRedationalContent = false;
 
     /**
      * @inheritdoc
@@ -57,14 +58,14 @@ class SocialShareWidget extends SocialShare
         $this->setConfigurator();
 
         if ($this->isComment == false && $this->isProtected == false && $this->mode == self::MODE_NORMAL) {
-            $this->containerOptions['style'] = $this->containerOptions['style'].'display: flex;
+            $this->containerOptions['style'] = $this->containerOptions['style'] . 'display: flex;
                 flex-direction: row;
                 align-items: flex-start;
                 justify-content: flex-end;
                 font-size: 2em;
                 width: 100%;';
         } else if ($this->isProtected == false && $this->isComment == true && $this->mode == self::MODE_NORMAL) {
-            $this->containerOptions['style'] = $this->containerOptions['style'].'display: flex;
+            $this->containerOptions['style'] = $this->containerOptions['style'] . 'display: flex;
                 flex-direction: row;
                 align-items: flex-start;
                 justify-content: flex-end;
@@ -75,7 +76,7 @@ class SocialShareWidget extends SocialShare
         if (!empty(\Yii::$app->components[$this->configuratorId])) {
             parent::init();
             if (empty($this->imageUrl)) {
-                $this->imageUrl = \yii\helpers\Url::to($baseUrl."/img/img_default.jpg");
+                $this->imageUrl = \yii\helpers\Url::to($baseUrl . "/img/img_default.jpg");
             }
         }
     }
@@ -104,45 +105,51 @@ class SocialShareWidget extends SocialShare
         }
 
         if (($this->isRedationalContent == true) || ($methodExists && $this->model->getValidatedOnce()) || ($this->isComment
-            == true)) {
+                == true)) {
             if (!empty(\Yii::$app->components[$this->configuratorId])) {
                 $this->setVisibleSocialNetwork();
                 $this->renderModalAjax(); //used for share on your own network
 
                 if (!$this->isSocialNetworkEmpty()) {
                     $this->renderModal();
+                    $labelShare = '<div class="m-t-15"><strong>' . \Yii::t('amoscore', 'CONDIVIDI') . '</strong></div>';
+
                     if ($this->mode == self::MODE_NORMAL) {
                         if ($this->isProtected == true && $this->isComment == true) {
+
                             echo '<style>'
-                            .'.container-social-share{display: flex;
+                                . '.container-social-share{display: flex;
                                 flex-direction: row;
                                 align-items: flex-start;
-                                justify-content: flex-end;
-                                font-size: 2em;
-                                width: 100%;}'
-                            .'.container-social-share > .share-wrap-button + .share-wrap-button{ padding-left: 5px}'                           
-                            .'</style>';
+                                justify-content: flex-start !important;
+                                
+                                font-size: 1.5em;
+                                margin-top:0px !important;
+                                width: 100% !important;}'
+                                . '.container-social-share > .share-wrap-button + .share-wrap-button{ padding-left: 5px}'
+                                . '</style>';
                         } else if ($this->isProtected == false) {
                             echo '<style>'
-                            .'.container-social-share .share-wrap-button + .share-wrap-button {
+                                . '.container-social-share .share-wrap-button + .share-wrap-button {
                                 padding-left: 5px;
                             }'
-                            .'</style>';
+                                . '</style>';
                         }
+                        echo $labelShare;
                         parent::run();
                         echo "<div hidden id='social-share-model' data-classname='' data-key='$content_id'></div>";
-
                     } else {
                         // SHARE INSIDE A DROPDOWN
+                        echo $labelShare;
                         echo "<div class=\"dropdown socialshared-dropdown\">
-                    <a class=\"btn dropdown-toggle\" data-toggle=\"dropdown\" href=\"\" aria-expanded=\"true\" title=\"".BaseAmosModule::t('amoscore',
-                            'Share')." \">"
-                        .AmosIcons::show('share', ['class' => ''])
-                        .Html::tag('b', '', ['class' => 'caret'])
-                        ."</a><ul class=\"dropdown-menu\"> ";
+                    <a class=\"btn dropdown-toggle\" data-toggle=\"dropdown\" href=\"\" aria-expanded=\"true\" title=\"" . BaseAmosModule::t('amoscore',
+                                'Share') . " \">"
+                            . AmosIcons::show('share', ['class' => ''])
+                            . Html::tag('b', '', ['class' => 'caret'])
+                            . "</a><ul class=\"dropdown-menu\"> ";
                         parent::run();
                         echo "</ul></div>"
-                        ."<div hidden id='social-share-model' data-classname='' data-key='$content_id'></div>";
+                            . "<div hidden id='social-share-model' data-classname='' data-key='$content_id'></div>";
                     }
                 }
             }
@@ -154,6 +161,8 @@ class SocialShareWidget extends SocialShare
      */
     public function renderModal()
     {
+        $controllerId = \Yii::$app->controller->id;
+        $moduleId = \Yii::$app->controller->module->id;
         if ($this->enableModalShare) {
             $free = false;
             if ($this->isProtected == false) {
@@ -186,7 +195,7 @@ class SocialShareWidget extends SocialShare
                 var clickedButton = this;
 
                 $.ajax({
-                  url: 'share-ajax?id='+idModel,
+                  url: '/" . $moduleId . "/" . $controllerId . "/share-ajax?id='+idModel,
                 }).done(function() {
                          if($(icon).attr('class') != 'am am-email' && !$(icon).hasClass( 'open-modal' )) {
                          e.preventDefault();
@@ -209,8 +218,8 @@ class SocialShareWidget extends SocialShare
      */
     public function canShare()
     {
-        $canShare  = true;
-        $model     = $this->model;
+        $canShare = true;
+        $model = $this->model;
         $cwhModule = \Yii::$app->getModule('cwh');
         // if is visible to all logged user, you can share on socials
         if ($this->isProtected == true && !empty($cwhModule) && $model instanceof ContentModelInterface && in_array(get_class($model),
@@ -246,9 +255,9 @@ class SocialShareWidget extends SocialShare
     protected function setVisibleSocialNetwork()
     {
         $allowedSocialNetwork = [];
-        $canShare             = $this->canShare();
-        $socialNetworks       = $this->configurator->getSocialNetworks();
-        $isMobile             = $this->isMobile();
+        $canShare = $this->canShare();
+        $socialNetworks = $this->configurator->getSocialNetworks();
+        $isMobile = $this->isMobile();
 
         foreach ($socialNetworks as $socialName => $social) {
             $okModule = true;
@@ -259,15 +268,25 @@ class SocialShareWidget extends SocialShare
                     $okModule = false;
                 }
             }
-            if (!empty($social['visibility']) && $social['visibility'] == ConfiguratorSocialShare::VISIBILITY_ALWAYS && $okModule) {
-                $allowedSocialNetwork[$socialName] = $social;
-            } else if ($canShare && $okModule) {
-                if (!empty($social['visibility']) && $social['visibility'] == ConfiguratorSocialShare::VISIBILITY_ONLY_MOBILE) {
-                    if ($isMobile) {
+
+            $showSocial = true;
+            if (!empty($social['visibility']) && $social['visibility'] == ConfiguratorSocialShare::VISIBILITY_ONLY_LOGGED) {
+                if (\Yii::$app->user->isGuest) {
+                    $showSocial = false;
+                }
+            }
+
+            if ($showSocial) {
+                if (!empty($social['visibility']) && $social['visibility'] == ConfiguratorSocialShare::VISIBILITY_ALWAYS && $okModule) {
+                    $allowedSocialNetwork[$socialName] = $social;
+                } else if ($canShare && $okModule) {
+                    if (!empty($social['visibility']) && $social['visibility'] == ConfiguratorSocialShare::VISIBILITY_ONLY_MOBILE) {
+                        if ($isMobile) {
+                            $allowedSocialNetwork[$socialName] = $social;
+                        }
+                    } else {
                         $allowedSocialNetwork[$socialName] = $social;
                     }
-                } else {
-                    $allowedSocialNetwork[$socialName] = $social;
                 }
             }
         }
@@ -303,16 +322,17 @@ class SocialShareWidget extends SocialShare
     {
         $moduleChat = \Yii::$app->getModule('chat');
         if ($moduleChat) {
-            $classname  = urlencode($this->model->className());
+            $classname = urlencode($this->model->className());
             $content_id = $this->model->id;
 
+            $amosadmin = AmosAdmin::getModuleName();
 
             $js = <<<JS
 
         $('.open-modal').click(function() {
              $('#modal-contacts-share').modal('show')
                 .find('#modalContent')
-                .load('/admin/user-profile-ajax/ajax-contact-list?classname=$classname&content_id=$content_id');
+                .load('/$amosadmin/user-profile-ajax/ajax-contact-list?classname=$classname&content_id=$content_id');
         });
        
 JS;

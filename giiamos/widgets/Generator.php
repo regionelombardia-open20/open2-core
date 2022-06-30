@@ -341,14 +341,14 @@ class Generator extends \yii\gii\generators\model\Generator
     protected function generateClassName($tableName, $useSchemaName = NULL)
     {
 
-        #BaseAmosModule::trace("Generating class name for '{$tableName}'...", __METHOD__);
+        #Yii::trace("Generating class name for '{$tableName}'...", __METHOD__);
         if (isset($this->classNames2[$tableName])) {
-            #BaseAmosModule::trace("Using '{$this->classNames2[$tableName]}' for '{$tableName}' from classNames2.", __METHOD__);
+            #Yii::trace("Using '{$this->classNames2[$tableName]}' for '{$tableName}' from classNames2.", __METHOD__);
             return $this->classNames2[$tableName];
         }
 
         if (isset($this->tableNameMap[$tableName])) {
-            BaseAmosModule::trace("Converted '{$tableName}' from tableNameMap.", __METHOD__);
+            Yii::trace("Converted '{$tableName}' from tableNameMap.", __METHOD__);
             return $this->classNames2[$tableName] = $this->tableNameMap[$tableName];
         }
 
@@ -375,13 +375,13 @@ class Generator extends \yii\gii\generators\model\Generator
         foreach ($patterns as $pattern) {
             if (preg_match($pattern, $tableName, $matches)) {
                 $className = $matches[1];
-                BaseAmosModule::trace("Mapping '{$tableName}' to '{$className}' from pattern '{$pattern}'.", __METHOD__);
+                Yii::trace("Mapping '{$tableName}' to '{$className}' from pattern '{$pattern}'.", __METHOD__);
                 break;
             }
         }
 
         $returnName                    = Inflector::id2camel($className, '_');
-        BaseAmosModule::trace("Converted '{$tableName}' to '{$returnName}'.", __METHOD__);
+        Yii::trace("Converted '{$tableName}' to '{$returnName}'.", __METHOD__);
         return $this->classNames2[$tableName] = $returnName;
     }
 

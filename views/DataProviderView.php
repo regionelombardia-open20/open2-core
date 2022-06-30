@@ -53,6 +53,8 @@ class DataProviderView extends Widget
     public function init()
     {
         parent::init();
+        $listViewLayout = $this->render('@vendor/open20/amos-layout/src/views/layouts/fullsize/parts/yii2/views/listViewLayout');
+        $listViewLayoutSummary = $this->render('@vendor/open20/amos-layout/src/views/layouts/fullsize/parts/yii2/views/parts/_listViewLayoutSummary');
 
         $controller = \Yii::$app->controller;
         $appControllerIsCrudController = ($controller instanceof CrudController);
@@ -65,6 +67,17 @@ class DataProviderView extends Widget
                 $columns = $this->gridView['exportColumns'];
             }
             $controller->setGridViewColumns($columns);
+        }
+
+        if (isset($this->listView)) {
+            $this->listView['layout'] = $listViewLayout;
+             if (is_null($this->listView['summary'])) {
+                $this->listView['summary'] = $listViewLayoutSummary;
+            }
+        }
+
+        if (isset($this->gridView)) {
+            $this->gridView['layout'] = $listViewLayout;
         }
 
         // ADVANCED EXPORT - With this options the developer can configure the export for specific columns instead of the grid view columns.
@@ -99,13 +112,13 @@ class DataProviderView extends Widget
         $viewClass = $this->{'view' . ucfirst(strtolower($this->currentView['name'])) . 'Class'};
         $viewParams = $this->{strtolower($this->currentView['name']) . 'View'};
 
-        if(!empty($this->availableViews)){
+        if (!empty($this->availableViews)) {
             $params = [
                 'availableViews' => $this->availableViews,
                 'forceCreateNewButtonWidget' => $this->forceCreateNewButtonWidget,
                 'currentView' => $this->currentView
             ];
-            if(!is_null($this->createNewBtnParams)){
+            if (!is_null($this->createNewBtnParams)) {
                 $params = ArrayHelper::merge($params, ['createNewBtnParams' => $this->createNewBtnParams]);
             }
             echo $this->render('@vendor/open20/amos-layout/src/views/layouts/parts/list_toolbar', $params);

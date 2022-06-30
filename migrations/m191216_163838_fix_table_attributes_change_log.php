@@ -8,7 +8,6 @@
  * @package    open20\amos\core\migrations
  * @category   CategoryName
  */
-
 use yii\db\Migration;
 
 /**
@@ -32,7 +31,12 @@ class m191216_163838_fix_table_attributes_change_log extends Migration
      */
     public function safeUp()
     {
-        $this->addColumn($this->tableName, 'model_attribute', $this->string(255)->null()->defaultValue(null)->after('model_id'));
+        $table = Yii::$app->db->schema->getTableSchema($this->tableName);
+        if (!isset($table->columns['model_attribute'])) {
+            // do something
+            $this->addColumn($this->tableName, 'model_attribute',
+                $this->string(255)->null()->defaultValue(null)->after('model_id'));
+        }
         return true;
     }
 

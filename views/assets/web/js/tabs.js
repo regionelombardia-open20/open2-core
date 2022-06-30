@@ -18,16 +18,17 @@ TabsActions.openTab = function () {
     }
 };
 TabsActions.setOpenTab = function (tabid) {
-    if( $("form").length) {
+    var form = $(tabid).parents('form');
+    if( $(form).length) {
         //form action
-        var actionForm = $("form").attr("action");
+        var actionForm = $(form).attr("action");
 
         //split form action
         var actionFormTemp = actionForm.split("#");
 
         //update the action form with the new tab
         var newAction = actionFormTemp[0] + tabid;
-        $("form").attr("action", newAction);
+        $(form).attr("action", newAction);
     }
 };
 

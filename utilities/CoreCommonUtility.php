@@ -12,7 +12,10 @@
 namespace open20\amos\core\utilities;
 
 use open20\amos\core\migration\libs\common\MigrationCommon;
+use open20\amos\core\module\BaseAmosModule;
 use yii\log\Logger;
+use yii\web\ForbiddenHttpException;
+use yii\web\NotFoundHttpException;
 
 /**
  * Class CoreCommonUtility
@@ -49,5 +52,23 @@ class CoreCommonUtility
         } else {
             \Yii::getLogger()->log($errorMsg, Logger::LEVEL_ERROR);
         }
+    }
+    
+    /**
+     * This method throw the standard ForbiddenHttpException
+     * @throws ForbiddenHttpException
+     */
+    public static function throwStandardForbiddenException()
+    {
+        throw new ForbiddenHttpException(BaseAmosModule::t('amoscore', 'Non sei autorizzato a visualizzare questa pagina'));
+    }
+    
+    /**
+     * This method throw the standard NotFoundHttpException
+     * @throws NotFoundHttpException
+     */
+    public static function throwStandardNotFoundException()
+    {
+        throw new NotFoundHttpException(BaseAmosModule::t('amoscore', 'The requested page does not exist.'));
     }
 }

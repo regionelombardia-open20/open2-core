@@ -88,7 +88,7 @@ abstract class BaseAmosModule extends BaseModule implements ModuleInterface
      */
     public static function t($category, $message, $params = [], $language = null)
     {
-        if (isset(\Yii::$app->locales)) {
+        if (isset(\Yii::$app->locales) && isset(\Yii::$app->locales[\Yii::$app->language])) {
             $language = \Yii::$app->locales[\Yii::$app->language];
         }
         return \Yii::t($category, $message, $params, $language);

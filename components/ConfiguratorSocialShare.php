@@ -20,6 +20,7 @@ class ConfiguratorSocialShare extends Configurator
     const VISIBILITY_ALWAYS              = 'always';
     const VISIBILITY_ONLY_PUBLIC_CONTENT = 'only_public_content';
     const VISIBILITY_ONLY_MOBILE         = 'only_mobile';
+    const VISIBILITY_ONLY_LOGGED         = 'only_logged';
 
     /**
      * Configuration of social network drivers.
@@ -58,7 +59,7 @@ class ConfiguratorSocialShare extends Configurator
                 'facebook' => [
                     'class' => \open20\amos\core\forms\editors\socialShareWidget\drivers\Facebook::class,
                     'label' => \yii\helpers\Html::tag('span', '',
-                        ['class' => 'ic ic-facebook', 'title' => BaseAmosModule::t('amoscore', 'Share with facebook')]),
+                        ['class' => 'mdi mdi-facebook', 'title' => BaseAmosModule::t('amoscore', 'Share with facebook')]),
                     'options' => ['class' => 'fb', 'onclick' => ($haveAnalytics ? "__gaTracker('send', 'event', 'Facebook', 'Share', '".$url."', '".$isFrontend."');"
                             : "return false;")],
                     'visibility' => ConfiguratorSocialShare::VISIBILITY_ONLY_PUBLIC_CONTENT
@@ -66,7 +67,7 @@ class ConfiguratorSocialShare extends Configurator
                 'twitter' => [
                     'class' => \open20\amos\core\forms\editors\socialShareWidget\drivers\Twitter::class,
                     'label' => \yii\helpers\Html::tag('span', '',
-                        ['class' => 'ic ic-twitter', 'title' => BaseAmosModule::t('amoscore', 'Share with twitter')]),
+                        ['class' => 'mdi mdi-twitter', 'title' => BaseAmosModule::t('amoscore', 'Share with twitter')]),
                     'options' => ['class' => 'tw', 'onclick' => ($haveAnalytics ? "__gaTracker('send', 'event', 'Twitter', 'Share', '".$url."', '".$isFrontend."');"
                             : "return false;")],
                     'visibility' => ConfiguratorSocialShare::VISIBILITY_ONLY_PUBLIC_CONTENT
@@ -79,7 +80,7 @@ class ConfiguratorSocialShare extends Configurator
                 'linkedIn' => [
                     'class' => \open20\amos\core\forms\editors\socialShareWidget\drivers\LinkedIn::class,
                     'label' => \yii\helpers\Html::tag('span', '',
-                        ['class' => 'ic ic-linkedin', 'title' => BaseAmosModule::t('amoscore', 'Share with linkedin')]),
+                        ['class' => 'mdi mdi-linkedin', 'title' => BaseAmosModule::t('amoscore', 'Share with linkedin')]),
                     'options' => ['class' => 'lk', 'onclick' => ($haveAnalytics ? "__gaTracker('send', 'event', 'LinkedIn', 'Share', '".$url."', '".$isFrontend."');"
                             : "return false;")
                     ],
@@ -88,7 +89,7 @@ class ConfiguratorSocialShare extends Configurator
                 'telegram' => [
                     'class' => \open20\amos\core\forms\editors\socialShareWidget\drivers\Telegram::class,
                     'label' => \yii\helpers\Html::tag('span', '',
-                        ['class' => 'ic ic-telegram', 'title' => BaseAmosModule::t('amoscore', 'Share with Telegram')]),
+                        ['class' => 'mdi mdi-telegram', 'title' => BaseAmosModule::t('amoscore', 'Share with Telegram')]),
                     'options' => ['class' => 'tg', 'onclick' => ($haveAnalytics ? "__gaTracker('send', 'event', 'Telegram', 'Share', '".$url."', '".$isFrontend."');"
                             : "return false;")],
                     'visibility' => ConfiguratorSocialShare::VISIBILITY_ONLY_MOBILE,
@@ -96,7 +97,7 @@ class ConfiguratorSocialShare extends Configurator
                 'whatsApp' => [
                     'class' => \open20\amos\core\forms\editors\socialShareWidget\drivers\WhatsApp::class,
                     'label' => \yii\helpers\Html::tag('span', '',
-                        ['class' => 'ic ic-whatsapp', 'title' => BaseAmosModule::t('amoscore', 'Share with WhatsApp')]),
+                        ['class' => 'mdi mdi-whatsapp', 'title' => BaseAmosModule::t('amoscore', 'Share with WhatsApp')]),
                     'options' => ['class' => 'wa', 'onclick' => ($haveAnalytics ? "__gaTracker('send', 'event', 'WhatsApp', 'Share', '".$url."', '".$isFrontend."');"
                             : "return false;")],
                     'visibility' => ConfiguratorSocialShare::VISIBILITY_ONLY_MOBILE
@@ -104,7 +105,7 @@ class ConfiguratorSocialShare extends Configurator
                 'email' => [
                     'class' => \open20\amos\core\forms\editors\socialShareWidget\drivers\Email::class,
                     'label' => \yii\helpers\Html::tag('span', '',
-                        ['class' => 'ic ic-mail', 'title' => BaseAmosModule::t('amoscore', 'Share with email')]),
+                        ['class' => 'mdi mdi-email', 'title' => BaseAmosModule::t('amoscore', 'Share with email')]),
                     'options' => ['class' => 'email', 'onclick' => ($haveAnalytics ? "__gaTracker('send', 'event', 'Email', 'Share', '".$url."', '".$isFrontend."');"
                             : "return false;")],
                     'visibility' => ConfiguratorSocialShare::VISIBILITY_ONLY_PUBLIC_CONTENT
@@ -112,11 +113,11 @@ class ConfiguratorSocialShare extends Configurator
                 'ownNetwork' => [
                     'class' => \open20\amos\core\forms\editors\socialShareWidget\drivers\OwnNetwork::class,
                     'label' => \yii\helpers\Html::tag('span', '',
-                        ['class' => 'ic ic-user open-modal', 'title' => BaseAmosModule::t('amoscore',
+                        ['class' => 'mdi mdi-account-circle open-modal', 'title' => BaseAmosModule::t('amoscore',
                             'Share with your own network')]),
                     'options' => ['class' => 'own-network', 'onclick' => ($haveAnalytics ? "__gaTracker('send', 'event', 'OwnNetwork', 'Share', '".$url."', '".$isFrontend."');"
                             : "return false;")],
-                    'visibility' => ConfiguratorSocialShare::VISIBILITY_ALWAYS,
+                    'visibility' => ConfiguratorSocialShare::VISIBILITY_ONLY_LOGGED,
                     'required_module' => 'chat'
                 ]
             ];

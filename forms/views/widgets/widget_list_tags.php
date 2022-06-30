@@ -26,7 +26,8 @@ use yii\widgets\Pjax;
  */
 
 if ($viewFilesCounter) {
-    $this->registerJs(<<<JS
+    $this->registerJs(
+        <<<JS
     
     var filesQuantity = "$filesQuantity";
     
@@ -47,49 +48,42 @@ $searchModule = Yii::$app->getModule('search');
 $currentModule = Yii::$app->controller->module->getUniqueId();
 
 ?>
-
+<div class="m-t-25"><strong class="text-uppercase"><?= BaseAmosModule::t('amoscore', 'Tag di interesse'); ?></strong></div>
 <?php if ($filesQuantity == 0) { ?>
-    <div class="no-items"><?= BaseAmosModule::t('amoscore', '#NO_INTEREST_AREA_TAGS'); ?></div>
-    <div class="tags-list-all col-xs-12 nop">
+    <div class="no-items text-muted"><?= BaseAmosModule::t('amoscore', 'Non sono presenti aree di interesse associate a questo contenuto'); ?></div>
+    <div class="tags-list-all">
     </div>
 <?php } else { ?>
 
-    <div class="tags-list-all col-xs-12 nop">
-        <?php
-        $columns = [
-            [
-                'value' => function ($model) use ($searchModule, $currentModule) {
-                    if(!is_null($searchModule)){
-                        $tagName = Html::a($model->nome , '/search/search/index?tagIds='.$model->id.'&moduleName='.$currentModule);
-                    }else {
-                        $tagName = $model->nome;
-                    }
-                    return "<div class=\"tags-list-single\" data-tag='".$model->id."'>
-                                            <div>" . AmosIcons::show('label') . "</div>
-                                            <div>
-                                                <p class=\"tag-label\">" . $tagName . "</p>
-                                                <small>" . $model->tagRoot->nome . ($model->path ? " / " . $model->path : "") . "</small>
-                                            </div>
-                                        </div>";
-                },
-                'format' => 'raw'
-            ],
-        ];
+    <div class="tags-list-all m-t-30">
 
-        ?>
-        <?php echo AmosGridView::widget([
-            'dataProvider' => $dataProvider,
-            'showPageSummary' => false,
-            'showPager' => false,
-            'columns' => $columns
-        ]); ?>
+
+        
+        <?php foreach ($dataProvider->models as $tag) { ?>
+            <div class="tags-bi" data-tag="<?= $tag->id ?>" data-toggle="tooltip" title="<?= $tag->tagRoot->nome . ($tag->path ? " / " . $tag->path : "") ?>">
+                <div class="d-flex align-items-center">
+                    <div>
+                        <span class="mdi mdi-tag-multiple"></span>
+                    </div>
+                    <div>
+                        <span class="tag-label">
+                            <?= $tag->nome ?>
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+        <?php } ?>
         <?php if ($filesQuantity > $pageSize) {
-            echo Html::tag('div',
+            echo Html::tag(
+                'small',
                 Html::a(BaseAmosModule::t('amoscore', '#view_all'), 'javascript:void(0);', [
                     'data-toggle' => 'modal',
                     'data-target' => '#view-all-tags',
                 ]),
-                ['class' => 'col-xs-12 nop list-tags-view-all']);
+                ['class' => 'm-l-20']
+            );
         } ?>
     </div>
 
@@ -107,18 +101,25 @@ $currentModule = Yii::$app->controller->module->getUniqueId();
         'enableReplaceState' => false,
         'clientOptions' => ['data-pjax-container' => 'grid-view-all-tags', 'method' => 'POST']
     ]); ?>
+    <div class="tags-list-all m-t-20 m-b-20">
+        <?php foreach ($dataProvider->models as $tag) { ?>
+            <div class="tags-bi" data-tag="<?= $tag->id ?>" data-toggle="tooltip" title="<?= $tag->tagRoot->nome . ($tag->path ? " / " . $tag->path : "") ?>">
+                <div class="d-flex align-items-center">
+                    <div>
+                        <span class="mdi mdi-tag-multiple"></span>
+                    </div>
+                    <div>
+                        <span class="tag-label">
+                            <?= $tag->nome ?>
+                        </span>
+                    </div>
 
-    <?php
-    $dataProviderModal = new ActiveDataProvider([
-        'query' => $dataProvider->query
-    ]);
-    echo AmosGridView::widget([
-        'dataProvider' => $dataProviderModal,
-        'id' => 'grid-view-all-tags',
-        'columns' => $columns
-    ]); ?>
+                </div>
 
-    <?php Pjax::end();
+            </div>
+        <?php } ?>
+    </div>
+<?php Pjax::end();
 
     Modal::end();
 } ?>

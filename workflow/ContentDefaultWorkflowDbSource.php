@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Aria S.p.A.
  * OPEN 2.0
@@ -8,7 +7,6 @@
  * @package    open20\amos\core\workflow
  * @category   CategoryName
  */
-
 /**
  * TODO
  * Questa classe è da spostare altrove in un posto più adatto. Dev'essere generica e ad esempio in un
@@ -29,6 +27,7 @@ use Yii;
  */
 class ContentDefaultWorkflowDbSource extends WorkflowDbSource
 {
+
     /**
      * Filter transitions based on user permissions
      *
@@ -38,10 +37,10 @@ class ContentDefaultWorkflowDbSource extends WorkflowDbSource
      */
     public function getTransitions($statusId, $model = null)
     {
-        $transitions = parent::getTransitions($statusId, $model);
-        $transitionsAllowed = [];
-        $gotModel = false;
-        $user = null;
+        $transitions          = parent::getTransitions($statusId, $model);
+        $transitionsAllowed   = [];
+        $gotModel             = false;
+        $user                 = null;
         $isConsoleApplication = false;
         if (Yii::$app instanceof \yii\web\Application) {
             $user = Yii::$app->user;
@@ -51,11 +50,20 @@ class ContentDefaultWorkflowDbSource extends WorkflowDbSource
         if (isset($model) && $model instanceof Record) {
             $gotModel = true;
         } else {
-            $controller = Yii::$app->controller;
-            if (isset($controller) && $controller instanceof BaseController) {
-                $model = $controller->model;
-                if (isset($model) && $model instanceof Record) {
+            $get = (method_exists(\Yii::$app->request, 'get'))? \Yii::$app->request->get(): [];
+            if (!empty($get['modelObj']) && !empty($get['id'])) {
+                $model = $get['modelObj']::findOne($get['id']);
+                if (!empty($model)) {
                     $gotModel = true;
+                }
+            } else {
+
+                $controller = Yii::$app->controller;
+                if (isset($controller) && $controller instanceof BaseController) {
+                    $model = $controller->model;
+                    if (isset($model) && $model instanceof Record) {
+                        $gotModel = true;
+                    }
                 }
             }
         }

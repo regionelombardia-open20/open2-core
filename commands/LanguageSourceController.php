@@ -34,14 +34,16 @@ class LanguageSourceController extends Controller
 
     public $file_name_config = [
         'modules-amos.php',
-        'modules-others.php'
+        'modules-others.php',
+        'modules.php'
     ];
 
     public $conf_path = [
         '@backend/config',
         '@common/config',
         '@console/config',
-        '@frontend/config'
+        '@frontend/config',
+        '@frontend/configs'
     ];
 
     public $forceUpdate = false;

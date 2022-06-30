@@ -20,7 +20,7 @@ interface InvitationExternalInterface
     /**
      * This method make the association from the specified context model and the specified user.
      * @param int $userId
-     * @param int $modelId
+     * @param mixed $modelId
      * @return bool
      */
     public function addUserContextAssociation($userId, $modelId);
