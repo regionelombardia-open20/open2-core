@@ -181,7 +181,7 @@ class Mysql
     }
 
     /**
-     * Inserisce i dati dell'importazione dentro la tabella.
+     * Inserisce o aggiorna i dati dell'importazione dentro la tabella.
      * @return boolean
      */
     public function saveData()
@@ -195,35 +195,67 @@ class Mysql
 
                 $transaction = $connection->beginTransaction();
                 try {
-                    //creo la query di inserimento
-                    $sql   .= "INSERT INTO {{".$this->table."}} (";
-                    $indx1 = 0;
-                    foreach ($this->columns as $col) {
-                        $column = self::getSlug($col);
-                        $sql    .= ($indx1 > 0 ? ", [[$column]]" : "[[$column]]");
-                        $indx1++;
-                    }
-                    $sql   .= ") VALUES (";
-                    $indx2 = 0;
-                    foreach ($this->data as $k => $v) {
-                        $column                  = self::getSlug($k);
-                        $sql                     .= ($indx2 > 0 ? ", :{$column}"
-                                : ":{$column}");
-                        $sqlParams[":{$column}"] = $v;
-                        $indx2++;
-                    }
-                    $sql .= ")";
+                    if (empty($this->data['id'])) {
+                        //creo la query di inserimento
+                        $sql   .= "INSERT INTO {{".$this->table."}} (";
+                        $indx1 = 0;
+                        foreach ($this->columns as $col) {
+                            $column = self::getSlug($col);
+                            $sql    .= ($indx1 > 0 ? ", [[$column]]" : "[[$column]]");
+                            $indx1++;
+                        }
+                        $sql   .= ") VALUES (";
+                        $indx2 = 0;
+                        foreach ($this->data as $k => $v) {
+                            $column                  = self::getSlug($k);
+                            $sql                     .= ($indx2 > 0 ? ", :{$column}" : ":{$column}");
+                            $sqlParams[":{$column}"] = $v;
+                            $indx2++;
+                        }
+                        $sql .= ")";
 
-                    $command = $connection->createCommand($sql, $sqlParams);
-                    $result  = [];
-                    if (!$command->execute()) {
-                        return false;
-                    }
+                        $command = $connection->createCommand($sql, $sqlParams);
+                        $result  = [];
+                        if (!$command->execute()) {
+                            $transaction->rollBack();
+                            $connection->close();
+                            return false;
+                        }
 
-                    $tableSchema  = $this->getTableSchema($this->getTable());
-                    $result['id'] = $this->getSchema()->getLastInsertID($tableSchema->sequenceName);
-                    $transaction->commit();
-                    $connection->close();
+                        $tableSchema  = $this->getTableSchema($this->getTable());
+                        $result['id'] = $this->getSchema()->getLastInsertID($tableSchema->sequenceName);
+                        $transaction->commit();
+                        $connection->close();
+                    } else {
+                        //creo la query di update
+                        $sql   .= "UPDATE {{".$this->table."}} SET ";
+                        $indx1 = 0;
+                        foreach ($this->columns as $col) {
+                            $column = self::getSlug($col);
+                            $kCol   = self::getSlug($column);
+                            $sql    .= ($indx1 > 0 ? ", [[$column]]=:$kCol" : "[[$column]]=:$kCol");
+                            $indx1++;
+                        }
+                        $sql   .= " WHERE id = ".$this->data['id'];
+                        $indx2 = 0;
+                        foreach ($this->data as $k => $v) {
+                            $column = self::getSlug($k);
+
+                            $sqlParams[":{$column}"] = $v;
+                            $indx2++;
+                        }
+
+                        $command      = $connection->createCommand($sql, $sqlParams);
+                        $result['id'] = $this->data['id'];
+                        if (!$command->execute()) {
+                            $transaction->rollBack();
+                            $connection->close();
+                            return false;
+                        }
+
+                        $transaction->commit();
+                        $connection->close();
+                    }
                     return $result;
                 } catch (Exception $er) {
                     $transaction->rollBack();

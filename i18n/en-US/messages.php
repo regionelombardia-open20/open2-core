@@ -280,6 +280,7 @@ return [
     'non presente. Nulla da rimuovere.' => 'not present. Nothing to remove.',
     'Non sei autorizzato ad eseguire questa operazione.' => 'You are not authorized to do so.',
     'Non sei autorizzato a visualizzare questa pagina' => 'You are not authorized to view this page',
+    'Non sono presenti aree di interesse associate a questo contenuto' =>'There are no areas of interest associated with this content',
     'Non sono presenti contenuti' => 'Contents not present',
     'not added' => 'not added',
     'Not available' => 'Not available',

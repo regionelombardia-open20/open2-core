@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Aria S.p.A.
  * OPEN 2.0
@@ -22,6 +21,7 @@ use yii\web\IdentityInterface;
 use open20\amos\core\models\AccessTokens;
 use open20\amos\core\module\BaseAmosModule;
 use open20\amos\admin\AmosAdmin;
+use open20\amos\core\record\CachedActiveQuery;
 
 /**
  * Class User
@@ -50,10 +50,10 @@ use open20\amos\admin\AmosAdmin;
 class User extends Record implements IdentityInterface
 {
     const STATUS_DELETED = 0;
-    const STATUS_ACTIVE = 10;
+    const STATUS_ACTIVE  = 10;
 
     protected $adminInstalled = NULL;
-    protected $userProfile = null;
+    protected $userProfile    = null;
 
     /**
      * @inheritdoc
@@ -97,7 +97,7 @@ class User extends Record implements IdentityInterface
      */
     public function behaviors()
     {
-        $behaviors = parent::behaviors();
+        $behaviors   = parent::behaviors();
         $adminModule = \Yii::$app->getModule(AmosAdmin::getModuleName());
         if ($adminModule && !empty($adminModule->enableAttributeChangeLog)) {
             $behaviors['AttributesChangeLogBehavior'] = [
@@ -107,11 +107,10 @@ class User extends Record implements IdentityInterface
                     'enabled' => true,
                     'userAttribute' => 'id',
                     'type' => UserProfile::LOG_TYPE_UPDATE_PROFILE,
-                    'name' => BaseAmosModule::t('app','Aggiornamento profilo'),
-                    'description' => BaseAmosModule::t('app','Aggiornamento profilo')
+                    'name' => BaseAmosModule::t('app', 'Aggiornamento profilo'),
+                    'description' => BaseAmosModule::t('app', 'Aggiornamento profilo')
                 ]
             ];
-
         }
         return $behaviors;
     }
@@ -126,19 +125,20 @@ class User extends Record implements IdentityInterface
 
         return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);
     }
-    
+
     /**
      * 
      * @return string
      */
-    public function getAccessToken() {
+    public function getAccessToken()
+    {
         $token = AccessTokens::findOne(['user_id' => $this->id]);
-        if(is_null($token)){
-            $token = new AccessTokens();
-            $token->user_id = $this->id;
+        if (is_null($token)) {
+            $token               = new AccessTokens();
+            $token->user_id      = $this->id;
             $token->access_token = \Yii::$app->getSecurity()->generateRandomString();
-            $token->fcm_token = null;
-            $token->device_os = 'web';
+            $token->fcm_token    = null;
+            $token->device_os    = 'web';
             $token->save(false);
         }
         return $token->access_token;
@@ -148,7 +148,8 @@ class User extends Record implements IdentityInterface
      * 
      * @return string
      */
-    public function getFcmToken() {
+    public function getFcmToken()
+    {
         $token = AccessTokens::findOne(['user_id' => $this->id]);
 
         return $token->fcm_token;
@@ -198,7 +199,7 @@ class User extends Record implements IdentityInterface
      */
     public static function findByEmail($email)
     {
-        $condition = ['email' => $email, 'status' => self::STATUS_ACTIVE];
+        $condition       = ['email' => $email, 'status' => self::STATUS_ACTIVE];
         $allUsersByEmail = static::findAll($condition);
         if (count($allUsersByEmail) > 1) {
             return null;
@@ -214,7 +215,7 @@ class User extends Record implements IdentityInterface
      */
     public static function findByEmailInactive($email)
     {
-        $condition = ['email' => $email, 'status' => self::STATUS_DELETED];
+        $condition       = ['email' => $email, 'status' => self::STATUS_DELETED];
         $allUsersByEmail = static::findAll($condition);
         if (count($allUsersByEmail) > 1) {
             return null;
@@ -265,8 +266,8 @@ class User extends Record implements IdentityInterface
         }
 
         return static::findOne([
-            'password_reset_token' => $token,
-            'status' => self::STATUS_ACTIVE,
+                'password_reset_token' => $token,
+                'status' => self::STATUS_ACTIVE,
         ]);
     }
 
@@ -282,8 +283,8 @@ class User extends Record implements IdentityInterface
             return false;
         }
 
-        $timestamp = (int)substr($token, strrpos($token, '_') + 1);
-        $expire = Yii::$app->params['user.passwordResetTokenExpire'];
+        $timestamp = (int) substr($token, strrpos($token, '_') + 1);
+        $expire    = Yii::$app->params['user.passwordResetTokenExpire'];
         return $timestamp + $expire >= time();
     }
 
@@ -345,7 +346,7 @@ class User extends Record implements IdentityInterface
      */
     public function generatePasswordResetToken()
     {
-        $this->password_reset_token = Yii::$app->security->generateRandomString() . '_' . time();
+        $this->password_reset_token = Yii::$app->security->generateRandomString().'_'.time();
     }
 
     /**
@@ -376,7 +377,10 @@ class User extends Record implements IdentityInterface
     {
         if ($this->adminInstalled) {
             if (is_null($this->userProfile)) {
-                $this->userProfile = $this->getUserProfile()->one();
+                $userProfileQuery  = $this->getUserProfile();
+                $userProfileCache  = CachedActiveQuery::instance($userProfileQuery);
+                $userProfileCache->cache(60);
+                $this->userProfile = $userProfileCache->one();
             }
             return $this->userProfile;
         } else {

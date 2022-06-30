@@ -332,7 +332,6 @@ class PositionalBreadcrumbHelper extends Component
         return $crumb;
     }
 
-
     /**
      * @param $crumb
      * @param $controller
@@ -356,11 +355,11 @@ class PositionalBreadcrumbHelper extends Component
         // --------- LABEL  CRUMB
         $module = \Yii::$app->getModule($moduleName);
         //defaut values for breadcrumb index
-        $crumb->label = $moduleName;
+        $crumb->label = \Yii::t('amosapp', ucfirst($moduleName));
+        $crumb->title = \Yii::t('amosapp', ucfirst($moduleName));
         if (!empty($module->name)) {
             $crumb->label = $module->name;
             $crumb->title = $module->name;
-
         }
         // personalized label in module plugin
         if ($module instanceof \open20\amos\core\interfaces\BreadcrumbInterface) {

@@ -56,11 +56,11 @@ echo \open20\amos\core\views\AmosGridView::widget([
               if (($status) && ($status->status == UserContact::STATUS_INVITED)) {
                 return 
                 Html::a(BaseAmosModule::t('amoscore', 'Rifiuta invito'), 
-                ['/admin/user-contact/connect', 'contactId' => $uid, 'userId' => $model->user_id, 'accept' => 0], 
+                ['/'.AmosAdmin::getModuleName().'/user-contact/connect', 'contactId' => $uid, 'userId' => $model->user_id, 'accept' => 0], 
                 ['class' => 'btn btn-navigation-primary']
                 )
                 . Html::a(BaseAmosModule::t('amoscore', 'Accetta invito'), 
-                ['/admin/user-contact/connect', 'contactId' => $uid, 'userId' => $model->user_id, 'accept' => 1], 
+                ['/'.AmosAdmin::getModuleName().'/user-contact/connect', 'contactId' => $uid, 'userId' => $model->user_id, 'accept' => 1], 
                 ['class' => 'btn btn-navigation-primary']
                 );
               }
@@ -74,7 +74,7 @@ echo \open20\amos\core\views\AmosGridView::widget([
                 return Html::tag('em', BaseAmosModule::t('amoscore', 'In attesa di accettazione della richiesta'));                        }
               
               return Html::a(BaseAmosModule::t('amoscore', 'collegati'), 
-                ['/admin/user-contact/connect', 'contactId' => $model->user_id], 
+                ['/'.AmosAdmin::getModuleName().'/user-contact/connect', 'contactId' => $model->user_id], 
                 ['class' => 'btn btn-navigation-primary', 'data-confirm' => BaseAmosModule::t('amoscore', 'Vuoi collegarti?')]
                 );
             } else {

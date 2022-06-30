@@ -68,11 +68,9 @@ class ButtonUtility
 
             $optionsDelete = [
                 'title' => $labelDelete,
-                'data' => [
-                    'confirm' => $labelDeleteConfirm,
-                    'method' => 'post',
-                    'pjax' => 0
-                ],
+                'data-confirm' => $labelDeleteConfirm,
+                'data-method' => 'post',
+                'data-pjax' => 0,
             ];
             if (self::havePermission($model, $actionDelete)) {
                 $optionsDeleteFin = "";

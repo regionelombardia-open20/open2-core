@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Aria S.p.A.
  * OPEN 2.0
@@ -22,13 +21,19 @@ use yii\web\User;
  */
 class ConsoleApplication extends Application implements ApplicationInterface
 {
+
     /**
      * @inheritdoc
      */
     public function init()
     {
-        Yii::setAlias('@webroot', '@backend/web');
-        Yii::setAlias('@web', '@backend/web');
+        if (!empty(\Yii::$app->params['befe']) && \Yii::$app->params['befe'] == true) {
+            Yii::setAlias('@webroot', '@frontend/web');
+            Yii::setAlias('@web', '@frontend/web');
+        } else {
+            Yii::setAlias('@webroot', '@backend/web');
+            Yii::setAlias('@web', '@backend/web');
+        }
         parent::init();
     }
 

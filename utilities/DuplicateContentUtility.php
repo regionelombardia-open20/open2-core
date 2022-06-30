@@ -178,7 +178,7 @@ class DuplicateContentUtility extends BaseObject
         $whereCondition = [
             'model' => $this->modelClassName,
             'attribute' => $attribute,
-            'itemId' => $this->model->id
+            'item_id' => $this->model->id
         ];
         $type = $this->attachmentsAttributes[$attribute];
         if (($type != self::ATTACHMENT_SINGLE) && ($type != self::ATTACHMENT_MULTI)) {
@@ -206,7 +206,7 @@ class DuplicateContentUtility extends BaseObject
         $file = new File();
         $file->setAttributes($oldFile->attributes);
         $file->id = null;
-        $file->itemId = $newContentId;
+        $file->item_id = $newContentId;
         $ok = $file->save(false);
         return $ok;
     }

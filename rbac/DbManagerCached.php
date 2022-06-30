@@ -17,6 +17,7 @@ use yii\helpers\ArrayHelper;
 use yii\log\Logger;
 use open20\amos\core\record\CachedQuery;
 use yii\db\Query;
+use yii\rbac\Item;
 
 class DbManagerCached extends AuthManager
 {
@@ -180,4 +181,37 @@ class DbManagerCached extends AuthManager
         return $parents;
     }
 
+    /**
+     * {@inheritdoc}
+     * The roles returned by this method include the roles assigned via [[$defaultRoles]].
+     */
+    public function getRolesByUser($userId)
+    {
+        try {
+
+            if ($this->isEmptyUserId($userId)) {
+                return [];
+            }
+
+            $query   = CachedQuery::instance(new Query);
+            $query->cache($this->cacheDuration);
+            $parents = $query->select('b.*')
+                ->from(['a' => $this->assignmentTable, 'b' => $this->itemTable])
+                ->where('{{a}}.[[item_name]]={{b}}.[[name]]')
+                ->andWhere(['a.user_id' => (string) $userId])
+                ->andWhere(['b.type' => Item::TYPE_ROLE])
+                ->all($this->db);
+
+
+            $roles = $this->getDefaultRoleInstances();
+            foreach ($parents as $row) {
+                $roles[$row['name']] = $this->populateItem($row);
+            }
+
+            return $roles;
+        } catch (yii\base\Exception $ex) {
+            Yii::getLogger()->log($ex->getMessage(), Logger::LEVEL_ERROR);
+            return [];
+        }
+    }
 }

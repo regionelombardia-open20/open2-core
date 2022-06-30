@@ -281,6 +281,7 @@ return [
     'Non sei autorizzato ad eseguire questa operazione.' => 'Non sei autorizzato ad eseguire questa operazione.',
     'Non sei autorizzato a visualizzare questa pagina' => 'Non sei autorizzato a visualizzare questa pagina',
     'Non sono presenti contenuti' => 'Non sono presenti contenuti',
+    'Non sono presenti aree di interesse associate a questo contenuto' =>'Non sono presenti aree di interesse associate a questo contenuto',
     'not added' => 'non aggiunto',
     'Not available' => 'Non disponibile',
     'not exist. Skipping remove...' => 'non esiste. Saltare rimuovi...',

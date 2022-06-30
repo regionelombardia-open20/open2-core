@@ -123,7 +123,6 @@ class M2MWidget extends Widget
     public $btnAssociaId = '';
     public $btnAssociaLabel = '';
     public $btnAssociaClass = 'btn btn-primary';
-    public $btnAssociaConfirm = null;
     public $btnAdditionalAssociateLabel = '';
     public $btnAdditionalAssociateClass = 'btn btn-primary';
     public $forceListRender = false;
@@ -285,6 +284,7 @@ class M2MWidget extends Widget
         }
 
         if (!$this->overrideModelDataArr) {
+            $this->modelData->limit($this->itemsSenderPageSize);
             $this->modelDataArr = ArrayHelper::map($this->modelData->all(), $this->modelDataArrFromTo['from'], $this->modelDataArrFromTo['to']);
         }
 
@@ -401,7 +401,6 @@ class M2MWidget extends Widget
                     $buttons .= Html::a($btnAssociaLabel, $url, [
                         'class' => $this->btnAssociaClass,
                         'title' => $btnAssociaLabel,
-                        'data-url-confirm' => $this->btnAssociaConfirm,
                         'id' => $associateBtnId
                     ]);
 
@@ -553,6 +552,7 @@ class M2MWidget extends Widget
     {
         $retVal = '';
         $buttons = '';
+        $buttonsAssocia = '';
 
         $btnAssociaLabel = ($this->btnAssociaLabel == '') ? BaseAmosModule::t('amoscore', 'Associa') : $this->btnAssociaLabel;
 
@@ -587,7 +587,6 @@ class M2MWidget extends Widget
                 $buttons .= Html::a($btnAssociaLabel, $url, [
                     'class' => $this->btnAssociaClass,
                     'title' => $btnAssociaLabel,
-                    'data-url-confirm' => $this->btnAssociaConfirm,
                     'id' => $associateBtnId
                 ]);
 

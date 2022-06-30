@@ -64,7 +64,9 @@ class MessageSource extends DbMessageSource
                 foreach ($modulesByCategory as $key => $module) {
                     $mod = $this->isAmosModule($key, $module);
                     if ($mod) {
-                        self::$modules[$mod->getAmosUniqueId()] = $mod;
+                        if(method_exists($mod, 'getAmosUniqueId')) {
+                            self::$modules[$mod->getAmosUniqueId()] = $mod;
+                        }
                     }
                 }
             }
@@ -91,8 +93,8 @@ class MessageSource extends DbMessageSource
                 if ($reflectionClass->isSubclassOf(AmosModule::className())) {
                     $className = $reflectionClass->getName();
 
-                    if (method_exists($className, 'getInstance')) {
-                        $amodModule = $className::getInstance();
+                    if (method_exists($className, 'instance')) {
+                        $amodModule = $className::instance();
                     } else {
                         $amodModule = \Yii::createObject($reflectionClass->getName(), [$key]);
                     }
@@ -113,6 +115,10 @@ class MessageSource extends DbMessageSource
      */
     public function translate($category, $message, $language)
     {
+        if(!empty(\Yii::$app->params['use_only_translation_lang'])){
+            $language = \Yii::$app->params['use_only_translation_lang'];
+        }
+
         try {
             $language = self::getMappedLanguage($language);
             $this->addUrlToSourceBySource($category, $message);

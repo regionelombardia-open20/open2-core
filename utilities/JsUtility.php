@@ -91,10 +91,7 @@ class JsUtility extends BaseObject
                 replace: false,
                 push: false,
                 data: data,
-                complete: function() {
-                    $('.loading').hide();
-                }
-            });
+            }).done(function() { $('.loading').hide()});
             return false;
         });
 
@@ -123,7 +120,8 @@ class JsUtility extends BaseObject
                     searchName : '$searchPostName',
                 },
                success: function(response) {
-                  $('#$gridId').html(response);
+                    $('#$gridId').html(response);
+                    $('.loading').hide();
                },
                complete: function() {
                     $('.loading').hide();

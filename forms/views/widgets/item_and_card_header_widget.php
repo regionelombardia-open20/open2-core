@@ -33,7 +33,7 @@ use open20\amos\core\module\BaseAmosModule;
     <div>
     <p class="creator"><?= $widget->getCreator($contentCreatorNameSurname) ?></p>
     <?php if (isset($contentPrevalentPartnership) && $contentPrevalentPartnership) : ?>
-        <p class="card-prevalent-partnership"><small>(<?= $contentPrevalentPartnership ?>)</small></p>
+        <p class="card-prevalent-partnership"><small><?= $contentPrevalentPartnership ?></small></p>
     <?php endif; ?>
     </div>
     <?php if (isset($contentCreatorTargets) && $contentCreatorTargets) : ?>

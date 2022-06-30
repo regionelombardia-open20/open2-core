@@ -17,6 +17,39 @@ use yii\helpers\Html;
 class CalendarView extends BaseListView
 {
     public $events               = [];
+
+    /**
+     * E.g.: \yii\helpers\Url::to(['/events/event/jsoncalendar'])
+     * In the controller the action will be for example:
+     * ```php
+     * public function actionJsoncalendar($start = NULL, $end = NULL, $_ = NULL)
+     * {
+     *         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+     *
+     *         $startF = date('Y-m-d', strtotime($start));
+     *         $endF   = date('Y-m-d', strtotime($end));
+     *         $agenda = Agenda::find()->andWhere(new \yii\db\Expression("DATE(data_ora_inizio) >= '$startF'
+     *          AND DATE(data_ora_fine) <= '$endF'"))->all();
+     *
+     *         $events = [];
+     *
+     *         foreach ($agenda AS $time) {
+     *
+     *             $Event        = new \yii2fullcalendar\models\Event();
+     *             $Event->id    = $time->id;
+     *             $Event->title = $time->titolo;
+     *             $Event->start = $time->data_ora_inizio;
+     *             $Event->end   = $time->data_ora_fine;
+     *             $Event->url   = '/events/event/view?id='.$time->id;
+     *             $events[]     = $Event;
+     *         }
+     *
+     *         return $events;
+     *     }
+     * ```
+     * @var string $ajaxEvents
+     */
+    public $ajaxEvents;
     public $titolo               = null;
     public $intestazione         = null; //contenuti html caricati ad inizio pagina prima del calendario - intestazioni o altro
     public $replace              = [];
@@ -69,19 +102,21 @@ class CalendarView extends BaseListView
     {
 
         $events = [];
-        if ($this->array) {
-            foreach ($models as $model) {
-                foreach ($model->{$this->getEventi}() as $Event) {
+        if (empty($this->ajaxEvents)) {
+            if ($this->array) {
+                foreach ($models as $model) {
+                    foreach ($model->{$this->getEventi}() as $Event) {
+                        $events[] = $Event;
+                    }
+                }
+            } else {
+                foreach ($models as $model) {
+                    $Event = new \yii2fullcalendar\models\Event();
+                    foreach ($this->eventConfig as $kEvent => $vEvent) {
+                        $Event->{$kEvent} = $model[$vEvent];
+                    }
                     $events[] = $Event;
                 }
-            }
-        } else {
-            foreach ($models as $model) {
-                $Event = new \yii2fullcalendar\models\Event();
-                foreach ($this->eventConfig as $kEvent => $vEvent) {
-                    $Event->{$kEvent} = $model[$vEvent];
-                }
-                $events[] = $Event;
             }
         }
         return $events;
@@ -95,7 +130,7 @@ class CalendarView extends BaseListView
         return Html::tag('div', $intestazione).AmosFullCalendar::widget([
                 'options' => $this->getClientOptions(),
                 'clientOptions' => $this->getClientOptions(),
-                'events' => $this->getEvents(),
+                'events' => (empty($this->ajaxEvents) ? $this->getEvents() : $this->ajaxEvents),
             ]).Html::tag('div', $content, $options);
     }
 

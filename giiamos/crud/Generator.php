@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Aria S.p.A.
  * OPEN 2.0
@@ -26,10 +25,9 @@ use schmunk42\giiant\helpers\SaveForm;
 use schmunk42\giiant\generators\model\Generator as ModelGenerator;
 use open20\amos\core\module\BaseAmosModule;
 
-
-class Generator extends \open20\amos\core\giiamos\Generator {
+class Generator extends \open20\amos\core\giiamos\Generator
+{
 //\schmunk42\giiant\generators\crud\Generator {
-
     /**
      * @todo review
      *
@@ -90,7 +88,7 @@ class Generator extends \open20\amos\core\giiamos\Generator {
     /**
      * @var bool whether to add an access filter to controllers
      */
-    public $accessFilter = false;
+    public $accessFilter                   = false;
     public $generateAccessFilterMigrations = false;
     public $baseTraits;
 
@@ -140,27 +138,26 @@ class Generator extends \open20\amos\core\giiamos\Generator {
     public $savedForm;
     public $moduleNs;
     public $migrationClass;
-    public $indexGridClass = 'yii\\grid\\GridView';
-    private $_p = [];
-   
+    public $indexGridClass   = 'yii\\grid\\GridView';
+    private $_p              = [];
     public $controllerClass;
-    public $indexWidgetType = 'grid';
+    public $indexWidgetType  = 'grid';
     public $searchModelClass = '';
 
     /**
      * @var bool whether to wrap the `GridView` or `ListView` widget with the `yii\widgets\Pjax` widget
      * @since 2.0.5
      */
-    public $enablePjax = false;
+    public $enablePjax             = false;
     public $formTabs;
-    public $templates = ['default' => '@vendor/open20/amos-core/giiamos/crud/default',
+    public $templates              = ['default' => '@vendor/open20/amos-core/giiamos/crud/default',
         'wizard' => '@vendor/open20/amos-core/giiamos/crud/wizard',
         'advanced' => '@vendor/open20/amos-core/giiamos/crud/advanced'];
-    public $template = 'advanced';
-    public $formTabsSeparator = '|';
+    public $template               = 'advanced';
+    public $formTabsSeparator      = '|';
     public $formTabsFieldSeparator = ',';
-    public $tabsFieldList = [];
-    public $providerList = 'open20\amos\core\giiamos\crud\providers\CallbackProvider,
+    public $tabsFieldList          = [];
+    public $providerList           = 'open20\amos\core\giiamos\crud\providers\CallbackProvider,
                             open20\amos\core\giiamos\crud\providers\DateTimeProvider,
                             open20\amos\core\giiamos\crud\providers\DateProvider,
                             open20\amos\core\giiamos\crud\providers\EditorProvider,
@@ -193,11 +190,11 @@ class Generator extends \open20\amos\core\giiamos\Generator {
     /**
      * @var array key-value pairs. 
      */
-    public $relFiledsDynamic = [];
+    public $relFiledsDynamic    = [];
     public $moduleName;
     public $descriptorField;
     public $moduleRelRequired;
-    public $arrayForeignKeys = [];
+    public $arrayForeignKeys    = [];
     public $baseControllerClass = 'open20\amos\core\controllers\CrudController';
 
     /**
@@ -208,7 +205,8 @@ class Generator extends \open20\amos\core\giiamos\Generator {
     /**
      * @inheritdoc
      */
-    public function init() {
+    public function init()
+    {
         $this->messageCategory = 'amoscore';
         parent::init();
 
@@ -220,23 +218,26 @@ class Generator extends \open20\amos\core\giiamos\Generator {
     /**
      * @inheritdoc
      */
-    public function getName() {
+    public function getName()
+    {
         return 'Amos CRUD Generator';
     }
 
     /**
      * @inheritdoc
      */
-    public function getDescription() {
+    public function getDescription()
+    {
         return 'Questo generatore permette di creare CRUD (Create, Read, Update, Delete) su model specifici';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function successMessage() {
+    public function successMessage()
+    {
         $return = 'The code has been generated successfully. Please require the following packages with composer:';
-        $return .= '<br/><code>' . implode('<br/>', $this->requires) . '</code>';
+        $return .= '<br/><code>'.implode('<br/>', $this->requires).'</code>';
 
         return $return;
     }
@@ -245,9 +246,11 @@ class Generator extends \open20\amos\core\giiamos\Generator {
      * @inheritdoc
      * 
      */
-    public function rules() {
+    public function rules()
+    {
         $arrayRules = [];
-        $arrayRules = array_merge(parent::rules(), [
+        $arrayRules = array_merge(parent::rules(),
+            [
             [
                 [
                     'providerList',
@@ -288,20 +291,22 @@ class Generator extends \open20\amos\core\giiamos\Generator {
         return $arrayRules;
     }
 
-    private function dynamicRules() {
+    private function dynamicRules()
+    {
         $arraysel = [];
-        $index = 0;
+        $index    = 0;
         foreach ($this->getRelationColumnNames() as $key => $value) {
-            $arraysel[$index++] = 'relFiledsDynamic[' . $key . '][fields], '
-                    . 'relFiledsDynamic[' . $key . '][moduleName], '
-                    . 'relFiledsDynamic[' . $key . '][descriptorField], '
-                    . 'relFiledsDynamic[' . $key . '][moduleRelRequired], ';
+            $arraysel[$index++] = 'relFiledsDynamic['.$key.'][fields], '
+                .'relFiledsDynamic['.$key.'][moduleName], '
+                .'relFiledsDynamic['.$key.'][descriptorField], '
+                .'relFiledsDynamic['.$key.'][moduleRelRequired], ';
         }
 //        pr($arraysel);die;
         return $arraysel;
     }
 
-    private function dynamicrelFileds() {
+    private function dynamicrelFileds()
+    {
         foreach ($this->getRelationColumnNames() as $key => $value) {
 
 
@@ -312,8 +317,10 @@ class Generator extends \open20\amos\core\giiamos\Generator {
     /**
      * @inheritdoc
      */
-    public function attributeLabels() {
-        return array_merge(parent::attributeLabels(), [
+    public function attributeLabels()
+    {
+        return array_merge(parent::attributeLabels(),
+            [
             'modelClass' => 'Model Class',
             'controllerClass' => 'Controller Class',
             'viewPath' => 'View Path',
@@ -326,7 +333,8 @@ class Generator extends \open20\amos\core\giiamos\Generator {
         ]);
     }
 
-    public function checkIsArray() {
+    public function checkIsArray()
+    {
         if (!is_array($this->tabsFieldList)) {
             $this->addError('tabsFieldList', 'tabsFieldList is not array!');
         }
@@ -335,8 +343,10 @@ class Generator extends \open20\amos\core\giiamos\Generator {
     /**
      * @inheritdoc
      */
-    public function hints() {
-        return array_merge(parent::hints(), [
+    public function hints()
+    {
+        return array_merge(parent::hints(),
+            [
             'modelClass' => 'This is the ActiveRecord class associated with the table that CRUD will be built upon.
                 You should provide a fully qualified class name, e.g., <code>app\models\Post</code>.',
             'controllerClass' => 'This is the name of the controller class to be generated. You should
@@ -359,30 +369,34 @@ class Generator extends \open20\amos\core\giiamos\Generator {
             'providerList' => 'Choose the providers to be used.',
             'pathPrefix' => 'Customized route/subfolder for controllers and views eg. <code>crud/</code>. <b>Note!</b> Should correspond to <code>viewPath</code>.',
             'modelMessageCategory' => 'Model message categry.',
-                ], SaveForm::hint());
+            ], SaveForm::hint());
     }
 
     /**
      * @inheritdoc
      */
-    public function requiredTemplates() {
+    public function requiredTemplates()
+    {
         return ['controller.php'];
     }
 
     /**
      * @inheritdoc
      */
-    public function stickyAttributes() {
-        return array_merge(parent::stickyAttributes(), ['baseControllerClass', 'indexWidgetType', 'providerList', 'actionButtonClass', 'viewPath', 'pathPrefix']);
+    public function stickyAttributes()
+    {
+        return array_merge(parent::stickyAttributes(),
+            ['baseControllerClass', 'indexWidgetType', 'providerList', 'actionButtonClass', 'viewPath', 'pathPrefix']);
     }
 
     /**
      * Checks if model class is valid
      */
-    public function validateModelClass() {
+    public function validateModelClass()
+    {
         /* @var $class ActiveRecord */
         $class = $this->modelClass;
-        $pk = $class::primaryKey();
+        $pk    = $class::primaryKey();
         if (empty($pk)) {
             $this->addError('modelClass', "The table associated with $class must have primary key(s).");
         }
@@ -393,7 +407,8 @@ class Generator extends \open20\amos\core\giiamos\Generator {
      *
      * @return array
      */
-    public function formAttributes() {
+    public function formAttributes()
+    {
         return [
             'modelClass',
             'searchModelClass',
@@ -418,24 +433,25 @@ class Generator extends \open20\amos\core\giiamos\Generator {
      * Generates parameter tags for phpdoc
      * @return array parameter tags for phpdoc
      */
-    public function generateActionParamComments() {
+    public function generateActionParamComments()
+    {
         /** @var ActiveRecord $class */
         $class = $this->modelClass;
-        $pks = $class::primaryKey();
+        $pks   = $class::primaryKey();
         if (($table = $this->getTableSchema()) === false) {
             $params = [];
             foreach ($pks as $pk) {
-                $params[] = '@param ' . (substr(strtolower($pk), -2) == 'id' ? 'integer' : 'string') . ' $' . $pk;
+                $params[] = '@param '.(substr(strtolower($pk), -2) == 'id' ? 'integer' : 'string').' $'.$pk;
             }
 
             return $params;
         }
         if (count($pks) === 1) {
-            return ['@param ' . $table->columns[$pks[0]]->phpType . ' $id'];
+            return ['@param '.$table->columns[$pks[0]]->phpType.' $id'];
         } else {
             $params = [];
             foreach ($pks as $pk) {
-                $params[] = '@param ' . $table->columns[$pk]->phpType . ' $' . $pk;
+                $params[] = '@param '.$table->columns[$pk]->phpType.' $'.$pk;
             }
 
             return $params;
@@ -446,7 +462,8 @@ class Generator extends \open20\amos\core\giiamos\Generator {
      * Returns table schema for current model class or false if it is not an active record
      * @return boolean|\yii\db\TableSchema
      */
-    public function getTableSchema() {
+    public function getTableSchema()
+    {
         /** @var ActiveRecord $class */
         $class = $this->modelClass;
         if (is_subclass_of($class, 'yii\db\ActiveRecord')) {
@@ -459,7 +476,8 @@ class Generator extends \open20\amos\core\giiamos\Generator {
     /**
      * @return array model column names
      */
-    public function getFormTabsAsArray() {
+    public function getFormTabsAsArray()
+    {
         $formTabsAsArray = [];
         if ($this->formTabs) {
             $formTabsAsArray = explode($this->formTabsSeparator, $this->formTabs);
@@ -475,7 +493,8 @@ class Generator extends \open20\amos\core\giiamos\Generator {
     /**
      * @return array model column names
      */
-    public function getAttributesTab($tabCode) {
+    public function getAttributesTab($tabCode)
+    {
 
         $attributes = [];
         if ($this->tabsFieldList && array_key_exists($tabCode, $this->tabsFieldList)) {
@@ -492,44 +511,63 @@ class Generator extends \open20\amos\core\giiamos\Generator {
     /**
      * {@inheritdoc}
      */
-    public function preGenerate() {
-        $accessDefinitions = require $this->getTemplatePath() . '/access_definition.php';
+    public function preGenerate()
+    {
+        $accessDefinitions = require $this->getTemplatePath().'/access_definition.php';
 
         $this->controllerNs = \yii\helpers\StringHelper::dirname(ltrim($this->controllerClass, '\\'));
-        $this->moduleNs = \yii\helpers\StringHelper::dirname(ltrim($this->controllerNs, '\\'));
-        $controllerName = substr(\yii\helpers\StringHelper::basename($this->controllerClass), 0, -10);
+        $this->moduleNs     = \yii\helpers\StringHelper::dirname(ltrim($this->controllerNs, '\\'));
+        $controllerName     = substr(\yii\helpers\StringHelper::basename($this->controllerClass), 0, -10);
 
         if ($this->singularEntities) {
-            $this->modelClass = Inflector::singularize($this->modelClass);
-            $this->controllerClass = Inflector::singularize(
-                            substr($this->controllerClass, 0, strlen($this->controllerClass) - 10)
-                    ) . 'Controller';
+            $this->modelClass       = Inflector::singularize($this->modelClass);
+            $this->controllerClass  = Inflector::singularize(
+                    substr($this->controllerClass, 0, strlen($this->controllerClass) - 10)
+                ).'Controller';
             $this->searchModelClass = Inflector::singularize($this->searchModelClass);
         }
         $newControllerFile = $this->createPathFromNs($this->controllerClass);
 
-        if(!empty($newControllerFile)){
+        if (!empty($newControllerFile)) {
             $baseControllerClass = StringHelper::baseName($newControllerFile);
-            $basePathController = str_replace($baseControllerClass, '', $newControllerFile);          
+            $basePathController  = str_replace($baseControllerClass, '', $newControllerFile);
         }
-        $controllerFile = (!empty($newControllerFile) ? ($basePathController . 'controllers/'. $baseControllerClass) : (Yii::getAlias('@' . str_replace('\\', '/', ltrim($this->controllerClass, '\\'))) . '.php'));
+        $controllerFile = (!empty($newControllerFile) ? ($basePathController.'controllers/'.$baseControllerClass) : (Yii::getAlias('@'.str_replace('\\',
+                    '/', ltrim($this->controllerClass, '\\'))).'.php'));
 
-        $baseControllerFile = StringHelper::dirname($controllerFile) . '/base/' . StringHelper::basename($controllerFile);
-        $restControllerFile = StringHelper::dirname($controllerFile) . '/api/' . StringHelper::basename($controllerFile);
+
+        if (strpos($controllerFile, '.php') == false) {
+            $controllerFile = $controllerFile.'.php';
+        }
+
+        $baseControllerFile = StringHelper::dirname($controllerFile).'/base/'.StringHelper::basename($controllerFile);
+        $restControllerFile = StringHelper::dirname($controllerFile).'/api/'.StringHelper::basename($controllerFile);
+
+
+        if (strpos($baseControllerFile, '.php') == false) {
+            $baseControllerFile = $baseControllerFile.'.php';
+        }
+
+        if (strpos($restControllerFile, '.php') == false) {
+            $restControllerFile = $restControllerFile.'.php';
+        }
+
+
 
         /*
          * search generated migration and overwrite it or create new
          */
         $migrationDir = StringHelper::dirname(StringHelper::dirname($controllerFile))
-                . '/migrations';
+            .'/migrations';
 
-        if (file_exists($migrationDir) && $migrationDirFiles = glob($migrationDir . '/m*_' . $controllerName . '00_access.php')) {
+        if (file_exists($migrationDir) && $migrationDirFiles = glob($migrationDir.'/m*_'.$controllerName.'00_access.php')) {
             $this->migrationClass = pathinfo($migrationDirFiles[0], PATHINFO_FILENAME);
         } else {
-            $this->migrationClass = 'm' . date('ymd_Hi') . '00_' . $controllerName . '_access';
+            $this->migrationClass = 'm'.date('ymd_Hi').'00_'.$controllerName.'_access';
         }
 
-        $files[] = new CodeFile($baseControllerFile, $this->render('controller.php', ['accessDefinitions' => $accessDefinitions]));
+        $files[]                       = new CodeFile($baseControllerFile,
+            $this->render('controller.php', ['accessDefinitions' => $accessDefinitions]));
         $params['controllerClassName'] = \yii\helpers\StringHelper::basename($this->controllerClass);
 
         if ($this->overwriteControllerClass || !is_file($controllerFile)) {
@@ -541,21 +579,22 @@ class Generator extends \open20\amos\core\giiamos\Generator {
         }
 
         if (!empty($this->searchModelClass)) {
-            $nsVendor = $this->createPathFromNs($this->searchModelClass, true);
-            $searchModel = (!empty($nsVendor) ? $nsVendor : Yii::getAlias('@' . str_replace('\\', '/', ltrim($this->searchModelClass, '\\')))) . '.php';
+            $nsVendor    = $this->createPathFromNs($this->searchModelClass, true);
+            $searchModel = (!empty($nsVendor) ? $nsVendor : Yii::getAlias('@'.str_replace('\\', '/',
+                        ltrim($this->searchModelClass, '\\')))).'.php';
             if ($this->overwriteSearchModelClass || !is_file($searchModel)) {
                 $files[] = new CodeFile($searchModel, $this->render('search.php'));
             }
         }
 
-        $viewPath = $this->getViewPath();
-        $templatePath = $this->getTemplatePath() . '/views';
+        $viewPath     = $this->getViewPath();
+        $templatePath = $this->getTemplatePath().'/views';
 
         foreach (scandir($templatePath) as $file) {
             if (empty($this->searchModelClass) && $file === '_search.php') {
                 continue;
             }
-            if (is_file($templatePath . '/' . $file) && pathinfo($file, PATHINFO_EXTENSION) === 'php') {
+            if (is_file($templatePath.'/'.$file) && pathinfo($file, PATHINFO_EXTENSION) === 'php') {
                 $files[] = new CodeFile("$viewPath/$file", $this->render("views/$file", ['permisions' => $permisions]));
             }
         }
@@ -565,34 +604,37 @@ class Generator extends \open20\amos\core\giiamos\Generator {
             /*
              * access migration
              */
-            $migrationFile = $migrationDir . '/' . $this->migrationClass . '.php';
-            $files[] = new CodeFile($migrationFile, $this->render('migration_access.php', ['accessDefinitions' => $accessDefinitions]));
+            $migrationFile = $migrationDir.'/'.$this->migrationClass.'.php';
+            $files[]       = new CodeFile($migrationFile,
+                $this->render('migration_access.php', ['accessDefinitions' => $accessDefinitions]));
 
             /*
              * access roles translation
              */
             $forRoleTranslationFile = StringHelper::dirname(StringHelper::dirname($controllerFile))
-                    . '/messages/for-translation/'
-                    . $controllerName . '.php';
-            $files[] = new CodeFile($forRoleTranslationFile, $this->render('roles-translation.php', ['accessDefinitions' => $accessDefinitions]));
+                .'/messages/for-translation/'
+                .$controllerName.'.php';
+            $files[]                = new CodeFile($forRoleTranslationFile,
+                $this->render('roles-translation.php', ['accessDefinitions' => $accessDefinitions]));
         }
 
         /*
          * create gii/[name]GiantCRUD.json with actual form data
          */
-        $suffix = str_replace(' ', '', $this->getName());
+        $suffix             = str_replace(' ', '', $this->getName());
         $controllerFileinfo = pathinfo($controllerFile);
-        $formDataFile = StringHelper::dirname(StringHelper::dirname($controllerFile))
-                . '/gii/'
-                . str_replace('Controller', $suffix, $controllerFileinfo['filename']) . '.json';
+        $formDataFile       = StringHelper::dirname(StringHelper::dirname($controllerFile))
+            .'/gii/'
+            .str_replace('Controller', $suffix, $controllerFileinfo['filename']).'.json';
         //$formData = json_encode($this->getFormAttributesValues());
-        $formData = json_encode(SaveForm::getFormAttributesValues($this, $this->formAttributes()));
-        $files[] = new CodeFile($formDataFile, $formData);
+        $formData           = json_encode(SaveForm::getFormAttributesValues($this, $this->formAttributes()));
+        $files[]            = new CodeFile($formDataFile, $formData);
 
         return $files;
-    }    
+    }
 
-    public function generate() {
+    public function generate()
+    {
         try {
 //            pr($this->relFiledsDynamic);
 
@@ -620,8 +662,9 @@ class Generator extends \open20\amos\core\giiamos\Generator {
      * @param $module
      * @return array
      */
-    public static function getTranslations($module) {
-        $translationCacheName = 'mtc_' . $module;
+    public static function getTranslations($module)
+    {
+        $translationCacheName = 'mtc_'.$module;
 
         return (array) Yii::$app->cache->get($translationCacheName);
     }
@@ -632,8 +675,9 @@ class Generator extends \open20\amos\core\giiamos\Generator {
      * @param $text
      * @return bool
      */
-    public static function addTranslation($module, $slug, $text) {
-        $translationCacheName = 'mtc_' . $module;
+    public static function addTranslation($module, $slug, $text)
+    {
+        $translationCacheName = 'mtc_'.$module;
 
         $moduleTranslations = Yii::$app->cache->get($translationCacheName);
 
@@ -649,8 +693,9 @@ class Generator extends \open20\amos\core\giiamos\Generator {
     /**
      * @return string the controller ID (without the module ID prefix)
      */
-    public function getControllerID() {
-        $pos = strrpos($this->controllerClass, '\\');
+    public function getControllerID()
+    {
+        $pos   = strrpos($this->controllerClass, '\\');
         $class = substr(substr($this->controllerClass, $pos + 1), 0, -10);
         if ($this->singularEntities) {
             $class = Inflector::singularize($class);
@@ -662,14 +707,15 @@ class Generator extends \open20\amos\core\giiamos\Generator {
     /**
      * @return string the controller view path
      */
-    public function getViewPath() {
+    public function getViewPath()
+    {
         if (empty($this->viewPath)) {
-            return Yii::getAlias('@app/views/' . $this->getControllerID());
+            return Yii::getAlias('@app/views/'.$this->getControllerID());
         }
-        $path = null;
+        $path    = null;
         $verify1 = $this->verifyControllerIdInPath($this->viewPath);
         if (!$verify1) {
-            $path = Yii::getAlias(str_replace('\\', '/', $this->viewPath) . '/' . $this->getControllerID());
+            $path = Yii::getAlias(str_replace('\\', '/', $this->viewPath).'/'.$this->getControllerID());
         } else {
             $path = Yii::getAlias(str_replace('\\', '/', $this->viewPath));
         }
@@ -678,7 +724,7 @@ class Generator extends \open20\amos\core\giiamos\Generator {
             if (!empty($path)) {
                 $verify = $this->verifyControllerIdInPath($path);
                 if (!$verify) {
-                    $path = $path . '/' . $this->getControllerID();
+                    $path = $path.'/'.$this->getControllerID();
                 }
             }
         }
@@ -690,22 +736,23 @@ class Generator extends \open20\amos\core\giiamos\Generator {
      * @param string $path
      * @return boolean
      */
-    protected function verifyControllerIdInPath($path){
+    protected function verifyControllerIdInPath($path)
+    {
         $controllerId = $this->getControllerID();
-        $pathArray = explode('/', $path);
-        $lastElement = end($pathArray);
-        if($lastElement == $controllerId){
+        $pathArray    = explode('/', $path);
+        $lastElement  = end($pathArray);
+        if ($lastElement == $controllerId) {
             return true;
         } else {
             return false;
         }
-             
     }
 
     /**
      * @return string
      */
-    public function getNameAttribute() {
+    public function getNameAttribute()
+    {
         foreach ($this->getColumnNames() as $name) {
             if (!strcasecmp($name, 'name') || !strcasecmp($name, 'title')) {
                 return $name;
@@ -713,7 +760,7 @@ class Generator extends \open20\amos\core\giiamos\Generator {
         }
         /* @var $class \yii\db\ActiveRecord */
         $class = $this->modelClass;
-        $pk = $class::primaryKey();
+        $pk    = $class::primaryKey();
 
         return $pk[0];
     }
@@ -723,7 +770,8 @@ class Generator extends \open20\amos\core\giiamos\Generator {
      * @param string $attribute
      * @return string
      */
-    public function generateActiveField($attribute) {
+    public function generateActiveField($attribute)
+    {
         $tableSchema = $this->getTableSchema();
         if ($tableSchema === false || !isset($tableSchema->columns[$attribute])) {
             if (preg_match('/^(password|pass|passwd|passcode)$/i', $attribute)) {
@@ -753,7 +801,7 @@ class Generator extends \open20\amos\core\giiamos\Generator {
                 $dropDownOptions[$enumValue] = Inflector::humanize($enumValue);
             }
             return "\$form->field(\$model, '$attribute')->dropDownList("
-                    . preg_replace("/\n\s*/", ' ', VarDumper::export($dropDownOptions)) . ", ['prompt' => ''])";
+                .preg_replace("/\n\s*/", ' ', VarDumper::export($dropDownOptions)).", ['prompt' => ''])";
         }
 
         if ($column->phpType !== 'string' || $column->size === null) {
@@ -768,7 +816,8 @@ class Generator extends \open20\amos\core\giiamos\Generator {
      * @param string $attribute
      * @return string
      */
-    public function generateActiveSearchField($attribute) {
+    public function generateActiveSearchField($attribute)
+    {
         $tableSchema = $this->getTableSchema();
         if ($tableSchema === false) {
             return "\$form->field(\$model, '$attribute')";
@@ -787,7 +836,8 @@ class Generator extends \open20\amos\core\giiamos\Generator {
      * @param \yii\db\ColumnSchema $column
      * @return string
      */
-    public function generateColumnFormat($column) {
+    public function generateColumnFormat($column)
+    {
         if ($column->phpType === 'boolean') {
             return 'boolean';
         }
@@ -815,9 +865,10 @@ class Generator extends \open20\amos\core\giiamos\Generator {
      * Generates validation rules for the search model.
      * @return array the generated validation rules
      */
-    public function generateSearchRules() {
+    public function generateSearchRules()
+    {
         if (($table = $this->getTableSchema()) === false) {
-            return ["[['" . implode("', '", $this->getColumnNames()) . "'], 'safe']"];
+            return ["[['".implode("', '", $this->getColumnNames())."'], 'safe']"];
         }
         $types = [];
         foreach ($table->columns as $column) {
@@ -835,21 +886,21 @@ class Generator extends \open20\amos\core\giiamos\Generator {
                 case Schema::TYPE_DOUBLE:
                 case Schema::TYPE_DECIMAL:
                 case Schema::TYPE_MONEY:
-                    $types['number'][] = $column->name;
+                    $types['number'][]  = $column->name;
                     break;
                 case Schema::TYPE_DATE:
                 case Schema::TYPE_TIME:
                 case Schema::TYPE_DATETIME:
                 case Schema::TYPE_TIMESTAMP:
                 default:
-                    $types['safe'][] = $column->name;
+                    $types['safe'][]    = $column->name;
                     break;
             }
         }
 
         $rules = [];
         foreach ($types as $type => $columns) {
-            $rules[] = "[['" . implode("', '", $columns) . "'], '$type']";
+            $rules[] = "[['".implode("', '", $columns)."'], '$type']";
         }
 
         return $rules;
@@ -858,7 +909,8 @@ class Generator extends \open20\amos\core\giiamos\Generator {
     /**
      * @return array searchable attributes
      */
-    public function getSearchAttributes() {
+    public function getSearchAttributes()
+    {
         return $this->getColumnNames();
     }
 
@@ -866,11 +918,12 @@ class Generator extends \open20\amos\core\giiamos\Generator {
      * Generates the attribute labels for the search model.
      * @return array the generated attribute labels (name => label)
      */
-    public function generateSearchLabels() {
+    public function generateSearchLabels()
+    {
         /* @var $model \yii\base\Model */
-        $model = new $this->modelClass();
+        $model           = new $this->modelClass();
         $attributeLabels = $model->attributeLabels();
-        $labels = [];
+        $labels          = [];
         foreach ($this->getColumnNames() as $name) {
             if (isset($attributeLabels[$name])) {
                 $labels[$name] = $attributeLabels[$name];
@@ -880,7 +933,7 @@ class Generator extends \open20\amos\core\giiamos\Generator {
                 } else {
                     $label = Inflector::camel2words($name);
                     if (!empty($label) && substr_compare($label, ' id', -3, 3, true) === 0) {
-                        $label = substr($label, 0, -3) . ' ID';
+                        $label = substr($label, 0, -3).' ID';
                     }
                     $labels[$name] = $label;
                 }
@@ -894,9 +947,10 @@ class Generator extends \open20\amos\core\giiamos\Generator {
      * Generates search conditions
      * @return array
      */
-    public function generateSearchConditions() {
+    public function generateSearchConditions()
+    {
         $columns = [];
-        if (($table = $this->getTableSchema()) === false) {
+        if (($table   = $this->getTableSchema()) === false) {
             $class = $this->modelClass;
             /* @var $model \yii\base\Model */
             $model = new $class();
@@ -929,7 +983,7 @@ class Generator extends \open20\amos\core\giiamos\Generator {
                     $hashConditions[] = "'{$column}' => \$this->{$column},";
                     break;
                 default:
-                    $likeKeyword = $this->getClassDbDriverName() === 'pgsql' ? 'ilike' : 'like';
+                    $likeKeyword      = $this->getClassDbDriverName() === 'pgsql' ? 'ilike' : 'like';
                     $likeConditions[] = "->andFilterWhere(['{$likeKeyword}', '{$column}', \$this->{$column}])";
                     break;
             }
@@ -938,11 +992,11 @@ class Generator extends \open20\amos\core\giiamos\Generator {
         $conditions = [];
         if (!empty($hashConditions)) {
             $conditions[] = "\$query->andFilterWhere([\n"
-                    . str_repeat(' ', 12) . implode("\n" . str_repeat(' ', 12), $hashConditions)
-                    . "\n" . str_repeat(' ', 8) . "]);\n";
+                .str_repeat(' ', 12).implode("\n".str_repeat(' ', 12), $hashConditions)
+                ."\n".str_repeat(' ', 8)."]);\n";
         }
         if (!empty($likeConditions)) {
-            $conditions[] = "\$query" . implode("\n" . str_repeat(' ', 12), $likeConditions) . ";\n";
+            $conditions[] = "\$query".implode("\n".str_repeat(' ', 12), $likeConditions).";\n";
         }
 
         return $conditions;
@@ -952,10 +1006,11 @@ class Generator extends \open20\amos\core\giiamos\Generator {
      * Generates URL parameters
      * @return string
      */
-    public function generateUrlParams() {
+    public function generateUrlParams()
+    {
         /* @var $class ActiveRecord */
         $class = $this->modelClass;
-        $pks = $class::primaryKey();
+        $pks   = $class::primaryKey();
         if (count($pks) === 1) {
             if (is_subclass_of($class, 'yii\mongodb\ActiveRecord')) {
                 return "'id' => (string)\$model->{$pks[0]}";
@@ -980,21 +1035,23 @@ class Generator extends \open20\amos\core\giiamos\Generator {
      * Generates action parameters
      * @return string
      */
-    public function generateActionParams() {
+    public function generateActionParams()
+    {
         /* @var $class ActiveRecord */
         $class = $this->modelClass;
-        $pks = $class::primaryKey();
+        $pks   = $class::primaryKey();
         if (count($pks) === 1) {
-            return '$' . $pks[0]; // fix for non-id columns
+            return '$'.$pks[0]; // fix for non-id columns
         }
 
-        return '$' . implode(', $', $pks);
+        return '$'.implode(', $', $pks);
     }
 
     /**
      * @return array model column names
      */
-    public function getColumnNames() {
+    public function getColumnNames()
+    {
         /* @var $class ActiveRecord */
         $class = $this->modelClass;
         if (is_subclass_of($class, 'yii\db\ActiveRecord')) {
@@ -1012,17 +1069,19 @@ class Generator extends \open20\amos\core\giiamos\Generator {
      * In case db is not instance of \yii\db\Connection null will be returned.
      * @since 2.0.6
      */
-    protected function getClassDbDriverName() {
+    protected function getClassDbDriverName()
+    {
         /* @var $class ActiveRecord */
         $class = $this->modelClass;
-        $db = $class::getDb();
+        $db    = $class::getDb();
         return $db instanceof \yii\db\Connection ? $db->driverName : null;
     }
 
     /**
      * @return array model column names
      */
-    public function getRelationColumnNames() {
+    public function getRelationColumnNames()
+    {
         /* @var $class ActiveRecord */
         $class = $this->modelClass;
 
@@ -1030,14 +1089,14 @@ class Generator extends \open20\amos\core\giiamos\Generator {
             $tableSchema = $class::getTableSchema();
 
             $foreignKeys = $tableSchema->foreignKeys;
-            $relations = [];
+            $relations   = [];
 
             foreach ($foreignKeys as $key => $value) {
 //                pr($value);
-                $tablename = $value[0];
+                $tablename             = $value[0];
                 unset($value[0]);
-                $fks = array_keys($value);
-                $tableSchemaRel = \Yii::$app->db->getTableSchema($tablename, true);
+                $fks                   = array_keys($value);
+                $tableSchemaRel        = \Yii::$app->db->getTableSchema($tablename, true);
                 $relations[$tablename] = [
                     'fieldrename' => $fks,
                     'fields' => array_keys($tableSchemaRel->columns)];
@@ -1054,11 +1113,12 @@ class Generator extends \open20\amos\core\giiamos\Generator {
         }
     }
 
-    public function getArrayForeignKeys() {
+    public function getArrayForeignKeys()
+    {
         $class = $this->modelClass;
         if (!empty($class)) {
-            $tableSchema = $class::getTableSchema();
-            $foreignKeys = $tableSchema->foreignKeys;
+            $tableSchema            = $class::getTableSchema();
+            $foreignKeys            = $tableSchema->foreignKeys;
             $this->arrayForeignKeys = [];
             foreach ($foreignKeys as $refs) {
                 unset($refs[0]);
@@ -1094,7 +1154,8 @@ class Generator extends \open20\amos\core\giiamos\Generator {
      *
      * @return int
      */
-    public function getMmRelations() {
+    public function getMmRelations()
+    {
 
 
 //pr($this->getRelationColumnNames());
@@ -1102,8 +1163,8 @@ class Generator extends \open20\amos\core\giiamos\Generator {
         $mmRelationss = [];
         if (!empty($this->relFiledsDynamic)) {
             $pathsee = explode('\\', $this->modelClass);
-            $name = array_pop($pathsee);
-            $index = 0;
+            $name    = array_pop($pathsee);
+            $index   = 0;
 //            pr($this->getRelationColumnNames());
 //            pr($this->relFiledsDynamic);die;
             foreach ($this->getRelationColumnNames() as $key => $value) {
@@ -1117,7 +1178,7 @@ class Generator extends \open20\amos\core\giiamos\Generator {
                     'fromModule' => lcfirst($name),
                     'toFields' => [],
                 ];
-                $index2 = 0;
+                $index2               = 0;
                 if ($this->relFiledsDynamic[$key]['fields'] != null) {
                     foreach ($this->relFiledsDynamic[$key]['fields'] as $k => $v) {
                         $mmRelationss[$index]['toFields'] = [
@@ -1131,11 +1192,11 @@ class Generator extends \open20\amos\core\giiamos\Generator {
                     }
                 }
 
-                $mmRelationss[$index]['toEntity'] = $key;
-                $mmRelationss[$index]['toModule'] = $this->relFiledsDynamic[$key]['moduleName'];
+                $mmRelationss[$index]['toEntity']        = $key;
+                $mmRelationss[$index]['toModule']        = $this->relFiledsDynamic[$key]['moduleName'];
                 $mmRelationss[$index]['descriptorField'] = $this->relFiledsDynamic[$key]['descriptorField'];
-                $mmRelationss[$index]['required'] = $this->relFiledsDynamic[$key]['moduleRelRequired'];
-                $mmRelationss[$index]['ordinal'] = 1;
+                $mmRelationss[$index]['required']        = $this->relFiledsDynamic[$key]['moduleRelRequired'];
+                $mmRelationss[$index]['ordinal']         = 1;
                 $index++;
             }
 //            pr($mmRelationss);
@@ -1144,12 +1205,13 @@ class Generator extends \open20\amos\core\giiamos\Generator {
         return $mmRelationss;
     }
 
-    public function getMmRelationsSingle($attribute) {
+    public function getMmRelationsSingle($attribute)
+    {
 
         if (!empty($this->relFiledsDynamic)) {
             $pathsee = explode('\\', $this->modelClass);
-            $name = array_pop($pathsee);
-            $index = 0;
+            $name    = array_pop($pathsee);
+            $index   = 0;
 //            pr($this->getRelationColumnNames());
 //            pr($this->relFiledsDynamic);die;
             foreach ($this->getRelationColumnNames() as $key => $value) {
@@ -1167,7 +1229,7 @@ class Generator extends \open20\amos\core\giiamos\Generator {
                         'fromModule' => lcfirst($name),
                         'toFields' => [],
                     ];
-                    $index2 = 0;
+                    $index2            = 0;
                     if (!empty($this->relFiledsDynamic[$key]['fields'])) {
                         foreach ($this->relFiledsDynamic[$key]['fields'] as $k => $v) {
                             $this->mmRelations['toFields'] = [
@@ -1188,11 +1250,11 @@ class Generator extends \open20\amos\core\giiamos\Generator {
 //                    }
 
 
-                    $this->mmRelations['toEntity'] = $key;
-                    $this->mmRelations['toModule'] = $this->relFiledsDynamic[$key]['moduleName'];
+                    $this->mmRelations['toEntity']        = $key;
+                    $this->mmRelations['toModule']        = $this->relFiledsDynamic[$key]['moduleName'];
                     $this->mmRelations['descriptorField'] = $this->relFiledsDynamic[$key]['descriptorField'];
-                    $this->mmRelations['required'] = $this->relFiledsDynamic[$key]['moduleRelRequired'];
-                    $this->mmRelations['ordinal'] = 1;
+                    $this->mmRelations['required']        = $this->relFiledsDynamic[$key]['moduleRelRequired'];
+                    $this->mmRelations['ordinal']         = 1;
                     $index++;
                 }
             }
@@ -1205,16 +1267,18 @@ class Generator extends \open20\amos\core\giiamos\Generator {
     /**
      * @return string the controller ID (without the module ID prefix)
      */
-    public function getModuleId() {
+    public function getModuleId()
+    {
         if (!$this->moduleNs) {
-            $controllerNs = \yii\helpers\StringHelper::dirname(ltrim($this->controllerClass, '\\'));
+            $controllerNs   = \yii\helpers\StringHelper::dirname(ltrim($this->controllerClass, '\\'));
             $this->moduleNs = \yii\helpers\StringHelper::dirname(ltrim($controllerNs, '\\'));
         }
 
         return \yii\helpers\StringHelper::basename($this->moduleNs);
     }
 
-    public static function getModelNameAttribute($modelClass) {
+    public static function getModelNameAttribute($modelClass)
+    {
         $model = new $modelClass();
 // TODO: cleanup, get-label-methods, move to config
         if ($model->hasMethod('get_label')) {
@@ -1245,7 +1309,8 @@ class Generator extends \open20\amos\core\giiamos\Generator {
         return $modelClass::primaryKey()[0];
     }
 
-    public function getModelByTableName($name) {
+    public function getModelByTableName($name)
+    {
         $returnName = str_replace($this->tablePrefix, '', $name);
         $returnName = Inflector::id2camel($returnName, '_');
         if ($this->singularEntities) {
@@ -1265,10 +1330,11 @@ class Generator extends \open20\amos\core\giiamos\Generator {
      *
      * @return array
      */
-    public function getModelRelations($modelClass, $types = []) {
-        $reflector = new \ReflectionClass($modelClass);
-        $model = new $modelClass();
-        $stack = [];
+    public function getModelRelations($modelClass, $types = [])
+    {
+        $reflector      = new \ReflectionClass($modelClass);
+        $model          = new $modelClass();
+        $stack          = [];
         $modelGenerator = new ModelGenerator();
         foreach ($reflector->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
             if (in_array(substr($method->name, 3), $this->skipRelations)) {
@@ -1313,23 +1379,24 @@ class Generator extends \open20\amos\core\giiamos\Generator {
                     }
                     // if types is empty, return all types -> no filter
                     if ((count($types) == 0) || in_array($relationType, $types)) {
-                        $name = $modelGenerator->generateRelationName(
-                                [$relation], $model->getTableSchema(), substr($method->name, 3), $relation->multiple
+                        $name         = $modelGenerator->generateRelationName(
+                            [$relation], $model->getTableSchema(), substr($method->name, 3), $relation->multiple
                         );
                         $stack[$name] = $relation;
                     }
                 }
             } catch (\Exception $e) {
-                \Yii::error('Error: ' . $e->getMessage(), __METHOD__);
+                \Yii::error('Error: '.$e->getMessage(), __METHOD__);
             } catch (\Error $e) {
                 //bypass get functions if calling to them results in errors (only for PHP7)
-                \Yii::error('Error: ' . $e->getMessage(), __METHOD__);
+                \Yii::error('Error: '.$e->getMessage(), __METHOD__);
             }
         }
         return $stack;
     }
 
-    public function getColumnByAttribute($attribute, $model = null) {
+    public function getColumnByAttribute($attribute, $model = null)
+    {
         if (is_string($model)) {
             $model = new $model();
         }
@@ -1350,7 +1417,9 @@ class Generator extends \open20\amos\core\giiamos\Generator {
      *
      * @return null|\yii\db\ActiveQuery
      */
-    public function getRelationByColumn($model, $column, $types = ['belongs_to', 'many_many', 'has_many', 'has_one', 'pivot']) {
+    public function getRelationByColumn($model, $column,
+                                        $types = ['belongs_to', 'many_many', 'has_many', 'has_one', 'pivot'])
+    {
         $relations = $this->getModelRelations($model, $types);
         foreach ($relations as $relation) {
 // TODO: check multiple link(s)
@@ -1362,25 +1431,28 @@ class Generator extends \open20\amos\core\giiamos\Generator {
         return;
     }
 
-    public function createRelationRoute($relation, $action) {
-        $route = $this->pathPrefix . Inflector::camel2id(
-                        $this->generateRelationTo($relation), '-', true
-                ) . '/' . $action;
+    public function createRelationRoute($relation, $action)
+    {
+        $route = $this->pathPrefix.Inflector::camel2id(
+                $this->generateRelationTo($relation), '-', true
+            ).'/'.$action;
 
         return $route;
     }
 
-    public function generateRelationTo($relation) {
+    public function generateRelationTo($relation)
+    {
         $class = new \ReflectionClass($relation->modelClass);
         $route = Inflector::variablize($class->getShortName());
 
         return $route;
     }
 
-    public function isPivotRelation(ActiveQuery $relation) {
+    public function isPivotRelation(ActiveQuery $relation)
+    {
         $model = new $relation->modelClass();
         $table = $model->tableSchema;
-        $pk = $table->primaryKey;
+        $pk    = $table->primaryKey;
         if (count($pk) !== 2) {
             return false;
         }
@@ -1404,12 +1476,14 @@ class Generator extends \open20\amos\core\giiamos\Generator {
     /**
      * @return array Class names of the providers declared directly under crud/providers folder
      */
-    public static function getCoreProviders() {
+    public static function getCoreProviders()
+    {
         $files = FileHelper::findFiles(
-                        __DIR__ . DIRECTORY_SEPARATOR . 'providers', [
-                    'only' => ['*.php'],
-                    'recursive' => false,
-                        ]
+                __DIR__.DIRECTORY_SEPARATOR.'providers',
+                [
+                'only' => ['*.php'],
+                'recursive' => false,
+                ]
         );
 
         foreach ($files as $file) {
@@ -1417,8 +1491,9 @@ class Generator extends \open20\amos\core\giiamos\Generator {
         }
 
         return array_filter(
-                get_declared_classes(), function ($a) {
-            return stripos($a, __NAMESPACE__ . '\providers') !== false;
+            get_declared_classes(),
+            function ($a) {
+            return stripos($a, __NAMESPACE__.'\providers') !== false;
         }
         );
     }
@@ -1426,13 +1501,15 @@ class Generator extends \open20\amos\core\giiamos\Generator {
     /**
      * @return array List of providers. Keys and values contain the same strings
      */
-    public function generateProviderCheckboxListData() {
+    public function generateProviderCheckboxListData()
+    {
         $coreProviders = self::getCoreProviders();
 
         return array_combine($coreProviders, $coreProviders);
     }
 
-    protected function initializeProviders() {
+    protected function initializeProviders()
+    {
 // TODO: this is a hotfix for an already initialized provider queue on action re-entry
         if ($this->_p !== []) {
             return;
@@ -1444,9 +1521,9 @@ class Generator extends \open20\amos\core\giiamos\Generator {
                 if (!$class) {
                     continue;
                 }
-                $obj = \Yii::createObject(['class' => $class]);
+                $obj            = \Yii::createObject(['class' => $class]);
                 $obj->generator = $this;
-                $this->_p[] = $obj;
+                $this->_p[]     = $obj;
                 //Yii::trace("Initialized provider '{$class}'", __METHOD__);
             }
         }
@@ -1462,7 +1539,8 @@ class Generator extends \open20\amos\core\giiamos\Generator {
      *
      * @return mixed|string
      */
-    public function activeField($attribute, $model = null) {
+    public function activeField($attribute, $model = null)
+    {
         if ($model === null) {
             $model = $this->modelClass;
         }
@@ -1481,7 +1559,8 @@ class Generator extends \open20\amos\core\giiamos\Generator {
         }
     }
 
-    public function prependActiveField($attribute, $model = null) {
+    public function prependActiveField($attribute, $model = null)
+    {
         if ($model === null) {
             $model = $this->modelClass;
         }
@@ -1493,7 +1572,8 @@ class Generator extends \open20\amos\core\giiamos\Generator {
         return $code;
     }
 
-    public function appendActiveField($attribute, $model = null) {
+    public function appendActiveField($attribute, $model = null)
+    {
         if ($model === null) {
             $model = $this->modelClass;
         }
@@ -1505,7 +1585,8 @@ class Generator extends \open20\amos\core\giiamos\Generator {
         return $code;
     }
 
-    public function columnFormat($attribute, $model = null) {
+    public function columnFormat($attribute, $model = null)
+    {
         if ($model === null) {
             $model = $this->modelClass;
         }
@@ -1520,7 +1601,8 @@ class Generator extends \open20\amos\core\giiamos\Generator {
         return $code;
     }
 
-    public function attributeFormat($attribute, $model = null) {
+    public function attributeFormat($attribute, $model = null)
+    {
         if ($model === null) {
             $model = $this->modelClass;
         }
@@ -1540,7 +1622,8 @@ class Generator extends \open20\amos\core\giiamos\Generator {
 // don't call parent anymore
     }
 
-    public function attributeEditable($attribute, $model = null) {
+    public function attributeEditable($attribute, $model = null)
+    {
         if ($model === null) {
             $model = $this->modelClass;
         }
@@ -1560,25 +1643,26 @@ class Generator extends \open20\amos\core\giiamos\Generator {
 // don't call parent anymore
     }
 
-    public function render($template, $params = []) {
+    public function render($template, $params = [])
+    {
         $code = parent::render($template, $params);
 
 // create temp file for code formatting
-        $tmpDir = Yii::getAlias('@runtime/giiant');
+        $tmpDir  = Yii::getAlias('@runtime/giiant');
         FileHelper::createDirectory($tmpDir);
-        $tmpFile = $tmpDir . '/' . md5($template);
+        $tmpFile = $tmpDir.'/'.md5($template);
         file_put_contents($tmpFile, $code);
 
         if ($this->tidyOutput) {
-            $command = Yii::getAlias('@vendor/bin/phptidy.php') . ' replace ' . $this->tidyOptions . ' ' . $tmpFile;
+            $command = Yii::getAlias('@vendor/bin/phptidy.php').' replace '.$this->tidyOptions.' '.$tmpFile;
             shell_exec($command);
-            $code = file_get_contents($tmpFile);
+            $code    = file_get_contents($tmpFile);
         }
 
         if ($this->fixOutput) {
-            $command = Yii::getAlias('@vendor/bin/php-cs-fixer') . ' fix ' . $this->fixOptions . ' ' . $tmpFile;
+            $command = Yii::getAlias('@vendor/bin/php-cs-fixer').' fix '.$this->fixOptions.' '.$tmpFile;
             shell_exec($command);
-            $code = file_get_contents($tmpFile);
+            $code    = file_get_contents($tmpFile);
         }
 
         unlink($tmpFile);
@@ -1586,7 +1670,8 @@ class Generator extends \open20\amos\core\giiamos\Generator {
         return $code;
     }
 
-    public function partialView($name, $model = null) {
+    public function partialView($name, $model = null)
+    {
         if ($model === null) {
             $model = $this->modelClass;
         }
@@ -1598,19 +1683,22 @@ class Generator extends \open20\amos\core\giiamos\Generator {
         return $code;
     }
 
-    public function relationGrid($name, $relation, $showAllRecords = false) {
+    public function relationGrid($name, $relation, $showAllRecords = false)
+    {
         Yii::trace("calling provider queue for '$name'", __METHOD__);
 
         return $this->callProviderQueue(__FUNCTION__, $name, $relation, $showAllRecords);
     }
 
-    public function relationGridEditable($name, $relation, $showAllRecords = false) {
+    public function relationGridEditable($name, $relation, $showAllRecords = false)
+    {
         Yii::trace("calling provider queue for '$name'", __METHOD__);
 
         return $this->callProviderQueue(__FUNCTION__, $name, $relation, $showAllRecords);
     }
 
-    protected function shorthandAttributeFormat($attribute, $model) {
+    protected function shorthandAttributeFormat($attribute, $model)
+    {
 // TODO: cleanup
         if (is_object($model) && (!method_exists($model, 'getTableSchema') || !$model->getTableSchema())) {
             return;
@@ -1638,10 +1726,11 @@ class Generator extends \open20\amos\core\giiamos\Generator {
             $format = 'text';
         }
 
-        return "        '" . $column->name . ($format === 'text' ? '' : ':' . $format) . "'";
+        return "        '".$column->name.($format === 'text' ? '' : ':'.$format)."'";
     }
 
-    protected function callProviderQueue($func, $args, $generator) {
+    protected function callProviderQueue($func, $args, $generator)
+    {
 // TODO: should be done on init, but providerList is empty
         $this->initializeProviders();
 
@@ -1660,7 +1749,7 @@ class Generator extends \open20\amos\core\giiamos\Generator {
                     } else {
                         $argsString = $args;
                     }
-                    $msg = 'Using provider ' . get_class($obj) . '::' . $func . ' ' . $argsString;
+                    $msg = 'Using provider '.get_class($obj).'::'.$func.' '.$argsString;
                     Yii::trace($msg, __METHOD__);
 
                     return $c;
@@ -1669,7 +1758,8 @@ class Generator extends \open20\amos\core\giiamos\Generator {
         }
     }
 
-    public function validateClass($attribute, $params) {
+    public function validateClass($attribute, $params)
+    {
         if ($this->singularEntities) {
             $this->$attribute = Inflector::singularize($this->$attribute);
         }
@@ -1677,55 +1767,54 @@ class Generator extends \open20\amos\core\giiamos\Generator {
     }
 
 // TODO: replace with VarDumper::export
-    public function var_export54($var, $indent = '') {
+    public function var_export54($var, $indent = '')
+    {
         switch (gettype($var)) {
             case 'string':
-                return '"' . addcslashes($var, "\\\$\"\r\n\t\v\f") . '"';
+                return '"'.addcslashes($var, "\\\$\"\r\n\t\v\f").'"';
             case 'array':
                 $indexed = array_keys($var) === range(0, count($var) - 1);
-                $r = [];
+                $r       = [];
                 foreach ($var as $key => $value) {
                     $r[] = "$indent    "
-                            . ($indexed ? '' : $this->var_export54($key) . ' => ')
-                            . $this->var_export54($value, "$indent    ");
+                        .($indexed ? '' : $this->var_export54($key).' => ')
+                        .$this->var_export54($value, "$indent    ");
                 }
 
-                return "[\n" . implode(",\n", $r) . "\n" . $indent . ']';
+                return "[\n".implode(",\n", $r)."\n".$indent.']';
             case 'boolean':
                 return $var ? 'TRUE' : 'FALSE';
             default:
                 return var_export($var, true);
         }
     }
-    
     /**
      *
      * @param type $namespace
      * @return string
      */
-   /* public function createPathFromNs($namespace, $isSearch = true) {
-        $path = null;
-        try {
-            $path = \Yii::getAlias('@' . str_replace('\\', '/', $namespace), false);
-            $class = StringHelper::baseName($namespace);
-            if (empty($path)) {
-                $nsVendor = $this->modelClass;
-                $reflector = new \ReflectionClass($nsVendor);
-                $pathInVendor = $reflector->getFileName();
-                if (!empty($pathInVendor)) {
-                    $search = 'models' . '\\' . StringHelper::baseName($pathInVendor);                                      
-                    $search2 = 'models' . '/' . StringHelper::baseName($pathInVendor);                                      
-                    if ($isSearch == true) {
-                        $path = str_replace($search, '', $pathInVendor) . 'search' . DIRECTORY_SEPARATOR . $class;
-                    } else {
-                        $path = str_replace( [$search,$search2], '', $pathInVendor). $class . '.php';
-                    }
-                }
-            }
-        } catch (\Exception $e) {
-            
-        }
-        return $path;
-    }*/
+    /* public function createPathFromNs($namespace, $isSearch = true) {
+      $path = null;
+      try {
+      $path = \Yii::getAlias('@' . str_replace('\\', '/', $namespace), false);
+      $class = StringHelper::baseName($namespace);
+      if (empty($path)) {
+      $nsVendor = $this->modelClass;
+      $reflector = new \ReflectionClass($nsVendor);
+      $pathInVendor = $reflector->getFileName();
+      if (!empty($pathInVendor)) {
+      $search = 'models' . '\\' . StringHelper::baseName($pathInVendor);
+      $search2 = 'models' . '/' . StringHelper::baseName($pathInVendor);
+      if ($isSearch == true) {
+      $path = str_replace($search, '', $pathInVendor) . 'search' . DIRECTORY_SEPARATOR . $class;
+      } else {
+      $path = str_replace( [$search,$search2], '', $pathInVendor). $class . '.php';
+      }
+      }
+      }
+      } catch (\Exception $e) {
 
+      }
+      return $path;
+      } */
 }

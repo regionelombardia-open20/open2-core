@@ -793,6 +793,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
         $result       = null;
         $community_id = self::checkScope();
         $userId       = \Yii::$app->user->id;
+        $values       = [];
 
         switch ($type) {
             case self::BULLET_TYPE_ALL:
@@ -889,11 +890,15 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
                 break;
             case self::BULLET_TYPE_OWN:
 
-                $sqlTag        = "SELECT `tag_id` FROM `cwh_tag_owner_interest_mm` WHERE `record_id` = {$userId} AND `deleted_at` IS NULL";
-                $myTags        = \yii\helpers\ArrayHelper::map(\Yii::$app->db->createCommand()->setSql($sqlTag)->queryAll(),
+                $sqlTag           = "SELECT `tag_id` FROM `cwh_tag_owner_interest_mm` WHERE `record_id` = {$userId} AND `deleted_at` IS NULL";
+                $myTags           = \yii\helpers\ArrayHelper::map(\Yii::$app->db->createCommand()->setSql($sqlTag)->queryAll(),
                         'tag_id', 'tag_id');
-                $conditions    = [];
-                $conditionsNot = [];
+                $sqlMyCommunities = "SELECT community_id id FROM `community_user_mm` WHERE `user_id` = ".\Yii::$app->user->id . " AND status = 'ACTIVE'";
+                $myCommunities    = \yii\helpers\ArrayHelper::map(\Yii::$app->db->createCommand()->setSql($sqlMyCommunities)->queryAll(),
+                        'id', 'id');
+                $myCommunities[0] = 0;
+                $conditions       = [];
+                $conditionsNot    = [];
                 if (!empty($myTags)) {
                     foreach ($myTags as $tg) {
                         $conditions[]    = new Expression("FIND_IN_SET('$tg',U.tags) > 0");
@@ -920,11 +925,11 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
                         $conditions,
                     ])
                     ->andWhere(['U.module' => $tableName])
-                    ->andWhere(['U.deleted_at' => null]);
+                    ->andWhere(['U.deleted_at' => null])
+                    ->andWhere(['U.community_id' => $myCommunities]);
                 if ($general == false) {
                     $queryOwn->andFilterWhere(['U.community_id' => $community_id]);
                 }
-
 
                 $queryAll = new Query();
                 $queryAll->select(new Expression("IF(count(U.updated_at) = 0, 0, IF(sum(B.user_id) is null, 1, IF(count(B.user_id) >= count(U.updated_at), 0, 1))) as bullet"))
@@ -961,34 +966,35 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
                         )->execute();
                     } else {
                         if ($resultAll['bullet'] == 0) {
+
+                            foreach ($myCommunities as $comm) {
+                                $values[] = "({$userId}, '{$tableName}', 1, {$comm}, now(), '{$userId}', now(), '{$userId}', null, null)";
+                                $values[] = "({$userId}, '{$tableName}', 2, {$comm}, now(), '{$userId}', now(), '{$userId}', null, null)";
+                                $values[] = "({$userId}, '{$tableName}', 3, {$comm}, now(), '{$userId}', now(), '{$userId}', null, null)";
+                                $values[] = "({$userId}, '{$tableName}', 4, {$comm}, now(), '{$userId}', now(), '{$userId}', null, null)";
+                            }
                             \Yii::$app->db->createCommand()->setSql(
                                 "INSERT INTO
                                     `notification_user`
                                     (`user_id`,`module`, `publication_rule`, `community_id`, `created_at`,
                                     `created_by`, `updated_at`, `updated_by`, `deleted_at`, `deleted_by`)
                                 VALUES
-                                    ({$userId}, '{$tableName}', 1, {$community_id}, now(),
-                                    '{$userId}', now(), '{$userId}', null, null),
-                                    ({$userId}, '{$tableName}', 2, {$community_id}, now(),
-                                    '{$userId}', now(), '{$userId}', null, null),
-                                         ({$userId}, '{$tableName}', 3, {$community_id}, now(),
-                                    '{$userId}', now(), '{$userId}', null, null),
-                                         ({$userId}, '{$tableName}', 4, {$community_id}, now(),
-                                    '{$userId}', now(), '{$userId}', null, null)
+                                     ".implode(',', $values)."
                                 ON DUPLICATE KEY UPDATE
                                     `updated_at` = now()"
                             )->execute();
                         } else {
+                            foreach ($myCommunities as $comm) {
+                                $values[] = "({$userId}, '{$tableName}', 2, {$comm}, now(), '{$userId}', now(), '{$userId}', null, null)";
+                                $values[] = "({$userId}, '{$tableName}', 4, {$comm}, now(), '{$userId}', now(), '{$userId}', null, null)";
+                            }
                             \Yii::$app->db->createCommand()->setSql(
                                 "INSERT INTO
                                     `notification_user`
                                     (`user_id`,`module`, `publication_rule`, `community_id`, `created_at`,
                                     `created_by`, `updated_at`, `updated_by`, `deleted_at`, `deleted_by`)
                                 VALUES
-                                    ({$userId}, '{$tableName}', 2, {$community_id}, now(),
-                                        '{$userId}', now(), '{$userId}', null, null),
-                                    ({$userId}, '{$tableName}', 4, {$community_id}, now(),
-                                        '{$userId}', now(), '{$userId}', null, null)
+                                    ".implode(',', $values)."
                                 ON DUPLICATE KEY UPDATE
                                     `updated_at` = now()"
                             )->execute();

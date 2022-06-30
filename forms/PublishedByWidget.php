@@ -151,12 +151,12 @@ class PublishedByWidget extends Widget
                 $this->sectionOptions = [];
                 $tooltipContent = $this->renderSections($this->layout);
                 $this->tooltipParams['title'] = $tooltipContent;
-                $sectionContent = Html::tag('span',AmosIcons::show('info-circle',[],'dash'),[
-                        'title' => $this->tooltipParams['title'],
-                        'data-toggle' => 'tooltip',
-                        'data-html' => 'true',
-                        'class' => 'amos-tooltip',
-                    ]);
+                $sectionContent = Html::tag('span', AmosIcons::show('info-circle', [], 'dash'), [
+                    'title' => $this->tooltipParams['title'],
+                    'data-toggle' => 'tooltip',
+                    'data-html' => 'true',
+                    'class' => 'amos-tooltip',
+                ]);
             } else {
                 $options = $this->options;
                 $tag = ArrayHelper::remove($options, 'tag', 'div');
@@ -202,15 +202,15 @@ class PublishedByWidget extends Widget
                 return $this->renderStatus();
             case '{statusSection}':
                 return $this->renderStatusSection();
-            case '{pubblicationdates}' :
+            case '{pubblicationdates}':
                 return $this->renderPubblicationDates();
-            case '{pubblicationdatesSection}' :
+            case '{pubblicationdatesSection}':
                 return $this->renderPubblicationDatesSection();
-            case '{pubblishedfrom}' :
+            case '{pubblishedfrom}':
                 return $this->renderPublishedFrom();
-            case '{pubblishedat}' :
+            case '{pubblishedat}':
                 return $this->renderPublishedAt();
-            case '{createdat}' :
+            case '{createdat}':
                 return $this->renderCreatedAt();
             default:
                 return false;
@@ -221,7 +221,7 @@ class PublishedByWidget extends Widget
      * @param bool $onlyContent
      * @return string
      */
-     public function renderPublisher($onlyContent = false)
+    public function renderPublisher($onlyContent = false)
     {
         $userProfile = $this->model->createdUserProfile;
 
@@ -230,12 +230,10 @@ class PublishedByWidget extends Widget
         }
 
         if (!empty($this->modelContext) && $this->modelContext->hasProperty('publicatedByLabel') && (strlen($this->modelContext->publicatedByLabel) > 0)) {
-            $content = $this->modelContext->publicatedByLabel ." ".$userProfile->nomeCognome;
-        }
-        elseif ($this->model->hasProperty('publicatedByLabel') && (strlen($this->model->publicatedByLabel) > 0)) {
-            $content = $this->model->publicatedByLabel ." ".$userProfile->nomeCognome;
-        }
-        else {
+            $content = $this->modelContext->publicatedByLabel . " " . $userProfile->nomeCognome;
+        } elseif ($this->model->hasProperty('publicatedByLabel') && (strlen($this->model->publicatedByLabel) > 0)) {
+            $content = $this->model->publicatedByLabel . " " . $userProfile->nomeCognome;
+        } else {
             $content = BaseAmosModule::t("amoscore", "<label>Pubblicata da</label> {content}", [
                 'content' => $userProfile->nomeCognome
             ]);
@@ -366,7 +364,7 @@ class PublishedByWidget extends Widget
         }
         $publicationRule = \open20\amos\cwh\utility\CwhUtil::getPublicationRuleLabel($this->model->regola_pubblicazione);
         $targetsString = $this->getNodesAsString($targets);
-        if (count($targets)) {
+        if (!empty($targets) && count($targets)) {
             $content = BaseAmosModule::t("amoscore", "<label>per</label> <span class='target'> {target}</span>", [
                 'rule' => $publicationRule,
                 'target' => $targetsString
@@ -395,10 +393,11 @@ class PublishedByWidget extends Widget
                     $description = $category->titolo;
                 }
             }
-            $retValue = Html::tag($this->sectionTag, BaseAmosModule::t("amoscore", "<label>Categoria</label>: {el}", [
-                'el' => $description
-            ]), $this->sectionOptions);
-
+            if (!empty($description)) {
+                $retValue = Html::tag($this->sectionTag, BaseAmosModule::t("amoscore", "<label>Categoria</label>: {el}", [
+                    'el' => $description
+                ]), $this->sectionOptions);
+            }
         } catch (\Exception $ex) {
             Yii::getLogger()->log($ex->getMessage(), \yii\log\Logger::LEVEL_ERROR);
         }
@@ -427,7 +426,6 @@ class PublishedByWidget extends Widget
                 $content .= $status;
             }
             $retValue = Html::tag($this->sectionTag, $content, $this->sectionOptions);
-
         } catch (\Exception $ex) {
             Yii::getLogger()->log($ex->getMessage(), \yii\log\Logger::LEVEL_ERROR);
         }
@@ -513,7 +511,6 @@ class PublishedByWidget extends Widget
                 $dateTo = \Yii::$app->getFormatter()->asDate($this->model->created_at, 'long');
             }
             $toContent = Html::tag('label', Html::label(BaseAmosModule::t('amoscore', '#created_at'))) . ': ' . $dateTo;
-
         } catch (\Exception $ex) {
             Yii::getLogger()->log($ex->getMessage(), \yii\log\Logger::LEVEL_ERROR);
         }
@@ -550,12 +547,10 @@ class PublishedByWidget extends Widget
         }
 
         if (!empty($this->modelContext) && $this->modelContext->hasProperty('publicatedByLabel') && (strlen($this->modelContext->publicatedByLabel) > 0)) {
-            $content = $this->modelContext->publicatedByLabel ." ".$userProfile->nomeCognome;
-        }
-        elseif ($this->model->hasProperty('publicatedByLabel') && (strlen($this->model->publicatedByLabel) > 0)) {
-            $content = $this->model->publicatedByLabel ." ".$userProfile->nomeCognome;
-        }
-        else {
+            $content = $this->modelContext->publicatedByLabel . " " . $userProfile->nomeCognome;
+        } elseif ($this->model->hasProperty('publicatedByLabel') && (strlen($this->model->publicatedByLabel) > 0)) {
+            $content = $this->model->publicatedByLabel . " " . $userProfile->nomeCognome;
+        } else {
             $content = BaseAmosModule::t("amoscore", "<strong><span>Pubblicata da:</span></strong> {content}", [
                 'content' => $userProfile->nomeCognome
             ]);
@@ -616,7 +611,6 @@ class PublishedByWidget extends Widget
             $retValue = Html::tag($this->sectionTag, BaseAmosModule::t("amoscore", "<strong><span>Categoria:</span></strong> {el}", [
                 'el' => $description
             ]), $this->sectionOptions);
-
         } catch (\Exception $ex) {
             Yii::getLogger()->log($ex->getMessage(), \yii\log\Logger::LEVEL_ERROR);
         }
@@ -644,10 +638,9 @@ class PublishedByWidget extends Widget
             } else {
                 $statusContent = $status;
             }
-            $content = '<strong><span>'. BaseAmosModule::t('amoscore', 'Status') .': </span></strong>'  . $statusContent;
+            $content = '<strong><span>' . BaseAmosModule::t('amoscore', 'Status') . ': </span></strong>'  . $statusContent;
 
             $retValue = Html::tag($this->sectionTag, $content, $this->sectionOptions);
-
         } catch (\Exception $ex) {
             Yii::getLogger()->log($ex->getMessage(), \yii\log\Logger::LEVEL_ERROR);
         }
@@ -698,14 +691,14 @@ class PublishedByWidget extends Widget
      * @return string
      */
     public function renderPublishedAtSection()
-    { 
+    {
         try {
             // Date to
             $dateTo = '';
             if ($this->model->hasProperty('publicatedAt')) {
                 $dateTo = \Yii::$app->getFormatter()->asDate($this->model->publicatedAt, 'long');
             }
-            $toContent = '<strong><span>'. BaseAmosModule::t('amoscore', '#publicated_at_published_by_widget') . ': </span></strong>' . $dateTo;
+            $toContent = '<strong><span>' . BaseAmosModule::t('amoscore', '#publicated_at_published_by_widget') . ': </span></strong>' . $dateTo;
             if ($this->model->hasProperty('publicatedAtLabel') && (strlen($this->model->publicatedAtLabel) > 0)) {
                 $toContent = Html::tag('label', $this->model->publicatedAtLabel) . ': ' . $dateTo;
             }

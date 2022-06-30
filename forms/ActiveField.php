@@ -137,9 +137,10 @@ class ActiveField extends YiiActiveField
      */
     public function radioList($items, $options = [])
     {
-        if ($this->inline) {
+       if ($this->inline) {
             if (!isset($options['template'])) {
-                $this->template = $this->inlineRadioListTemplate;
+                $this->template = '{label} <fieldset> {beginWrapper} {input} {error} {endWrapper} {hint} </fieldset>';
+		$options['template'] = $this->template;
             } else {
                 $this->template = $options['template'];
                 unset($options['template']);
@@ -152,8 +153,8 @@ class ActiveField extends YiiActiveField
         } elseif (!isset($options['item'])) {
             $itemOptions     = isset($options['itemOptions']) ? $options['itemOptions'] : [];
             $options['item'] = function ($index, $label, $name, $checked, $value) use ($itemOptions) {
-                $options = array_merge(['value' => $value, 'id' => $name.$value, 'name' => $name], $itemOptions);
-                return '<div class="radio"><label for="'.$name.$value.'">'.Html::radio($name, $checked, $options).$label.'</label></div>';
+            $options = array_merge(['value' => $value, 'id' => $name.$value, 'name' => $name], $itemOptions);
+            return '<div class="radio"><label for="'.$name.$value.'">'.Html::radio($name, $checked, $options).$label.'</label></div>';
             };
         }
         parent::radioList($items, $options);
