@@ -82,6 +82,17 @@ class ActiveField extends YiiActiveField
      */
     public function checkboxList($items, $options = [])
     {
+        if (!empty($options['labelOptions'])) {
+            $this->labelOptions = $options['labelOptions'];
+        }
+        if(empty($this->labelOptions) || empty($this->labelOptions['for']))
+        {
+            if(empty($this->labelOptions))
+            {
+                $this->labelOptions = [];
+            }
+            $this->labelOptions = ArrayHelper::merge($this->labelOptions, ['for' => null]);
+        }
         if ($this->inline) {
             if (!isset($options['template'])) {
                 $this->template = $this->inlineCheckboxListTemplate;
@@ -166,10 +177,17 @@ class ActiveField extends YiiActiveField
 //                $options['class'] = 'sr-only';
 //                parent::label($label, $options);
             } else {
-                $this->enableLabel = true;
-                $label             = ucfirst($this->attribute);
-                $this->renderLabelParts($label, $options);
-                $options['class']  = 'sr-only';
+                if($label === false)
+                {
+                    $this->enableLabel = false;
+                    $label             = false;
+                    parent::label($label, $options);
+                }else{
+                    $this->enableLabel = true;
+                    $label             = ucfirst($this->attribute);
+                    $this->renderLabelParts($label, $options);
+                    $options['class']  = 'sr-only';
+                }
                 parent::label($label, $options);
             }
         } else {

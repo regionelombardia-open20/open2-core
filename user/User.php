@@ -15,11 +15,13 @@ use open20\amos\admin\models\UserProfile;
 use open20\amos\core\behaviors\AttributesChangeLogBehavior;
 use open20\amos\core\record\Record;
 use Yii;
+use yii\base\Exception;
 use yii\base\NotSupportedException;
 use yii\helpers\ArrayHelper;
 use yii\web\IdentityInterface;
 use open20\amos\core\models\AccessTokens;
 use open20\amos\core\module\BaseAmosModule;
+use open20\amos\admin\AmosAdmin;
 
 /**
  * Class User
@@ -59,7 +61,7 @@ class User extends Record implements IdentityInterface
     public function init()
     {
         parent::init();
-        $this->adminInstalled = Yii::$app->getModule('admin');
+        $this->adminInstalled = Yii::$app->getModule(AmosAdmin::getModuleName());
     }
 
     /**
@@ -96,7 +98,7 @@ class User extends Record implements IdentityInterface
     public function behaviors()
     {
         $behaviors = parent::behaviors();
-        $adminModule = \Yii::$app->getModule('admin');
+        $adminModule = \Yii::$app->getModule(AmosAdmin::getModuleName());
         if ($adminModule && !empty($adminModule->enableAttributeChangeLog)) {
             $behaviors['AttributesChangeLogBehavior'] = [
                 'class' => AttributesChangeLogBehavior::className(),
@@ -119,7 +121,37 @@ class User extends Record implements IdentityInterface
      */
     public static function findIdentity($id)
     {
+        //Security Cast
+        $id = (int) $id;
+
         return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);
+    }
+    
+    /**
+     * 
+     * @return string
+     */
+    public function getAccessToken() {
+        $token = AccessTokens::findOne(['user_id' => $this->id]);
+        if(is_null($token)){
+            $token = new AccessTokens();
+            $token->user_id = $this->id;
+            $token->access_token = \Yii::$app->getSecurity()->generateRandomString();
+            $token->fcm_token = null;
+            $token->device_os = 'web';
+            $token->save(false);
+        }
+        return $token->access_token;
+    }
+
+    /**
+     * 
+     * @return string
+     */
+    public function getFcmToken() {
+        $token = AccessTokens::findOne(['user_id' => $this->id]);
+
+        return $token->fcm_token;
     }
 
     /**

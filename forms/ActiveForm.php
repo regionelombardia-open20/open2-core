@@ -33,10 +33,8 @@ class ActiveForm extends YiiActiveForm
     {
         $this->options['role'] = false;
         $this->setFieldConfigDefault();
-        
-        echo FormUtility::tabErrorTriangle();
-        
         parent::init();
+        echo FormUtility::tabErrorTriangle($this->id);
     }
     
     /**

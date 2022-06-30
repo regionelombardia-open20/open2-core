@@ -122,6 +122,7 @@ class Html extends \yii\helpers\Html
                 if ($checkPermNew) {
                     $isValidPermissionNew = self::checkPermissionByUrl($url, $options);
                 }
+                ArrayHelper::remove($options, 'model');
 
 //                if ($isValidPermission) {
 //                    if (\Yii::$app->getUser()->can($safeUrl)) {

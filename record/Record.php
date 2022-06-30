@@ -89,6 +89,18 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
     protected $usePrettyUrl;
 
     /**
+     *
+     * @var bool $useFrontendView
+     */
+    protected $useFrontendView;
+
+    /**
+     *
+     * @var bool $moduleBackendobjects
+     */
+    public $moduleBackendobjects;
+
+    /**
      * @return object|\yii\db\Connection|null
      * @throws \yii\base\InvalidConfigException
      */
@@ -100,6 +112,29 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
         }
 
         return parent::getDb();
+    }
+
+    /**
+     * Return the view url of the CMS if is available
+     * @return string
+     */
+    public function getBackendobjectsUrl()
+    {
+        $link = '';
+        try {
+            if (!empty($this->moduleBackendobjects) && !empty($this->moduleBackendobjects->modelsDetailMapping)) {
+                $cls      = $this->className();
+                $module   = $this->moduleBackendobjects;
+                $link     = $module::getDetachUrl($this->id, $cls, $module->modelsDetailMapping[$cls]);
+                $parseUrl = parse_url($link);
+                if (!empty($parseUrl) && !empty($parseUrl['path']) && !empty($parseUrl['query'])) {
+                    $link = $parseUrl['path'].'/'.$this->getPrettyUrl().'?'.$parseUrl['query'];
+                }
+            }
+        } catch (\Exception $e) {
+            Yii::getLogger()->log($e->getMessage().'-'.$e->getFile().'-'.$e->getLine(), \yii\log\Logger::LEVEL_ERROR);
+        }
+        return $link;
     }
 
     /**
@@ -355,8 +390,30 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
     public function init()
     {
         parent::init();
-        $this->adminInstalled  = \Yii::$app->getModule('admin');
+        $this->adminInstalled  = \Yii::$app->getModule(\open20\amos\admin\AmosAdmin::getModuleName());
         $this->reflectionClass = new \ReflectionClass(static::className());
+        if (empty($this->moduleBackendobjects)) {
+            $this->moduleBackendobjects = Yii::$app->getModule('backendobjects');
+        }
+
+        if (empty($this->getModuleObj())) {
+            if (!empty(\Yii::$app->controller) && !empty(\Yii::$app->controller->module)) {
+                $moduleName = \Yii::$app->controller->module->id;
+                $module     = \Yii::$app->getModule($moduleName);
+                $this->setModuleObj($module);
+            }
+        }
+        if (empty($this->getUsePrettyUrl())) {
+            if (!empty($this->moduleObj) && !empty($this->moduleObj->usePrettyUrl) && ($this->moduleObj->usePrettyUrl == true)) {
+                $this->setUsePrettyUrl(true);
+            }
+        }
+        if (empty($this->getUseFrontendView())) {
+            if (!empty($this->moduleObj) && !empty($this->moduleObj->useFrontendView) && ($this->moduleObj->useFrontendView
+                == true)) {
+                $this->setUseFrontendView(true);
+            }
+        }
     }
 
     /**
@@ -740,7 +797,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
                         // Change from 'XHTML 1.0 Strict'.
                         'HTML.Doctype' => 'XHTML 1.0 Transitional',
                         // Change from 'XHTML 1.0 Strict'.
-                        'HTML.Allowed' => 'a[href|target|style],h1[style],h2[style],h3[style],h4[style],h5[style],h6[style],b,strong,i,em,ul[style],ol[style],li[style],p[style],br,span[style],img[width|height|alt|src|style],iframe[width|height|src|frameborder]',
+                        'HTML.Allowed' => 'hr,a[href|target|style],h1[style],h2[style],h3[style],h4[style],h5[style],h6[style],b,strong,i,em,ul[style],ol[style],li[style],p[style],br,span[style],img[width|height|alt|src|style],iframe[width|height|src|frameborder]',
                         // Finally add the following lines:
                         'HTML.SafeIframe' => true,
                         'URI.SafeIframeRegexp' => '%^(http://|https://|//)(www.youtube.com/embed/|player.vimeo.com/video/)%',
@@ -1128,7 +1185,11 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
      */
     public function getViewUrl()
     {
-        return $this->getBasicUrl().'view';
+        if (!empty($this->usePrettyUrl) && ($this->usePrettyUrl == true)) {
+            return $this->getBasicUrl();
+        } else {
+            return $this->getBasicUrl().'view';
+        }
     }
 
     /**
@@ -1136,7 +1197,14 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
      */
     public function getFullViewUrl()
     {
-        return $this->getBasicFullUrl($this->getViewUrl());
+        if (!empty($this->usePrettyUrl) && ($this->usePrettyUrl == true)) {
+            return Url::toRoute(["/".$this->getViewUrl()."/".$this->id."/".$this->getPrettyUrl()]);
+        } else if (!empty($this->useFrontendView) && ($this->useFrontendView == true) && method_exists($this,
+                'getBackendobjectsUrl')) {
+            return $this->getBackendobjectsUrl();
+        } else {
+            return $this->getBasicFullUrl($this->getViewUrl());
+        }
     }
 
     /**
@@ -1203,9 +1271,9 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
 
                     // salvare l'aggioamento della community
                 }
-            }
+            } 
         }
-    }
+    } 
 
     /**
      * This method duplicates this content row.
@@ -1267,6 +1335,24 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
     public function setUsePrettyUrl($usePrettyUrl)
     {
         $this->usePrettyUrl = $usePrettyUrl;
+    }
+
+    /**
+     *
+     * @return bool
+     */
+    public function getUseFrontendView()
+    {
+        return $this->useFrontendView;
+    }
+
+    /**
+     *
+     * @param bool $useFrontendView
+     */
+    public function setUseFrontendView($useFrontendView)
+    {
+        $this->useFrontendView = $useFrontendView;
     }
 
     /**

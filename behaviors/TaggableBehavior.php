@@ -97,6 +97,34 @@ class TaggableBehavior extends YiiTaggable
             return $this->_tagValues === null ? '' : implode($this->tagValuesSeparatorAttribute, $this->_tagValues);
         }
     }
+    
+    /**
+     * Returns tags records. 
+     * @return array
+     */
+    public function getTagsList()
+    {
+        $this->_tagValues = [];
+        
+        if (!$this->owner->getIsNewRecord()) 
+        {    
+            /** @var ActiveRecord $pivot */
+            $pivot = $this->pivot;
+            if ($this->focusRoot) {
+                $list = $pivot::findAll(['classname' => get_class($this->owner), 'record_id' => $this->owner->getPrimaryKey(), 'root_id' => $this->focusRoot]);
+            } else {
+                $list = $pivot::findAll(['classname' => get_class($this->owner), 'record_id' => $this->owner->getPrimaryKey()]);
+            }
+
+            foreach ($list as $record) {
+                /** @var EntitysTagsMm $record */
+                $this->_tagValues[] = $record->tag;
+            }
+        }
+
+        return $this->_tagValues;
+        
+    }
 
     /**
      * @return array

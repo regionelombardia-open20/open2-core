@@ -12,6 +12,7 @@ namespace open20\amos\core\forms;
 
 use dosamigos\tinymce\TinyMce;
 use dosamigos\tinymce\TinyMceAsset;
+use open20\amos\core\assets\TnyMentionAsset;
 use dosamigos\tinymce\TinyMceLangAsset;
 use open20\amos\core\module\Module;
 use open20\amos\core\utilities\StringUtils;
@@ -35,6 +36,7 @@ class TextEditorWidget extends TinyMce
         'images_upload_url' => self::upload_url,
         'convert_urls' => false,
         'allow_unsafe_link_target' => true,
+        'extended_valid_elements' => "a[href|title|data-mention|target=_blank]",
         'plugins' => [
             "advlist autolink lists link charmap print preview anchor",
             "searchreplace visualblocks code fullscreen code",
@@ -55,6 +57,10 @@ class TextEditorWidget extends TinyMce
      */
     public function __construct($config = array())
     {
+        if (isset(\Yii::$app->params['platformTextEditorClientOptions'])) {
+            $this->clientOptions = ArrayHelper::merge($this->clientOptions,
+                    \Yii::$app->params['platformTextEditorClientOptions']);
+        }
         $config = $this->evaluateConfiguration($config);
         parent::__construct($config);
     }
@@ -67,6 +73,7 @@ class TextEditorWidget extends TinyMce
     {
 
         parent::registerClientScript();
+        TnyMentionAsset::register($this->view);
 
         $view = $this->getView();
 
@@ -84,10 +91,15 @@ JS;
         $view->registerJs($pluginPlaceholder);
 
         $js   = [];
-        $js[] = ' jQuery.ajaxSetup({
-                         data: {"'.\Yii::$app->request->csrfParam.'": "'.\Yii::$app->request->csrfToken.'"},
-                         cache:false
-                    });';
+        $csrfParam = \Yii::$app->request->csrfParam;
+        $csrfToken = \Yii::$app->request->csrfToken;
+        $js[] = <<<JS
+            jQuery.ajaxSetup({
+                    data: {"$csrfParam": "$csrfToken"},
+                    cache:false
+            });
+JS;
+
         $view->registerJs(implode("\n", $js), View::POS_READY);
     }
 
@@ -115,6 +127,41 @@ JS;
      */
     protected function evaluateConfiguration($config = array())
     {
+
+        try {
+            if (class_exists('open20\amos\admin\AmosAdmin')) {
+
+                $adminName = \open20\amos\admin\AmosAdmin::getModuleName();
+
+                $mentionMethod = <<<JS
+            function(query, process, delimiter) {
+                // Do your ajax call
+                // When using multiple delimiters you can alter the query depending on the delimiter used
+                if (delimiter === '@') {
+                    $.getJSON('/$adminName/user-profile/find-name', {name: query}, function (data) {
+                        //call process to show the result
+                        process(data)
+                    });
+                }
+            }
+JS;
+
+                $mentionElementMethod = <<<JS
+            function(item) {
+                console.log(item.user_id); 
+                return '<a href="'+item.url+'">@' + item.name + '</a>&nbsp;';
+            }
+JS;
+
+                $this->clientOptions['mentions'] = [
+                    'source' => new \yii\web\JsExpression($mentionMethod),
+                    'insert' => new \yii\web\JsExpression($mentionElementMethod)
+                ];
+            }
+        } catch (\Exception $e) {
+
+        }
+
         if (isset($config['clientOptions'])) {
             $config['clientOptions'] = ArrayHelper::merge($this->clientOptions, $config['clientOptions']);
             if (isset($config['clientOptions']['plugins'])) {

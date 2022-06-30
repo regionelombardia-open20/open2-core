@@ -219,9 +219,10 @@ HTML;
             }
             $emptyRow .= "</tr>\n</tbody>";*/
 
-            $emptyRow = "<tbody></tbody>";
+            $emptyRow = "<tbody>\n<tr><td>";
             $emptyMessage = ((isset($this->emptyText)) && is_string($this->emptyText)) ? $this->emptyText : BaseAmosModule::t('amoscore','Non sono presenti contenuti');
             $emptyRow .= Html::tag('p',BaseAmosModule::t('amoscore',$emptyMessage),['class' => 'grid-view-empty']);
+            $emptyRow .= "</td>\n</tr>\n</tbody>";
             
             return $emptyRow;
         } else {

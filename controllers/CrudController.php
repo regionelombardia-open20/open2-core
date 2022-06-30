@@ -484,7 +484,7 @@ abstract class CrudController extends BaseController
     {
         return true;
     }
-
+ 
     /**
      *
      * @return array Array of links e.g. [['Create da me' => '/module/controller/action']]; Implement it in your controller

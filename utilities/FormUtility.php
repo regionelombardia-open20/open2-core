@@ -28,10 +28,10 @@ class FormUtility
      * Return the error triangle to put in a tab header.
      * @return string
      */
-    public static function tabErrorTriangle()
+    public static function tabErrorTriangle($formId)
     {
         return Html::tag('span', '&nbsp; ' . AmosIcons::show('alert-triangle'), [
-            'id' => 'errore-alert-common',
+            'id' => $formId . '-errore-alert-common',
             'class' => 'errore-alert hidden',
             'title' => BaseAmosModule::t('amoscore', 'La tab contiene degli errori')
         ]);

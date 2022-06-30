@@ -13793,7 +13793,8 @@ var TimeGridEventRenderer = /** @class */ (function (_super) {
                 ' style="' + skinCss + '"' :
                 '') +
             '>' +
-            '<div class="fc-content" id="cal-event-' + eventDef.id + '">' +
+            '<div class="fc-content" id="cal-event-' + eventDef.id + '" data-title="' + (eventDef.title ?                
+                    util_1.htmlEscape(eventDef.title) : 'nd') + '">' +
             (timeText ?
                 '<div class="fc-time"' +
                     ' data-start="' + util_1.htmlEscape(startTimeText) + '"' +
@@ -14457,7 +14458,8 @@ var DayGridEventRenderer = /** @class */ (function (_super) {
                 ' style="' + skinCss + '"' :
                 '') +
             '>' +
-            '<div class="fc-content" id="cal-event-' + eventDef.id + '">' +
+            '<div class="fc-content" id="cal-event-' + eventDef.id + '" data-title="' + (eventDef.title ?                
+                    util_1.htmlEscape(eventDef.title) : 'nd') + '">' +
             (this.dayGrid.isRTL ?
                 titleHtml + ' ' + timeHtml : // put a natural space in between
                 timeHtml + ' ' + titleHtml //

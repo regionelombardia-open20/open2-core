@@ -14,7 +14,7 @@ TabsActions.launchListenTab = function () {
 TabsActions.openTab = function () {
     var tabid = window.location.hash;
     if (tabid) {
-        $('a[href="' + tabid + '"]').tab('show');
+        $('body').find('a[href="' + tabid + '"]').tab('show');
     }
 };
 TabsActions.setOpenTab = function (tabid) {

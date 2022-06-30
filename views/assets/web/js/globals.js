@@ -30,8 +30,9 @@ FormActions.commonValidateForm = function (form_obj, messages) {
                     //check if the error icon is already present
                     var hasError = (tab_a.find(".errore-alert").length > 0 ? true : false);
                     if (!hasError && message.length > 0) {
+                        var elemId = "#" + form_obj.getAttribute("id") +  "-errore-alert-common";
                         //get the the prototype icon
-                        var icon_common = $("#errore-alert-common");
+                        var icon_common = $(elemId);
                         if (icon_common && icon_common.length > 0) {
                             var icon_clone = icon_common.clone();
                             icon_clone.removeClass("hidden");

@@ -20,6 +20,14 @@ use Yii;
 
 class MessageSource extends DbMessageSource
 {
+    const MAP_LANGUAGE = [
+        'it' => 'it-IT',
+        'en' => 'en-GB',
+        'fr' => 'fr-FR',
+        'es' => 'es-ES',
+        'de' => 'de-DE'
+    ];
+
     /**
      * @var boolean enable autoUpdate db-files i18n
      */
@@ -83,7 +91,7 @@ class MessageSource extends DbMessageSource
                 if ($reflectionClass->isSubclassOf(AmosModule::className())) {
                     $className = $reflectionClass->getName();
 
-                    if(method_exists($className, 'getInstance')) {
+                    if (method_exists($className, 'getInstance')) {
                         $amodModule = $className::getInstance();
                     } else {
                         $amodModule = \Yii::createObject($reflectionClass->getName(), [$key]);
@@ -106,6 +114,7 @@ class MessageSource extends DbMessageSource
     public function translate($category, $message, $language)
     {
         try {
+            $language = self::getMappedLanguage($language);
             $this->addUrlToSourceBySource($category, $message);
             $dbTranslation = $this->loadMessages($category, $language);
             if (!isset($dbTranslation[$message])) {
@@ -158,6 +167,7 @@ class MessageSource extends DbMessageSource
      */
     protected function addTranslationByPath($category, $message, $language, $pathLanguage)
     {
+        $language = self::getMappedLanguage($language);
         /**
          * Get general translation configs
          */
@@ -182,6 +192,7 @@ class MessageSource extends DbMessageSource
      */
     protected function alignDbAndTranslate($category, $message, $language, $messageSource)
     {
+        $language = self::getMappedLanguage($language);
         /**
          * Active languages
          */
@@ -289,6 +300,7 @@ class MessageSource extends DbMessageSource
      */
     protected function loadMessages($category, $language)
     {
+        $language = self::getMappedLanguage($language);
         $messages = [];
 
         try {
@@ -416,5 +428,13 @@ class MessageSource extends DbMessageSource
         } catch (\Exception $ex) {
 
         }
+    }
+
+    public static function getMappedLanguage($language)
+    {
+        if (strlen($language) == 2 && isset(self::MAP_LANGUAGE[$language])) {
+            $language = self::MAP_LANGUAGE[$language];
+        }
+        return $language;
     }
 }

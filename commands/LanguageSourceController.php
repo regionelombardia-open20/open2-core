@@ -61,11 +61,15 @@ class LanguageSourceController extends Controller
     public function actionLoadFiles()
     {
         foreach ($this->conf_path as $path) {
-            $modules = $this->loadModules(\Yii::getAlias($path));
-            foreach ($modules as $key => $module) {
-                $mod = $this->isAmosModule($key, $module);
-                if ($mod) {
-                    $this->loadFiles($mod->getAmosUniqueId(), $mod->getI18nDirPath(), $this->forceUpdate);
+            $realPath = \Yii::getAlias($path, false);
+
+            if($realPath) {
+                $modules = $this->loadModules($realPath);
+                foreach ($modules as $key => $module) {
+                    $mod = $this->isAmosModule($key, $module);
+                    if ($mod) {
+                        $this->loadFiles($mod->getAmosUniqueId(), $mod->getI18nDirPath(), $this->forceUpdate);
+                    }
                 }
             }
         }

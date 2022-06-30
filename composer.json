@@ -31,6 +31,7 @@
         "lajax/yii2-translate-manager": "1.*",
         "mdmsoft/yii2-admin": "~2.0",
         "nizsheanez/yii2-asset-converter": "^1.3.0",
+        "npm-asset/tinymce-mention": "^4.0",
         "open20/yii2-less.php": "~1.0.0",
         "philippfrenzel/yii2fullcalendar": "^3.9.0",
         "bower-asset/fullcalendar" : "^3.9.0",

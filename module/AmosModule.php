@@ -95,6 +95,12 @@ abstract class AmosModule extends BaseAmosModule implements ModuleInterface
     public $usePrettyUrl = false;
 
     /**
+     *
+     * @var bool $useFrontendView
+     */
+    public $useFrontendView = false;
+
+    /**
      * Return an instance of module
      *
      * @return AmosModule
@@ -228,7 +234,10 @@ abstract class AmosModule extends BaseAmosModule implements ModuleInterface
         $menu = "";
         if (isset(Yii::$app->params['menuModules'])) {
             foreach (Yii::$app->params['menuModules'] as $module) {
-                $menu .= Yii::$app->getModule($module)->getFrontEndMenu($dept);
+                $instanceModule = Yii::$app->getModule($module);
+                if (!empty($instanceModule)) {
+                    $menu .= $instanceModule->getFrontEndMenu($dept);
+                }
             }
         }
         return $menu;

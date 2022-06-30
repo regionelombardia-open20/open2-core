@@ -37,7 +37,7 @@ else
   <script src="/frontend/js/html5shiv.js"></script>
   <script src="/frontend/js/respond.js"></script> 
 <![endif]-->
-<script type="text/javascript">
+<script>
     var isIE9TO11 = navigator.appVersion.indexOf("Trident/");
     if (isIE9TO11 > -1) {/*! svg4everybody v1.0.0 | github.com/jonathantneal/svg4everybody */
 (function (document, uses, requestAnimationFrame, CACHE, IE9TO11) {
