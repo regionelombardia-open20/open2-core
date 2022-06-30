@@ -64,7 +64,7 @@ class MessageSource extends DbMessageSource
                 foreach ($modulesByCategory as $key => $module) {
                     $mod = $this->isAmosModule($key, $module);
                     if ($mod) {
-                        if(method_exists($mod, 'getAmosUniqueId')) {
+                        if (method_exists($mod, 'getAmosUniqueId')) {
                             self::$modules[$mod->getAmosUniqueId()] = $mod;
                         }
                     }
@@ -177,10 +177,10 @@ class MessageSource extends DbMessageSource
         /**
          * Get general translation configs
          */
-        $translationsConfig                       = [];
-        $translationsConfig['sourceLanguage']     = 'en-US';
-        $translationsConfig['basePath']           = $pathLanguage;
-        $translationsConfig['fileMap']            = [];
+        $translationsConfig = [];
+        $translationsConfig['sourceLanguage'] = 'en-US';
+        $translationsConfig['basePath'] = $pathLanguage;
+        $translationsConfig['fileMap'] = [];
         $translationsConfig['fileMap'][$category] = 'messages.php';
 
 
@@ -414,10 +414,10 @@ class MessageSource extends DbMessageSource
             if (\Yii::$app instanceof \yii\web\Application) {
                 if (!empty(\Yii::$app->params['forceUpdateUrlTranslations']) && \Yii::$app->params['forceUpdateUrlTranslations']
                     == true) {
-                    $url    = \Yii::$app->request->url;
+                    $url = \Yii::$app->request->url;
                     $arrUrl = parse_url($url);
                     if (!empty($arrUrl['path'])) {
-                        $newUrl     = \yii\helpers\Url::toRoute($arrUrl['path'], true);
+                        $newUrl = \yii\helpers\Url::toRoute($arrUrl['path'], true);
                         $connection = Yii::$app->getDb();
 
                         $params = [':category' => $category, ':message' => $message];
@@ -428,15 +428,15 @@ class MessageSource extends DbMessageSource
                         if (!empty($result)) {
 
                             if (empty($result['urls'])) {
-                                $params2  = [':newurl' => $newUrl, ':id' => $result['id']];
+                                $params2 = [':newurl' => $newUrl, ':id' => $result['id']];
                                 $command2 = $connection->createCommand("
                                         UPDATE language_source SET urls=:newurl WHERE id=:id
                                     ", $params2);
                                 $command2->execute();
                             } else {
                                 if (strpos($result['urls'], $newUrl) === false) {
-                                    $addUrl   = $result['urls'].'  '.$newUrl;
-                                    $params3  = [':newurl' => $addUrl, ':id' => $result['id']];
+                                    $addUrl = $result['urls'] . '  ' . $newUrl;
+                                    $params3 = [':newurl' => $addUrl, ':id' => $result['id']];
                                     $command3 = $connection->createCommand("
                                         UPDATE language_source SET urls=:newurl WHERE id=:id
                                     ", $params3);

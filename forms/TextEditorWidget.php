@@ -26,7 +26,7 @@ class TextEditorWidget extends TinyMce
 {
     const upload_url = '/attachments/file/upload-files';
 
-    public $language      = 'en';
+    public $language = 'en';
     private $tinyMCELabel;
 
 
@@ -74,7 +74,7 @@ class TextEditorWidget extends TinyMce
         // URL to action to search for a user
         'mentions' => [
             'url' => null
-        ]
+        ],
     ];
 
     /**
@@ -85,7 +85,7 @@ class TextEditorWidget extends TinyMce
     {
         if (isset(\Yii::$app->params['platformTextEditorClientOptions'])) {
             $this->clientOptions = ArrayHelper::merge($this->clientOptions,
-                    \Yii::$app->params['platformTextEditorClientOptions']);
+                \Yii::$app->params['platformTextEditorClientOptions']);
         }
         $config = $this->evaluateConfiguration($config);
         parent::__construct($config);
@@ -116,7 +116,7 @@ JS;
 
         $view->registerJs($pluginPlaceholder);
 
-        $js   = [];
+        $js = [];
         $csrfParam = \Yii::$app->request->csrfParam;
         $csrfToken = \Yii::$app->request->csrfToken;
         $js[] = <<<JS
@@ -136,8 +136,8 @@ JS;
     protected function getLanguage()
     {
         $languageAsset = TinyMceLangAsset::register($this->view);
-        $languagePath  = $languageAsset->basePath;
-        $langCode      = StringUtils::substring(\Yii::$app->language, 0, 2);
+        $languagePath = $languageAsset->basePath;
+        $langCode = StringUtils::substring(\Yii::$app->language, 0, 2);
 
         if (file_exists("{$languagePath}/langs/{$langCode}.js")) {
             return $langCode;
@@ -200,54 +200,54 @@ JS;
             if (isset($config['clientOptions']['mobile'])) {
                 $this->clientOptions['mobile'] = $config['clientOptions']['mobile'];
             } else {
-                $mobile_options                            = array();
-                $mobile_options['mobile']['menubar']       = true;
-                $mobile_options['mobile']['plugins']       = ['autosave', 'lists', 'autolink'];
-                $mobile_options['mobile']['theme']         = 'mobile';
+                $mobile_options = array();
+                $mobile_options['mobile']['menubar'] = true;
+                $mobile_options['mobile']['plugins'] = ['autosave', 'lists', 'autolink'];
+                $mobile_options['mobile']['theme'] = 'mobile';
                 $mobile_options['mobile']['content_style'] = 'body {background-color: white;}';
-                $mobile_options['mobile']['toolbar']       = [
+                $mobile_options['mobile']['toolbar'] = [
                     'fullscreen', 'undo redo code', 'styleselect ',
                     'bold italic strikethrough forecolor backcolor',
                     'link image media insertdatetime', 'removeformat'
                 ];
-                $this->clientOptions                       = ArrayHelper::merge($this->clientOptions, $mobile_options);
+                $this->clientOptions = ArrayHelper::merge($this->clientOptions, $mobile_options);
             }
         } else {
-            $mobile_options                            = array();
-            $mobile_options['mobile']['menubar']       = true;
-            $mobile_options['mobile']['plugins']       = ['autosave', 'lists', 'autolink'];
-            $mobile_options['mobile']['theme']         = 'mobile';
+            $mobile_options = array();
+            $mobile_options['mobile']['menubar'] = true;
+            $mobile_options['mobile']['plugins'] = ['autosave', 'lists', 'autolink'];
+            $mobile_options['mobile']['theme'] = 'mobile';
             $mobile_options['mobile']['content_style'] = 'body {background-color: white;}';
-            $mobile_options['mobile']['toolbar']       = [
+            $mobile_options['mobile']['toolbar'] = [
                 'fullscreen', 'undo redo code', 'styleselect ',
                 'bold italic strikethrough forecolor backcolor',
                 'link image media insertdatetime', 'removeformat'
             ];
 
 
-            $this->clientOptions     = ArrayHelper::merge($this->clientOptions, $mobile_options);
+            $this->clientOptions = ArrayHelper::merge($this->clientOptions, $mobile_options);
             $config['clientOptions'] = $this->clientOptions;
         }
 
         if (empty($config['clientOptions']['wordcount'])) {
-            if(is_array($config['clientOptions']['plugins'])){
-            	$config['clientOptions']['plugins'][] = "charactercount";
-            }else{
+            if (is_array($config['clientOptions']['plugins'])) {
+                $config['clientOptions']['plugins'][] = "charactercount";
+            } else {
                 $config['clientOptions']['plugins'] = [$config['clientOptions']['plugins']];
                 $config['clientOptions']['plugins'][] = "charactercount";
             }
-            $this->tinyMCELabel               = Module::t('amoscore', '#tinyMCECharsCount');
+            $this->tinyMCELabel = Module::t('amoscore', '#tinyMCECharsCount');
         } else {
-            if(is_array($config['clientOptions']['plugins'])){
+            if (is_array($config['clientOptions']['plugins'])) {
                 $config['clientOptions']['plugins'][] = "wordcount";
-            }else{
+            } else {
                 $config['clientOptions']['plugins'] = [$config['clientOptions']['plugins']];
                 $config['clientOptions']['plugins'][] = "wordcount";
             }
         }
 
         if (!isset($config['language'])) {
-            $this->language     = $this->getLanguage();
+            $this->language = $this->getLanguage();
             $config['language'] = $this->language;
         }
 
@@ -259,13 +259,25 @@ JS;
         }
 
         // MENTIONS - plugin enable
-        if( \Yii::$app->params['textEditor']['mentions']['enable'] ){
+        if (\Yii::$app->params['textEditor']['mentions']['enable']) {
             $config['clientOptions']['plugins'][] = "mention";
         }
 
-        return $config;
+        // SCATENO evento di change per texteditor
+        $tinyMCECallback = <<< JS
+    function (editor) {
+        editor.on('change', function () {
+                $('.mce-tinymce + textarea').trigger('textEditorChange');
+        });
     }
+JS;
+        if (empty($config['clientOptions']['setup'])) {
+            $config['clientOptions']['setup'] = new \yii\web\JsExpression($tinyMCECallback);
+        }
 
+
+            return $config;
+    }
 
 
 }

@@ -27,9 +27,10 @@ class BaseListView extends ListView
     ];
     public $itemsContainerTag     = 'div';
     public $itemsContainerOptions = [
-        'class' => "",
-        "role" => "listbox",
-        "data-role" => "list-view"
+        'class' => '',
+        'role' => 'listbox',
+        'data-role' => 'list-view',
+        'aria-label' => 'list',
     ];
     public $buttons;
     public $buttonClass           = 'open20\amos\core\views\common\Buttons';
@@ -137,6 +138,9 @@ class BaseListView extends ListView
         }
 
         $options = $this->itemOptions;
+        if (empty($options['role'])) {
+            $options['role'] = 'option';
+        }
         //$tag = ArrayHelper::remove($options, 'tag', 'div');
         return Html::tag('div', $content, $options);
     }

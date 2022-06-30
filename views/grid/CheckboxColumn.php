@@ -56,20 +56,29 @@ class CheckboxColumn extends YiiCheckboxColumn
 //     * @var string $containerGridId
 //     */
 //    public $containerGridId = '';
-
+    
+    /**
+     * @var string $label To add a label even on a non-multiple checkbox column.
+     */
+    public $label;
+    
     /**
      * @inheritdoc
      */
     protected function renderHeaderCellContent()
     {
         if ($this->header !== null || !$this->multiple) {
-            return parent::renderHeaderCellContent();
+            if (!is_null($this->label)) {
+                return $this->label;
+            } else {
+                return parent::renderHeaderCellContent();
+            }
         } else {
             $idGrid = (!empty($this->grid->getId()) ? $this->grid->id : $this->getHeaderCheckBoxName());
             return '<div class="checkbox"><label for="id_header-' . $idGrid . '"><span class="sr-only">' . BaseAmosModule::t('amoscore', 'Select All') . '</span>' . Html::checkbox($this->getHeaderCheckBoxName(), false, ['class' => 'select-on-check-all', 'id' => 'id_header-' . $idGrid]) . '</label></div>';
         }
     }
-
+    
     /**
      * @inheritdoc
      */
@@ -80,15 +89,16 @@ class CheckboxColumn extends YiiCheckboxColumn
         } else {
             $options = $this->checkboxOptions;
         }
-
+        
         if (!isset($options['value'])) {
             $options['value'] = is_array($key) ? Json::encode($key) : $key;
         }
-
+        
         if ($this->cssClass !== null) {
             Html::addCssClass($options, $this->cssClass);
         }
-        return '<div class="checkbox"><label for="' . ((isset($options['id'])) ? $options['id'] : 'id-mancante') . '"><span class="sr-only">' . str_replace(['[', ']'], '', Inflector::camel2words($this->name)) . '</span>' . Html::checkbox($this->name, !empty($options['checked']), $options) . '</label></div>';
+        $inputName = (!empty($options['name']) ? $options['name'] : $this->name);
+        return '<div class="checkbox"><label for="' . ((isset($options['id'])) ? $options['id'] : 'id-mancante') . '"><span class="sr-only">' . str_replace(['[', ']'], '', Inflector::camel2words($this->name)) . '</span>' . Html::checkbox($inputName, !empty($options['checked']), $options) . '</label></div>';
     }
 
 //    /**

@@ -11,6 +11,7 @@
 
 namespace open20\amos\core\views;
 
+use open20\amos\core\module\BaseAmosModule;
 use yii\base\InvalidConfigException;
 use yii\bootstrap\BootstrapPluginAsset;
 use yii\bootstrap\Dropdown;
@@ -27,7 +28,10 @@ class ChangeView extends Dropdown
     public $encodeLabels = false;
 
     public $dropdownContainerOptions = [
-        'class' => 'btn-group'
+        'class' => 'btn-group',
+        'title' =>  'Cambia visualizzazione',
+        //'data-toggle' => 'tooltip'
+        'tabindex' => 0
     ];
 
     public $dropdown;
@@ -51,6 +55,10 @@ class ChangeView extends Dropdown
      */
     public function init()
     {
+        if(!empty($this->dropdownContainerOptions['title']) && $this->dropdownContainerOptions['title'] == "Cambia visualizzazione") {
+            $this->dropdownContainerOptions['title'] = BaseAmosModule::t('amoscore', "Cambia visualizzazione");
+        }
+
         if (!isset($this->views)) {
             throw new InvalidConfigException("'views' option is required.");
         }

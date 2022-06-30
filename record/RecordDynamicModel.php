@@ -261,8 +261,21 @@ class RecordDynamicModel extends DynamicModel
      */
     public function defineLabel($name, $label)
     {
+        $label = $this->purifyString($label);
         $this->_attributeLabels[$name] = $label;
     }
+
+    /**
+     * @param $label
+     * @return mixed
+     */
+    public function purifyString($label){
+        $label = str_replace("<!DOCTYPE html>\n<html>\n<head>\n</head>\n<body>\n", '', $label );
+        $label = str_replace("\n</body>\n</html>", '', $label );
+        return $label;
+    }
+
+
 
     /**
      * 

@@ -89,10 +89,11 @@ class Buttons extends BaseObject
     protected function makeButtonView()
     {
         $this->buttons['view'] = function ($url, $model) {
-            if (!$this->can($model, 'read')) {
+            $options = $this->viewOptions;
+            $customPermission = (isset($options['customPermissionToCheck']) && is_array($options['customPermissionToCheck']) ? $options['customPermissionToCheck'] : '');
+            if (!$this->can($model, 'read', $customPermission)) {
                 return '';
             }
-            $options = $this->viewOptions;
             if (isset($options['hide']) && $options['hide']) {
                 return '';
             }
@@ -126,10 +127,11 @@ class Buttons extends BaseObject
     protected function makeButtonUpdate()
     {
         $this->buttons['update'] = function ($url, $model) {
-            if (!$this->can($model, 'update')) {
+            $options = $this->updateOptions;
+            $customPermission = (isset($options['customPermissionToCheck']) && is_string($options['customPermissionToCheck']) ? $options['customPermissionToCheck'] : '');
+            if (!$this->can($model, 'update', $customPermission)) {
                 return '';
             }
-            $options = $this->updateOptions;
             if (isset($options['hide']) && $options['hide']) {
                 return '';
             }
@@ -163,10 +165,11 @@ class Buttons extends BaseObject
     protected function makeButtonDelete()
     {
         $this->buttons['delete'] = function ($url, $model) {
-            if (!$this->can($model, 'delete')) {
+            $options = $this->deleteOptions;
+            $customPermission = (isset($options['customPermissionToCheck']) && is_string($options['customPermissionToCheck']) ? $options['customPermissionToCheck'] : '');
+            if (!$this->can($model, 'delete', $customPermission)) {
                 return '';
             }
-            $options = $this->deleteOptions;
             if (isset($options['hide']) && $options['hide']) {
                 return '';
             }
@@ -239,10 +242,14 @@ class Buttons extends BaseObject
     /**
      * @param array|object $model
      * @param string $action
+     * @param string $customPermission
      * @return bool
      */
-    protected function can($model, $action)
+    protected function can($model, $action, $customPermission = '')
     {
+        if (!empty($customPermission)) {
+            return CurrentUser::getUser()->can($customPermission, ['model' => $model]);
+        }
         $modelClassName = $this->get_real_class($model);
         $permissionName = strtoupper($modelClassName . '_' . $action);
         return (

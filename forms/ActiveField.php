@@ -11,6 +11,7 @@
 namespace open20\amos\core\forms;
 
 use open20\amos\core\helpers\Html;
+use open20\amos\core\helpers\StringHelper;
 use open20\amos\core\icons\AmosIcons;
 use open20\amos\core\record\Record;
 use yii\bootstrap\ActiveField as YiiActiveField;
@@ -49,21 +50,21 @@ class ActiveField extends YiiActiveField
         parent::init();
 
         $this->errorOptions = ArrayHelper::merge($this->errorOptions, [
-                'tag' => 'span'
+            'tag' => 'span'
         ]);
-        $this->hintOptions  = ArrayHelper::merge($this->hintOptions, [
-                'tag' => 'span'
+        $this->hintOptions = ArrayHelper::merge($this->hintOptions, [
+            'tag' => 'span'
         ]);
 
         $hint = $this->model->getAttributeHint($this->attribute);
         if (!empty($hint)) {
             $this->parts['{hint}'] = Html::tag('span', AmosIcons::show('help'),
-                    [
+                [
                     //'class' => 'text-right',
                     'data-toggle' => "tooltip",
                     'data-placement' => "top",
                     'title' => html_entity_decode($hint)
-            ]);
+                ]);
         }
         $error = $this->model->getErrors($this->attribute);
 //        if (count($error)) {
@@ -322,40 +323,43 @@ JS;
     public function setTemplateByTranslation()
     {
         try {
-            $module = \Yii::$app->getModule('translation');
-            if (empty($this->labelTranslationField) && !empty($module)) {
-                if (!empty($module->enableLabelTranslationField) && $module->enableLabelTranslationField === true && $module->byPassPermissionInlineTranslation
-                    === true) {
-                    $configuration = $module->translationBootstrap;
-                    if (!empty($configuration['configuration']['translationContents'])) {
-                        $translationContents = $configuration['configuration']['translationContents'];
-                        if (!empty($translationContents['classBehavior']) && !empty($translationContents['models'])) {
-                            foreach ($translationContents['models'] as $model) {
-                                if (!empty($model['namespace']) && !empty($model['attributes'])) {
-                                    $classSender = get_class($this->model);
-                                    if ($classSender == $model['namespace'] && !empty($model['attributes']) && in_array($this->attribute,
-                                            $model['attributes'])) {
-                                        if (!empty($module->labelTranslationField)) {
-                                            eval("\$translationLabelAltField = {$module->translationLabelAltField}");
-                                            eval("\$translationLabelField = {$module->translationLabelField}");
-                                            $templateTranslationField    = $module->templateTranslationField;
-                                            $templateTranslationAltField = $module->templateTranslationAltField;
-                                            $this->labelTranslationField = str_replace($templateTranslationAltField,
-                                                $translationLabelAltField, $module->labelTranslationField);
-                                            $this->labelTranslationField = str_replace($templateTranslationField,
-                                                $translationLabelField, $this->labelTranslationField);                                      
-                                        } else {
-                                            $this->labelTranslationField = ' (<span class="label_translation am am-translate" title="'.BaseAmosModule::t("amostranslation",
-                                                    "Testo traducibile direttamente scrivendo in questo campo, tradurrai nella lingua selezionata, la visualizzazione attuale è in").' '.strtoupper(substr(\Yii::$app->language,
-                                                        0, 2)).'"> - '.strtoupper(substr(\Yii::$app->language, 0, 2)).'</span>)';
-                                        }
-                                        if (!empty($this->labelTranslationField)) {
-                                            $posLabel = strpos($this->template, '{label}');
-                                            if ($posLabel !== false && strpos($this->template,
-                                                    $this->labelTranslationField) === false) {
-                                                $pos            = $posLabel + 7;
-                                                $this->template = substr($this->template, 0, $pos).$this->labelTranslationField.substr($this->template,
-                                                        $pos);
+            if ($this->checkCanShowTranslationInLine()) {
+                $module = \Yii::$app->getModule('translation');
+                if (empty($this->labelTranslationField) && !empty($module)) {
+                    if (!empty($module->enableLabelTranslationField) && $module->enableLabelTranslationField === true && $module->byPassPermissionInlineTranslation
+                        === true) {
+                        $configuration = $module->translationBootstrap;
+                        if (!empty($configuration['configuration']['translationContents'])) {
+                            $translationContents = $configuration['configuration']['translationContents'];
+                            if (!empty($translationContents['classBehavior']) && !empty($translationContents['models'])) {
+                                foreach ($translationContents['models'] as $model) {
+                                    if (!empty($model['namespace']) && !empty($model['attributes'])) {
+                                        $classSender = get_class($this->model);
+                                        if ($classSender == $model['namespace'] && !empty($model['attributes']) && in_array($this->attribute,
+                                                $model['attributes'])) {
+                                            if (!empty($module->labelTranslationField)) {
+                                                eval("\$translationLabelAltField = {$module->translationLabelAltField}");
+                                                eval("\$translationLabelField = {$module->translationLabelField}");
+                                                $templateTranslationField = $module->templateTranslationField;
+                                                $templateTranslationAltField = $module->templateTranslationAltField;
+                                                $this->labelTranslationField = str_replace($templateTranslationAltField,
+                                                    $translationLabelAltField, $module->labelTranslationField);
+                                                $this->labelTranslationField = str_replace($templateTranslationField,
+                                                    $translationLabelField, $this->labelTranslationField);
+                                            } else {
+                                                $this->labelTranslationField = ' (<span class="label_translation am am-translate" title="' . BaseAmosModule::t("amostranslation",
+                                                        "Testo traducibile direttamente scrivendo in questo campo, tradurrai nella lingua selezionata, la visualizzazione attuale è in") . ' ' . strtoupper(substr(\Yii::$app->language,
+                                                        0, 2)) . '"> - ' . strtoupper(substr(\Yii::$app->language, 0, 2)) . '</span>)';
+                                            }
+                                            if (!empty($this->labelTranslationField)) {
+                                                $textSource = $this->translationSource($this->model->id, $module, $model['namespace']);
+                                                $posLabel = strpos($this->template, '{label}');
+                                                if ($posLabel !== false && strpos($this->template,
+                                                        $this->labelTranslationField) === false) {
+                                                    $pos = $posLabel + 7;
+                                                    $this->template = $textSource . substr($this->template, 0, $pos) . $this->labelTranslationField . substr($this->template,
+                                                            $pos);
+                                                }
                                             }
                                         }
                                     }
@@ -368,5 +372,71 @@ JS;
         } catch (\Exception $e) {
 
         }
+    }
+
+    /**
+     * @return bool
+     */
+    public function checkCanShowTranslationInLine()
+    {
+        $okMultilanguage = true;
+
+        if ( method_exists($this->model, 'canShowTranslationInLine')) {
+            return $this->model->canShowTranslationInLine();
+        }
+
+        if (!empty(\Yii::$app->params['showTranslationInlinePersonalized'])) {
+            $class = \Yii::$app->params['showTranslationInlinePersonalized']['class'];
+            $method = \Yii::$app->params['showTranslationInlinePersonalized']['method'];
+            $okMultilanguage = $class::$method();
+            return $okMultilanguage;
+        }
+
+        return true;
+    }
+
+    public function isMultilanguageEnabled()
+    {
+        $moduleCwh = \Yii::$app->getModule('cwh');
+        $moduleEvents = \Yii::$app->getModule('events');
+        if (!empty($moduleCwh) && !empty($moduleEvents)) {
+            $scope = $moduleCwh->getCwhScope();
+            if (!empty($scope) && isset($scope['community'])) {
+                $communityId = $scope['community'];
+                $event = \open20\amos\events\models\Event::find()->andWhere(['community_id'])->one();
+                if ($event->multilanguage) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public function translationSource($id, $module, $namespace)
+    {
+        $str = '';
+        if (!$this->model->isNewRecord) {
+            $lang = \Yii::$app->language;
+            if ($lang != 'it-IT') {
+                $classNameTrans = $module->modelNs . '\\' . StringHelper::basename($namespace) . "Translation";
+                $language_source = null;
+                $language_source = \Yii::$app->request->getQueryParam(StringHelper::basename($classNameTrans))['language_source'];
+                list($language_source_res, $source) = \open20\amos\translation\models\TranslationConf::getSource($language_source, $id, $lang, $namespace);
+
+                $modelSource = $source->one();
+                if ($modelSource && !empty($modelSource[$this->attribute])) {
+                    $str = "
+                    <div class='box-language text-secondary'>
+                    <div class='text-language'>
+                        <small><strong>" . \Yii::t('app', 'Testo sorgente') . "</strong></small><br>
+                        " . $modelSource[$this->attribute] . " 
+                        </div>
+                    </div>
+        ";
+
+                }
+            }
+        }
+        return $str;
     }
 }

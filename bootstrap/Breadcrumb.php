@@ -35,6 +35,11 @@ class Breadcrumb implements BootstrapInterface
 //    public $activeBreadcrumbHelperClass = "open20\\amos\\core\\helpers\\PositionalBreadcrumbHelper";
 
     /**
+     * @var string
+     */
+    public $positionalBreadcrumbHelperClass = "open20\\amos\\core\\helpers\\PositionalBreadcrumbHelper";
+
+    /**
      * @param $app
      */
     public function bootstrap($app)
@@ -87,7 +92,7 @@ class Breadcrumb implements BootstrapInterface
         \Yii::$app->controller->trigger(self::EVENT_BEFORE_BREADCRUMB);
 
         if (!empty(\Yii::$app->params['enablePositionalBreadcrumb']) && \Yii::$app->params['enablePositionalBreadcrumb'] == true) {
-            $this->activeBreadcrumbHelperClass = "open20\\amos\\core\\helpers\\PositionalBreadcrumbHelper";
+            $this->activeBreadcrumbHelperClass = $this->positionalBreadcrumbHelperClass;
         }
         /**
          * set up breadcrumb helper

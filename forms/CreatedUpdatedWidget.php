@@ -152,6 +152,7 @@ class CreatedUpdatedWidget extends Widget
                     'data-toggle' => 'tooltip',
                     'data-html' => 'true',
                     'class' => 'amos-tooltip',
+                    'tabindex' => 0
                 ]) . $icon;
         } else {
             $sectionContent = Html::beginTag('div', $this->containerOptions);

@@ -476,4 +476,5 @@ return [
     'fra' => 'in',
     'ti ha taggato in un commento.' => "tagged you in a comment.",
     "Clicca qui per vederlo:" => "Click here to see it: ",
+    "Cambia visualizzazione" => "Change view",
 ];

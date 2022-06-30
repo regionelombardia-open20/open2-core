@@ -145,8 +145,7 @@ $bootstrapItaliaAsset = BootstrapItaliaDesignAsset::register($this);
 
                         <?php if( isset($actions_link['print']) && !empty($actions_link['print']) ) : ?>
                             <li>
-
-                                <a class="list-item" href="#" onclick="<?= $actions_link['print'] ?>" >
+                                <a class="list-item" href="<?= Yii::$app->params['platform']['frontendUrl'] . Yii::$app->request->url ?>" onclick="<?= $actions_link['print'] ?>" >
                                     <svg class="icon icon-sm icon-primary mr-1">
                                         <use xlink:href="<?=$bootstrapItaliaAsset->baseUrl?>/node_modules/bootstrap-italia/dist/svg/sprite.svg#it-print"></use>
 

@@ -2023,4 +2023,5 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
             );
         }
     }
+
 }
