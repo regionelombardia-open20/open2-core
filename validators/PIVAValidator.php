@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Aria S.p.A.
+ * Lombardia Informatica S.p.A.
  * OPEN 2.0
  *
  *
@@ -16,7 +16,6 @@ use yii\validators\Validator;
 /**
  * Description of PIVAValidator
  *
- * @author Cesare
  */
 class PIVAValidator extends Validator
 {

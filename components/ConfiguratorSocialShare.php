@@ -1,17 +1,5 @@
 <?php
-
 /**
- * Aria S.p.A.
- * OPEN 2.0
- *
- *
- * @package    Open20Package
- * @category   CategoryName
- */
-/**
- * @link https://github.com/yiimaker/yii2-social-share
- * @copyright Copyright (c) 2017-2018 Yii Maker
- * @license BSD 3-Clause License
  */
 
 namespace open20\amos\core\components;
@@ -25,7 +13,6 @@ use ymaker\social\share\configurators\Configurator;
 /**
  * Configurator for social network drivers.
  *
- * @author Vladimir Kuprienko <vldmr.kuprienko@gmail.com>
  * @since 1.0
  */
 class ConfiguratorSocialShare extends Configurator

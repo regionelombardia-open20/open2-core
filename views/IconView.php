@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Aria S.p.A.
+ * Lombardia Informatica S.p.A.
  * OPEN 2.0
  *
  *
@@ -53,7 +53,6 @@ class IconView extends BaseListView
     /**
      * @var array the HTML attributes for the container tag of the list view.
      * The "tag" element specifies the tag name of the container element and defaults to "div".
-     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $options = ['class' => 'icon-view'];
 

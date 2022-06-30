@@ -1,6 +1,6 @@
 <?php
 /**
- * Aria S.p.A.
+ * Lombardia Informatica S.p.A.
  * OPEN 2.0
  *
  *
@@ -45,7 +45,6 @@ class Generator extends \open20\amos\core\giiamos\Generator
 
     /**
      * @var array fully qualified interfaces name
-     * @see GeneratoConfig::getDefinition()['baseInterfaceNames']
      */
     public $interfacessel = [];
 
@@ -57,7 +56,6 @@ class Generator extends \open20\amos\core\giiamos\Generator
 
     /**
      * @var array key-value pairs. 
-     * @see GeneratoConfig::getDefinition()['baseClassNames']
      */
     public $baseClassNames = [];
 
@@ -68,7 +66,6 @@ class Generator extends \open20\amos\core\giiamos\Generator
 
     /**
      * @var array key-value pairs. 
-     * @see GeneratoConfig::getDefinition()['baseInterfaceNames']
      */
     public $baseInterfaceNames = [];
 
@@ -79,7 +76,6 @@ class Generator extends \open20\amos\core\giiamos\Generator
 
     /**
      * @var array key-value pairs. 
-     * @see GeneratoConfig::getDefinition()['<baseclass name>']  
      */
     public $baseclassDynamic = [];
     public $baseActiveRecord = 'yii\db\ActiveRecord';
@@ -320,7 +316,6 @@ class Generator extends \open20\amos\core\giiamos\Generator
      *
      * @return string
      * @since 2.0.5
-     * @see getDbConnection
      */
     public function getTablePrefix()
     {
@@ -587,7 +582,6 @@ class Generator extends \open20\amos\core\giiamos\Generator
             $table0Schema = $db->getTableSchema($table0);
             $table1Schema = $db->getTableSchema($table1);
 
-            // @see https://github.com/yiisoft/yii2-gii/issues/166
             if ($table0Schema === null || $table1Schema === null) {
                 continue;
             }
@@ -949,7 +943,6 @@ class Generator extends \open20\amos\core\giiamos\Generator
 
                         $strmethods .= ' /**
                                     *  @inheritdoc
-                                    *  @see '.array_pop($pathsee).'::'.$key.' 
                                     */
                                     public function '.$key.'( '.$str ? substr($str, 0, -1) : ''.') {
                                     //

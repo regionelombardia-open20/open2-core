@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Aria S.p.A.
+ * Lombardia Informatica S.p.A.
  * OPEN 2.0
  *
  *
@@ -47,7 +47,6 @@ class CloseSaveButtonWidget extends Widget
     private $model;
 
     /**
-     * @see \kartik\base\Widget::init();
      *
      * Set of the permissionSave
      */

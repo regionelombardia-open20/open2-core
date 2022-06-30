@@ -1,13 +1,4 @@
 <?php
-
-/**
- * Aria S.p.A.
- * OPEN 2.0
- *
- *
- * @package    Open20Package
- * @category   CategoryName
- */
 use open20\amos\admin\AmosAdmin;
 use open20\amos\admin\widgets\ConnectToUserWidget;
 use open20\amos\admin\widgets\SendMessageToUserWidget;

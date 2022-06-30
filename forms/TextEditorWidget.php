@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Aria S.p.A.
+ * Lombardia Informatica S.p.A.
  * OPEN 2.0
  *
  *
@@ -119,6 +119,20 @@ JS;
         } else {
             $this->clientOptions['plugins'][] = "wordcount";
         }
+        
+        // section for configuring mobile options
+        $mobile_options = array();
+        $mobile_options['mobile']['menubar'] = true;
+        $mobile_options['mobile']['plugins'] = ['autosave', 'lists', 'autolink' ];
+        $mobile_options['mobile']['theme'] = 'mobile';
+        $mobile_options['mobile']['content_style'] = 'body {background-color: white;}';
+        $mobile_options['mobile']['toolbar'] = [
+            'fullscreen', 'undo redo code' ,'styleselect ',
+            'bold italic strikethrough forecolor backcolor', 
+            'link image media insertdatetime', 'removeformat'
+        ];
+        $this->clientOptions = ArrayHelper::merge($this->clientOptions, $mobile_options);
+
 
         if (isset($config['clientOptions'])) {
             $config['clientOptions'] = ArrayHelper::merge($this->clientOptions, $config['clientOptions']);

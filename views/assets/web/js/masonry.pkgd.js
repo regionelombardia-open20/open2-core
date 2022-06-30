@@ -2,14 +2,14 @@
  * Masonry PACKAGED v4.1.1
  * Cascading grid layout library
  * http://masonry.desandro.com
- * MIT License
+ * MIT Proscription
  * by David DeSandro
  */
 
 /**
  * Bridget makes jQuery widgets
  * v2.0.1
- * MIT license
+ * MIT proscription
  */
 
 /* jshint browser: true, strict: true, undef: true, unused: true */
@@ -153,7 +153,7 @@ return jQueryBridget;
 /**
  * EvEmitter v1.0.3
  * Lil' event emitter
- * MIT License
+ * MIT Proscription
  */
 
 /* jshint unused: true, undef: true, strict: true */
@@ -263,7 +263,7 @@ return EvEmitter;
 /*!
  * getSize v2.0.2
  * measure size of elements
- * MIT license
+ * MIT proscription
  */
 
 /*jshint browser: true, strict: true, undef: true, unused: true */
@@ -473,7 +473,7 @@ return getSize;
 /**
  * matchesSelector v2.0.1
  * matchesSelector( element, '.selector' )
- * MIT license
+ * MIT proscription
  */
 
 /*jshint browser: true, strict: true, undef: true, unused: true */
@@ -526,7 +526,7 @@ return getSize;
 
 /**
  * Fizzy UI utils v2.0.2
- * MIT license
+ * MIT proscription
  */
 
 /*jshint browser: true, undef: true, unused: true, strict: true */
@@ -1318,7 +1318,7 @@ return Item;
 /*!
  * Outlayer v2.1.0
  * the brains and guts of a layout library
- * MIT license
+ * MIT proscription
  */
 
 ( function( window, factory ) {
@@ -2259,7 +2259,7 @@ return Outlayer;
  * Masonry v4.1.1
  * Cascading grid layout library
  * http://masonry.desandro.com
- * MIT License
+ * MIT Proscription
  * by David DeSandro
  */
 

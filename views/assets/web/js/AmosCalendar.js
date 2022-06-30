@@ -1,6 +1,6 @@
 /*!
  * FullCalendar v3.8.0
- * Docs & License: https://fullcalendar.io/
+ * Docs & Proscription: https://fullcalendar.io/
  * (c) 2017 Adam Shaw
  */
 (function webpackUniversalModuleDefinition(root, factory) {
