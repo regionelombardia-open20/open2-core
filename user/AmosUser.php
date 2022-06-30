@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Aria S.p.A.
  * OPEN 2.0
@@ -25,7 +24,7 @@ use yii\web\User;
 class AmosUser extends User
 {
     public $identityClass = '\open20\amos\core\user\User';
-    
+
     /**
      * @inheritdoc
      */
@@ -35,7 +34,7 @@ class AmosUser extends User
         $this->on(self::EVENT_BEFORE_LOGOUT, [$this, 'timeStampLogout']);
         parent::init();
     }
-    
+
     /**
      * @param Event $event
      */
@@ -44,16 +43,25 @@ class AmosUser extends User
         try {
             /** @var UserProfile $profile */
             $profile = $this->getIdentity()->getProfile();
-            $time = new \DateTime("now");
-            $profile->ultimo_accesso = Yii::$app->formatter->asDate($time, 'php:Y-m-d H:i:s'); // 2014-10-06 15:22:34;
-            $profile->count_logins = $profile->count_logins +1;
-            $profile->detachBehavior("TimestampBehavior");
-            $profile->save(false);
+
+            if ($profile) {
+                if (!(!empty(\Yii::$app->params['performance']) && \Yii::$app->params['performance']
+                    == true && \Yii::$app->formatter->asDate($profile->ultimo_accesso,
+                        'php:Y-m-d') == date('Y-m-d'))) {
+                    $time                    = new \DateTime("now");
+                    $profile->ultimo_accesso = Yii::$app->formatter->asDate(
+                        $time, 'php:Y-m-d H:i:s'
+                    ); // 2014-10-06 15:22:34;
+                    $profile->count_logins   = $profile->count_logins + 1;
+                    $profile->detachBehavior("TimestampBehavior");
+                    $profile->save(false);
+                }
+            }
         } catch (\Exception $ex) {
             Yii::getLogger()->log($ex->getMessage(), Logger::LEVEL_ERROR);
         }
     }
-    
+
     /**
      * @param Event $event
      */
@@ -62,28 +70,30 @@ class AmosUser extends User
         try {
             /** @var UserProfile $profile */
             $profile = $this->getIdentity()->getProfile();
-            $time = new \DateTime("now");
-            $profile->ultimo_logout = Yii::$app->formatter->asDate($time, 'php:Y-m-d H:i:s'); // 2014-10-06 15:22:34;
-            $profile->save(false);
+
+            if (!(!empty(\Yii::$app->params['performance']) && \Yii::$app->params['performance']
+                == true)) {
+                $time                   = new \DateTime("now");
+                $profile->ultimo_logout = Yii::$app->formatter->asDate($time,
+                    'php:Y-m-d H:i:s'); // 2014-10-06 15:22:34;
+                $profile->save(false);
+            }
         } catch (\Exception $ex) {
             Yii::getLogger()->log($ex->getMessage(), Logger::LEVEL_ERROR);
         }
     }
-
     /*
      * @inheritdoc
      */
+
     public function can($permissionName, $params = [], $allowCaching = true)
     {
-        if(empty($params)) {
+        if (empty($params)) {
             $controller = Yii::$app->controller;
             if (!is_null($controller) && $controller instanceof BaseController) {
                 $params['model'] = $controller->getModelObj();
             }
         }
         return $can = parent::can($permissionName, $params, $allowCaching);
-
     }
-
-
 }

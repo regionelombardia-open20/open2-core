@@ -10,15 +10,19 @@
 
 namespace open20\amos\core\module;
 
-use ReflectionClass;
-use yii\helpers\ArrayHelper;
 use open20\amos\core\widget\WidgetAbstract;
+use ReflectionClass;
+use ReflectionException;
+use Yii;
+use yii\base\InvalidConfigException;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 
 /**
  * Class AmosModule
  * @package open20\amos\core\module
  */
-abstract class AmosModule extends \open20\amos\core\module\BaseAmosModule implements ModuleInterface
+abstract class AmosModule extends BaseAmosModule implements ModuleInterface
 {
     /**
      * Array that will store the models used in the package
@@ -60,7 +64,6 @@ abstract class AmosModule extends \open20\amos\core\module\BaseAmosModule implem
      */
     public $db_fields_translation;
 
-
     /**
      * @var bool $hideWidgetGraphicsActions
      */
@@ -79,7 +82,7 @@ abstract class AmosModule extends \open20\amos\core\module\BaseAmosModule implem
     public static function instance()
     {
         /*         * @var AmosModule $module */
-        $module = \Yii::$app->getModule(static::getModuleName());
+        $module = Yii::$app->getModule(static::getModuleName());
         return $module;
     }
 
@@ -90,13 +93,13 @@ abstract class AmosModule extends \open20\amos\core\module\BaseAmosModule implem
     {
         parent::init();
         // layout path configuration
-        $layoutModule = \Yii::$app->getModule('layout');
+        $layoutModule = Yii::$app->getModule('layout');
 
         if ($layoutModule) {
             $this->setLayoutPath($layoutModule->layoutPath);
         }
 
-        $layoutModule = \Yii::$app->getModule('layout');
+        $layoutModule = Yii::$app->getModule('layout');
 
         if ($layoutModule) {
             $this->setLayoutPath($layoutModule->layoutPath);
@@ -104,7 +107,8 @@ abstract class AmosModule extends \open20\amos\core\module\BaseAmosModule implem
 
         $this->defineModelClasses();
 
-        if (!empty(\Yii::$app->params['dashboardEngine']) && \Yii::$app->params['dashboardEngine'] == WidgetAbstract::ENGINE_ROWS) {
+        if (!empty(Yii::$app->params['dashboardEngine']) && Yii::$app->params['dashboardEngine']
+            == WidgetAbstract::ENGINE_ROWS) {
             $this->hideWidgetGraphicsActions = true;
         }
     }
@@ -140,11 +144,11 @@ abstract class AmosModule extends \open20\amos\core\module\BaseAmosModule implem
     /**
      * @param string $name
      * @return object
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public function createModel($name, array $params = [])
     {
-        return \Yii::createObject($this->model($name), $params);
+        return Yii::createObject($this->model($name), $params);
     }
 
     /**
@@ -166,7 +170,7 @@ abstract class AmosModule extends \open20\amos\core\module\BaseAmosModule implem
 
     /**
      * @return string
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function getI18nDirPath()
     {
@@ -192,5 +196,69 @@ abstract class AmosModule extends \open20\amos\core\module\BaseAmosModule implem
     public static function beginCreateNewSessionKeyDateTime()
     {
         return 'beginCreateNewUrlDateTime_'.static::getModuleName();
+    }
+
+    
+    
+    public static function getModulesFrontEndMenus()
+    {
+        $menu = "";
+        if (isset(Yii::$app->params['menuModules'])) {
+            foreach (Yii::$app->params['menuModules'] as $module) {
+                $menu .= Yii::$app->getModule($module)->getFrontEndMenu();
+            }
+        }
+        return $menu;
+    }
+
+    /**
+     *
+     * @return type
+     */
+    public function getFrontEndMenu()
+    {
+        $menu = "";
+        
+        return $menu;
+    }
+
+    /**
+     *
+     * @param string $url
+     * @return string
+     */
+    public static function toUrlModule($url)
+    {
+        $languageString = '/' . \Yii::$app->language;
+        if(strncmp($url, $languageString, strlen($languageString)) === 0){
+            $languageString = "";
+        }
+        return  $languageString .  '/' . static::getModuleName().$url;
+    }
+
+    /**
+     *
+     * @param type $title
+     * @param type $link
+     * @return string
+     */
+    protected function addFrontEndMenu($title, $link)
+    {
+        $itemMenu = Html::tag(
+                'li',
+                Html::a(
+                    $title, null,
+                    [
+                        'class' => 'nav-link'.' '.'active',
+                        'target' => '_self',
+                        'title' => $title,
+                        'href' => $link,
+                    ]
+                ),
+                [
+                    'class' => 'nav-item'.' '.'active',
+                ]
+        );
+        return $itemMenu;
     }
 }

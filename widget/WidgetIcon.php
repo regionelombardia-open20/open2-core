@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Aria S.p.A.
  * OPEN 2.0
@@ -17,33 +16,33 @@ use yii\db\ActiveQuery;
 
 class WidgetIcon extends WidgetAbstract
 {
-    
     public
         $url,
         $post,
-        $icon = 'linmodulo',
-        $iconFramework = 'dash',
+        $icon                  = 'linmodulo',
+        $iconFramework         = 'dash',
         $namespace,
-        $classLi = [],
-        $classA = [],
-        $classSpan = ['color-primary'],
-        $targetUrl = '',
-        $bulletCount = '',
-        $dataPjaxZero = 'data-pjax="0"', 
-        $attributes = '',          // @var string $attributes - additional attributes for html tag <a>
+        $classLi               = [],
+        $classA                = [],
+        $classSpan             = ['color-primary'],
+        $targetUrl             = '',
+        $bulletCount           = '',
+        $dataPjaxZero          = 'data-pjax="0"',
+        $attributes            = '', // @var string $attributes - additional attributes for html tag <a>
         $disableBulletCounters = false,
-        $saveMicrotime = true
+        $saveMicrotime         = true,
+        $active                = false
+
     ;
-    
     const EVENT_AFTER_COUNT = 'EVENT_AFTER_COUNT';
-    
+
     /**
      * @inheritdoc
      */
     public function init()
     {
         parent::init();
-        
+
         if (isset(\Yii::$app->params['disableBulletCounters']) && (\Yii::$app->params['disableBulletCounters'] === true)) {
             $this->disableBulletCounters = true;
         }
@@ -55,9 +54,7 @@ class WidgetIcon extends WidgetAbstract
      */
     public function run()
     {
-        return ($this->isVisible())
-            ? $this->getHtml()
-            : '';
+        return ($this->isVisible()) ? $this->getHtml() : '';
     }
 
     /**
@@ -87,7 +84,7 @@ class WidgetIcon extends WidgetAbstract
     public function getHtml()
     {
         $controller = \Yii::$app->controller;
-        $moduleL = \Yii::$app->getModule('layout');
+        $moduleL    = \Yii::$app->getModule('layout');
 
         if (!empty($moduleL)) {
             $assetBundle = \open20\amos\layout\assets\BaseAsset::register($controller->getView());
@@ -101,11 +98,10 @@ class WidgetIcon extends WidgetAbstract
         }
 
         return $this->render(
-            $view, 
-            [
+                $view, [
                 'asset' => $assetBundle,
                 'widget' => $this
-            ]
+                ]
         );
     }
 
@@ -127,7 +123,8 @@ class WidgetIcon extends WidgetAbstract
             'namespace' => $this->getNamespace(),
             'iconFramework' => $this->getIconFramework(),
             'classSpan' => $this->getClassSpan(),
-            'attributes' => $this->getAttributes()
+            'attributes' => $this->getAttributes(),
+            'active' => $this->getActive(),
         ];
     }
 
@@ -150,25 +147,26 @@ class WidgetIcon extends WidgetAbstract
     /**
      * Reset bc only if the current page contain it
      */
-    public function resetBulletCount() {        
-        return  in_array(
-            '/' . \Yii::$app->controller->action->getUniqueId(), 
-            $this->getUrl()
+    public function resetBulletCount()
+    {
+        return in_array(
+            '/'.\Yii::$app->controller->action->getUniqueId(), $this->getUrl()
         );
     }
-    
+
     /**
      * Return the name of the relative WidgetIconFOO to used by cron script
      * 
      * @return type
      */
-    public static function getWidgetIconName() {
+    public static function getWidgetIconName()
+    {
         $parts = explode('\\', self::classname());
-        
+
         if (is_array($parts)) {
             return array_pop($parts);
         }
-        
+
         return null;
     }
 
@@ -187,20 +185,18 @@ class WidgetIcon extends WidgetAbstract
         if (($this->disableBulletCounters == true) || ($userId == null) || ($className == null)) {
             return 0;
         }
-        
-        $count = 0;
+
+        $count    = 0;
         $notifier = Yii::$app->getModule('notify');
         if ($notifier) {
             $count = $notifier->countNotRead(
-                $userId,
-                $className,
-                $externalQuery
+                $userId, $className, $externalQuery
             );
         }
 
         return $count;
     }
-    
+
     /**
      * @return mixed
      */
@@ -378,11 +374,26 @@ class WidgetIcon extends WidgetAbstract
     }
 
     /**
+     * @return boolean
+     */
+    public function getActive()
+    {
+        return $this->active;
+    }
+
+    /**
+     * @param boolean $active
+     */
+    public function setActive($active)
+    {
+        $this->active = $active;
+    }
+
+    /**
      *
      */
     public function enableDashboardModal()
     {
         $this->classA[] = 'open-modal-dashboard';
     }
-
 }

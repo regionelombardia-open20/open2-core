@@ -1,7 +1,4 @@
 <?php
-
-namespace open20\amos\core\applications;
-
 /**
  * Aria S.p.A.
  * OPEN 2.0
@@ -10,29 +7,16 @@ namespace open20\amos\core\applications;
  * @package    [NAMESPACE_HERE]
  * @category   CategoryName
  */
-use luya\web\Application as WebApplication;
-use Yii;
 
-class CmsApplication extends WebApplication
+namespace open20\amos\core\applications;
+
+use luya\Boot;
+
+/**
+ * Description of CmsApplication
+ *
+ */
+class CmsApplication extends Boot
 {
 
-    public function getHomeUrl()
-    {
-        return self::toUrl(parent::getHomeUrl());
-    }
-
-    /**
-     *
-     * @param string $url
-     * @return string
-     */
-    public static function toUrl($url)
-    {
-        $languageString = '/'.Yii::$app->composition['langShortCode'];
-        if (strncmp($url, $languageString, strlen($languageString)) === 0) {
-            $languageString = "";
-        }
-        $url = (strcmp($url, '/') === 0)  ? "": $url;
-        return $languageString.'/'.$url;
-    }
 }

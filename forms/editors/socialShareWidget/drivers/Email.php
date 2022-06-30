@@ -5,7 +5,7 @@
 namespace open20\amos\core\forms\editors\socialShareWidget\drivers;
 
 use open20\amos\core\module\BaseAmosModule;
-use ymaker\social\share\base\Driver;
+use ymaker\social\share\base\AbstractDriver;
 use yii\helpers\Html;
 
 /**
@@ -14,25 +14,23 @@ use yii\helpers\Html;
  *
  * @since 1.0
  */
-class Email extends Driver
+class Email extends AbstractDriver
 {
+
     /**
      * {@inheritdoc}
      */
     protected function processShareData()
     {
-        $this->url = rawurlencode (BaseAmosModule::t('amoscore', '#share_body_message') .static::encodeData($this->url));
-        $this->title = \Yii::$app->name.': '.rawurlencode($this->title);
+        $this->url   = rawurlencode(BaseAmosModule::t('amoscore', '#share_body_message').static::encodeData($this->url));
+        $this->title = \Yii::$app->name.': '.rawurlencode($this->title);       
     }
 
     /**
      * @inheritdoc
      */
-    public function getLink()
+    protected function buildLink()
     {
-        $this->_link = 'mailto:?subject={title}&body={url}';
-
-        return parent::getLink();
+        return 'mailto:?subject={title}&body={url}';
     }
-
 }

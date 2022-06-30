@@ -24,4 +24,5 @@ class ConsoleApplication extends Application
     {
         return $this->get('user');
     }
+
 }

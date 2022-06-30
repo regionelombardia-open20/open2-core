@@ -341,7 +341,10 @@ class M2MWidget extends Widget
                     'urlCreateNew' => $this->createNewTargetUrl,
                     'checkPermWithNewMethod' => $this->checkPermWithNewMethod,
                     'createButtonId' => self::creaButtonId(),
-                    'createNewBtnLabel' => $this->createNewBtnLabel
+                    'createNewBtnLabel' => $this->createNewBtnLabel,
+                    'otherOptions' => [
+                        'title' => $this->createNewBtnLabel
+                    ]
                 ];
                 if (isset($this->model)) {
                     $createOptions['model'] = $this->model;
