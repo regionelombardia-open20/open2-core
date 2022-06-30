@@ -134,7 +134,6 @@ class AmosMigrationPermissions extends Migration
     }
     
     /**
-     * @see \yii\db\Migration::init() for more info.
      */
     public function init()
     {

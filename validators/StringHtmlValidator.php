@@ -19,7 +19,6 @@ use Yii;
  *
  * Note, this validator should only be used with string-typed attributes.
  *
- * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
 class StringHtmlValidator extends Validator
@@ -33,19 +32,14 @@ class StringHtmlValidator extends Validator
      *   This will overwrite [[min]].
      * - an array of two elements: the minimum and maximum lengths that the value should be of.
      *   For example, `[8, 128]`. This will overwrite both [[min]] and [[max]].
-     * @see tooShort for the customized message for a too short string.
-     * @see tooLong for the customized message for a too long string.
-     * @see notEqual for the customized message for a string that does not match desired length.
      */
     public $length;
     /**
      * @var int maximum length. If not set, it means no maximum length limit.
-     * @see tooLong for the customized message for a too long string.
      */
     public $max;
     /**
      * @var int minimum length. If not set, it means no minimum length limit.
-     * @see tooShort for the customized message for a too short string.
      */
     public $min;
     /**

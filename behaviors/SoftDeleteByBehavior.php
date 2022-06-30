@@ -26,6 +26,11 @@ class SoftDeleteByBehavior extends Behavior
     public $deletedByAttribute = 'deleted_by';
 
     /**
+     * @var mixed $deletedByAttributeCustomValue This deleted by attribute value is used only when the user is guest.
+     */
+    public $deletedByAttributeCustomValue = null;
+
+    /**
      * @inheritdoc
      */
     public $timestamp;
@@ -71,7 +76,12 @@ class SoftDeleteByBehavior extends Behavior
         $userId = 1;
         if (Yii::$app instanceof \yii\web\Application) {
             $user = Yii::$app->get('user', false);
-            $userId = $user && !$user->isGuest ? $user->id : null;
+            $userId = null;
+            if ($user && !$user->isGuest) {
+                $userId = $user->id;
+            } elseif ($user->isGuest && $this->deletedByAttributeCustomValue) {
+                $userId = $this->deletedByAttributeCustomValue;
+            }
         } elseif (Yii::$app instanceof \yii\console\Application) {
             $userId = 1;
         }

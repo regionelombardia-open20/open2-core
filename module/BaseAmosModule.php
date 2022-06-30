@@ -98,7 +98,6 @@ abstract class BaseAmosModule extends BaseModule implements ModuleInterface
      * Metodo da usare per tutte le traduzioni che non fanno parte di attributi dei tag html (es. Non si può usare
      * nell'attributo "title" del tag "a")
      *
-     * @see Lx::t() for more info.
      *
      * @param string $category the message category.
      * @param string $message the message to be translated.
@@ -115,7 +114,6 @@ abstract class BaseAmosModule extends BaseModule implements ModuleInterface
     /**
      * Metodo vecchio stile com'era nei plugin prima di introdurre le traduzioni a db.
      *
-     * @see Yii::t() for more info.
      *
      * @param string $category the message category.
      * @param string $message the message to be translated.

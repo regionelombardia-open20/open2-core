@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Aria S.p.A.
  * OPEN 2.0
@@ -10,33 +11,45 @@
 
 namespace open20\amos\core\user;
 
+use open20\amos\admin\models\UserProfile;
+use open20\amos\core\behaviors\AttributesChangeLogBehavior;
 use open20\amos\core\record\Record;
 use Yii;
 use yii\base\NotSupportedException;
+use yii\helpers\ArrayHelper;
 use yii\web\IdentityInterface;
 
 /**
+ * Class User
+ *
  * User model
  *
  * @property integer $id
  * @property string $username
+ * @property string $auth_key
  * @property string $password_hash
  * @property string $password_reset_token
  * @property string $email
- * @property string $auth_key
  * @property integer $status
- * @property integer $created_at
- * @property integer $updated_at
+ * @property string $created_at
+ * @property string $updated_at
+ * @property string $deleted_at
+ * @property integer $created_by
+ * @property integer $updated_by
+ * @property integer $deleted_by
+ * @property string $access_token
  * @property string $password write-only password
  * @property \open20\amos\admin\models\UserProfile $userProfile
+ *
+ * @package open20\amos\core\user
  */
 class User extends Record implements IdentityInterface
 {
     const STATUS_DELETED = 0;
-    const STATUS_ACTIVE  = 10;
+    const STATUS_ACTIVE = 10;
 
     protected $adminInstalled = NULL;
-    protected $userProfile    = null;
+    protected $userProfile = null;
 
     /**
      * @inheritdoc
@@ -73,6 +86,33 @@ class User extends Record implements IdentityInterface
             ['password_reset_token', 'default', 'value' => null],
             ['username', 'default', 'value' => null],
         ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+
+        $adminModule = \Yii::$app->getModule('admin');
+        if ($adminModule && !empty($adminModule->enableAttributeChangeLog)) {
+            $attrChangeLog = ['AttributesChangeLogBehavior' => [
+                'class' => AttributesChangeLogBehavior::className(),
+                'attributesToLog' => ['email'],
+                'configUserActivityLog' => [
+                    'enabled' => true,
+                    'userAttribute' => 'id',
+                    'type' => UserProfile::LOG_TYPE_UPDATE_PROFILE,
+                    'name' => \Yii::t('app','Aggiornamento profilo'),
+                    'description' => \Yii::t('app','Aggiornamento profilo')
+                ]
+            ]];
+
+        }
+        $behaviors = ArrayHelper::merge(parent::behaviors(),
+            $attrChangeLog
+        );
+        return $behaviors;
     }
 
     /**
@@ -121,7 +161,7 @@ class User extends Record implements IdentityInterface
      */
     public static function findByEmail($email)
     {
-        $condition       = ['email' => $email, 'status' => self::STATUS_ACTIVE];
+        $condition = ['email' => $email, 'status' => self::STATUS_ACTIVE];
         $allUsersByEmail = static::findAll($condition);
         if (count($allUsersByEmail) > 1) {
             return null;
@@ -137,7 +177,7 @@ class User extends Record implements IdentityInterface
      */
     public static function findByEmailInactive($email)
     {
-        $condition       = ['email' => $email, 'status' => self::STATUS_DELETED];
+        $condition = ['email' => $email, 'status' => self::STATUS_DELETED];
         $allUsersByEmail = static::findAll($condition);
         if (count($allUsersByEmail) > 1) {
             return null;
@@ -188,8 +228,8 @@ class User extends Record implements IdentityInterface
         }
 
         return static::findOne([
-                'password_reset_token' => $token,
-                'status' => self::STATUS_ACTIVE,
+            'password_reset_token' => $token,
+            'status' => self::STATUS_ACTIVE,
         ]);
     }
 
@@ -205,8 +245,8 @@ class User extends Record implements IdentityInterface
             return false;
         }
 
-        $timestamp = (int) substr($token, strrpos($token, '_') + 1);
-        $expire    = Yii::$app->params['user.passwordResetTokenExpire'];
+        $timestamp = (int)substr($token, strrpos($token, '_') + 1);
+        $expire = Yii::$app->params['user.passwordResetTokenExpire'];
         return $timestamp + $expire >= time();
     }
 
@@ -268,7 +308,7 @@ class User extends Record implements IdentityInterface
      */
     public function generatePasswordResetToken()
     {
-        $this->password_reset_token = Yii::$app->security->generateRandomString().'_'.time();
+        $this->password_reset_token = Yii::$app->security->generateRandomString() . '_' . time();
     }
 
     /**

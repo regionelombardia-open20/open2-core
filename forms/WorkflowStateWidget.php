@@ -41,7 +41,6 @@ class WorkflowStateWidget extends Widget {
     }
 
     /**
-     * @see \kartik\base\Widget::init();
      *
      * Set of the permissionSave
      */

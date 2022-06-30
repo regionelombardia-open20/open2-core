@@ -11,8 +11,12 @@
 
 namespace open20\amos\core\behaviors;
 
+use open20\amos\admin\models\UserProfile;
 use open20\amos\core\models\AttributesChangeLog;
+use open20\amos\core\models\ModelsClassname;
+use open20\amos\core\models\UserActivityLog;
 use open20\amos\core\record\Record;
+use open20\amos\core\user\User;
 use yii\base\Behavior;
 use yii\base\Event;
 use yii\db\ActiveQuery;
@@ -24,10 +28,26 @@ use yii\db\ActiveRecord;
  */
 class AttributesChangeLogBehavior extends Behavior
 {
+    CONST LOG_UPDATE_MODEL = 'log_update_model';
+
     /**
      * @var array $attributesToLog
      */
     public $attributesToLog = [];
+
+    /**
+     * @var array
+     *
+     * 'configUserActivityLog' => [
+     *     'enabled' => true,
+     *     'userAttribute' => 'user_id',
+     *     'type' => 'update_profile',
+     *     'name' => 'Aggiornamento profilo',
+     *     'description' => 'Aggiornamento profilo'
+     * ]
+     **/
+    public $configUserActivityLog = [
+    ];
 
     /**
      * @inheritdoc
@@ -51,6 +71,8 @@ class AttributesChangeLogBehavior extends Behavior
         /** @var Record $owner */
         $owner = $event->sender->owner;
         if (!empty($owner)) {
+
+            $userActivityLog = $this->saveUserActivityLog($event, $owner);
             $oldAttributes = $owner->getOldAttributes();
             foreach ($this->attributesToLog as $attributeName) {
                 $oldValue = (($event->name == ActiveRecord::EVENT_AFTER_INSERT) ? null : $oldAttributes[$attributeName]);
@@ -62,6 +84,9 @@ class AttributesChangeLogBehavior extends Behavior
                     $fieldsLog->model_attribute = $attributeName;
                     $fieldsLog->old_value = $oldValue;
                     $fieldsLog->new_value = $newValue;
+                    if ($userActivityLog) {
+                        $fieldsLog->user_activity_log_id = $userActivityLog->id;
+                    }
                     $fieldsLog->save(false);
                 }
             }
@@ -200,4 +225,63 @@ class AttributesChangeLogBehavior extends Behavior
         $logList = $this->getAttributeFirstUpdate($attribute);
         return ((is_array($logList) && count($logList) > 0) ? $logList : []);
     }
+
+
+    /**
+     * @return UserActivityLog|null
+     */
+    public function saveUserActivityLog($event, $owner)
+    {
+        $log = null;
+        if (!empty($this->configUserActivityLog['enabled'])) {
+            if ($this->isChanged($event, $owner)) {
+                $class = get_class($owner);
+                $modelsClassname = ModelsClassname::find()->andWhere(['classname' => $class])->one();
+                if ($modelsClassname) {
+                    $name = \Yii::t('app', "Aggiornamento") . ' ' . $modelsClassname->label;
+                    $type = self::LOG_UPDATE_MODEL;
+                    $user_id = null;
+
+                    /** PERSONALIZATION */
+                    if (!empty($this->configUserActivityLog['userAttribute'])) {
+                        $userAttr = $this->configUserActivityLog['userAttribute'];
+                        $user_id = $owner->$userAttr;
+                    }
+
+                    if (!empty($this->configUserActivityLog['name'])) {
+                        $name = $this->configUserActivityLog['name'];
+                    }
+                    if (!empty($this->configUserActivityLog['description'])) {
+                        $description = $this->configUserActivityLog['description'];
+                    }
+                    if (!empty($this->configUserActivityLog['type'])) {
+                        $type = $this->configUserActivityLog['type'];
+                    }
+
+                    $log = UserActivityLog::registerLog($name, $owner, $type, $description, $user_id);
+                }
+            }
+        }
+        return $log;
+    }
+
+    /**
+     * @param $event
+     * @param $owner
+     * @return bool
+     */
+    public function isChanged($event, $owner)
+    {
+        $oldAttributes = $this->owner->getOldAttributes();
+        foreach ($this->attributesToLog as $attributeName) {
+            $oldValue = (($event->name == ActiveRecord::EVENT_AFTER_INSERT) ? null : $oldAttributes[$attributeName]);
+            $newValue = $owner->{$attributeName};
+            if ($oldValue != $newValue) {
+                return true;
+            }
+
+        }
+        return false;
+    }
+
 }

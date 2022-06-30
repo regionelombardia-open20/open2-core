@@ -161,7 +161,6 @@ class WorkflowTransitionWidget extends Widget
     private $seeStatusButtonId = false;
 
     /**
-     * @see \kartik\base\Widget::init();
      *
      * Set of the permissionSave
      */

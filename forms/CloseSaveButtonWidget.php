@@ -47,7 +47,6 @@ class CloseSaveButtonWidget extends Widget
     private $model;
 
     /**
-     * @see \kartik\base\Widget::init();
      *
      * Set of the permissionSave
      */

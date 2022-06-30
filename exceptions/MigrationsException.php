@@ -7,7 +7,6 @@
  *
  * @package open20\amos\core\exceptions
  * @category CategoryName
- * @author Lombardia Informatica S.p.A.
  */
 
 namespace open20\amos\core\exceptions;

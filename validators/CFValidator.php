@@ -17,7 +17,6 @@ use yii\validators\Validator;
 /**
  * Description of CFValidator
  *
- * @author Cesare
  */
 class CFValidator extends Validator
 {

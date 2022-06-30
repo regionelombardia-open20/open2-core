@@ -16,7 +16,6 @@ use yii\validators\Validator;
 /**
  * Description of PIVAValidator
  *
- * @author Cesare
  */
 class PIVAValidator extends Validator
 {

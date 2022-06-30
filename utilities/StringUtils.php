@@ -1155,7 +1155,6 @@ final class StringUtils
      *
      * @return string|null The capitalized `string` or `null` if `null` `string`
      *    input.
-     * @see StringUtils::uncapitalize, WordUtils::capitalize
      */
     public static function capitalize($str)
     {
@@ -1177,7 +1176,6 @@ final class StringUtils
      *
      * @return string|null The uncapitalized `string` or `null` if `null`
      *    `string` input.
-     * @see StringUtils::capitalize, WordUtils::uncapitalize
      */
     public static function uncapitalize($str)
     {
