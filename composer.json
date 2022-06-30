@@ -12,7 +12,7 @@
         "2amigos/yii2-google-maps-library": "^1.0.2",
         "2amigos/yii2-tinymce-widget" : "~1.1",
         "open20/amos-audit": ">=1.0",
-        "open20/amos-utility": "^1.6.0",
+        "open20/amos-utility": "^1.6.0",        
         "bower-asset/bootstrap-tour": "*",
         "bower-asset/jquery-ui-touch-punch-improved": "*",
         "brussens/yii2-maintenance-mode": "*",
@@ -42,7 +42,7 @@
         "yiisoft/yii2": "<=2.0.32",
         "yiisoft/yii2-bootstrap": "*",
         "yiisoft/yii2-swiftmailer": "*",
-        "yiimaker/yii2-social-share": "^2.3.2",
+        "yiimaker/yii2-social-share": "*",
         "yii2tech/spreadsheet": "^1.0.5"
     },
     "autoload": {

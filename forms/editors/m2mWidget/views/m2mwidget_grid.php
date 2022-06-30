@@ -8,6 +8,7 @@
  * @package    open20\amos\core\editors\m2mwidget\views
  * @category   CategoryName
  */
+
 use open20\amos\core\forms\editors\assets\EditorsAsset;
 use open20\amos\core\helpers\Html;
 use open20\amos\core\icons\AmosIcons;
@@ -23,6 +24,7 @@ use yii\bootstrap\Modal;
  * @var bool $viewSearch
  * @var bool $useCheckbox
  */
+
 EditorsAsset::register($this);
 
 $list = [
@@ -40,33 +42,22 @@ $grid = [
     'url' => '?currentView=grid'
 ];
 
-$icon = [
-    'name' => 'icon',
-    'label' => BaseAmosModule::t('amoscore', '{iconaElenco}' . Html::tag('p', BaseAmosModule::t('amoscore', 'Icone')), [
-        'iconaElenco' => AmosIcons::show('grid')
-    ]),
-    'url' => '?currentView=icon'
-];
-
 $GridId = isset($firstGridId) ? $firstGridId . '-association' : 'grid-view-sedi';
 //$gridViewContainerId = isset($gridViewContainerId) ? $gridViewContainerId : M2MWidget::defaultGridViewContainerId();
-$gridViewContainerId = isset($gridViewContainerId) ? $gridViewContainerId : 'm2mwidget-grid-view-container';
+$gridViewContainerId =  isset($gridViewContainerId) ? $gridViewContainerId : 'm2mwidget-grid-view-container';
 if (isset($isModal) && $isModal) {
     $modalId = isset($firstGridId) ? $firstGridId . '-modal' : $GridId . '-modal';
 }
 $pjaxContainerId = $GridId . '-pjax';
 $currentView = $grid;
-$listViewArray = [];
 if (!is_null($listView)) {
     $currentView = $list;
     $listViewArray = is_array($listView) ? $listView : ['itemView' => $listView];
+} else {
+    $listViewArray = [];
 }
-if (!is_null($iconView)) {
-    $currentView = $icon;
-    $listViewArray = is_array($iconView) ? $iconView : ['itemView' => $iconView];
-}
-
 \yii\widgets\PjaxAsset::register($this);
+
 ?>
 <?php
 if (isset($modalId)) {
@@ -83,8 +74,7 @@ $this->registerJs($js);
 ?>
 
 <?php if (isset($viewSearch) && ($viewSearch === true)): ?>
-    <?=
-    $this->render('_search', [
+    <?= $this->render('_search', [
         'model' => $searchModel,
         'widget' => $widget,
         'pjaxContainerId' => $pjaxContainerId,
@@ -92,20 +82,19 @@ $this->registerJs($js);
         'gridId' => $GridId,
         'isModal' => isset($isModal) ? $isModal : false,
         'useCheckbox' => $useCheckbox
-    ]);
-    ?>
+    ]); ?>
 <?php endif; ?>
 
 <div id="<?= $gridViewContainerId ?>">
     <?php
-    // check if parameter disable pagination is set true
-    if (Yii::$app->getRequest()->get('disablePagination') == true) {
-        $this->params['modelTargetData']->pagination = false;
-    }
+        // check if parameter disable pagination is set true
+        if( Yii::$app->getRequest()->get('disablePagination') == true){
+            $this->params['modelTargetData']->pagination = false;
+        }
     ?>
 
-        <?=
-        DataProviderView::widget([
+    <div id="<?= $GridId ?>" data-pjax-container="<?= $pjaxContainerId ?>" data-pjax-timeout="1000">
+        <?= DataProviderView::widget([
             'dataProvider' => $this->params['modelTargetData'],
             'currentView' => $currentView,
             'gridView' => [
@@ -116,6 +105,6 @@ $this->registerJs($js);
                 },
             ],
             'listView' => $listViewArray
-        ])
-        ?>
+        ]) ?>
+    </div>
 </div>

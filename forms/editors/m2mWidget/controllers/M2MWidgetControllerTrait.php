@@ -14,7 +14,6 @@ namespace open20\amos\core\forms\editors\m2mWidget\controllers;
 use open20\amos\core\forms\editors\m2mWidget\M2MEventsEnum;
 use Yii;
 use yii\base\Event;
-use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
@@ -107,7 +106,7 @@ trait M2MWidgetControllerTrait
     private $mmTableAttributesDefault = [];
 
     /**
-     * @var bool $customQuery - true if query to view target record to insert in mmtable is not a standard search but a personalized query
+     * @var bool $customQuery - true if query to view target record to insert in mmtable is is not a standard search but a personalized query
      */
     private $customQuery = false;
 
@@ -115,12 +114,6 @@ trait M2MWidgetControllerTrait
      * @var bool $viewM2MWidgetGenericSearch
      */
     private $viewM2MWidgetGenericSearch = false;
-
-    /**
-     * Array of other mm table fields and values to search in the intercect query
-     * @var array $mmTableAdditionalAttributesToSearch
-     */
-    private $mmTableAdditionalAttributesToSearch = [];
 
     /**
      * @param int $id
@@ -187,14 +180,12 @@ trait M2MWidgetControllerTrait
         } else {
             return $this->render($this->targetUrl, $renderOptions);
         }
+
     }
 
     /**
      * @param $id
      * @return mixed
-     * @throws \Throwable
-     * @throws \yii\base\InvalidConfigException
-     * @throws \yii\db\StaleObjectException
      */
     public function actionAssociaM2m($id)
     {
@@ -211,12 +202,6 @@ trait M2MWidgetControllerTrait
         $startObj = Yii::createObject($this->startObjClassName);
         $model = $startObj->findOne($id);
 
-        $event = new Event();
-        $event->sender = [
-            'startObj' => $model
-        ];
-        $this->trigger(M2MEventsEnum::EVENT_AFTER_FIND_START_OBJ_M2M, $event);
-
         if (Yii::$app->request->isPost) {
             $post = Yii::$app->request->post();
             $model->load($post);
@@ -228,14 +213,8 @@ trait M2MWidgetControllerTrait
                         /** @var ActiveRecord $target */
                         $target = $targetObjClassName::findOne(['id' => Yii::$app->request->post()['selected'][$index]]);
                         if (!is_null($target)) {
-                            /**
-                             * Vedere se è possibile fare una sola query che cerca tutti gli oggetti e li ritorna in un unico array
-                             * di oggetti così si risparmia il tempo di fare una query ad ogni ciclo. Dev'essere ritornato per forza
-                             * l'oggetto perché può servire a chi intercetta l'evento.
-                             * Vedere se è facile sostituire il for col foreach che così a occhio sembra inutile.
-                             * Sistemare la cosa del post selected usato 200 volte a caso.
-                             */
-                            $intercect = $this->getAssociaM2mIntercect($model->id, $target->id);
+                            $intercect = $mmTableName::find()->andWhere([$this->mmStartKey => $model->id])
+                                ->andWhere([$this->mmTargetKey => $target->id])->one();
                             if (is_null($intercect)) {
                                 $event = new Event();
                                 $event->sender = [
@@ -270,11 +249,7 @@ trait M2MWidgetControllerTrait
                 }
             }
 
-            $event = new Event();
-            $event->sender = [
-                'notInTargets' => $notInTargets
-            ];
-            $this->trigger(M2MEventsEnum::EVENT_AFTER_ASSOCIATE_M2M, $event);
+            $this->trigger(M2MEventsEnum::EVENT_AFTER_ASSOCIATE_M2M);
 
             $post = Yii::$app->getRequest()->post();
             if (!Yii::$app->getRequest()->getIsAjax() && (!isset($post['fromGenericSearch']) || (isset($post['fromGenericSearch']) && !$post['fromGenericSearch']))) {
@@ -295,28 +270,6 @@ trait M2MWidgetControllerTrait
         } else {
             return $this->render($this->targetUrl, $renderOptions);
         }
-    }
-
-    /**
-     * @param int $startId
-     * @param int $targetId
-     * @return array|ActiveRecord|null
-     */
-    protected function getAssociaM2mIntercect($startId, $targetId)
-    {
-        /** @var ActiveRecord $mmTableName */
-        $mmTableName = $this->mmTableName;
-        /** @var ActiveQuery $query */
-        $query = $mmTableName::find();
-        $query->andWhere([$this->mmStartKey => $startId])
-            ->andWhere([$this->mmTargetKey => $targetId]);
-        if (is_array($this->mmTableAdditionalAttributesToSearch) && !empty($this->mmTableAdditionalAttributesToSearch)) {
-            foreach ($this->mmTableAdditionalAttributesToSearch as $field => $value) {
-                $query->andWhere([$field => $value]);
-            }
-        }
-        $intercect = $query->one();
-        return $intercect;
     }
 
     /**
@@ -768,19 +721,4 @@ trait M2MWidgetControllerTrait
         $this->invitationModule = $invitationModule;
     }
 
-    /**
-     * @return array
-     */
-    public function getMmTableAdditionalAttributesToSearch()
-    {
-        return $this->mmTableAdditionalAttributesToSearch;
-    }
-
-    /**
-     * @param array $mmTableAdditionalAttributesToSearch
-     */
-    public function setMmTableAdditionalAttributesToSearch($mmTableAdditionalAttributesToSearch)
-    {
-        $this->mmTableAdditionalAttributesToSearch = $mmTableAdditionalAttributesToSearch;
-    }
 }

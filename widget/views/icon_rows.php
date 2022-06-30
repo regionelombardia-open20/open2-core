@@ -30,7 +30,7 @@ use open20\amos\core\icons\AmosIcons;
 <div class="square-box" data-code="<?= $className ?>">
     <div class="square-content item-widget" data-code="<?= $className ?>">
         <?php if (strlen($url)): ?>
-            <a data-module="<?= $dataModule ?>" class="<?= $classSpanA ?> dashboard-menu-item <?= ($widget->active == true ? 'active' : '')?>" href="<?= $url ?>"
+            <a data-module="<?= $dataModule ?>" class="<?= $classSpanA ?> dashboard-menu-item" href="<?= $url ?>"
            <?= $target ?>title="<?= $widget->description ?>" role="menuitem" class="sortableOpt1" <?= $widget->dataPjaxZero ?> <?= $widget->attributes ?>>
         <?php else: ?>
             <div class="dashboard-menu-item">

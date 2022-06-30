@@ -96,14 +96,13 @@ abstract class AmosController extends YiiController
             $findDash = AmosUserDashboards::find();
             $findDash->andWhere(['user_id' => Yii::$app->user->id]);
             $findDash->orderBy(['updated_at' => SORT_DESC]);
-            $findDash->limit(1);
             $userDashboard = $findDash->one();
 
             //Main Cache filter
             $amosCache = [
                 'class' => 'yii\filters\PageCache',
                 'enabled' => $enablePageCache,
-                 'only' => ['index', 'view', 'own-interest-news', 'own-news', 'all-news', 'my-communities', 'created-by-communities', 'own-interest-discussions', 'created-by', 'all-discussions', 'validated', 'own-interest', 'operating-referent', 'index-own', 'all-admin', 'staff-een', 'een-expr-of-interest','facilitator-partnership-profiles', 'own-projects'],
+                //'only' => ['index'],
                 'duration' => 8600,
                 'cacheHeaders' => false,
                 'cacheCookies' => false,

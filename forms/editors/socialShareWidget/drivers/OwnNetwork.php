@@ -4,7 +4,7 @@
 
 namespace open20\amos\core\forms\editors\socialShareWidget\drivers;
 
-use ymaker\social\share\base\AbstractDriver;
+use ymaker\social\share\base\Driver;
 
 /**
  * Driver for Facebook.
@@ -12,23 +12,25 @@ use ymaker\social\share\base\AbstractDriver;
  *
  * @since 1.0
  */
-class OwnNetwork extends AbstractDriver
+class OwnNetwork extends Driver
 {
-
     /**
      * {@inheritdoc}
      */
     protected function processShareData()
     {
-        $this->url   = static::encodeData($this->url);
+        $this->url = static::encodeData($this->url);
         $this->title = static::encodeData($this->title);
     }
 
     /**
      * @inheritdoc
      */
-    protected function buildLink()
+    public function getLink()
     {
-        return 'javascript:void(0);';
+        $this->_link = 'javascript:void(0);';
+
+        return parent::getLink();
     }
+
 }

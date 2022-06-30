@@ -120,15 +120,12 @@ class ModalUtility extends BaseObject
         $modalOptions = ((isset($modalConfiguration['modalOptions']) && is_array($modalConfiguration['modalOptions'])) ?
             $modalConfiguration['modalOptions'] :
             ['class' => 'pull-right m-15-0']);
-        $containerOptions = (isset($modalConfiguration['containerOptions']) ?
-            $modalConfigurations['containerOptions'] = $modalConfiguration['containerOptions'] :
-            '');
 
         // Buttons
         $buttons = Html::a($cancelLabel, $cancelLink, $cancelOptions) . Html::a($confirmLabel, $confirmLink, $confirmOptions);
 
         // Make the modal
-        Modal::begin(['id' => $modalId, 'header' => $modalHeader, 'options' => $containerOptions]);
+        Modal::begin(['id' => $modalId, 'header' => $modalHeader]);
         echo Html::tag('div', $modalDescriptionText);
         echo Html::tag('div', $buttons, $modalOptions);
         Modal::end();
@@ -145,47 +142,22 @@ class ModalUtility extends BaseObject
             'modalDescriptionText' => $configurations['modalDescriptionText'],
             'confirmBtnLink' => $configurations['btnLink'],
         ];
-        if (isset($configurations['modalHeader'])) {
-            $modalConfigurations['modalHeader'] = $configurations['modalHeader'];
-        }
-        if (isset($configurations['containerOptions'])) {
-            $modalConfigurations['containerOptions'] = $configurations['containerOptions'];
-        }
-        $content = self::createConfirmModal($modalConfigurations);
-        if (!isset($configurations['withoutBtn']) || (isset($configurations['withoutBtn']) && ($configurations['withoutBtn'] === false))) {
-            $content .= self::createConfirmRejectModalButton(
-                $configurations['modalId'],
-                $configurations['btnText'],
-                $configurations['btnLink'],
-                $configurations['btnOptions']
-            );
-        }
-        return $content;
-    }
-
-    /**
-     * This method creates the confirm-reject modal main button, not the modal buttons!
-     * @param string $btnText
-     * @param string $btnLink
-     * @param array $btnOptions
-     * @return string
-     */
-    public static function createConfirmRejectModalButton($modalId, $btnText, $btnLink, $btnOptions)
-    {
-        $btnOptionsInternal = [
+        $btnOptions = [
             'data-toggle' => 'modal',
-            'data-target' => '#' . $modalId
+            'data-target' => '#' . $configurations['modalId']
         ];
-        $skipKeys = array_keys($btnOptionsInternal);
-        if (isset($btnOptions) && is_array($btnOptions)) {
-            foreach ($btnOptions as $key => $value) {
+        $skipKeys = array_keys($btnOptions);
+        if (isset($configurations['btnOptions']) && is_array($configurations['btnOptions'])) {
+            foreach ($configurations['btnOptions'] as $key => $value) {
                 // Exclude the data
                 if (!in_array($key, $skipKeys)) {
-                    $btnOptionsInternal[$key] = $value;
+                    $btnOptions[$key] = $value;
                 }
             }
         }
-        return Html::a($btnText, $btnLink, $btnOptionsInternal);
+        $content = self::createConfirmModal($modalConfigurations);
+        $content .= Html::a($configurations['btnText'], $configurations['btnLink'], $btnOptions);
+        return $content;
     }
 
     public static function createAlertModalDefaultId()
@@ -257,15 +229,9 @@ class ModalUtility extends BaseObject
         $modalHeaderClass = ((isset($modalConfiguration['headerClass']) && is_string($modalConfiguration['headerClass'])) ?
             $modalConfiguration['headerClass'] :
             '');
-        if (isset($modalConfiguration['headerOnlyText']) && ($modalConfiguration['headerOnlyText'] === true)) {
-            $modalHeaderText = ((isset($modalConfiguration['headerText']) && is_string($modalConfiguration['headerText'])) ?
-                $modalConfiguration['headerText'] :
-                null);
-        } else {
-            $modalHeaderText = ((isset($modalConfiguration['headerText']) && is_string($modalConfiguration['headerText'])) ?
-                Html::tag('h3', $modalConfiguration['headerText'], ['class' => 'modal-title']) :
-                Html::tag('h3', '', ['class' => 'modal-title']));
-        }
+        $modalHeaderText = ((isset($modalConfiguration['headerText']) && is_string($modalConfiguration['headerText'])) ?
+            Html::tag('h3', $modalConfiguration['headerText'], ['class' => 'modal-title']) :
+            Html::tag('h3', '', ['class' => 'modal-title']));
         $modalBodyContent = ((isset($modalConfiguration['modalBodyContent']) && is_string($modalConfiguration['modalBodyContent'])) ?
             $modalConfiguration['modalBodyContent'] :
             '');
@@ -275,11 +241,9 @@ class ModalUtility extends BaseObject
         $modalFooterClass = ((isset($modalConfiguration['footerClass']) && is_string($modalConfiguration['footerClass'])) ?
             $modalConfiguration['footerClass'] :
             '');
-        if (!isset($modalConfiguration['disableFooter']) || (isset($modalConfiguration['disableFooter']) && ($modalConfiguration['disableFooter'] === false))) {
-            $modalFooterText = ((isset($modalConfiguration['footerText']) && is_string($modalConfiguration['footerText'])) ?
-                Html::tag('div', $modalConfiguration['footerText'], ['class' => 'bootstrap-dialog-footer']) :
-                Html::tag('div', '', ['class' => 'bootstrap-dialog-footer-buttons']));
-        }
+        $modalFooterText = ((isset($modalConfiguration['footerText']) && is_string($modalConfiguration['footerText'])) ?
+            Html::tag('div', $modalConfiguration['footerText'], ['class' => 'bootstrap-dialog-footer']) :
+            Html::tag('div', '', ['class' => 'bootstrap-dialog-footer-buttons']));
         $modalClassSize = ((isset($modalConfiguration['modalClassSize']) && is_string($modalConfiguration['modalClassSize'])) ?
             $modalConfiguration['modalClassSize'] :
             '');
@@ -297,4 +261,5 @@ class ModalUtility extends BaseObject
         echo Html::tag('div', $modalBodyContent);
         Modal::end();
     }
+
 }

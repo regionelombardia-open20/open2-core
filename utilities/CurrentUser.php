@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Aria S.p.A.
  * OPEN 2.0
@@ -10,12 +11,12 @@
 
 namespace open20\amos\core\utilities;
 
-use open20\amos\admin\AmosAdmin;
 use Yii;
 use yii\base\BaseObject;
 
 class CurrentUser extends BaseObject
 {
+
     static public $user;
     static public $userIdentity;
     static public $userProfile;
@@ -41,28 +42,12 @@ class CurrentUser extends BaseObject
 
     static public function getUserProfile()
     {
-        if (!isset(self::$userProfile)) {
-            if (!Yii::$app->getUser()->getIsGuest() && AmosAdmin::instance()) {
+        if (!isset(self::$userProfile)) {                       
+            if (!Yii::$app->getUser()->getIsGuest() && Yii::$app->getModule('admin')) {
                 self::$userProfile = self::getUserIdentity()->userProfile;
             }
         }
         return self::$userProfile;
     }
 
-    /**
-     *
-     * @return boolean
-     */
-    public static function isPlatformGuest()
-    {
-        $ret = true;
-
-        if (!Yii::$app->getUser()->getIsGuest() &&
-            (isset(Yii::$app->params['platformConfigurations']['guestUserId']) ? Yii::$app->getUser()->id
-                != Yii::$app->params['platformConfigurations']['guestUserId'] : false)) {
-            $ret = false;
-        }
-
-        return $ret;
-    }
 }

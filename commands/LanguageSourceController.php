@@ -84,10 +84,7 @@ class LanguageSourceController extends Controller
                 $this->loadFiles($extraCategory, \Yii::getAlias($extraPath), $this->forceUpdate);
             }
         }
-        if(!is_null(\Yii::$app->cache))
-        {
-            \Yii::$app->cache->flush();
-        }
+        \Yii::$app->cache->flush();
         return Controller::EXIT_CODE_NORMAL;
     }
 
