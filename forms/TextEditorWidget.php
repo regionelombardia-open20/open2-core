@@ -33,21 +33,21 @@ class TextEditorWidget extends TinyMce
 
 
     /**
-     * 
+     *
      * MENTIONS - URL to action to search for a user
-     * 
+     *
      * 'mentions' => [
      *      'url' => null
      *  ]
-     * 
+     *
      * MENTIONS - params TextEditor widget to enable mentions
-     * 
+     *
      * 'textEditor' => [
      *      "mentions" => [
      *          'enable' => true,
      *      ]
      * ]
-     * 
+     *
      */
 
     public $clientOptions = [
@@ -161,13 +161,13 @@ JS;
                     if(!is_null(\Yii::$app->controller->getModelObj()))
                     {
                         $className = str_replace('\\', '\\\\', \Yii::$app->controller->getModelObj()->className());
-                    } 
+                    }
                     $mentionMethod = <<<JS
                     function(query, process, delimiter) {
                         // Do your ajax call
                         // When using multiple delimiters you can alter the query depending on the delimiter used
                         if (delimiter === '@') {
-                        
+
                             $.getJSON("$mention_action_url", {name: query, className: "$className"}, function (data) {
                                 //call process to show the result
                                 process(data)
@@ -178,7 +178,7 @@ JS;
 
                     $mentionElementMethod = <<<JS
                         function(item) {
-                            console.log(item.user_id); 
+                            console.log(item.user_id);
                             return '<a href="'+item.url+'">@' + item.name + '</a>&nbsp;';
                         }
 JS;
@@ -202,7 +202,7 @@ JS;
         } else {
             $this->clientOptions['plugins'][] = "wordcount";
         }
-        
+
         // section for configuring mobile options
         $mobile_options = array();
         $mobile_options['mobile']['menubar'] = true;
@@ -211,7 +211,7 @@ JS;
         $mobile_options['mobile']['content_style'] = 'body {background-color: white;}';
         $mobile_options['mobile']['toolbar'] = [
             'fullscreen', 'undo redo code' ,'styleselect ',
-            'bold italic strikethrough forecolor backcolor', 
+            'bold italic strikethrough forecolor backcolor',
             'link image media insertdatetime', 'removeformat'
         ];
         $this->clientOptions = ArrayHelper::merge($this->clientOptions, $mobile_options);
@@ -242,7 +242,5 @@ JS;
 
         return $config;
     }
-
-
 
 }
