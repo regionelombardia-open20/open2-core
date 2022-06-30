@@ -473,4 +473,6 @@ return [
     '#ZipUtility_not_string_property_zip_file_extension' => 'ZipUtility: compressed file extension is not a string',
     '#ZipUtility_not_string_property_zip_file_name' => 'ZipUtility: zip file name is not a string',
     'fra' => 'in',
+    'ti ha taggato in un commento.' => "tagged you in a comment.",
+    "Clicca qui per vederlo:" => "Click here to see it: ",
 ];

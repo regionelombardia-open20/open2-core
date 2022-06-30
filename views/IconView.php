@@ -28,14 +28,14 @@ class IconView extends BaseListView
     ];
 
     public $containerOptions = [
-        'id' => 'dataViewListContainer',
-        'class'=>'row'
+        // 'id' => 'dataViewListContainer',
+        // 'class'=>'row'
     ];
 
     public $itemOptions = [
-        "class" => "col-md-4 col-sm-6 col-xs-12",
-        "aria-selected" => "false",
-        "role" => "option"
+        // "class" => "col-md-4 col-sm-6 col-xs-12",
+        // "aria-selected" => "false",
+        // "role" => "option"
     ];
 
 

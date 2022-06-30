@@ -478,4 +478,6 @@ return [
     '#ZipUtility_not_string_property_zip_file_name' => 'ZipUtility: nome del file zip non è una stringa',
     'Subcommunity' => 'Sottocommunity',
     'fra' => 'fra',
+    'ti ha taggato in un commento.' => "ti ha taggato in un commento.",
+    "Clicca qui per vederlo:" => "Clicca qui per vederlo: ",
 ];

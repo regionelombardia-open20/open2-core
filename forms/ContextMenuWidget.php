@@ -111,6 +111,11 @@ class ContextMenuWidget extends Widget
      */
     private $confirmModify = '';
 
+    /**
+     * @var array
+     */
+    public $additionalButtons = [];
+
 
     /**
      * @inheritdoc
@@ -175,6 +180,13 @@ class ContextMenuWidget extends Widget
         if (!$this->isDisableDelete()) {
             $buttons[] = Html::a($deleteTitle, $this->getActionDelete(), $optionsDelete, $this->checkDeletePermission);
         }
+
+        if(!empty($this->additionalButtons)){
+            foreach ($this->additionalButtons as $htmlAdditionalButton){
+                  $buttons []= $htmlAdditionalButton;
+            }
+        }
+
         $this->atLeastOnePermission = false;
         foreach ($buttons as $button) {
             if (strlen($button) > 0) {

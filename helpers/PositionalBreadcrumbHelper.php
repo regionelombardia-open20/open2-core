@@ -209,9 +209,11 @@ class PositionalBreadcrumbHelper extends Component
     public static function crumbExistInTrail($crumb, $trail)
     {
 //        $trail = self::getCache()->get(self::key());
-        foreach ($trail as $elem) {
-            if ($crumb->url == $elem->url) {
-                return true;
+        if (is_array($trail)) {
+            foreach ($trail as $elem) {
+                if ($crumb->url == $elem->url) {
+                    return true;
+                }
             }
         }
         return false;
