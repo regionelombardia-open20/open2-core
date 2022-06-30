@@ -19,6 +19,7 @@ use open20\amos\core\interfaces\StatsToolbarInterface;
 use open20\amos\core\interfaces\WorkflowModelInterface;
 use open20\amos\core\module\AmosModule;
 use open20\amos\core\module\BaseAmosModule;
+use open20\amos\core\models\TagNotification;
 use open20\amos\core\utilities\StringUtils;
 use open20\amos\core\utilities\WorkflowTransitionWidgetUtility;
 use raoul2000\workflow\base\SimpleWorkflowBehavior;
@@ -203,7 +204,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
                             },
                             'whenClient' => "function (attribute, value) {
                                 var regolaPubblicazione = $('#cwh-regola_pubblicazione');
-                               return ( regolaPubblicazione.length && (regolaPubblicazione.val() == '2' || regolaPubblicazione.val() == '4' ) && 
+                               return ( regolaPubblicazione.length && (regolaPubblicazione.val() == '2' || regolaPubblicazione.val() == '4' ) &&
                                 $('.kv-selected').length === 0 );
                 }",
                             'message' => BaseAmosModule::t('amostag', 'Selezionare almeno 1 tag.')
@@ -543,40 +544,6 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
             return false;
         }
 
-        // checking for tagging user_profile
-		if(!$this->isNewRecord){
-
-            if( isset(\Yii::$app->params['mention-models-enabled']) 
-                && is_array(\Yii::$app->params['mention-models-enabled']) 
-                && array_key_exists($this->className(),\Yii::$app->params['mention-models-enabled']) 
-            ){	
-
-                $user_profile_ids = [];
-
-                if (method_exists($this, 'getValidatedStatus')) {
-
-                    if ($this->getValidatedStatus() == $this->status) {
-                        // extract user_profile id filtered..
-                        $user_profile_ids = $this->checkNewMentionIds();
-                    }
-                }else {
-                    $user_profile_ids = $this->checkNewMentionIds();
-                }	
-
-                // get all UserProfile for sending a mail
-                $user_profiles = \open20\amos\admin\models\UserProfile::find()
-                                ->andWhere(['id' => $user_profile_ids])
-                                ->all();
-
-                // send email for user_profiles
-                $this->sendEmailForUserProfiles($user_profiles);
-            }
-		}
-		
-
-
-
-
         return parent::beforeSave($insert);
     }
 
@@ -604,16 +571,16 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
 
         if (!in_array($tableName, $blackList) && \Yii::$app->db->schema->getTableSchema($vanishTableName, true) != null) {
             \Yii::$app->db->createCommand()->setSql(
-                "INSERT INTO vanish_cache (`table_name`, `updates`, `created_at`, `created_by`, `updated_at`, `updated_by`, `deleted_at`, `deleted_by`) 
+                "INSERT INTO vanish_cache (`table_name`, `updates`, `created_at`, `created_by`, `updated_at`, `updated_by`, `deleted_at`, `deleted_by`)
                   VALUES ('{$tableName}', 1, now(), NULL, now(), NULL, now(), NULL)
                   ON DUPLICATE KEY UPDATE updates = updates + 1, updated_at = now()"
             )->execute();
         }
-        
+
         if (\Yii::$app instanceof \yii\web\Application && \Yii::$app->user->id) {
             /**
              * Something was changed in my own interest areas?
-             */   
+             */
             $whiteList = [
                 'user',                 //admin
                 'community',
@@ -630,19 +597,19 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
                 'sondaggi',
                 'profilo'
             ];
-            
+
             if (in_array($tableName, $whiteList)) {
-                                
+
                 $classname = $this->className();
-                
+
                 $attributes = $this->getAttributes();
                 $created_by = null;
                 $updated_by = null;
-                
+
                 if (isset($attributes['created_by'])) {
                     $created_by = $attributes['created_by'];
                 }
-                
+
                 if (isset($attributes['updated_by'])) {
                     $updated_by = $attributes['updated_by'];
                 }
@@ -656,20 +623,68 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
                 }
 
                 \Yii::$app->db->createCommand()->setSql(
-                    "INSERT INTO 
-                        `update_contents` (`module`, `updates`, `created_at`, `created_by`, `updated_at`, `updated_by`, `deleted_at`, `deleted_by`) 
+                    "INSERT INTO
+                        `update_contents` (`module`, `updates`, `created_at`, `created_by`, `updated_at`, `updated_by`, `deleted_at`, `deleted_by`)
                     VALUES (
                         '{$tableName}', 1, now(), NULL, now(), '{$created_by}', now(), '{$updated_by}'
                     )
-                    ON DUPLICATE KEY UPDATE 
-                        `updates` = `updates` + 1, 
+                    ON DUPLICATE KEY UPDATE
+                        `updates` = `updates` + 1,
                         `updated_at` = now(),
-                        `updated_by` = '{$updated_by}' 
+                        `updated_by` = '{$updated_by}'
                     "
                 )->execute();
             }
         }
+        // checking for tagging user_profile
+	//if(!$this->isNewRecord){
 
+            if( isset(\Yii::$app->params['mention-models-enabled'])
+                && is_array(\Yii::$app->params['mention-models-enabled'])
+                && array_key_exists($this->className(),\Yii::$app->params['mention-models-enabled'])
+            ){
+
+                $user_profile_ids = [];
+                $changed_values = $insert ? $this->attributes : $changedAttributes;
+                if (method_exists($this, 'getValidatedStatus') && property_exists($this, 'status')) {
+                    if ($this->getValidatedStatus() == $this->status) {
+                        $firstValidation = $this->isFirstValidation($changedAttributes);
+                        if($firstValidation)
+                        {
+                            $changed_values = $this->attributes;
+                        }
+                        // extract user_profile id filtered..
+                        $user_profile_ids = $this->checkNewMentionIds($changed_values, $firstValidation);
+                    }
+                }else {
+                    $user_profile_ids = $this->checkNewMentionIds($changed_values, $insert);
+                }
+
+                // get all UserProfile for sending a mail
+                $user_profiles = \open20\amos\admin\models\UserProfile::find()
+                                ->andWhere(['id' => $user_profile_ids])
+                                ->all();
+
+                TagNotification::deleteAll(
+                    ['and',
+                        ['context_model_class_name' => get_class($this)],
+                        ['context_model_id' => $this->id],
+                    ]
+                );
+
+                foreach ($user_profiles as $user_profile) {
+                    $notification = new TagNotification();
+                    $notification->context_model_class_name = get_class($this);
+                    $notification->context_model_id = $this->id;
+                    $notification->user_id = $user_profile->user->id;
+                    $notification->read = false;
+                    $notification->save();
+                }
+
+                // send email for user_profiles
+                $this->sendEmailForUserProfiles($user_profiles);
+            }
+	//}
         parent::afterSave($insert, $changedAttributes);
     }
 
@@ -716,6 +731,18 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
                 Yii::$app->getSession()->addFlash($key, $message);
             }
             return false;
+        }
+
+        if( isset(\Yii::$app->params['mention-models-enabled'])
+            && is_array(\Yii::$app->params['mention-models-enabled'])
+            && array_key_exists($this->className(),\Yii::$app->params['mention-models-enabled'])
+        ){
+            TagNotification::deleteAll(
+                ['and',
+                    ['context_model_class_name' => get_class($this)],
+                    ['context_model_id' => $this->id],
+                ]
+            );
         }
 
         return parent::beforeDelete();
@@ -1265,12 +1292,12 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
         return ($ok ? $newContent : null);
     }
 
-        
+
     /**
      * Method to get user ID from text for tagged users
      *
      * @param string | text | $text
-     * 
+     *
      * @return array | $ids
      */
     public static function getMentionUserIdFromText($text){
@@ -1303,43 +1330,34 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
                     }
                 }
             }
-        } 
-        
+        }
+
         return $ids;
     }
 
 
     /**
-     * Method to get UserProfile id 
+     * Method to get UserProfile id
      * filtered based on the difference between the old id tagging and the new id tagging from the text field
      * filtered by user_profile -> notify_tagging_user_in_content
      *
      * @return array | $user_profile_ids
      */
-	protected function checkNewMentionIds(){
+    protected function checkNewMentionIds($changedAttributes, $isFirst)
+    {
 
-	    $user_profile_ids = [];
+	$user_profile_ids = [];
 
         foreach(\Yii::$app->params['mention-models-enabled'][$this->className()] as $v){
 
-            if(array_key_exists($v, $this->dirtyAttributes)){
+            if(array_key_exists($v, $changedAttributes)){
 
-                $beforeIds = self::getMentionUserIdFromText($this->oldAttributes[$v]);
+                $beforeIds = self::getMentionUserIdFromText($changedAttributes[$v]);
                 $afterIds = self::getMentionUserIdFromText($this->$v);
 
-                // check if this model has been validated
-                $count = \open20\amos\workflow\models\WorkflowTransitionsLog::find()
-                    ->andWhere(['classname' => $this->className()])
-                    ->andWhere(['owner_primary_key' => $this->id])
-                    ->count();
-       
-                // create an array of user_profile_id to send an email tag notification
-                $user_profile_ids = [];
-
-                if( $count == 0 ){
-
+                if( $isFirst){
                     // all afterIds
-                    $user_profile_ids = $afterIds;
+                    $user_profile_ids = array_unique(ArrayHelper::merge($user_profile_ids, $afterIds));
 
                 }else{
 
@@ -1366,48 +1384,69 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
                 );
             }
         }
-        
+
         return $user_profile_ids;
 	}
 
+    /**
+     *
+     * @return boolean
+     */
+    protected function isFirstValidation($changedAttributes)
+    {
+        $ret = false;
+        $status = $this->getValidatedStatus();
+
+        $count = \open20\amos\workflow\models\WorkflowTransitionsLog::find()
+            ->andWhere(['classname' => $this->className()])
+            ->andWhere(['owner_primary_key' => $this->id])
+            ->andWhere(['end_status' => $status])
+            ->count();
+        if(($count == 1 || ($count == 0 && $this->status == $status))
+                && (isset($changedAttributes['status']) && $changedAttributes['status'] != $status))
+        {
+            $ret = true;
+        }
+        return $ret;
+    }
 
     /**
      * Method to send email to list UserProfile
      *
      * @param string $modelContext
-     * @param string $model 
+     * @param string $model
      * @param string $email_assistance
      * @param model | \open20\amos\admin\models\UserProfile | $user_profiles
-     * 
+     *
      * @return void
      */
     public function sendEmailForUserProfiles($user_profiles, $modelContext = null, $model = null){
 
         // create email for tagging user_profile
         $email_assistance = \Yii::$app->params['email-assistenza'];
-        $subject = "Sei stato taggato in un commento";
+        $subject = BaseAmosModule::t('amoscore', "Sei stato taggato in un contenuto.");
 
         $email = new \open20\amos\core\utilities\Email;
-  
+
         try {
-                
+
             foreach ($user_profiles as $key => $user_profile) {
 
                 $message = \Yii::$app->controller->renderMailPartial('@vendor/open20/amos-core/views/email/content_tagging_user', [
                     'model' => $this ?? $model,
                     'contextModel' => $this ?? $modelContext,
-                    'model_field' => $v,
+                    'model_field' => $key,
                     'user' => $user_profile->user
                 ]);
 
                 $email->sendMail($email_assistance, [$user_profile->user->email], $subject, $message);
             }
-            
+
         } catch (\Throwable $th) {
             echo "<pre>";
             print_r($th->getMessage());
             echo "</pre>";
-            
+
             \Yii::getLogger()->log($th->getMessage(), \yii\log\Logger::LEVEL_ERROR);
         }
     }
