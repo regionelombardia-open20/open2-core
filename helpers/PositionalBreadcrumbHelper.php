@@ -12,6 +12,7 @@
 namespace open20\amos\core\helpers;
 
 use open20\amos\core\controllers\BaseController;
+use open20\amos\core\models\ModelsClassname;
 use yii\base\Component;
 use yii\base\Event;
 use yii\helpers\StringHelper;
@@ -135,6 +136,7 @@ class PositionalBreadcrumbHelper extends Component
      */
     public static function add($label, $url = null, $template = null, $remove_action = null)
     {
+
         $request = \Yii::$app->request;
 
         $currentModule = \Yii::$app->controller->module->id;
@@ -142,6 +144,7 @@ class PositionalBreadcrumbHelper extends Component
         //  rimosso truncate per dettaglio  task - 7737
         //  $label = StringHelper::truncate($label, 20, '...');
         $isIndex = self::setCurrentIndex();
+        $isSetBreadcrumbCommunityIndex = false;
 
 
         if (!$request->isPjax && $url != '/site/error') {
@@ -286,17 +289,17 @@ class PositionalBreadcrumbHelper extends Component
         $name_class = '';
         $isCurrentIndex = self::isIndex(\Yii::$app->controller->action->id, \Yii::$app->controller->id, \Yii::$app->controller->module);
 
-        list($controller, $actionID) = \Yii::$app->createController($array_url['url']);
         $controller = \Yii::$app->controller;
+        $actionID = $controller->action->id;
         if ($controller instanceof BaseController) {
             $model = $controller->model;
-            if(method_exists($model, 'getTitle')){
+            if (method_exists($model, 'getTitle')) {
                 $title = $model->getTitle();
-            }else {
+            } else {
                 $title = $model->__toString();
             }
 
-            if($type != self::TYPE_BREAD_DETAIL){
+            if ($type != self::TYPE_BREAD_DETAIL) {
                 $title = StringHelper::truncate($title, 20, '...');
             }
             $name_class = $controller->model->className();
@@ -378,8 +381,8 @@ class PositionalBreadcrumbHelper extends Component
             $crumb->route = null;
         } else {
             // url index default - go /modulename/controllername/index of the current controller
-            $crumb->url = '/' . $moduleName . '/' . $controllerName. '/index';
-            $crumb->route = '/' . $moduleName . '/' . $controllerName. '/index';
+            $crumb->url = '/' . $moduleName . '/' . $controllerName . '/index';
+            $crumb->route = '/' . $moduleName . '/' . $controllerName . '/index';
 
             //personalized url index to model for a particular controller
             if (!\Yii::$app->user->isGuest) {
@@ -476,7 +479,7 @@ class PositionalBreadcrumbHelper extends Component
     public static function createCrumbParentCommunities($community)
     {
         $actionJoinCommunity = 'join';
-        if(\Yii::$app->params['befe']){
+        if (\Yii::$app->params['befe']) {
             $actionJoinCommunity = 'join/open-join';
         }
         $communityParent = $community;
@@ -496,6 +499,7 @@ class PositionalBreadcrumbHelper extends Component
                 'url' => '/community/subcommunities/my-communities?id=' . $parentCom->id,
                 'route' => '/community/subcommunities/my-communities?id=' . $parentCom->id,
             ];
+
             $parentsCrumb [] = self::createCrumb($url_param, self::TYPE_BREAD_COMMUNITY);
 
             //crumb  - community name
@@ -520,7 +524,7 @@ class PositionalBreadcrumbHelper extends Component
     public static function createCrumbCommunity($currentController)
     {
         $actionJoinCommunity = 'join';
-        if(\Yii::$app->params['befe']){
+        if (\Yii::$app->params['befe']) {
             $actionJoinCommunity = 'join/open-join';
         }
         $moduleCwh = \Yii::$app->getModule('cwh');
@@ -534,7 +538,7 @@ class PositionalBreadcrumbHelper extends Component
         if (!empty($community_id)) {
             $community = \open20\amos\community\models\Community::findOne($community_id);
             if ($community) {
-                $url_param = [
+                 $url_param = [
                     'label' => StringHelper::truncate($community->getTitle(), 20, '...'),
                     'title' => $community->getTitle(),
                     'module' => 'community',
@@ -544,8 +548,9 @@ class PositionalBreadcrumbHelper extends Component
                     'remove_action' => isset($remove_action) ? $remove_action : null,
                     'template' => isset($template) ? $template : null,
                 ];
+                $url_param_index = self::getUrlParamIndexCommunity($community, $url_param);
+                $crumbIndex = self::createCrumb($url_param_index, self::TYPE_BREAD_INDEX, true);
 
-                $crumbIndex = self::createCrumb($url_param, self::TYPE_BREAD_INDEX, true);
                 $isSetBreadcrumbCommunityIndex = true;
 
                 $parentsCrumb = self::createCrumbParentCommunities($community);
@@ -567,6 +572,39 @@ class PositionalBreadcrumbHelper extends Component
 
         return $isSetBreadcrumbCommunityIndex;
     }
+
+    /**
+     * @param $community
+     * @param $url_param
+     * @return array
+     */
+    public static function getUrlParamIndexCommunity($community, $url_param)
+    {
+        // se è una comunity di contesto (ad esempio organizzazione) prendo il modulo delle organizzazioni altrimeti
+        //uso quello della community
+        if (!empty($community->context) && $community->context != get_class($community)) {
+            $modelClassname = ModelsClassname::find()->andWhere(['classname' => $community->context])->one();
+            if ($modelClassname) {
+                $explode = explode('\\', $community->context);
+                $classNetwork = end($explode);
+                $controllerNetwork = strtolower(preg_replace('/(?<!^)[A-Z]/', '-$0', $classNetwork));
+
+                $url_param = [
+                    'label' => StringHelper::truncate($community->getTitle(), 20, '...'),
+                    'title' => $community->getTitle(),
+                    'module' => $modelClassname->module,
+                    'controller' => $controllerNetwork,
+                    'url' => $modelClassname->module . '/' . $controllerNetwork . '/index',
+                    'route' => $modelClassname->module . '/' . $controllerNetwork . '/index',
+                    'remove_action' => isset($remove_action) ? $remove_action : null,
+                    'template' => isset($template) ? $template : null,
+                ];
+            }
+        }
+        return $url_param;
+
+    }
+
 
     /**
      * @throws \yii\base\InvalidConfigException

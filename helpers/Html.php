@@ -157,11 +157,19 @@ class Html extends \yii\helpers\Html
             $realActionId = trim(strtoupper(end($splittedUrl)));
             $realModelClassName = (isset($options['model']) ? get_class($options['model']) : NULL);
         } else {
-            $baseUrl = explode("?", $url);
-            list($controllerObj, $actionId) = \Yii::$app->createController($baseUrl[0]);
-            $realModelClassName = (isset($controllerObj->modelClassName) ? $controllerObj->modelClassName : '');
-            $splittedModelClassName = explode("\\", $realModelClassName);
-            $realActionId = trim(strtoupper($actionId));
+            // se passo il model evito di inizializzare i controller perchè crea problemi
+            if (isset($options['model'])) {
+                $baseUrl = explode("?", $url);
+                $splittedUrl = explode("/", $baseUrl[0]);
+                $realActionId = trim(strtoupper(end($splittedUrl)));
+                $realModelClassName = get_class($options['model']);
+            } else {
+                $baseUrl = explode("?", $url);
+                list($controllerObj, $actionId) = \Yii::$app->createController($baseUrl[0]);
+                $realModelClassName = (isset($controllerObj->modelClassName) ? $controllerObj->modelClassName : '');
+                $splittedModelClassName = explode("\\", $realModelClassName);
+                $realActionId = trim(strtoupper($actionId));
+            }
         }
         if (!$realActionId) {
             $realActionId = 'INDEX';
@@ -437,7 +445,7 @@ class Html extends \yii\helpers\Html
                         if (is_array($v)) {
                             $html .= " $name-$n='" . Json::htmlEncode($v) . "'";
                         } else {
-                            $html .= " $name-$n=\"" . ($encode ?  static::encode($v) :  $v) . '"';
+                            $html .= " $name-$n=\"" . ($encode ? static::encode($v) : $v) . '"';
                         }
                     }
                 } elseif ($name === 'class') {
@@ -449,12 +457,12 @@ class Html extends \yii\helpers\Html
                     if (empty($value)) {
                         continue;
                     }
-                    $html .= " $name=\"" . ($encode ? static::encode(static::cssStyleFromArray($value)) :  static::cssStyleFromArray($value)) . '"';
+                    $html .= " $name=\"" . ($encode ? static::encode(static::cssStyleFromArray($value)) : static::cssStyleFromArray($value)) . '"';
                 } else {
                     $html .= " $name='" . Json::htmlEncode($value) . "'";
                 }
             } elseif ($value !== null) {
-                $html .= " $name=\"" . ($encode ? static::encode($value) :  $value) . '"';
+                $html .= " $name=\"" . ($encode ? static::encode($value) : $value) . '"';
             }
         }
 

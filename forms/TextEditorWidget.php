@@ -54,8 +54,7 @@ class TextEditorWidget extends TinyMce
         'theme' => 'modern',
         'images_upload_url' => self::upload_url,
         'convert_urls' => false,
-        'allow_unsafe_link_target' => true,
-        'extended_valid_elements' => "a[href|title|data-mention|target=_blank]",
+        'allow_unsafe_link_target' => true,       
         'plugins' => [
             "advlist autolink lists link charmap print preview anchor",
             "searchreplace visualblocks code fullscreen code",
@@ -65,7 +64,7 @@ class TextEditorWidget extends TinyMce
         ],
         'image_advtab' => true,
         'style_formats_merge' => true,
-        'extended_valid_elements' => 'a[href|target=_blank|src|style|title|alt|class]',
+        'extended_valid_elements' => 'a[href|target=_blank|src|style|data-mention|title|alt|class|target=_self]',
         'toolbar' => "fullscreen | undo redo code | styleselect | bold italic strikethrough forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media insertdatetime | removeformat",
         'branding' => false,
         'paste_block_drop' => true,

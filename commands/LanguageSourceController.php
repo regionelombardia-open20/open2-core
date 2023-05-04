@@ -33,9 +33,9 @@ class LanguageSourceController extends Controller
     const FILE_NAME_LANGUAGE = 'messages.php';
 
     public $file_name_config = [
-        'modules-amos.php',
-        'modules-others.php',
-        'modules.php'
+        'main.php',
+        'main-local.php',
+        'env.php'
     ];
 
     public $conf_path = [
@@ -107,19 +107,28 @@ class LanguageSourceController extends Controller
         $configurations = [];
 
         try {
-            $files = FileHelper::findFiles($path, [
-                'only' => $this->file_name_config,
-                'recursive' => true,
+            $files = FileHelper::findFiles($path,
+                    [
+                    'only' => $this->file_name_config,
+                    'recursive' => true,
             ]);
-            foreach ($files as $file) {
-                $myArray = include $file;
-                $configurations = ArrayHelper::merge($configurations, $myArray);
+            if (!empty($files)) {
+                foreach ($files as $file) {
+                    $myArray = include $file;
+
+                    if (is_array($myArray)) {
+                        $configurations = ArrayHelper::merge($configurations, $myArray);
+                    }
+                }
             }
         } catch (\Exception $ex) {
             Yii::getLogger()->log($ex->getMessage(), Logger::LEVEL_ERROR);
         }
 
-        return $configurations;
+        if (isset($configurations['modules'])) {
+            return $configurations['modules'];
+        }
+        return [];
     }
 
     /**

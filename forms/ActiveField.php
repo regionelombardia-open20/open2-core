@@ -37,11 +37,17 @@ class ActiveField extends YiiActiveField
      */
     private $_skipLabelFor = false;
 
+    public $errorOptions = [
+        'class' => 'help-block help-block-error',
+        'tag' => 'span',
+    ];
+
     /**
      * @var string $labelTranslationField
      */
     private $labelTranslationField;
 
+    
     /**
      * @inheritdoc
      */
@@ -49,9 +55,6 @@ class ActiveField extends YiiActiveField
     {
         parent::init();
 
-        $this->errorOptions = ArrayHelper::merge($this->errorOptions, [
-            'tag' => 'span'
-        ]);
         $this->hintOptions = ArrayHelper::merge($this->hintOptions, [
             'tag' => 'span'
         ]);
@@ -66,7 +69,7 @@ class ActiveField extends YiiActiveField
                     'title' => html_entity_decode($hint)
                 ]);
         }
-        $error = $this->model->getErrors($this->attribute);
+//        $error = $this->model->getErrors($this->attribute);
 //        if (count($error)) {
 //            $this->parts['{error}'] = Html::tag('span', AmosIcons::show('alert-triangle', [], AmosIcons::AM),
 //                    [

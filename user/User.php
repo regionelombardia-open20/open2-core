@@ -132,7 +132,7 @@ class User extends Record implements IdentityInterface
      */
     public function getAccessToken()
     {
-        $token = AccessTokens::findOne(['user_id' => $this->id]);
+        $token = AccessTokens::findOne(['user_id' => $this->id,'logout_at' => null]);
         if (is_null($token)) {
             $token               = new AccessTokens();
             $token->user_id      = $this->id;
@@ -160,7 +160,10 @@ class User extends Record implements IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        $Token = AccessTokens::findOne(['access_token' => $token]);
+        $Token = AccessTokens::findOne([
+            'access_token' => $token,
+            'logout_at' => null]
+        );
 
         if ($Token) {
             return $Token->user;

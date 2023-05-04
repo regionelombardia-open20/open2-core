@@ -56,7 +56,7 @@ class Breadcrumb implements BootstrapInterface
         if ((method_exists(\Yii::$app->controller, 'getModel') || property_exists(\Yii::$app->controller, 'model'))
             &&  !empty(\Yii::$app->controller->model)) {
             $model = \Yii::$app->controller->model;
-            if(\Yii::$app->controller->action->id == 'index' && \Yii::$app->controller->id == 'community'){
+            if(\Yii::$app->controller->action->id == 'index' && (\Yii::$app->controller->id == 'community' || \Yii::$app->controller->id == 'profilo' )){
                 $moduleCwh = \Yii::$app->getModule('cwh');
                 if (isset($moduleCwh)) {
                     $moduleCwh->resetCwhScopeInSession();

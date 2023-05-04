@@ -234,7 +234,10 @@ class ItemAndCardHeaderWidget extends Widget
 //            if(array_key_exists('open20\amos\core\interfaces\OrganizationsModelInterface', class_implements($this->findNode($target)))){
 //                $targetString .= Module::t('amoscore', 'Organizzazione') . ' ';
 //            }
-            $targetArr[] = $targetString . $this->findNode($target)->toStringWithCharLimit(-1);
+            $fNode = $this->findNode($target);
+            if(!is_null($fNode)){
+                $targetArr[] = $targetString . $fNode->toStringWithCharLimit(-1);
+            }
         }
 
         return implode(', ', $targetArr);
@@ -262,7 +265,10 @@ class ItemAndCardHeaderWidget extends Widget
                 if (array_key_exists('open20\amos\core\interfaces\OrganizationsModelInterface', class_implements($this->findNode($singleValidator)))) {
                     $targetString .= Module::t('amoscore', '#item_card_header_widget_from_organization') . ' ';
                 }
-                $validatorsArr[] = $targetString . $this->findNode($singleValidator)->toStringWithCharLimit(-1);
+                $fNode = $this->findNode($singleValidator);
+                if (!is_null($fNode)) {
+                    $validatorsArr[] = $targetString . $fNode->toStringWithCharLimit(-1);
+                }
             }
         }
 

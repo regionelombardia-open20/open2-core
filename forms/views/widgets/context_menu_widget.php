@@ -23,7 +23,7 @@ use open20\amos\core\module\BaseAmosModule;
     <div class="manage <?= $mainDivClasses ?>">
         <div class="dropdown">
             <a class="manage-menu btn btn-outline-tertiary" data-toggle="dropdown" href="" aria-expanded="true"
-               title="<?= BaseAmosModule::t('amoscore', 'Menu contestuale') ?>">
+               title="<?= $title ?>">
                 <?= AmosIcons::show('settings', ['class' => 'pull-left']) ?>
                 <span class="caret"></span>
                 <span class="sr-only"><?= BaseAmosModule::t('amoscore', 'Menu contestuale') ?></span>

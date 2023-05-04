@@ -390,6 +390,8 @@ return [
     'Termina contatto' => 'Termina contatto',
     'The \'addParents\' key is not an array. Skipping parents of' => 'Chiave \'addParents\' non presente. Ignorare genitori di',
     'The child is not a string' => 'Il figlio non è una stringa',
+    'The child to add is not a string' => 'Il figlio da aggiungere non è una stringa',
+    'The child to remove is not a string' => 'Il figlio da rimuovere non è una stringa',
     'The content of the field' => 'Il contenuto del campo',
     'The fields marked with * are required.' => 'I campi marcati con * sono obbligatori.',
     'The fields marked with' => 'I campi marcati con',
@@ -481,5 +483,8 @@ return [
     'Subcommunity' => 'Sottocommunity',
     'fra' => 'fra',
     'ti ha taggato in un commento.' => "ti ha taggato in un commento.",
-    "Clicca qui per vederlo:" => "Clicca qui per vederlo: ",
+    "Clicca qui per vederlo:" => "Clicca qui per vederlo: ",   
+    'manage_order_fields'=>'Gestisci campi di ordinamento',
+    'field'=>'Campo di ordinamento',  
+    'order_fields_visible'=>'Visibile',
 ];

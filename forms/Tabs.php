@@ -47,6 +47,11 @@ class Tabs extends BaseTabs
      * @var bool $newCwhView If true show the new CWH 3 cols widget.
      */
     public $newCwhView = true;
+    
+    /**
+     * @var bool $cardTagsView If true show the new CardTagWidgetAreeInteresse widget.
+     */
+    public $cardTagsView = false;
 
     /**
      * @inheritdoc
@@ -160,18 +165,33 @@ JS;
             /* if model is UserProfile or extends UserProfile, show a different Widget */
             if (($model instanceof UserProfile) && isset($moduleCwh) && isset($moduleTag) && !$this->hideTagsTab) {
                 $oneTagPresent = ($model->hasErrors('interestTagValues') ? 0 : 1);
-                $this->items[] = [
-                    'label' => BaseAmosModule::t('amoscore', 'Tag Aree di interesse'),
-                    'content' => (new \open20\amos\cwh\widgets\TagWidgetAreeInteresse([
-                        'model' => $model,
-                        'attribute' => 'areeDiInteresse',
-                        'form' => \yii\base\Widget::$stack[0],
-                    ]))->run(),
-                    'options' => [
-                        'class' => 'tag-aree-interesse-tab',
-                        'id' => 'tab-tags'
-                    ]
-                ];
+                if($this->cardTagsView){
+                    $this->items[] = [
+                        'label' => BaseAmosModule::t('amoscore', 'Tag Aree di interesse'),
+                        'content' => (new \open20\amos\cwh\widgets\CardTagWidgetAreeInteresse([
+                            'model' => $model,
+                            'attribute' => 'interestTagValues',
+                            'form' => \yii\base\Widget::$stack[0],
+                        ]))->run(),
+                        'options' => [
+                            'class' => 'tag-aree-interesse-tab',
+                            'id' => 'tab-tags'
+                        ]
+                    ];
+                }else{
+                    $this->items[] = [
+                        'label' => BaseAmosModule::t('amoscore', 'Tag Aree di interesse'),
+                        'content' => (new \open20\amos\cwh\widgets\TagWidgetAreeInteresse([
+                            'model' => $model,
+                            'attribute' => 'areeDiInteresse',
+                            'form' => \yii\base\Widget::$stack[0],
+                        ]))->run(),
+                        'options' => [
+                            'class' => 'tag-aree-interesse-tab',
+                            'id' => 'tab-tags'
+                        ]
+                    ];
+                }
                 $js = <<<JS
 var oneTagPresent = '$oneTagPresent';
 if (oneTagPresent === '0') {

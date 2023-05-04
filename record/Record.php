@@ -14,6 +14,8 @@ use open20\amos\core\behaviors\BlameableBehavior;
 use open20\amos\core\behaviors\EJsonBehavior;
 use open20\amos\core\behaviors\SoftDeleteByBehavior;
 use open20\amos\core\behaviors\VersionableBehaviour;
+use open20\amos\core\helpers\Html;
+use open20\amos\core\helpers\StringHelper;
 use open20\amos\core\interfaces\CrudModelInterface;
 use open20\amos\core\interfaces\StatsToolbarInterface;
 use open20\amos\core\interfaces\WorkflowModelInterface;
@@ -35,7 +37,6 @@ use yii\db\ActiveRecord;
 use yii\db\Expression;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
-use yii\helpers\HtmlPurifier;
 use yii\helpers\Inflector;
 use yii\helpers\Url;
 use yii\web\Application as Web;
@@ -188,6 +189,18 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
     public static function basicFind()
     {
         return parent::find();
+    }
+
+
+    public function afterFind()
+    {
+        parent::afterFind();
+
+        foreach ($this->attributes as $key => $value) {
+            if (is_string($this->$key)) {
+                $this->$key = StringHelper::purifyString(Html::decode($value));
+            }
+        }
     }
 
     /**
@@ -1229,27 +1242,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
             $listAttributes = $this->attributes;
             foreach ($listAttributes as $key => $attribute) {
                 if (is_string($this->$key)) {
-                    $config = [
-                        // Change from 'XHTML 1.0 Strict'.
-                        'HTML.Doctype' => 'XHTML 1.0 Transitional',
-                        // Change from 'XHTML 1.0 Strict'.
-                        'HTML.Allowed' => 'a[href|target|style],h1[style],h2[style],h3[style],h4[style],h5[style],h6[style],b,strong,i,em,ul[style],ol[style],li[style],p[style],br,span[style],img[width|height|alt|src|style],iframe[width|height|src|frameborder],sup,sub',
-                        // Finally add the following lines:
-                        'HTML.SafeIframe' => true,
-                        'URI.SafeIframeRegexp' => '%^(http://|https://|//)(www.youtube.com/embed/|player.vimeo.com/video/)%',
-                        'Attr.AllowedFrameTargets' => '_blank',
-                        'CSS.AllowTricky' => true,
-                    ];
-
-                    if (!empty(\Yii::$app->params['forms-purify-data-config'])) {
-                        $config = \Yii::$app->params['forms-purify-data-config'];
-                    }
-
-                    $this->$key = HtmlPurifier::process(trim($this->$key), $config);
-                    if (!empty(\Yii::$app->params['forms-purify-data-enable-amp']) && \Yii::$app->params['forms-purify-data-enable-amp']
-                        == true) {
-                        $this->$key = str_replace('&amp;', '&', $this->$key);
-                    }
+                    $this->$key = StringHelper::purifyString($this->$key);
                 }
             }
         }

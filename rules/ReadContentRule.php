@@ -42,6 +42,26 @@ class ReadContentRule extends BasicContentRule
         $cwhModule = \Yii::$app->getModule('cwh');
         $cwhEnabled = $model->isEnabledCwh($cwhModule);
 
+        // se sono community manger posso guardare - > riportato if presente  in ValidatorUpdateContentRule
+        if($cwhEnabled || $model->isNewRecord) {
+            $scope = $cwhModule->getCwhScope();
+            if (isset($cwhModule) && !empty($scope)) {
+                $communityModule = \Yii::$app->getModule('community');
+                if (isset($scope['community']) && $communityModule) {
+                    $community = \open20\amos\community\models\Community::findOne($scope['community']);
+                    if (isset($communityModule->forceWorkflowSingleCommunity) && $communityModule->forceWorkflowSingleCommunity) {
+                        if (\open20\amos\community\utilities\CommunityUtil::hasRole($community) || !$community->force_workflow) {
+                            return true;
+                        }
+                    } else {
+                        if (\open20\amos\community\utilities\CommunityUtil::hasRole($community)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
         //exclude draft contents when the content has a workflow validated status
         if (!$cwhEnabled) {
             if (!$model->hasAttribute('status')) {

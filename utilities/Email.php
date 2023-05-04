@@ -20,7 +20,7 @@ use yii\log\Logger;
  */
 class Email extends BaseObject
 {
-
+    const PARAMS__TESTING_MAIL_ADDRESSES = 'testingEmailAddresses';
     /**
      * @param string $from
      * @param array|string $to
@@ -48,6 +48,9 @@ class Email extends BaseObject
                 } elseif (!is_string($to) && !is_array($to)) {
                     return false;
                 }
+                //check per vedere se bisogna usare gli indirizzi di testing come destinatari
+                $to = self::getFinalRecipientListForEmail($to);
+
                 foreach ($to as $recipient) {
                     /** @var string $recipient */
                     if ($use_queue) {
@@ -127,6 +130,23 @@ class Email extends BaseObject
                 $lang = $module->getGuestLanguage();
                 $module->setAppLanguage($lang);
             }
+        }
+    }
+    /*
+    Questa funzione controlla se c'è il parametro testingMailAddresses nei params. Se non c'è
+    tutto normale, altrimenti tutti gli invii di email vengono fatti a questi indirizzi
+    anzichè gli indirizzi originali.
+    */
+    private static function getFinalRecipientListForEmail($email_address_or_list) {
+        if (isset(\Yii::$app->params[self::PARAMS__TESTING_MAIL_ADDRESSES])) {
+            $p = \Yii::$app->params[self::PARAMS__TESTING_MAIL_ADDRESSES];
+
+            if (is_string($p)) return array($p);
+            if (is_array($p)) return $p;
+            throw new \Exception("Errore nella configurazione : il parametro ".self::PARAMS__TESTING_MAIL_ADDRESSES." non è una stringa email o un array di stringhe email.");
+        } else 
+        {
+            return $email_address_or_list;
         }
     }
 }

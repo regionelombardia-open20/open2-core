@@ -93,6 +93,7 @@ class M2MWidget extends Widget
     public $itemsTargetPagination = null;
     public $itemsMittenteActionColumns = [];
     public $mittenteFooter = '';
+    public $redirectCancelButton = '';
 
     /**
      * @var array $relationAttributesArray
@@ -1009,7 +1010,7 @@ class M2MWidget extends Widget
             $buttons = $this->targetFooterButtons;
         } else {
             $moduleClassName = $this->moduleClassName;
-            $cancelButton = self::makeCancelButton($moduleClassName, $this->targetUrlController, $this->model, $this->isModal);
+            $cancelButton = self::makeCancelButton($moduleClassName, $this->targetUrlController, $this->model, $this->isModal, $this->redirectCancelButton);
             $urlParams = [
                 '/' . $moduleClassName::getModuleName() . '/' . $this->targetUrlController . '/associa-m2m',
                 'id' => $this->model['id'],
@@ -1042,24 +1043,29 @@ class M2MWidget extends Widget
 
     /**
      * This method return the default cancel button
-     * @param string $moduleClassName
-     * @param string $targetUrlController
-     * @param Record $model
-     * @param bool|false $isModal
+     * @param $moduleClassName
+     * @param $targetUrlController
+     * @param $model
+     * @param bool $isModal
+     * @param string $redirectCancelButton
      * @return string
      */
-    public static function makeCancelButton($moduleClassName, $targetUrlController, $model, $isModal = false)
+    public static function makeCancelButton($moduleClassName, $targetUrlController, $model, $isModal = false, $redirectCancelButton  ='')
     {
         /** @var Module $moduleClassName */
         if ($isModal) {
             $button = Html::a(BaseAmosModule::tHtml('amoscore', 'Annulla'), null,
                 ['class' => 'btn btn-secondary', 'title' => BaseAmosModule::t('amoscore', 'Annulla'), 'data-dismiss' => 'modal']);
         } else {
-            $button = Html::a(BaseAmosModule::tHtml('amoscore', 'Annulla'), Yii::$app->urlManager->createUrl([
+            $url = [
                 '/' . $moduleClassName::getModuleName() . '/' . $targetUrlController . '/annulla-m2m',
                 'id' => $model['id'],
                 'action' => Yii::$app->controller->action->id
-            ]), ['class' => 'btn btn-secondary', 'title' => BaseAmosModule::t('amoscore', 'Annulla')]);
+            ];
+            if(!empty($redirectCancelButton)){
+               $url['redirectCancelButton'] = $redirectCancelButton;
+            }
+            $button = Html::a(BaseAmosModule::tHtml('amoscore', 'Annulla'), Yii::$app->urlManager->createUrl($url), ['class' => 'btn btn-secondary', 'title' => BaseAmosModule::t('amoscore', 'Annulla')]);
         }
         return $button;
     }
@@ -1073,10 +1079,10 @@ class M2MWidget extends Widget
     {
         if ($isModal) {
             return Html::a(BaseAmosModule::tHtml('amoscore', 'Salva'), $url,
-                ['class' => 'btn btn-navigation-primary save-modal m-l-5']);
+                ['class' => 'btn btn-navigation-primary save-modal m-l-5', 'data-pjax' => '0']);
         } else {
             return Html::submitButton(BaseAmosModule::tHtml('amoscore', 'Salva'),
-                ['class' => 'btn btn-navigation-primary save-association']);
+                ['class' => 'btn btn-navigation-primary save-association', 'data-pjax' => '0']);
         }
     }
 

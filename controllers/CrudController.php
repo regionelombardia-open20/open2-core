@@ -126,6 +126,21 @@ abstract class CrudController extends BaseController
                             'allow' => true,
                             'roles' => ['@']
                         ],
+                        [
+                            'actions' => ['order-fields','ajax-update-order-fields'],
+                            'allow' => true,
+                            'roles' => ['MANAGE_ORDER_FIELDS'],
+                            'matchCallback' => function ($rule, $action) {	
+                            
+                                $module = $this->module;
+                                if($module->hasProperty(enableCustomOrderFields))
+                                    return $module->enableCustomOrderFields;
+                                else
+                                    return false;
+                               
+                            }
+                            
+                        ],
                     ],
                 ],
                 'verbs' => [
@@ -493,5 +508,116 @@ abstract class CrudController extends BaseController
     public static function getManageLinks()
     {
         return [];
+    }
+    
+    public function actionOrderFields()
+    {
+        
+        $view = '@vendor/open20/amos-core/views/CustomOrderFieldsView';        
+        
+        $this->setUpLayout('form');
+               
+        try {
+            $moduleObj = $this->module;
+            $module = $moduleObj->getModuleName();
+            $url = ['/'.$moduleObj->id.'/'.$moduleObj->id.'/ajax-update-order-fields'];
+        } catch (\yii\base\UnknownMethodException $e) {           
+            throw new \yii\base\NotSupportedException(Yii::t('amoscore', '"getModuleName" is not implemented.'));
+        }catch(\Error $e){
+            throw new \yii\base\NotSupportedException($e->getMessage());
+        }
+        
+        $fields = [];
+        if(isset($moduleObj->params['orderParams'])){
+            $orderParams = $moduleObj->params['orderParams'];
+            
+            if(isset($orderParams[$module]) && isset($orderParams[$module]['enable']) && $orderParams[$module]['enable'] && $orderParams[$module]['fields']){
+                
+                $model = $this->getModelSearch();
+                $model->setOrderAttributes($orderParams[$module]['fields']);
+                $fields = $model->getOrderAttributesLabels();
+                
+            }  
+        }
+        
+        $rows = [];
+        foreach($fields as $field=>$label){   
+            
+            $record = \open20\amos\core\models\base\CustomOrderFields::find()->where(['modulo'=>$module,'colonna'=>$field])->one();
+            $visible = isset($record) ? $record->visibile : 0;                  
+            
+            $rows[] = [
+                'field'=>$field,
+                'label'=>$label,
+                'visible'=>(boolean)$visible,
+            ];
+        }             
+        
+        $dataProvider = new \yii\data\ArrayDataProvider([
+    	    'allModels' => $rows,    	    
+    	    'pagination' => false,
+    	]);
+                
+        return $this->render(
+            $view,
+            [
+                'dataProvider' => $dataProvider,
+                'moduleName' => $module,
+                'updateUrl' =>$url,
+                
+            ]
+        );
+    }
+    
+    public function actionAjaxUpdateOrderFields()
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $return = ['error'=>false];      
+        
+        if(!isset($_POST['rows'])){
+            Yii::$app->session->addFlash('danger',  Yii::t('amoscore', 'Parametri post non settati correttamente'));
+            $return['error'] = true;
+            return $return;
+        }
+                     
+        try {
+            $moduleObj = $this->module;
+            $module = $moduleObj->getModuleName();            
+        } catch (\yii\base\UnknownMethodException $e) {
+            Yii::$app->session->addFlash('danger',  Yii::t('amoscore', '"getModuleName" is not implemented.'));
+            $return['error'] = true;
+            return $return;   
+        } catch(\Error $e){
+            Yii::$app->session->addFlash('danger',  $e->getMessage());
+            $return['error'] = true;
+            return $return;         
+        }
+        
+        $field = isset($_POST['field']) ? $_POST['field'] : null;
+        $visible = isset($_POST['visible']) ? $_POST['visible'] : 0;
+        
+        foreach($_POST['rows'] as $rows){
+               
+            $field = isset($rows['field']) ? $rows['field'] : null;
+            $visible = isset($rows['visible']) ? (int)$rows['visible'] : 0;
+            
+            $model = \open20\amos\core\models\base\CustomOrderFields::find()->where(['modulo'=>$module,'colonna'=>$field])->one();
+            if(!isset($model))
+                $model = new \open20\amos\core\models\base\CustomOrderFields(); 
+
+            $model->modulo = $module;
+            $model->colonna = $field;
+            $model->visibile = $visible;
+
+            $result = $model->save();
+            
+            if(!$result){
+                Yii::$app->session->addFlash('danger',  \yii\helpers\Html::errorSummary($model));
+                $return['error'] = true;
+                break;                
+            }
+        }
+    
+        return $return;
     }
 }

@@ -1,0 +1,149 @@
+#org-chart-id {
+  overflow-x: auto;
+}
+
+.google-visualization-orgchart-table {
+  width: 100%;
+
+  // tr:nth-child(2){
+  //   background-color: red;
+  // }
+  .google-visualization-orgchart-node-large {
+
+    padding: 0;
+    height: 1px;
+    min-height: 100%;
+
+  }
+
+  @-moz-document url-prefix() {
+    .google-visualization-orgchart-node-large {
+      height: 100% !important;
+    }
+  }
+
+  .org-table-space {
+    padding: 0 20px;
+  }
+
+  .google-visualization-orgchart-noderow-large {
+    background-color: rgba(41, 122, 56, 0.1);
+    padding: 0;
+
+    .item-node-project {
+      background-color: rgba(41, 122, 56, 0.4);
+      padding: 25px 35px;
+      color: #333;
+      font-size: 18px;
+      line-height: 1.2;
+      min-height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      position: relative;
+      a {
+        color: #333;
+        text-decoration: none;
+
+        &:hover,
+        &:focus {
+          text-decoration: underline;
+        }
+      }
+
+      &.node-draft {
+        border: dashed 2px #00000050;
+        // background-color: rgba(41, 122, 56, 0.2);
+      }
+
+      // &.node-to-validate {
+      //   background-color: rgba(166,99,0,0.36);
+      //   font-style: italic;
+      // }
+      .number-contents-node {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        font-size: 14px;
+        background-color: #333;
+        color: #fff;
+        border-radius: 25px;
+        padding: 2px 8px;
+      }
+    }
+
+    &:nth-child(21n+2) {
+      background-color: rgba(255, 139, 139, 0.2);
+
+      .item-node-project {
+        background-color: rgba(255, 139, 139, 0.9);
+      }
+    }
+
+    &:nth-child(21n+5) {
+      background-color: rgba(255, 188, 43, 0.2);
+
+      .item-node-project {
+        background-color: rgba(255, 188, 43, 0.9);
+      }
+    }
+
+    &:nth-child(21n+8) {
+      background-color: rgba(255, 241, 52, 0.2);
+
+      .item-node-project {
+        background-color: rgba(255, 241, 52, 0.9);
+      }
+    }
+
+    &:nth-child(21n+11) {
+      background-color: rgba(111, 205, 120, 0.2);
+
+      .item-node-project {
+        background-color: rgba(111, 205, 120, 0.9);
+      }
+    }
+
+    &:nth-child(21n+14) {
+      background-color: rgba(104, 234, 234, 0.2);
+
+      .item-node-project {
+        background-color: rgba(104, 234, 234, 0.9);
+      }
+    }
+
+    &:nth-child(21n+17) {
+      background-color: rgba(90, 142, 231, 0.2);
+
+      .item-node-project {
+        background-color: rgba(90, 142, 231, 0.9);
+      }
+    }
+
+    &:nth-child(21n+20) {
+      background-color: rgba(124, 114, 238, 0.2);
+
+      .item-node-project {
+        background-color: rgba(124, 114, 238, 0.9);
+      }
+    }
+  }
+
+  [class^="google-visualization-orgchart-line"] {
+    border-color: #000;
+    border-width: 2px;
+  }
+
+  .level-label {
+    text-transform: uppercase;
+    padding: 0 25px;
+  }
+
+}  
+#content-modal-node {
+    .title-contents {
+      padding: 15px 0;
+      border-top: 1px dotted #999;
+    }
+  }

@@ -77,7 +77,7 @@ class AttributesChangeLogBehavior extends Behavior
             $oldAttributes = $owner->getOldAttributes();
             $this->attributesToLog = array_unique($this->attributesToLog);
             foreach ($this->attributesToLog as $attributeName) {
-                $oldValue = (($event->name == ActiveRecord::EVENT_AFTER_INSERT) ? null : $oldAttributes[$attributeName]);
+                $oldValue = ((($event->name != ActiveRecord::EVENT_AFTER_INSERT) && isset($oldAttributes[$attributeName])) ? $oldAttributes[$attributeName] : null);
                 $newValue = $owner->{$attributeName};
                 if ($oldValue != $newValue) {
                     $fieldsLog = new AttributesChangeLog();
