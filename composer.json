@@ -10,7 +10,7 @@
     "require": {
         "php": ">=5.4.0",
         "2amigos/yii2-google-maps-library": "^1.0.2",
-        "2amigos/yii2-tinymce-widget" : "~1.1",
+        "2amigos/yii2-tinymce-widget": "~1.1",
         "open20/amos-layout": ">=1.2",
         "open20/amos-audit": ">=1.0",
         "open20/amos-utility": "^1.6.0",
@@ -20,6 +20,7 @@
         "brussens/yii2-maintenance-mode": "*",
         "cornernote/yii2-workflow-manager": "*",
         "creocoder/yii2-taggable": "~2.0",
+        "creocoder/yii2-flysystem": "*",
         "kartik-v/yii2-datecontrol": "^1.9.5",
         "kartik-v/yii2-export": "^1.3.0",
         "kartik-v/yii2-grid": "^3.5.0",
@@ -36,18 +37,19 @@
         "npm-asset/tinymce-mention": "^4.0",
         "open20/yii2-less.php": "~1.0.0",
         "philippfrenzel/yii2fullcalendar": "^3.9.0",
-        "bower-asset/fullcalendar" : "^3.9.0",
+        "bower-asset/fullcalendar": "^3.9.0",
         "raoul2000/yii2-workflow": "*",
         "raoul2000/yii2-workflow-view": "*",
         "schmunk42/yii2-giiant": "*",
-        "tinymce/tinymce":"~4.9.3",
+        "tinymce/tinymce": "~4.9.3",
         "yiidoc/yii2-redactor": "*",
-        "yiisoft/yii2": "^2.0.46",
+        "yiisoft/yii2": "^2.0.40",
         "yiisoft/yii2-bootstrap": "*",
         "yiisoft/yii2-swiftmailer": "*",
         "yiimaker/yii2-social-share": "^2.3.2",
         "yii2tech/spreadsheet": "^1.0.5",
-        "google/apiclient": "^2.0"
+        "google/apiclient": "^2.0",
+        "league/flysystem-aws-s3-v3": "*"
     },
     "autoload": {
         "psr-4": {

@@ -1077,10 +1077,10 @@ class M2MWidget extends Widget
     {
         if ($isModal) {
             return Html::a(BaseAmosModule::tHtml('amoscore', 'Salva'), $url,
-                ['class' => 'btn btn-navigation-primary save-modal m-l-5']);
+                ['class' => 'btn btn-navigation-primary save-modal m-l-5', 'data-pjax' => '0']);
         } else {
             return Html::submitButton(BaseAmosModule::tHtml('amoscore', 'Salva'),
-                ['class' => 'btn btn-navigation-primary save-association']);
+                ['class' => 'btn btn-navigation-primary save-association', 'data-pjax' => '0']);
         }
     }
 

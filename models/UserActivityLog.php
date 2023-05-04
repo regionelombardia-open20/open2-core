@@ -51,9 +51,9 @@ class UserActivityLog extends \open20\amos\core\models\base\UserActivityLog
     }
 
 
-    public static function getEditFields()
+    public function getEditFields()
     {
-        $labels = self::attributeLabels();
+        $labels = $this->attributeLabels();
 
         return [
             [

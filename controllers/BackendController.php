@@ -18,11 +18,13 @@ use open20\amos\core\models\ContentShared;
 use open20\amos\core\models\ModelsClassname;
 use open20\amos\core\user\User;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\data\ActiveDataProvider;
 use yii\db\Query;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use open20\amos\core\module\BaseAmosModule;
@@ -182,9 +184,16 @@ abstract class BackendController extends AmosController
      * @param type $uid user_id
      * @param type $cid content_id
      * @param type $mid model id from models_classname: News, Documenti, Discussione
+     * @throws ForbiddenHttpException
+     * @throws InvalidConfigException
      */
     public function actionLike($uid = null, $cid = null, $mid = null)
     {
+        // 18551 security check VAPT
+        if (Yii::$app->user->id != $uid) {
+            throw new ForbiddenHttpException();
+        }
+
         \Yii::$app->response->format = Response::FORMAT_JSON;
 
         $obj = $this->getModelObj();

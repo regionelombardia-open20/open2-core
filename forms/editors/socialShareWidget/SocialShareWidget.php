@@ -59,6 +59,16 @@ class SocialShareWidget extends SocialShare
     {
         $this->setConfigurator();
 
+        if (empty($this->url)) {
+            $this->url = Url::to('', true);
+        }elseif (property_exists($this->model, 'primo_piano') && $this->model->primo_piano){
+            $this->url = Url::to('', true);
+        } else {
+            $this->url = Url::to('', true);
+            $arr = explode("view", $this->url, 2);
+            $this->url = $arr[0] . "public" . $arr[1];
+        }
+
         if ($this->isComment == false && $this->isProtected == false && $this->mode == self::MODE_NORMAL) {
             $this->containerOptions['style'] = $this->containerOptions['style'] . 'display: flex;
                 flex-direction: row;

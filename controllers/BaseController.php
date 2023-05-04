@@ -4,11 +4,10 @@
  * Aria S.p.A.
  * OPEN 2.0
  *
- *
- * @package    open20\amos\core\controllers
- * @category   CategoryName
+ *         
+ * @package open20\amos\core\controllers
+ * @category CategoryName
  */
-
 namespace open20\amos\core\controllers;
 
 use open20\amos\core\module\BaseAmosModule;
@@ -23,14 +22,20 @@ use yii\web\ForbiddenHttpException;
 
 /**
  * Class BaseController
+ *
  * @package open20\amos\core\controllers
  */
 abstract class BaseController extends BackendController
 {
+
     private $modelObj;
+
     private $modelClass;
+
     private $modelClassName;
+
     private $modelName;
+
     private $actionsPermissions = array(
         'index' => 'read',
         'view' => 'read',
@@ -45,6 +50,7 @@ abstract class BaseController extends BackendController
     );
 
     /**
+     *
      * @param string $action
      * @param string $permission
      */
@@ -54,6 +60,7 @@ abstract class BaseController extends BackendController
     }
 
     /**
+     *
      * @return mixed
      */
     public function getModel()
@@ -62,6 +69,7 @@ abstract class BaseController extends BackendController
     }
 
     /**
+     *
      * @param mixed $modelObj
      */
     public function setModel($modelObj)
@@ -70,6 +78,7 @@ abstract class BaseController extends BackendController
     }
 
     /**
+     *
      * @return mixed
      */
     public function getModelObj()
@@ -78,6 +87,7 @@ abstract class BaseController extends BackendController
     }
 
     /**
+     *
      * @param mixed $modelObj
      */
     public function setModelObj($modelObj)
@@ -86,6 +96,7 @@ abstract class BaseController extends BackendController
     }
 
     /**
+     *
      * @return mixed
      */
     public function getModelClassName()
@@ -94,6 +105,7 @@ abstract class BaseController extends BackendController
     }
 
     /**
+     *
      * @param mixed $modelClassName
      */
     public function setModelClassName($modelClassName)
@@ -109,6 +121,7 @@ abstract class BaseController extends BackendController
     }
 
     /**
+     *
      * @return mixed
      */
     public function getModelName()
@@ -117,6 +130,7 @@ abstract class BaseController extends BackendController
     }
 
     /**
+     *
      * @param mixed $modelName
      */
     public function setModelName($modelName)
@@ -125,6 +139,7 @@ abstract class BaseController extends BackendController
     }
 
     /**
+     *
      * @return Model
      */
     public function getModelClass()
@@ -133,6 +148,7 @@ abstract class BaseController extends BackendController
     }
 
     /**
+     *
      * @param Model $modelClass
      */
     public function setModelClass($modelClass)
@@ -141,12 +157,13 @@ abstract class BaseController extends BackendController
     }
 
     /**
+     *
      * @throws InvalidConfigException
      */
     public function init()
     {
         parent::init();
-        if (!isset($this->modelObj)) {
+        if (! isset($this->modelObj)) {
             throw new InvalidConfigException("{modelObj} must be set in your init function");
         }
         $this->initModelName();
@@ -154,6 +171,7 @@ abstract class BaseController extends BackendController
     }
 
     /**
+     *
      * @return array
      */
     public function behaviors()
@@ -164,8 +182,10 @@ abstract class BaseController extends BackendController
                 $rules = [
                     [
                         'allow' => true,
-                        'roles' => ['@'],
-                    ],
+                        'roles' => [
+                            '@'
+                        ]
+                    ]
                 ];
             }
         }
@@ -181,14 +201,15 @@ abstract class BaseController extends BackendController
                         $this->addFlash('warning', BaseAmosModule::t('amoscore', 'La sessione è scaduta, effettua il login'));
                         return Yii::$app->getUser()->loginRequired();
                     }
-                    throw new ForbiddenHttpException(BaseAmosModule::t('amoscore',
-                        'Non sei autorizzato a visualizzare questa pagina'));
+                    throw new ForbiddenHttpException(BaseAmosModule::t('amoscore', 'Non sei autorizzato a visualizzare questa pagina'));
                 }
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'logout' => ['post']
+                    'logout' => [
+                        'post'
+                    ]
                 ]
             ]
         ]);
@@ -197,6 +218,7 @@ abstract class BaseController extends BackendController
     }
 
     /**
+     *
      * @return array
      */
     protected function getRules()
@@ -211,13 +233,15 @@ abstract class BaseController extends BackendController
             }
 
             foreach ($this->actionsPermissions as $act => $perm) {
-                if (Yii::$app->user->can(strtoupper($this->modelName . '_' . $perm), $params) ||
-                    Yii::$app->user->can(get_class($this->modelObj) . '_' . strtoupper($perm), $params)
-                ) {
+                if (Yii::$app->user->can(strtoupper($this->modelName . '_' . $perm), $params) || Yii::$app->user->can(get_class($this->modelObj) . '_' . strtoupper($perm), $params)) {
                     $rules[] = [
-                        'actions' => [$act],
+                        'actions' => [
+                            $act
+                        ],
                         'allow' => true,
-                        'roles' => ['@']
+                        'roles' => [
+                            '@'
+                        ]
                     ];
                 }
             }
@@ -227,6 +251,4 @@ abstract class BaseController extends BackendController
 
         return $rules;
     }
-
-
 }

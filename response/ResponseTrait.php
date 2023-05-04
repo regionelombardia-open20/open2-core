@@ -152,6 +152,10 @@ trait ResponseTrait {
     private function checkCurrentUrlForSearchEngineFiltering() {
         $url = \Yii::$app->request->url;
 
+        if(!isset(\Yii::$app->params['searchEngineFilters'])) {
+            return false;
+        }
+
         $filters = !is_null(\Yii::$app->params) && isset(\Yii::$app->params['searchEngineFilters']) ? \Yii::$app->params['searchEngineFilters'] : "*";
 
         if($filters == '*' || (is_array($filters) && in_array('*', $filters))){

@@ -50,9 +50,9 @@ class ContentShared extends \open20\amos\core\models\base\ContentShared
     }
 
 
-    public static function getEditFields()
+    public function getEditFields()
     {
-        $labels = self::attributeLabels();
+        $labels = $this->attributeLabels();
 
         return [
             [

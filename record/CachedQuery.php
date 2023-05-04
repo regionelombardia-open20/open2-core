@@ -14,7 +14,7 @@ use yii\db\Query;
 
 class CachedQuery extends \yii\db\Query
 {
-    private $cacheDuration = null;
+    private $cacheDuration = 60;
     private $functionName  = '';
     private $q             = null;
 

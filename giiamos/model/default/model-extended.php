@@ -378,8 +378,8 @@ if (isset($arrayRules['piva_cf_azienda'])):
     }
 <?php endif; ?>
 
-public static function getEditFields() {
-$labels = self::attributeLabels();
+public function getEditFields() {
+$labels = $this->attributeLabels();
 
 return [
 <?php

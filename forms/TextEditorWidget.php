@@ -276,7 +276,7 @@ JS;
                     $('.mce-tinymce + textarea').trigger('textEditorChange');
                     if ({$triggerTextareaInput}) {
                         $('.mce-tinymce + textarea').val(editor.getBody().innerHTML);
-                        $('.mce-tinymce + textarea').get(0).dispatchEvent(new Event('input', {bubbles: true}));
+                        $('.mce-tinymce + textarea').trigger('input');
                     }
             });
             editor.on('input', function () {

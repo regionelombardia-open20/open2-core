@@ -194,6 +194,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
     public function afterFind()
     {
         parent::afterFind();
+
         if (!empty(\Yii::$app->params['disableAfterFindPurify'])) {
             return;
         }
@@ -807,7 +808,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
         $values       = [];
 
         $sqlMyCommunities = "SELECT community_id id FROM `community_user_mm` WHERE `user_id` = ".\Yii::$app->user->id." AND status = 'ACTIVE'";
-        $myCommunities    = \yii\helpers\ArrayHelper::map(\Yii::$app->db->createCommand()->setSql($sqlMyCommunities)->queryAll(),
+        $myCommunities    = \yii\helpers\ArrayHelper::map(\Yii::$app->db->createCommand()->setSql($sqlMyCommunities)->cache(60)->queryAll(),
                 'id', 'id');
         $myCommunities[0] = 0;
         switch ($type) {
@@ -843,7 +844,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
                     $resultA = $queryOwnA->column();
 
                     if (!empty($resultA[0])) {
-                        $queryOwnB->andWhere(['<', 'B.updated_at', $resultA[0]])->limit(1);
+                        $queryOwnB->andWhere(['<=', 'B.updated_at', $resultA[0]])->limit(1);
 
                         $count  = (empty($queryOwnB->limit(1)->scalar()) ? 0 : 1);
                         $countC = (empty($queryOwnC->limit(1)->scalar()) ? 0 : 1);
@@ -880,7 +881,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
                     $resultA = $queryOwnA->column();
 
                     if (!empty($resultA[0])) {
-                        $queryOwnB->andWhere(['<', 'B.updated_at', $resultA[0]])->limit(1);
+                        $queryOwnB->andWhere(['<=', 'B.updated_at', $resultA[0]])->limit(1);
 
                         $count  = (empty($queryOwnB->limit(1)->scalar()) ? 0 : 1);
                         $countC = (empty($queryOwnC->limit(1)->scalar()) ? 0 : 1);
@@ -2023,7 +2024,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
     {
         if (empty(self::getMyTags())) {
             $sqlTag = "SELECT `tag_id` FROM `cwh_tag_owner_interest_mm` WHERE `record_id` = {$userId} AND `deleted_at` IS NULL";
-            $myTags = \yii\helpers\ArrayHelper::map(\Yii::$app->db->createCommand()->setSql($sqlTag)->queryAll(),
+            $myTags = \yii\helpers\ArrayHelper::map(\Yii::$app->db->createCommand()->setSql($sqlTag)->cache(60)->queryAll(),
                     'tag_id', 'tag_id');
             self::setMyTags($myTags);
         } else {

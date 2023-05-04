@@ -50,9 +50,9 @@ class ModelsClassname extends \open20\amos\core\models\base\ModelsClassname
     }
 
 
-    public static function getEditFields()
+    public function getEditFields()
     {
-        $labels = self::attributeLabels();
+        $labels = $this->attributeLabels();
 
         return [
             [

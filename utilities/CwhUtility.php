@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Aria S.p.A.
  * OPEN 2.0
@@ -12,21 +13,20 @@ namespace open20\amos\core\utilities;
 
 use open20\amos\core\exceptions\AmosException;
 use open20\amos\core\module\BaseAmosModule;
+use open20\amos\core\record\CachedActiveQuery;
 
 /**
  * Class CwhUtility
  * @package open20\amos\core\utilities
  */
-class CwhUtility
-{
+class CwhUtility {
 
-    /** 
+    /**
      * 
      * @param type $model
      * @return string
      */
-    public static function getTargetsString($model) 
-    { 
+    public static function getTargetsString($model) {
         $targetString = null;
         if (!empty($model->validatori)) {
             $validatorName = self::getValidatorName($model->validatori);
@@ -42,28 +42,33 @@ class CwhUtility
      * @return string
      * @throws \yii\base\InvalidConfigException
      */
-    public static function getValidatorName($validators)
-    {
-        $validatorsCollection = \open20\amos\cwh\models\CwhNodi::findAll([
-                'id' => $validators
-        ]);
+    public static function getValidatorName($validators) {
+        $validatorsCollectionQuery = \open20\amos\cwh\models\CwhNodi::find()
+                ->andWhere(['id' => $validators])
+                ->select(['record_id', 'id', 'classname']);
+        $validatorsQuery = CachedActiveQuery::instance($validatorsCollectionQuery);
+        $validatorsQuery->cache(60);
+        $validatorsCollection = $validatorsQuery->asArray()->all();
 
         $validatorsArr = [];
         /** @var CwhNodi $target */
         foreach ($validatorsCollection as $singleValidator) {
-            if (!(strpos($singleValidator->id, 'user') !== false)) {
+
+
+            if (!(strpos($singleValidator['id'], 'user') !== false)) {
+
                 $targetString = "";
                 if (array_key_exists('open20\amos\community\models\CommunityContextInterface',
-                        class_implements(self::findNode($singleValidator)))) {                  
-                    $targetString .= BaseAmosModule::t('amoscore', '#item_card_header_widget_from_community').' ';
+                                class_implements($singleValidator['classname']))) {
+                    $targetString .= BaseAmosModule::t('amoscore', '#item_card_header_widget_from_community') . ' ';
                 }
                 if (array_key_exists('open20\amos\core\interfaces\OrganizationsModelInterface',
-                        class_implements(self::findNode($singleValidator)))) {
-                    $targetString .= BaseAmosModule::t('amoscore', '#item_card_header_widget_from_organization').' ';
+                                class_implements($singleValidator['classname']))) {
+                    $targetString .= BaseAmosModule::t('amoscore', '#item_card_header_widget_from_organization') . ' ';
                 }
                 $fNode = self::findNode($singleValidator);
-                if(!is_null($fNode)){
-                    $validatorsArr[] = $targetString.$fNode->toStringWithCharLimit(-1);
+                if (!is_null($fNode)) {
+                    $validatorsArr[] = $targetString . $fNode->toStringWithCharLimit(-1);
                 }
             }
         }
@@ -76,10 +81,14 @@ class CwhUtility
      * @return mixed
      * @throws \yii\base\InvalidConfigException
      */
-    protected static function findNode($Target)
-    {
-        $modelClass = \Yii::createObject($Target['classname']);
-        $model      = $modelClass->findOne($Target['record_id']);
+    protected static function findNode($Target) {
+        $modelClass = $Target['classname'];
+        $activeQuery = $modelClass::find()->andWhere(['id' => $Target['record_id']]);
+        $modelQuery = CachedActiveQuery::instance($activeQuery);
+        $modelQuery->cache(60);
+        $model = $modelQuery->one();
+
         return $model;
     }
+
 }

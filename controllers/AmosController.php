@@ -22,9 +22,6 @@ use yii\base\ViewEvent;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller as YiiController;
 use yii\web\View;
-use const YII_DEBUG;
-use const YII_ENV_PROD;
-use const YII_ENV_TEST;
 
 /**
  * Class AmosController
@@ -90,6 +87,7 @@ abstract class AmosController extends YiiController
     public function behaviors()
     {
         $vanishTableName = 'vanish_cache';
+        
         $enablePageCache = !empty(Yii::$app->params['enablePageCache']) ? Yii::$app->params['enablePageCache'] : false;
         if ($enablePageCache && Yii::$app->db->schema->getTableSchema($vanishTableName, true) != null) {
             $enablePageCache = Yii::$app->response->statusCode < 300;
@@ -103,14 +101,14 @@ abstract class AmosController extends YiiController
             $amosCache = [
                 'class' => 'yii\filters\PageCache',
                 'enabled' => $enablePageCache,
-                 'only' => ['index', 'view', 'own-interest-news', 'own-news', 'all-news', 'my-communities', 'created-by-communities', 'own-interest-discussions', 'created-by', 'all-discussions', 'validated', 'own-interest', 'operating-referent', 'index-own', 'all-admin', 'staff-een', 'een-expr-of-interest','facilitator-partnership-profiles', 'own-projects'],
+                'only' => ['index', 'view', 'own-interest-news', 'own-news', 'all-news', 'my-communities', 'created-by-communities', 'own-interest-discussions', 'created-by', 'all-discussions', 'validated', 'own-interest', 'operating-referent', 'index-own', 'all-admin', 'staff-een', 'een-expr-of-interest','facilitator-partnership-profiles', 'own-projects'],
                 'duration' => 8600,
                 'cacheHeaders' => false,
                 'cacheCookies' => false,
                 'varyByRoute' => true,
                 'variations' => [
                     Yii::$app->language,
-                    Yii::$app->user->id,
+                    (empty(Yii::$app->user) ? null : Yii::$app->user->id),
                     Yii::$app->request->get(),
                     Yii::$app->request->post(),
                     Yii::$app->session->get('cwh-scope'),
