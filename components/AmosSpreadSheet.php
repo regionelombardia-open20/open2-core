@@ -19,6 +19,7 @@ use PhpOffice\PhpSpreadsheet\Style\Color;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use yii\helpers\ArrayHelper;
+use yii\data\ActiveDataProvider;
 
 class AmosSpreadSheet extends Spreadsheet {
 

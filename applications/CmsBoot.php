@@ -139,7 +139,7 @@ class CmsBoot extends Boot
      */
     public static function isSessionDebug()
     {
-        $debug = (! is_null($SESSION['debug_session']) ? $SESSION['debug_session'] == 'on' : false);
+        $debug = (! is_null($_SESSION['debug_session']) ? $_SESSION['debug_session'] == 'on' : false);
 
         return $debug;
     }

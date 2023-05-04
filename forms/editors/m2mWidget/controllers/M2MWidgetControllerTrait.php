@@ -467,10 +467,10 @@ trait M2MWidgetControllerTrait
                 if(!empty($redirectAction)){
                     return $this->redirect($redirectAction);
                 } else {
-                $this->redirect($this->getRedirectArray($id));
+                    return $this->redirect($this->getRedirectArray($id));
                 }
             }
-        }
+        }       
     }
 
     /**
