@@ -4,6 +4,7 @@ namespace open20\amos\core\helpers;
 
 use yii\helpers\ArrayHelper;
 use yii\helpers\BaseStringHelper;
+use yii\helpers\HtmlPurifier;
 
 class StringHelper extends BaseStringHelper
 {
@@ -429,6 +430,36 @@ class StringHelper extends BaseStringHelper
         }
 
         return $array;
+    }
+
+    /**
+     * @param $string
+     * @return string
+     */
+    public static function purifyString($string) {
+        $config = [
+            // Change from 'XHTML 1.0 Strict'.
+            'HTML.Doctype' => 'XHTML 1.0 Transitional',
+            // Change from 'XHTML 1.0 Strict'.
+            'HTML.Allowed' => 'a[href|target|style],h1[style],h2[style],h3[style],h4[style],h5[style],h6[style],b,strong,i,em,ul[style],ol[style],li[style],p[style],br,span[style],img[width|height|alt|src|style],iframe[width|height|src|frameborder],sup,sub',
+            // Finally add the following lines:
+            'HTML.SafeIframe' => true,
+            'URI.SafeIframeRegexp' => '%^(http://|https://|//)(www.youtube.com/embed/|player.vimeo.com/video/)%',
+            'Attr.AllowedFrameTargets' => '_blank',
+            'CSS.AllowTricky' => true,
+        ];
+
+        if (!empty(\Yii::$app->params['forms-purify-data-config'])) {
+            $config = \Yii::$app->params['forms-purify-data-config'];
+        }
+
+        $string = HtmlPurifier::process(trim($string), $config);
+        if (!empty(\Yii::$app->params['forms-purify-data-enable-amp']) && \Yii::$app->params['forms-purify-data-enable-amp']
+            == true) {
+            $string = str_replace('&amp;', '&', $string);
+        }
+
+        return $string;
     }
 
 }

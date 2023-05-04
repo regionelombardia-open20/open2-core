@@ -61,7 +61,10 @@ class CwhUtility
                         class_implements(self::findNode($singleValidator)))) {
                     $targetString .= BaseAmosModule::t('amoscore', '#item_card_header_widget_from_organization').' ';
                 }
-                $validatorsArr[] = $targetString.self::findNode($singleValidator)->toStringWithCharLimit(-1);
+                $fNode = self::findNode($singleValidator);
+                if(!is_null($fNode)){
+                    $validatorsArr[] = $targetString.$fNode->toStringWithCharLimit(-1);
+                }
             }
         }
 

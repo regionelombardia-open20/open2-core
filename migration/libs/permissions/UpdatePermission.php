@@ -42,6 +42,8 @@ class UpdatePermission extends BaseObject
         'ruleName' => self::FIELD_TYPE_STRING,
         'removeParents' => self::FIELD_TYPE_ARRAY,
         'addParents' => self::FIELD_TYPE_ARRAY,
+        'removeChildren' => self::FIELD_TYPE_ARRAY,
+        'addChildren' => self::FIELD_TYPE_ARRAY
     ];
     
     /**
@@ -77,7 +79,9 @@ class UpdatePermission extends BaseObject
         'description',
         'ruleName',
         'removeParents',
-        'addParents'
+        'addParents',
+        'removeChildren',
+        'addChildren'
     ];
     
     /**
@@ -535,6 +539,38 @@ class UpdatePermission extends BaseObject
             }
         }
         
+        if (isset($newValues['addChildren'])) {
+            $addChildren = $newValues['addChildren'];
+            if (!is_array($addChildren)) {
+                MigrationCommon::printConsoleMessage(BaseAmosModule::t('amoscore', "The 'addChildren' key is not an array. Skipping children of") . ' ' . $addStr);
+                return false;
+            }
+            switch ($mode) {
+                case 'update':
+                    $this->addChildren($addChildren);
+                    break;
+                case 'revert':
+                    $this->removeChildren($addChildren);
+                    break;
+            }
+        }
+        
+        if (isset($newValues['removeChildren'])) {
+            $removeChildren = $newValues['removeChildren'];
+            if (!is_array($removeChildren)) {
+                MigrationCommon::printConsoleMessage(BaseAmosModule::t('amoscore', "The 'removeChildren' key is not an array. Skipping children of") . ' ' . $removeStr);
+                return false;
+            }
+            switch ($mode) {
+                case 'update':
+                    $this->removeChildren($removeChildren);
+                    break;
+                case 'revert':
+                    $this->addChildren($removeChildren);
+                    break;
+            }
+        }
+        
         return true;
     }
 
@@ -669,6 +705,75 @@ class UpdatePermission extends BaseObject
                 }
             } else {
                 MigrationCommon::printConsoleMessage(BaseAmosModule::t('amoscore', 'Parent not found') . ": '" . $parentName . "'. " . BaseAmosModule::t('amoscore', 'Skipping remove...'));
+            }
+        }
+    }
+    
+    /**
+     * @param array $childrenToAdd
+     */
+    private function addChildren($childrenToAdd)
+    {
+        foreach ($childrenToAdd as $childName) {
+            if (!is_string($childName)) {
+                MigrationCommon::printConsoleMessage(BaseAmosModule::t('amoscore', 'The child to add is not a string') . ": '" . $childName . "'. " . BaseAmosModule::t('amoscore', ". Skipping..."));
+                continue;
+            }
+            
+            $child = $this->authManager->getRole($childName);
+            if (is_null($child)) {
+                $child = $this->authManager->getPermission($childName);
+            }
+            if (!is_null($child)) {
+                $messagePrefix = BaseAmosModule::t('amoscore', 'Associations between') . " '" . $this->authItem->name . "' " . BaseAmosModule::t('amoscore', 'and') . " '" . $childName . "' ";
+                $exists = $this->authManager->hasChild($this->authItem, $child);
+                if (!$exists) {
+                    $ok = $this->authManager->addChild($this->authItem, $child);
+                    if ($ok) {
+                        MigrationCommon::printConsoleMessage($messagePrefix . BaseAmosModule::t('amoscore', 'successfully created'));
+                    } else {
+                        MigrationCommon::printConsoleMessage($messagePrefix . BaseAmosModule::t('amoscore', 'failed'));
+                    }
+                } else {
+                    MigrationCommon::printConsoleMessage($messagePrefix . BaseAmosModule::t('amoscore', 'exists. Skipping add...'));
+                }
+            } else {
+                MigrationCommon::printConsoleMessage(BaseAmosModule::t('amoscore', 'Child not found') . ": '" . $childName . "'. " . BaseAmosModule::t('amoscore', 'Skipping add...'));
+            }
+        }
+    }
+    
+    /**
+     * This method destroy the associations between permissions and roles.
+     * @param array $childrenToRemove
+     */
+    private function removeChildren($childrenToRemove)
+    {
+        foreach ($childrenToRemove as $childName) {
+            if (!is_string($childName)) {
+                MigrationCommon::printConsoleMessage(BaseAmosModule::t('amoscore', 'The child to remove is not a string') . ": '" . $childName . "'. " . BaseAmosModule::t('amoscore', '. Skipping...'));
+                continue;
+            }
+            
+            $child = $this->authManager->getRole($childName);
+            if (is_null($child)) {
+                $child = $this->authManager->getPermission($childName);
+            }
+            if (!is_null($child)) {
+                $exists = $this->authManager->hasChild($this->authItem, $child);
+                $messagePrefix = BaseAmosModule::t('amoscore', 'Associations between') . " '" . $this->authItem->name . "' " . BaseAmosModule::t('amoscore', 'and') . " '" . $childName . "' ";
+                if ($exists) {
+                    $ok = $this->authManager->removeChild($this->authItem, $child);
+                    if ($ok) {
+                        MigrationCommon::printConsoleMessage($messagePrefix . BaseAmosModule::t('amoscore', 'successfully removed'));
+                    } else {
+                        MigrationCommon::printConsoleMessage($messagePrefix . BaseAmosModule::t('amoscore', 'remove failed'));
+                    }
+                } else {
+                    MigrationCommon::printConsoleMessage($messagePrefix . BaseAmosModule::t('amoscore', 'not exist. Skipping remove...'));
+                }
+            } else {
+                MigrationCommon::printConsoleMessage(BaseAmosModule::t('amoscore', 'Child not found') . ": '" . $childName . "'. " . BaseAmosModule::t('amoscore', 'Skipping remove...'));
             }
         }
     }

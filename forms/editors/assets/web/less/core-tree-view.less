@@ -1,0 +1,127 @@
+.tree-core-widget {
+
+  .link-list {
+    margin-left: 0;
+    padding-left: 0;
+
+    @media (min-width:576px) {
+      .link-list {
+        .li-link-list {
+         padding-left: 56px;
+
+        }
+      }
+    }
+
+    li {
+      list-style-type: none;
+
+      .item-tree {
+        padding: 24px 0;
+        border-bottom: #CCC solid 1px;
+        .number-contents-node {
+          text-transform: uppercase;
+          font-size: 15px;
+          font-weight: bold;
+          margin-top: 16px;
+        }
+        .d-flex {
+          @media (max-width:575px){
+            flex-wrap: wrap;
+          }
+        }
+
+        .icon-collapse {
+
+          // margin-right: 20px;
+          // width: 36px;
+          &:empty {
+            height: 24px;
+            width: 24px;
+            background: rgba(0, 0, 0, .5);
+            border-radius: 100%;
+            border: 7px solid #efe7de;
+            @media (min-width:576px){
+              height: 36px;
+              width: 36px;
+              border: 14px solid #efe7de;
+            }
+          }
+
+          a {
+            color: #000;
+            text-decoration: none;
+            border: 1px solid;
+            border-radius: 4px;
+            padding: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 24px;
+            width: 24px;
+            @media (min-width:576px){
+              height: 36px;
+              width: 36px;
+            }
+            &[data-toggle=collapse] {
+
+              .icon-tree-collapse {
+                &::before {
+                  content: "-";
+                  font-size: 36px;
+                  display: block;
+                  margin-top: -6px;
+                }
+              }
+            }
+
+            &[aria-expanded="false"] {
+              .icon-tree-collapse {
+                &::before {
+                  content: "+";
+                  font-size: 36px;
+                  display: block;
+                  margin-top: -6px;
+                }
+              }
+            }
+          }
+          // &:after {
+          //   content: "°";
+          //   font-size: 36px;
+          //   display: block;
+          //   margin-top: -6px;
+          // }
+        }
+
+        h5 {
+          font-weight: 700;
+          color: #000;
+          margin-bottom: 18px;
+          font-size: 24px;
+          a {
+            color: #000;
+          }
+        }
+
+        .content-item-tree {
+          margin-left: 12px;
+          @media (min-width:576px){
+            margin-left: 20px;
+          }
+          p {
+            margin: 0;
+          }
+        }
+
+        .btn-actions {
+          margin-left: auto;
+
+          .manage {
+            margin-left: 8px;
+          }
+        }
+      }
+    }
+  }
+}

@@ -116,6 +116,17 @@ class ContextMenuWidget extends Widget
      */
     public $additionalButtons = [];
 
+    /**
+     * Stringa che rappresenta l'etichetta che viene visualizzata quando il mouse è sopra il widget
+     */
+    public $title;
+
+    public function __construct() {
+
+        $this->title = BaseAmosModule::t('amoscore', 'Menu contestuale');
+
+        parent::__construct();
+    }
 
     /**
      * @inheritdoc
@@ -125,6 +136,7 @@ class ContextMenuWidget extends Widget
         $this->initLabels();
         $buttons = $this->composeContextMenuButtons();
         return $this->renderFile($this->getLayout(), [
+            'title' => $this->title,
             'atLeastOnePermission' => $this->atLeastOnePermission,
             'buttons' => $buttons,
             'mainDivClasses' => $this->getMainDivClasses()
@@ -162,12 +174,18 @@ class ContextMenuWidget extends Widget
                 'pjax' => 0
             ],
         ];
+
         if (isset($this->optionsModify) && is_array($this->optionsModify)) {
             $optionsModify = ArrayHelper::merge($optionsModify, $this->optionsModify);
         }
+        $optionsModify = ArrayHelper::merge($optionsModify, ['model' => $this->model]);
+
         if (isset($this->optionsDelete) && is_array($this->optionsDelete)) {
             $optionsDelete = ArrayHelper::merge($optionsDelete, $this->optionsDelete);
         }
+        $optionsDelete = ArrayHelper::merge($optionsDelete, ['model' => $this->model]);
+
+
 
         $buttons = [];
         if (!$this->isDisableModify()) {
@@ -414,7 +432,7 @@ class ContextMenuWidget extends Widget
     /**
     * @return string
     */
-    public function getlabelModify()
+    public function getLabelModify()
     {
         return $this->labelModify;
     }
@@ -430,7 +448,7 @@ class ContextMenuWidget extends Widget
     /**
      * @return string
      */
-    public function getlabelDelete()
+    public function getLabelDelete()
     {
         return $this->labelDelete;
     }

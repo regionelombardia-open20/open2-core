@@ -102,10 +102,12 @@ trait ResponseTrait {
      * @inheritdoc
      */
     public function send() {
-        if ($this->isSent) {
+
+        if ($this->isSent || \Yii::$app instanceof \yii\console\Application) {
             return;
         }
         $this->addSafetyHeaders();
+        $this->addSearchEngineFilterHeader();
         parent::send();
     }
 
@@ -123,6 +125,46 @@ trait ResponseTrait {
         $this->addXssProtection($headers);
         $this->addFrameOptions($headers);
         $this->addPublicKeyPins($headers);
+    }
+
+    public function addSearchEngineFilterHeader() {
+        
+        if ($this->checkCurrentUrlForSearchEngineFiltering()) {
+            $headers = $this->getHeaders();
+            $headers->set("X-Robots-Tag", "noindex");
+        }
+    }
+
+    private function checkCurrentUrlForSearchEngineFiltering() {
+        $url = \Yii::$app->request->url;
+
+        $filters = \Yii::$app->params['searchEngineFilters'];
+
+        if ($filters) {
+            if (!is_array($filters)) $filters = [$filters];
+        }
+        
+        if ($filters) {
+            foreach ($filters as $easy_pattern) {
+                $preg_pattern = $this->transformEasyPatternIntoPreg($easy_pattern);
+
+                if (preg_match($preg_pattern,$url)) return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function transformEasyPatternIntoPreg($pattern) {
+        
+        $pattern = str_replace("/","\/",$pattern);
+        $pattern = str_replace("?","\?",$pattern);
+        $pattern = str_replace("*",".*",$pattern);
+        $pattern = str_replace("#","[\[\]\(\)%=\-\w\d]*",$pattern);
+
+        $pattern = "/^".$pattern."$/";
+
+        return $pattern;
     }
 
     /**

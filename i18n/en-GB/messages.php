@@ -386,6 +386,8 @@ return [
     'Termina contatto' => 'End contact',
     'The \'addParents\' key is not an array. Skipping parents of' => 'The \'addParents\' key is not an array. Skipping parents of',
     'The child is not a string' => 'The child is not a string',
+    'The child to add is not a string' => 'The child to add is not a string',
+    'The child to remove is not a string' => 'The child to remove is not a string',
     'The content of the field' => 'The content of the field',
     'The fields marked with * are required.' => 'The fields marked with * are required.',
     'The fields marked with' => 'The fields marked with',
