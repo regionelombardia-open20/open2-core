@@ -191,10 +191,12 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
         return parent::find();
     }
 
-
     public function afterFind()
     {
         parent::afterFind();
+        if (!empty(\Yii::$app->params['disableAfterFindPurify'])) {
+            return;
+        }
 
         foreach ($this->attributes as $key => $value) {
             if (is_string($this->$key)) {
@@ -274,7 +276,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
                             'required',
                             'when' => function ($model) {
                                 return (!is_null($model->regola_pubblicazione) && in_array($model->regola_pubblicazione,
-                                        [2, 4]) && empty($model->tagValues) && empty($_POST[$this->formName()]['tagValues']));
+                                    [2, 4]) && empty($model->tagValues) && empty($_POST[$this->formName()]['tagValues']));
                             },
                             'whenClient' => "function (attribute, value) {
                                 var regolaPubblicazione = $('#cwh-regola_pubblicazione');
@@ -450,11 +452,11 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
     {
         return ArrayHelper::merge(parent::attributeLabels(),
                 [
-                'orderAttribute' => BaseAmosModule::t('amoscore', 'Campo di ordinamento'),
-                'orderType' => BaseAmosModule::t('amoscore', 'Criterio di ordinamento'),
-                'createdUserProfile' => BaseAmosModule::t('amoscore', 'Creato da'),
-                'updatedUserProfile' => BaseAmosModule::t('amoscore', 'Ultimo aggiornamento di'),
-                'deletedUserProfile' => BaseAmosModule::t('amoscore', 'Cancellato da')
+                    'orderAttribute' => BaseAmosModule::t('amoscore', 'Campo di ordinamento'),
+                    'orderType' => BaseAmosModule::t('amoscore', 'Criterio di ordinamento'),
+                    'createdUserProfile' => BaseAmosModule::t('amoscore', 'Creato da'),
+                    'updatedUserProfile' => BaseAmosModule::t('amoscore', 'Ultimo aggiornamento di'),
+                    'deletedUserProfile' => BaseAmosModule::t('amoscore', 'Cancellato da')
                 ]
         );
     }
@@ -655,12 +657,11 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
         }
 
         // checking for tagging user_profile
-		if(!$this->isNewRecord){
+        if (!$this->isNewRecord) {
 
-            if( isset(\Yii::$app->params['mention-models-enabled'])
-                && is_array(\Yii::$app->params['mention-models-enabled'])
-                && array_key_exists($this->className(),\Yii::$app->params['mention-models-enabled'])
-            ){
+            if (isset(\Yii::$app->params['mention-models-enabled']) && is_array(\Yii::$app->params['mention-models-enabled'])
+                && array_key_exists($this->className(), \Yii::$app->params['mention-models-enabled'])
+            ) {
 
                 $user_profile_ids = [];
 
@@ -670,22 +671,19 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
                         // extract user_profile id filtered..
                         $user_profile_ids = $this->checkNewMentionIds();
                     }
-                }else {
+                } else {
                     $user_profile_ids = $this->checkNewMentionIds();
                 }
 
                 // get all UserProfile for sending a mail
                 $user_profiles = \open20\amos\admin\models\UserProfile::find()
-                                ->andWhere(['id' => $user_profile_ids])
-                                ->all();
+                    ->andWhere(['id' => $user_profile_ids])
+                    ->all();
 
                 // send email for user_profiles
                 $this->sendEmailForUserProfiles($user_profiles);
             }
-		}
-		
-
-
+        }
 
 
         return parent::beforeSave($insert);
@@ -714,7 +712,6 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
     public function afterSave($insert, $changedAttributes)
     {
         $tableName = self::getTableSchema()->name;
-
 
         $blackList = [
             'amos_user_dashboards',
@@ -803,51 +800,94 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
      */
     public static function getBulletType($type, $tableName, $reset, $general = false)
     {
-        $result       = null;
+        $result       = ['bullet' => 0];
+        $resultAll    = 0;
         $community_id = self::checkScope();
         $userId       = \Yii::$app->user->id;
         $values       = [];
 
+        $sqlMyCommunities = "SELECT community_id id FROM `community_user_mm` WHERE `user_id` = ".\Yii::$app->user->id." AND status = 'ACTIVE'";
+        $myCommunities    = \yii\helpers\ArrayHelper::map(\Yii::$app->db->createCommand()->setSql($sqlMyCommunities)->queryAll(),
+                'id', 'id');
+        $myCommunities[0] = 0;
         switch ($type) {
             case self::BULLET_TYPE_ALL:
-
                 if ($community_id > 0 && $general == false) {
-                    $result = \Yii::$app->db->createCommand()->setSql(
-                            "SELECT
-                            IF(count(U.updated_at) = 0, 0, IF(sum(B.user_id) is null, 1, IF(count(B.user_id) >= count(U.updated_at), 0, 1))) as bullet
-                        FROM
-                            notification_update U
-                        LEFT JOIN
-                            notification_user B
-                        ON
-                            (U.module = B.module AND B.user_id = {$userId} AND B.publication_rule in (3,4) AND (U.updated_at < B.updated_at) AND U.community_id = B.community_id)
-                        WHERE
-                            U.community_id = {$community_id} AND U.deleted_at is null AND U.module = '{$tableName}'"
-                        )->queryOne();
-                    /*        pr( "SELECT
-                      IF(count(U.updated_at) = 0, 0, IF(sum(B.user_id) is null, 1, IF(count(B.user_id) > 0, 0, 1))) as bullet
-                      FROM
-                      notification_update U
-                      LEFT JOIN
-                      notification_user B
-                      ON
-                      (U.module = B.module AND B.user_id = {$userId} AND B.publication_rule in (3,4) AND (U.updated_at < B.updated_at) AND U.community_id = B.community_id)
-                      WHERE
-                      U.community_id = {$community_id} AND U.deleted_at is null"); */
+                    $queryOwnA = new Query();
+                    $queryOwnA->select(new Expression("MAX(U.updated_at)"))
+                        ->from("notification_update U")
+                        ->andWhere(new \yii\db\Expression("U.module like '{$tableName}'"))
+                        ->andWhere(['U.deleted_at' => null])
+                        ->andWhere(['U.community_id' => $myCommunities]);
+
+                    $queryOwnB = new Query();
+                    $queryOwnB->select(new Expression("B.user_id"))
+                        ->from("notification_user B")
+                        ->andWhere(new \yii\db\Expression("B.module like '{$tableName}'"))
+                        ->andWhere(['B.deleted_at' => null])
+                        ->andWhere(['B.user_id' => $userId])
+                        ->andWhere(['B.community_id' => $myCommunities]);
+
+                    $queryOwnC = new Query();
+                    $queryOwnC->select(new Expression("B.user_id"))
+                        ->from("notification_user B")
+                        ->andWhere(new \yii\db\Expression("B.module like '{$tableName}'"))
+                        ->andWhere(['B.deleted_at' => null])
+                        ->andWhere(['B.user_id' => $userId])
+                        ->andWhere(['B.community_id' => $myCommunities]);
+
+                    $queryOwnA->andWhere(['U.community_id' => $community_id]);
+                    $queryOwnB->andWhere(['B.community_id' => $community_id]);
+                    $queryOwnC->andWhere(['B.community_id' => $community_id])->limit(1);
+
+                    $resultA = $queryOwnA->column();
+
+                    if (!empty($resultA[0])) {
+                        $queryOwnB->andWhere(['<', 'B.updated_at', $resultA[0]])->limit(1);
+
+                        $count  = (empty($queryOwnB->limit(1)->scalar()) ? 0 : 1);
+                        $countC = (empty($queryOwnC->limit(1)->scalar()) ? 0 : 1);
+                        if ($count == 0 && $countC == 0) {
+                            $result = ['bullet' => 1];
+                        } else $result = ['bullet' => $count];
+                    }
                 } else {
 
-                    $result = \Yii::$app->db->createCommand()->setSql(
-                            "SELECT
-                            IF(count(U.updated_at) = 0, 0, IF(sum(B.user_id) is null, 1, IF(count(B.user_id) >= count(U.updated_at), 0, 1))) as bullet
-                        FROM
-                            notification_update U
-                        LEFT JOIN
-                            notification_user B
-                        ON
-                            U.module = B.module AND B.user_id = {$userId} AND (U.updated_at < B.updated_at) AND (B.publication_rule in (1,2,3,4))
-                        WHERE
-                            U.module = '{$tableName}' AND U.deleted_at is null"
-                        )->queryOne();
+                    $queryOwnA = new Query();
+                    $queryOwnA->select(new Expression("MAX(U.updated_at)"))
+                        ->from("notification_update U")
+                        ->andWhere(new \yii\db\Expression("U.module like '{$tableName}'"))
+                        ->andWhere(['U.deleted_at' => null])
+                        ->andWhere(['U.community_id' => $myCommunities]);
+
+                    $queryOwnB = new Query();
+                    $queryOwnB->select(new Expression("B.user_id"))
+                        ->from("notification_user B")
+                        ->andWhere(new \yii\db\Expression("B.module like '{$tableName}'"))
+                        ->andWhere(['B.deleted_at' => null])
+                        ->andWhere(['B.user_id' => $userId])
+                        ->andWhere(['B.community_id' => $myCommunities]);
+
+                    $queryOwnC = new Query();
+                    $queryOwnC->select(new Expression("B.user_id"))
+                        ->from("notification_user B")
+                        ->andWhere(new \yii\db\Expression("B.module like '{$tableName}'"))
+                        ->andWhere(['B.deleted_at' => null])
+                        ->andWhere(['B.user_id' => $userId])
+                        ->andWhere(['B.community_id' => $myCommunities])
+                        ->limit(1);
+
+                    $resultA = $queryOwnA->column();
+
+                    if (!empty($resultA[0])) {
+                        $queryOwnB->andWhere(['<', 'B.updated_at', $resultA[0]])->limit(1);
+
+                        $count  = (empty($queryOwnB->limit(1)->scalar()) ? 0 : 1);
+                        $countC = (empty($queryOwnC->limit(1)->scalar()) ? 0 : 1);
+                        if ($count == 0 && $countC == 0) {
+                            $result = ['bullet' => 1];
+                        } else $result = ['bullet' => $count];
+                    }
                 }
 
                 if ($reset) {
@@ -866,31 +906,22 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
                                     `updated_at` = now()"
                         )->execute();
                     } else {
+                        foreach ($myCommunities as $comm) {
+                            $values[] = "({$userId}, '{$tableName}', 1, {$comm}, now(), '{$userId}', now(), '{$userId}', null, null)";
+                            $values[] = "({$userId}, '{$tableName}', 2, {$comm}, now(), '{$userId}', now(), '{$userId}', null, null)";
+                            $values[] = "({$userId}, '{$tableName}', 3, {$comm}, now(), '{$userId}', now(), '{$userId}', null, null)";
+                            $values[] = "({$userId}, '{$tableName}', 4, {$comm}, now(), '{$userId}', now(), '{$userId}', null, null)";
+                        }
+
                         \Yii::$app->db->createCommand()->setSql(
                             "INSERT INTO
                                     `notification_user`
                                     (`user_id`,`module`, `publication_rule`, `community_id`, `created_at`,
                                     `created_by`, `updated_at`, `updated_by`, `deleted_at`, `deleted_by`)
                                 VALUES
-                                    ({$userId}, '{$tableName}', 1, {$community_id}, now(),
-                                        '{$userId}', now(), '{$userId}', null, null),
-                                    ({$userId}, '{$tableName}', 2, {$community_id}, now(),
-                                        '{$userId}', now(), '{$userId}', null, null),
-                                             ({$userId}, '{$tableName}', 3, {$community_id}, now(),
-                                        '{$userId}', now(), '{$userId}', null, null),
-                                             ({$userId}, '{$tableName}', 4, {$community_id}, now(),
-                                        '{$userId}', now(), '{$userId}', null, null)
+                                     ".implode(',', $values)."
                                 ON DUPLICATE KEY UPDATE
                                     `updated_at` = now()"
-                        )->execute();
-
-                        \Yii::$app->db->createCommand()->setSql(
-                            "UPDATE
-                                    `notification_user`
-                                SET
-                                    `updated_at` = now()
-                                WHERE
-                                    `user_id` = {$userId} AND `module` = '{$tableName}'"
                         )->execute();
                     }
                     $query     = (new \yii\db\Query())->from('notification_update')
@@ -902,65 +933,81 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
                 }
                 break;
             case self::BULLET_TYPE_OWN:
-
-                $sqlTag           = "SELECT `tag_id` FROM `cwh_tag_owner_interest_mm` WHERE `record_id` = {$userId} AND `deleted_at` IS NULL";
-                $myTags           = \yii\helpers\ArrayHelper::map(\Yii::$app->db->createCommand()->setSql($sqlTag)->queryAll(),
-                        'tag_id', 'tag_id');
-                $sqlMyCommunities = "SELECT community_id id FROM `community_user_mm` WHERE `user_id` = ".\Yii::$app->user->id . " AND status = 'ACTIVE'";
-                $myCommunities    = \yii\helpers\ArrayHelper::map(\Yii::$app->db->createCommand()->setSql($sqlMyCommunities)->queryAll(),
-                        'id', 'id');
-                $myCommunities[0] = 0;
-                $conditions       = [];
-                $conditionsNot    = [];
-                if (!empty($myTags)) {
-                    foreach ($myTags as $tg) {
-                        $conditions[]    = new Expression("FIND_IN_SET('$tg',U.tags) > 0");
-                        $conditionsNot[] = new Expression("FIND_IN_SET('$tg',U.tags) = 0");
-                    }
-                }
-
-                $conditions    = "U.publication_rule in (2,4) ".(!empty($conditions) ? " and (".implode(' or ',
-                        $conditions).")" : "");
-                $conditionsNot = "U.publication_rule in (2,4) ".(!empty($conditionsNot) ? " and (".implode(' or ',
-                        $conditionsNot).")" : "");
                 $allConditions = self::getAllConditionsForQueryByTag($userId);
                 $conditions    = $allConditions[0];
                 $conditionsNot = $allConditions[1];
 
-                $queryOwn = new Query();
-                $queryOwn->select(new Expression("IF(count(U.updated_at) = 0, 0, IF(sum(B.user_id) is null, 1, IF(count(B.user_id) >= count(U.updated_at), 0, 1))) as bullet"))
+                $queryOwnA = new Query();
+                $queryOwnA->select(new Expression("MAX(U.updated_at)"))
                     ->from("notification_update U")
-                    ->leftJoin("notification_user B",
-                        "U.module = B.module AND B.user_id = {$userId} AND (U.updated_at < B.updated_at) AND U.community_id = B.community_id")
                     ->andWhere([
                         'OR',
                         ['U.publication_rule' => [1, 3]],
                         $conditions,
                     ])
-                    ->andWhere(['U.module' => $tableName])
+                    ->andWhere(new \yii\db\Expression("U.module like '{$tableName}'"))
                     ->andWhere(['U.deleted_at' => null])
                     ->andWhere(['U.community_id' => $myCommunities]);
+
+                $queryOwnB = new Query();
+                $queryOwnB->select(new Expression("B.user_id"))
+                    ->from("notification_user B")
+                    ->andWhere(new \yii\db\Expression("B.module like '{$tableName}'"))
+                    ->andWhere(['B.deleted_at' => null])
+                    ->andWhere(['B.user_id' => $userId])
+                    ->andWhere(['B.community_id' => $myCommunities]);
+
+                $queryAllA = new Query();
+                $queryAllA->select(new Expression("MAX(U.updated_at)"))
+                    ->from("notification_update U")
+                    ->andWhere($conditionsNot)
+                    ->andWhere(new \yii\db\Expression("U.module like '{$tableName}'"))
+                    ->andWhere(['U.deleted_at' => null])
+                    ->andWhere(['U.community_id' => $myCommunities]);
+
+                $queryAllB = new Query();
+                $queryAllB->select(new Expression("B.user_id"))
+                    ->from("notification_user B")
+                    ->andWhere(new \yii\db\Expression("B.module like '{$tableName}'"))
+                    ->andWhere(['B.deleted_at' => null])
+                    ->andWhere(['B.publication_rule' => [1, 3]])
+                    ->andWhere(['B.user_id' => $userId])
+                    ->andWhere(['B.community_id' => $myCommunities]);
+
+                $queryOwnC = new Query();
+                $queryOwnC->select(new Expression("B.user_id"))
+                    ->from("notification_user B")
+                    ->andWhere(new \yii\db\Expression("B.module like '{$tableName}'"))
+                    ->andWhere(['B.deleted_at' => null])
+                    ->andWhere(['B.user_id' => $userId])
+                    ->andWhere(['B.community_id' => $myCommunities])
+                    ->limit(1);
+
                 if ($general == false) {
-                    $queryOwn->andFilterWhere(['U.community_id' => $community_id]);
+                    $queryOwnA->andFilterWhere(['U.community_id' => $community_id]);
+                    $queryOwnB->andFilterWhere(['B.community_id' => $community_id]);
+                    $queryOwnC->andFilterWhere(['B.community_id' => $community_id]);
+                    $queryAllA->andFilterWhere(['U.community_id' => $community_id]);
+                    $queryAllB->andFilterWhere(['B.community_id' => $community_id]);
                 }
 
-                $queryAll = new Query();
-                $queryAll->select(new Expression("IF(count(U.updated_at) = 0, 0, IF(sum(B.user_id) is null, 1, IF(count(B.user_id) >= count(U.updated_at), 0, 1))) as bullet"))
-                    ->from("notification_update U")
-                    ->leftJoin("notification_user B",
-                        "U.module = B.module AND B.user_id = {$userId} AND (U.updated_at < B.updated_at) AND U.community_id = B.community_id")
-                    ->andWhere([
-                        'OR',
-                        ['U.publication_rule' => [1, 3]],
-                        $conditionsNot,
-                    ])
-                    ->andWhere(['U.deleted_at' => null])
-                    ->andWhere(['U.module' => $tableName])
-                    ->andFilterWhere(['U.community_id' => $community_id]);
+                $resultA    = $queryOwnA->column();
+                $resultAllA = $queryAllA->column();
+                if (!empty($resultA[0])) {
+                    $queryOwnB->andWhere(['<', 'B.updated_at', $resultA[0]])->limit(1);
 
+                    $count  = (empty($queryOwnB->limit(1)->scalar()) ? 0 : 1);
+                    $countC = (empty($queryOwnC->limit(1)->scalar()) ? 0 : 1);
+                    if ($count == 0 && $countC == 0) {
+                        $result = ['bullet' => 1];
+                    } else $result = ['bullet' => $count];
+                }
 
-                $result    = $queryOwn->one();
-                $resultAll = $queryAll->one();
+                if (!empty($resultAllA[0])) {
+                    $queryAllB->andWhere(['<', 'B.updated_at', $resultAllA[0]]);
+                    $resultAll = (empty($queryAllB->limit(1)->scalar()) ? 0 : 1);
+                }
+
 
                 if ($reset) {
                     if (!empty($community_id)) {
@@ -978,7 +1025,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
                                     `updated_at` = now()"
                         )->execute();
                     } else {
-                        if ($resultAll['bullet'] == 0) {
+                        if ($resultAll == 0) {
 
                             foreach ($myCommunities as $comm) {
                                 $values[] = "({$userId}, '{$tableName}', 1, {$comm}, now(), '{$userId}', now(), '{$userId}', null, null)";
@@ -986,6 +1033,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
                                 $values[] = "({$userId}, '{$tableName}', 3, {$comm}, now(), '{$userId}', now(), '{$userId}', null, null)";
                                 $values[] = "({$userId}, '{$tableName}', 4, {$comm}, now(), '{$userId}', now(), '{$userId}', null, null)";
                             }
+
                             \Yii::$app->db->createCommand()->setSql(
                                 "INSERT INTO
                                     `notification_user`
@@ -1807,7 +1855,6 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
         $this->moduleObj = $moduleObj;
     }
 
-    
     /**
      * Method to get user ID from text for tagged users
      *
@@ -1815,7 +1862,8 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
      *
      * @return array | $ids
      */
-    public static function getMentionUserIdFromText($text){
+    public static function getMentionUserIdFromText($text)
+    {
 
         $ids        = [];
         $occurrence = '>@';
@@ -1846,10 +1894,9 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
                 }
             }
         }
-        
+
         return $ids;
     }
-
 
     /**
      * Method to get UserProfile id
@@ -1858,36 +1905,36 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
      *
      * @return array | $user_profile_ids
      */
-	protected function checkNewMentionIds(){
+    protected function checkNewMentionIds()
+    {
 
-	    $user_profile_ids = [];
+        $user_profile_ids = [];
 
-        foreach(\Yii::$app->params['mention-models-enabled'][$this->className()] as $v){
+        foreach (\Yii::$app->params['mention-models-enabled'][$this->className()] as $v) {
 
-            if(array_key_exists($v, $this->dirtyAttributes)){
+            if (array_key_exists($v, $this->dirtyAttributes)) {
 
                 $beforeIds = self::getMentionUserIdFromText($this->oldAttributes[$v]);
-                $afterIds = self::getMentionUserIdFromText($this->$v);
+                $afterIds  = self::getMentionUserIdFromText($this->$v);
 
                 // check if this model has been validated
                 $count = \open20\amos\workflow\models\WorkflowTransitionsLog::find()
                     ->andWhere(['classname' => $this->className()])
                     ->andWhere(['owner_primary_key' => $this->id])
                     ->count();
-       
+
                 // create an array of user_profile_id to send an email tag notification
                 $user_profile_ids = [];
 
-                if( $count == 0 ){
+                if ($count == 0) {
 
                     // all afterIds
                     $user_profile_ids = $afterIds;
-
-                }else{
+                } else {
 
                     // extract all ids from $ afterIds where they are not in $ beforeIds
                     foreach ($afterIds as $key => $value) {
-                        if( !in_array($value, $beforeIds) ){
+                        if (!in_array($value, $beforeIds)) {
                             $user_profile_ids[] = $value;
                         }
                     }
@@ -1895,23 +1942,21 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
 
                 // filter of user profiles that have set notify_tagging_user_in_content
                 $user_profiles = ArrayHelper::getColumn(
-                    \open20\amos\admin\models\UserProfile::find()
-                        ->select('id')
-                        ->andWhere(['id' => $user_profile_ids])
-                        ->andWhere(['notify_tagging_user_in_content' => 1])
-                        ->andWhere(['deleted_at' => null])
-                        ->all(),
-
-                    function($element){
-                        return $element['id'];
-                    }
+                        \open20\amos\admin\models\UserProfile::find()
+                            ->select('id')
+                            ->andWhere(['id' => $user_profile_ids])
+                            ->andWhere(['notify_tagging_user_in_content' => 1])
+                            ->andWhere(['deleted_at' => null])
+                            ->all(),
+                        function ($element) {
+                            return $element['id'];
+                        }
                 );
             }
         }
-        
-        return $user_profile_ids;
-	}
 
+        return $user_profile_ids;
+    }
 
     /**
      * Method to send email to list UserProfile
@@ -1923,28 +1968,29 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
      *
      * @return void
      */
-    public function sendEmailForUserProfiles($user_profiles, $modelContext = null, $model = null){
+    public function sendEmailForUserProfiles($user_profiles, $modelContext = null, $model = null)
+    {
 
         // create email for tagging user_profile
         $email_assistance = \Yii::$app->params['email-assistenza'];
-        $subject = BaseAmosModule::t('amoscore',"#you_have_been_tagged");
+        $subject          = BaseAmosModule::t('amoscore', "#you_have_been_tagged");
 
         $email = new \open20\amos\core\utilities\Email;
-  
+
         try {
-            
+
             foreach ($user_profiles as $key => $user_profile) {
 
-                $message = \Yii::$app->controller->renderMailPartial('@vendor/open20/amos-core/views/email/content_tagging_user', [
-                    'model' => $model ?? $this,
-                    'contextModel' => $modelContext ?? $this,
-                    'model_field' => $v,
-                    'user' => $user_profile->user
+                $message = \Yii::$app->controller->renderMailPartial('@vendor/open20/amos-core/views/email/content_tagging_user',
+                    [
+                        'model' => $model ?? $this,
+                        'contextModel' => $modelContext ?? $this,
+                        'model_field' => $v,
+                        'user' => $user_profile->user
                 ]);
 
                 $email->sendMail($email_assistance, [$user_profile->user->email], $subject, $message);
             }
-            
         } catch (\Throwable $th) {
             \Yii::getLogger()->log($th->getMessage(), \yii\log\Logger::LEVEL_ERROR);
         }
@@ -2012,5 +2058,4 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
             );
         }
     }
-
 }

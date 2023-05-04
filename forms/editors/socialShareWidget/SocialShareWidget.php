@@ -49,6 +49,8 @@ class SocialShareWidget extends SocialShare
     public $isProtected = true;
     public $isComment = false;
     public $isRedationalContent = false;
+    public $showAlwaysSocials = [];
+    public $labelShare = 'CONDIVIDI';
 
     /**
      * @inheritdoc
@@ -112,8 +114,10 @@ class SocialShareWidget extends SocialShare
 
                 if (!$this->isSocialNetworkEmpty()) {
                     $this->renderModal();
-                    $labelShare = '<div class="m-t-15"><strong>' . \Yii::t('amoscore', 'CONDIVIDI') . '</strong></div>';
-
+                    $labelShare = '';
+                    if($this->labelShare) {
+                        $labelShare = '<div class="m-t-15"><strong>' . \Yii::t('amoscore', $this->labelShare) . '</strong></div>';
+                    }
                     if ($this->mode == self::MODE_NORMAL) {
                         if ($this->isProtected == true && $this->isComment == true) {
 
@@ -309,8 +313,12 @@ class SocialShareWidget extends SocialShare
                     }
                 }
             }
+            if(in_array($socialName, $this->showAlwaysSocials ) && !empty( $allowedSocialNetwork[$socialName])){
+                $allowedSocialNetwork[$socialName] = $social;
+            }
         }
-        if ($this->isProtected == false || $this->isComment == true) {
+
+        if (empty($this->showAlwaysSocials) && $this->isProtected == false || $this->isComment == true) {
             if (isset($allowedSocialNetwork['email'])) {
                 unset($allowedSocialNetwork['email']);
             }
@@ -318,6 +326,7 @@ class SocialShareWidget extends SocialShare
                 unset($allowedSocialNetwork['ownNetwork']);
             }
         }
+
         $this->configurator->socialNetworks = $allowedSocialNetwork;
     }
 

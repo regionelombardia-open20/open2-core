@@ -116,6 +116,8 @@ class ContextMenuWidget extends Widget
      */
     public $additionalButtons = [];
 
+    public $positionAdditionalButton = 'bottom';
+
     /**
      * Stringa che rappresenta l'etichetta che viene visualizzata quando il mouse è sopra il widget
      */
@@ -168,6 +170,7 @@ class ContextMenuWidget extends Widget
         $optionsDelete = [
             'model' => $this->model,
             'title' => $deleteTitle,
+            'class' => 'text-danger',
             'data' => [
                 'confirm' => $labelDeleteConfirm,
                 'method' => 'post',
@@ -188,6 +191,17 @@ class ContextMenuWidget extends Widget
 
 
         $buttons = [];
+        $additionalButtons = [];
+        if(!empty($this->additionalButtons)){
+            foreach ($this->additionalButtons as $htmlAdditionalButton){
+                $additionalButtons []= $htmlAdditionalButton;
+            }
+        }
+
+        if($this->positionAdditionalButton == 'top'){
+            $buttons = ArrayHelper::merge($buttons, $additionalButtons);
+        }
+
         if (!$this->isDisableModify()) {
             if(!empty($this->modelValidatePermission) && $this->model instanceof WorkflowModelInterface){
                 $optionsModify = ModalUtility::getBackToEditPopup($this->model, $this->modelValidatePermission, $this->getActionModify(), $optionsModify);
@@ -199,11 +213,11 @@ class ContextMenuWidget extends Widget
             $buttons[] = Html::a($deleteTitle, $this->getActionDelete(), $optionsDelete, $this->checkDeletePermission);
         }
 
-        if(!empty($this->additionalButtons)){
-            foreach ($this->additionalButtons as $htmlAdditionalButton){
-                  $buttons []= $htmlAdditionalButton;
-            }
+        if($this->positionAdditionalButton == 'bottom'){
+            $buttons = ArrayHelper::merge($buttons, $additionalButtons);
         }
+
+
 
         $this->atLeastOnePermission = false;
         foreach ($buttons as $button) {
@@ -223,7 +237,7 @@ class ContextMenuWidget extends Widget
             $this->labelModify =  BaseAmosModule::t('amoscore', 'Modifica');
         }
         if(empty($this->labelDelete)) {
-            $this->labelDelete= BaseAmosModule::t('amoscore', 'Cancella');
+            $this->labelDelete= BaseAmosModule::t('amoscore', 'Elimina');
         }
     }
 

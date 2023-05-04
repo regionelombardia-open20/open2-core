@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Aria S.p.A.
  * OPEN 2.0
@@ -89,7 +88,7 @@ class AmosView extends View
                     : ''),
             ];
             $this->registerJs(
-                "var yiiOptions = " . \yii\helpers\Json::htmlEncode($options) . ";", View::POS_HEAD, 'yiiOptions'
+                "var yiiOptions = ".\yii\helpers\Json::htmlEncode($options).";", View::POS_HEAD, 'yiiOptions'
             );
         }
 
@@ -105,7 +104,73 @@ class AmosView extends View
             }
         }
 
+        if (!empty(\Yii::$app->controller) && (\Yii::$app->controller instanceof \open20\amos\core\controllers\BackendController)) {
+            $this->registerSeo($params);
+        }
+
         return parent::beforeRender($viewFile, $params);
+    }
+
+    /**
+     *
+     */
+    public function registerSeo($params) {
+        try {
+            if (!empty($params['model']) && !($params['model'] instanceof \stdClass) && is_object($params['model'])) {
+                if ($params['model']->hasMethod('getOgTitle') && !empty($params['model']->getOgTitle())) {
+                    $this->registerMetaTag(['name' => 'og:title', 'content' => $params['model']->getOgTitle()],
+                            'socialTitle');
+                    $this->registerMetaTag(['property' => 'og:title', 'content' => $params['model']->getOgTitle()],
+                            'socialTitle');
+                }
+
+                if ($params['model']->hasMethod('getOgDescription') && !empty($params['model']->getOgDescription())) {
+                    $this->registerMetaTag(['name' => 'og:description', 'content' => $params['model']->getOgDescription()],
+                            'socialDescription');
+                    $this->registerMetaTag(['property' => 'og:description', 'content' => $params['model']->getOgDescription()],
+                            'socialDescription');
+                }
+                if ($params['model']->hasMethod('getOgType') && !empty($params['model']->getOgType())) {
+                    $this->registerMetaTag(['name' => 'og:type', 'content' => $params['model']->getOgType()], 'ogType');
+                    $this->registerMetaTag(['property' => 'og:type', 'content' => $params['model']->getOgType()], 'ogType');
+                }
+
+                if ($params['model']->hasMethod('getOgImageUrl') && !empty($params['model']->getOgImageUrl())) {
+                    $this->registerMetaTag(['name' => 'og:image', 'content' => $params['model']->getOgImageUrl()], 'ogImage');
+                    $this->registerMetaTag(['property' => 'og:image', 'content' => $params['model']->getOgImageUrl()],
+                            'ogImage');
+                }
+
+                if ($params['model']->hasMethod('getMetaRobots') && !empty($params['model']->getMetaRobots())) {
+
+
+                    $this->registerMetaTag(['name' => 'robots', 'content' => $params['model']->getMetaRobots()],
+                            'metaRobots');
+                    $this->registerMetaTag(['property' => 'robots', 'content' => $params['model']->getMetaRobots()],
+                            'metaRobots');
+                }
+                if ($params['model']->hasMethod('getMetaGooglebot') && !empty($params['model']->getMetaGooglebot())) {
+                    $this->registerMetaTag(['name' => 'googlebot', 'content' => $params['model']->getMetaGooglebot()],
+                            'metaGooglebot');
+                    $this->registerMetaTag(['property' => 'googlebot', 'content' => $params['model']->getMetaGooglebot()],
+                            'metaGooglebot');
+                }
+                if ($params['model']->hasMethod('getMetaDescription') && !empty($params['model']->getMetaDescription())) {
+                    $this->registerMetaTag(['name' => 'description', 'content' => $params['model']->getMetaDescription()],
+                            'metaDescription');
+                    $this->registerMetaTag(['property' => 'description', 'content' => $params['model']->getMetaDescription()],
+                            'metaDescription');
+                }
+                if ($params['model']->hasMethod('getMetaKeywords') && !empty($params['model']->getMetaKeywords())) {
+                    $this->registerMetaTag(['name' => 'keywords', 'content' => $params['model']->getMetaKeywords()],
+                            'metyKeywords');
+                    $this->registerMetaTag(['property' => 'keywords', 'content' => $params['model']->getMetaKeywords()],
+                            'metyKeywords');
+                }
+            }
+        } catch (\Exception $e) {
+            
+        }
     }
 
     /**
@@ -187,15 +252,17 @@ class AmosView extends View
     {
         $fileView = $this->cleanFullsize($fileView);
 
-        if (!empty(\Yii::$app->params['dashboardEngine']) && \Yii::$app->params['dashboardEngine'] == WidgetAbstract::ENGINE_ROWS && strpos($fileView, DIRECTORY_SEPARATOR . 'fullsize' . DIRECTORY_SEPARATOR) === false) {
+        if (!empty(\Yii::$app->params['dashboardEngine']) && \Yii::$app->params['dashboardEngine'] == WidgetAbstract::ENGINE_ROWS
+            && strpos($fileView, DIRECTORY_SEPARATOR.'fullsize'.DIRECTORY_SEPARATOR) === false) {
 
-            if (strpos($fileView, DIRECTORY_SEPARATOR) !== 0 && strpos($fileView, '@') !== 0 && strpos($fileView, 'fullsize') === false) {
-                return 'fullsize' . DIRECTORY_SEPARATOR . $fileView;
+            if (strpos($fileView, DIRECTORY_SEPARATOR) !== 0 && strpos($fileView, '@') !== 0 && strpos($fileView,
+                    'fullsize') === false) {
+                return 'fullsize'.DIRECTORY_SEPARATOR.$fileView;
             }
-            $views = explode(DIRECTORY_SEPARATOR, $fileView);
-            $count = count($views);
-            $end = end($views);
-            $prev = array_splice($views, 0, $count - 1);
+            $views       = explode(DIRECTORY_SEPARATOR, $fileView);
+            $count       = count($views);
+            $end         = end($views);
+            $prev        = array_splice($views, 0, $count - 1);
             array_push($prev, 'fullsize');
             array_push($prev, $end);
             $newViewFile = implode(DIRECTORY_SEPARATOR, $prev);
@@ -204,31 +271,30 @@ class AmosView extends View
                 return $newViewFile;
             }
         }
-        if ((strpos($fileView, DIRECTORY_SEPARATOR) === false || strpos($fileView, DIRECTORY_SEPARATOR) > 0) && strpos($fileView, '@') !== 0) {
+        if ((strpos($fileView, DIRECTORY_SEPARATOR) === false || strpos($fileView, DIRECTORY_SEPARATOR) > 0) && strpos($fileView,
+                '@') !== 0) {
 
-            if (strpos($fileView, 'fullsize' . DIRECTORY_SEPARATOR . 'fullsize') !== false && !file_exists($fileView)) {
-                $fileViewNew = str_replace('fullsize' . DIRECTORY_SEPARATOR . 'fullsize', 'fullsize', $fileView);
-
-                return $fileViewNew;
-
-            } else if (strpos($fileView, 'fullsize' . DIRECTORY_SEPARATOR) !== false && !file_exists($fileView)) {
-
-                $fileViewNew = str_replace('fullsize' . DIRECTORY_SEPARATOR, '', $fileView);
+            if (strpos($fileView, 'fullsize'.DIRECTORY_SEPARATOR.'fullsize') !== false && !file_exists($fileView)) {
+                $fileViewNew = str_replace('fullsize'.DIRECTORY_SEPARATOR.'fullsize', 'fullsize', $fileView);
 
                 return $fileViewNew;
+            } else if (strpos($fileView, 'fullsize'.DIRECTORY_SEPARATOR) !== false && !file_exists($fileView)) {
 
+                $fileViewNew = str_replace('fullsize'.DIRECTORY_SEPARATOR, '', $fileView);
+
+                return $fileViewNew;
             }
         }
-        if (strpos($fileView, 'fullsize' . DIRECTORY_SEPARATOR . 'fullsize') !== false && !file_exists($fileView)) {
-            $fileViewNew = str_replace('fullsize' . DIRECTORY_SEPARATOR . 'fullsize', 'fullsize', $fileView);
+        if (strpos($fileView, 'fullsize'.DIRECTORY_SEPARATOR.'fullsize') !== false && !file_exists($fileView)) {
+            $fileViewNew = str_replace('fullsize'.DIRECTORY_SEPARATOR.'fullsize', 'fullsize', $fileView);
 
             if (file_exists($fileViewNew)) {
                 return $fileViewNew;
             }
         }
-        if (strpos($fileView, 'fullsize' . DIRECTORY_SEPARATOR) !== false && !file_exists($fileView)) {
+        if (strpos($fileView, 'fullsize'.DIRECTORY_SEPARATOR) !== false && !file_exists($fileView)) {
 
-            $fileViewNew = str_replace('fullsize' . DIRECTORY_SEPARATOR, '', $fileView);
+            $fileViewNew = str_replace('fullsize'.DIRECTORY_SEPARATOR, '', $fileView);
 
             if (file_exists($fileViewNew)) {
                 return $fileViewNew;
@@ -271,7 +337,7 @@ class AmosView extends View
         $newPath = implode(DIRECTORY_SEPARATOR, $array);
         return $newPath;
     }
-    
+
     /**
      * Removes redundant whitespaces (>1) and new lines (>1).
      *
@@ -282,5 +348,4 @@ class AmosView extends View
     {
         return StringHelper::minify($content);
     }
-
 }

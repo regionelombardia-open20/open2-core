@@ -53,7 +53,8 @@ class ConfiguratorSocialShare extends Configurator
         $isFrontend    = self::isFrontend();
         $url           = self::getCurrentUrl();
         $socialModule  = \Yii::$app->getModule('social');
-        $haveAnalytics = ((!empty($socialModule) && !empty($socialModule->googleAnalytics)) ? true : false);
+        $disableGaTracker = \Yii::$app->params['disableGaTracker'];
+        $haveAnalytics = !$disableGaTracker && ((!empty($socialModule) && !empty($socialModule->googleAnalytics)) ? true : false);
         if (empty($this->socialNetworks)) {
             $this->socialNetworks = [
                 'facebook' => [

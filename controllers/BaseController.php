@@ -38,6 +38,10 @@ abstract class BaseController extends BackendController
         'create-ajax' => 'create',
         'delete' => 'delete',
         'update' => 'update',
+        'like' => 'read',
+        'like-to' => 'read',
+        'get-counter' => 'read',
+        'like-me' => 'read'
     );
 
     /**

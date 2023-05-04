@@ -518,17 +518,15 @@ class M2MWidget extends Widget
             }
 
             if (!empty($this->additionalButtons)) {
-                $buttons = '<div class="row"><div class="col-sm-12 col-md-6 btn-add-admin">' . $buttons . '</div><div class="col-sm-12 col-md-6 btn-search-admin">' .
-                    $downloadButton . $this->additionalButtons;
+                $buttons = '<div class="col-sm-12 col-md-6 btn-add-admin">' . $buttons . '</div><div class="col-sm-12 col-md-6 btn-search-admin m-t-15">' . $downloadButton . $this->additionalButtons;
             } else {
-                $buttons = '<div class="row"><div class="col-sm-12 col-md-6 btn-add-admin">' . $buttons . '</div><div class="col-sm-12 col-md-6 btn-search-admin">' .
-                    $downloadButton;
+                $buttons = '<div class="col-sm-12 col-md-6 btn-add-admin">' . $buttons . '</div><div class="col-sm-12 col-md-6 btn-search-admin m-t-15">' . $downloadButton; 
             }
 
             $buttons = $buttons .
                 Html::input('text', null, $searchFieldValue, [
                     'id' => 'search-' . $gridId,
-                    'class' => 'form-control pull-left',
+                    'class' => 'form-control pull-left m-l-15',
                     'placeholder' => BaseAmosModule::t('amoscore', 'Search') . '...',
                 ]) .
                 Html::a(AmosIcons::show('search', ['class' => '']),
@@ -543,14 +541,14 @@ class M2MWidget extends Widget
                         'id' => 'reset-search-btn-' . $gridId,
                         'class' => 'btn btn-danger-inverse',
                         'alt' => BaseAmosModule::t('amoscore', 'Cancel search')
-                    ]) . '</div></div>';
+                    ]) . '</div>';
         } else {
             $buttons = $downloadButton . $buttons;
         }
 
 
         if (strlen($buttons)) {
-            $retVal = Html::tag('div', $buttons, ['class' => 'container-tools']);
+            $retVal = Html::tag('div', $buttons, ['class' => 'container-tools row']);
         }
 
         return $retVal;
@@ -706,7 +704,7 @@ class M2MWidget extends Widget
             $this->itemsMittente,
             $this->getRelationAttributesArray(),
             $this->createActionColumnButtons()
-        );
+        ); 
 
         /** @var  $dataProviderMittente ActiveDataProvider */
         $dataProviderMittente = $this->getItemsMittenteDataProvider();
@@ -1079,10 +1077,10 @@ class M2MWidget extends Widget
     {
         if ($isModal) {
             return Html::a(BaseAmosModule::tHtml('amoscore', 'Salva'), $url,
-                ['class' => 'btn btn-navigation-primary save-modal m-l-5', 'data-pjax' => '0']);
+                ['class' => 'btn btn-navigation-primary save-modal m-l-5']);
         } else {
             return Html::submitButton(BaseAmosModule::tHtml('amoscore', 'Salva'),
-                ['class' => 'btn btn-navigation-primary save-association', 'data-pjax' => '0']);
+                ['class' => 'btn btn-navigation-primary save-association']);
         }
     }
 

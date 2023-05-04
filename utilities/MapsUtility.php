@@ -73,6 +73,9 @@ class MapsUtility extends BaseObject
                     
                 }
             }
+        } else {
+            Yii::$app->session->addFlash('warning', BaseAmosModule::t('amoscore', 'Errore di comunicazione con google: la provided API key fornita non è valida.'));
+            return [];
         }
         
         if (empty($origin)) {

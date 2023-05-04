@@ -39,6 +39,7 @@ class WidgetShareAndSeeActions extends WidgetGraphic
     {
 
         $current_page_url = \Yii::$app->params['platform']['frontendUrl'] . Url::current();
+        $current_page_url = urlencode($current_page_url);
         $support_email=  \Yii::$app->params['widgetShareEmail'];
         $sharing_link = [
             'facebook' => "https://www.facebook.com/sharer/sharer.php?u=" . $current_page_url,

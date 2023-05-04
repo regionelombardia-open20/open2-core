@@ -1,5 +1,4 @@
 <?php
-
 /**
  */
 
@@ -88,7 +87,6 @@ use yii\helpers\ArrayHelper;
  */
 class ActiveField extends \yii\bootstrap4\ActiveField
 {
-
     private $labelTranslationField;
 
     /**
@@ -111,7 +109,6 @@ class ActiveField extends \yii\bootstrap4\ActiveField
         }
         return $this;
     }
-
     /**
      * @param string|null $label the label or null to use model label
      * @param array $options the tag options
@@ -160,42 +157,38 @@ class ActiveField extends \yii\bootstrap4\ActiveField
                                     if (!empty($model['namespace']) && !empty($model['attributes'])) {
                                         $classSender = get_class($this->model);
                                         if ($classSender == $model['namespace'] && !empty($model['attributes']) && in_array(
-                                            $this->attribute,
-                                            $model['attributes']
-                                        )) {
+                                                $this->attribute, $model['attributes']
+                                            )) {
                                             if (!empty($module->labelTranslationField)) {
                                                 eval("\$translationLabelAltField = {$module->translationLabelAltField}");
                                                 eval("\$translationLabelField = {$module->translationLabelField}");
-                                                $templateTranslationField = $module->templateTranslationField;
+                                                $templateTranslationField    = $module->templateTranslationField;
                                                 $templateTranslationAltField = $module->templateTranslationAltField;
                                                 $this->labelTranslationField = str_replace(
-                                                    $templateTranslationAltField,
-                                                    $translationLabelAltField,
+                                                    $templateTranslationAltField, $translationLabelAltField,
                                                     $module->labelTranslationField
                                                 );
                                                 $this->labelTranslationField = str_replace(
-                                                    $templateTranslationField,
-                                                    $translationLabelField,
+                                                    $templateTranslationField, $translationLabelField,
                                                     $this->labelTranslationField
                                                 );
                                             } else {
-                                                $this->labelTranslationField = ' (<span class="label_translation am am-translate" title="' . BaseAmosModule::t(
-                                                    "amostranslation",
-                                                    "Testo traducibile direttamente scrivendo in questo campo, tradurrai nella lingua selezionata, la visualizzazione attuale è in"
-                                                ) . ' ' . strtoupper(substr(
-                                                    \Yii::$app->language,
-                                                    0,
-                                                    2
-                                                )) . '"> - ' . strtoupper(substr(\Yii::$app->language, 0, 2)) . '</span>)';
+                                                $this->labelTranslationField = ' (<span class="label_translation am am-translate" title="'.BaseAmosModule::t(
+                                                        "amostranslation",
+                                                        "Testo traducibile direttamente scrivendo in questo campo, tradurrai nella lingua selezionata, la visualizzazione attuale è in"
+                                                    ).' '.strtoupper(substr(
+                                                            \Yii::$app->language, 0, 2
+                                                        )).'"> - '.strtoupper(substr(\Yii::$app->language, 0, 2)).'</span>)';
                                             }
                                             if (!empty($this->labelTranslationField)) {
-                                                $textSource = $this->translationSource($this->model->id, $module, $model['namespace']);
-                                                $posLabel = strpos($this->template, '{label}');
-                                                if ($posLabel !== false && strpos($this->template, $this->labelTranslationField) === false) {
-                                                    $pos = $posLabel + 7;
-                                                    $this->template = $textSource . substr($this->template, 0, $pos) . $this->labelTranslationField . substr(
-                                                        $this->template,
-                                                        $pos
+                                                $textSource = $this->translationSource($this->model->id, $module,
+                                                    $model['namespace']);
+                                                $posLabel   = strpos($this->template, '{label}');
+                                                if ($posLabel !== false && strpos($this->template,
+                                                        $this->labelTranslationField) === false) {
+                                                    $pos            = $posLabel + 7;
+                                                    $this->template = $textSource.substr($this->template, 0, $pos).$this->labelTranslationField.substr(
+                                                            $this->template, $pos
                                                     );
                                                 }
                                             }
@@ -208,6 +201,7 @@ class ActiveField extends \yii\bootstrap4\ActiveField
                 }
             }
         } catch (\Exception $e) {
+
         }
     }
 
@@ -224,8 +218,8 @@ class ActiveField extends \yii\bootstrap4\ActiveField
         }
 
         if (!empty(\Yii::$app->params['showTranslationInlinePersonalized'])) {
-            $class = \Yii::$app->params['showTranslationInlinePersonalized']['class'];
-            $method = \Yii::$app->params['showTranslationInlinePersonalized']['method'];
+            $class           = \Yii::$app->params['showTranslationInlinePersonalized']['class'];
+            $method          = \Yii::$app->params['showTranslationInlinePersonalized']['method'];
             $okMultilanguage = $class::$method();
             return $okMultilanguage;
         }
@@ -233,25 +227,24 @@ class ActiveField extends \yii\bootstrap4\ActiveField
         return true;
     }
 
-
-    public function translationSource($id, $module, $namespace)
+    public function translationSource($id, $module, $namespace, $default_language = 'it-IT')
     {
         $str = '';
         if (!$this->model->isNewRecord) {
             $lang = \Yii::$app->language;
-            if ($lang != 'it-IT') {
-                $classNameTrans = $module->modelNs . '\\' . StringHelper::basename($namespace) . "Translation";
-                $language_source = null;
+            if ($lang != $default_language) {
+                $classNameTrans  = $module->modelNs.'\\'.StringHelper::basename($namespace)."Translation";
                 $language_source = \Yii::$app->request->getQueryParam(StringHelper::basename($classNameTrans))['language_source'];
-                list($language_source_res, $source) = \open20\amos\translation\models\TranslationConf::getSource($language_source, $id, $lang, $namespace);
+                list($language_source_res, $source) = \open20\amos\translation\models\TranslationConf::getSource($language_source,
+                        $id, $lang, $namespace);
 
                 $modelSource = $source->one();
                 if ($modelSource && !empty($modelSource[$this->attribute])) {
                     $str = "
             <div class='box-language text-secondary'>
             <div class='text-language'>
-                <small><strong>" . \Yii::t('app', 'Testo sorgente') . "</strong></small><br>
-                " . $modelSource[$this->attribute] . " 
+                <small><strong>".\Yii::t('app', 'Testo sorgente')."</strong></small><br>
+                ".$modelSource[$this->attribute]." 
                 </div>
             </div>
         ";

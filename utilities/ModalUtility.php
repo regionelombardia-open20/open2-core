@@ -128,7 +128,7 @@ class ModalUtility extends BaseObject
         $buttons = Html::a($cancelLabel, $cancelLink, $cancelOptions) . Html::a($confirmLabel, $confirmLink, $confirmOptions);
 
         // Make the modal
-        Modal::begin(['id' => $modalId, 'header' => $modalHeader, 'options' => $containerOptions]);
+        Modal::begin(['id' => $modalId, 'header' => $modalHeader, 'headerOptions' => $containerOptions]);
         echo Html::tag('div', $modalDescriptionText);
         echo Html::tag('div', $buttons, $modalOptions);
         Modal::end();

@@ -19,8 +19,10 @@ use yii\helpers\Html;
  * Class ActionColumn
  * @package open20\amos\core\views\grid
  */
-class ActionColumn extends YiiActionColumn
-{
+class ActionColumn extends YiiActionColumn {
+
+    private $labelD;
+
     /**
      * @var string $buttonClass The class of a single action columns button
      */
@@ -61,12 +63,12 @@ class ActionColumn extends YiiActionColumn
      * @var bool $useOnly_additionalParams
      */
     public $useOnly_additionalParams = false;
-    
+
     /**
      * @var \Closure|null $beforeRenderParent
      */
     public $beforeRenderParent = null;
-    
+
     /**
      * @var \Closure|null $afterRenderParent
      */
@@ -75,8 +77,8 @@ class ActionColumn extends YiiActionColumn
     /**
      * @inheritdoc
      */
-    protected function renderDataCellContent($model, $key, $index)
-    {
+    protected function renderDataCellContent($model, $key, $index) {
+        $newActionColumn = ((!empty(\Yii::$app->params['useNewActionColumn']) && \Yii::$app->params['useNewActionColumn'] == true) ? true : false);
         //if isset the additional params parameter
         if (!empty($this->additionalParams)) {
             //if isset to use only additional params
@@ -96,7 +98,7 @@ class ActionColumn extends YiiActionColumn
                 }
             }
         }
-    
+
         if (!is_null($this->beforeRenderParent) && ($this->beforeRenderParent instanceof \Closure)) {
             $beforeRenderParentRes = call_user_func($this->beforeRenderParent, $model, $key, $index);
             if (is_array($key)) {
@@ -106,44 +108,81 @@ class ActionColumn extends YiiActionColumn
                 $key = array_merge($tmp_array_key, ['beforeRenderParentRes' => $beforeRenderParentRes]);
             }
         }
-        
+
         $renderDataCellContent = preg_replace_callback('/\\{([\w\-\/]+)\\}/',
-            function ($matches) use ($model, $key, $index) {
-            $name = $matches[1];
+                function ($matches) use ($model, $key, $index) {
+                    $name = $matches[1];
 
-            if (isset($this->visibleButtons[$name])) {
-                $isVisible = $this->visibleButtons[$name] instanceof \Closure ? call_user_func($this->visibleButtons[$name],
-                        $model, $key, $index) : $this->visibleButtons[$name];
-            } else {
-                $isVisible = true;
-            }
+                    if (isset($this->visibleButtons[$name])) {
+                        $isVisible = $this->visibleButtons[$name] instanceof \Closure ? call_user_func($this->visibleButtons[$name],
+                                        $model, $key, $index) : $this->visibleButtons[$name];
+                    } else {
+                        $isVisible = true;
+                    }
 
-            if ($isVisible && isset($this->buttons[$name])) {
-                if ($name == 'view' && ((!empty($model->usePrettyUrl) && $model->usePrettyUrl == true) || (!empty($model->useFrontendView)
-                    && $model->useFrontendView == true) )) {
+                    if ($isVisible && isset($this->buttons[$name])) {
+                        if ($name == 'view' && ((!empty($model->usePrettyUrl) && $model->usePrettyUrl == true) || (!empty($model->useFrontendView) && $model->useFrontendView == true) )) {
 
-                    $url = $model->getFullViewUrl();
-                } else {
-                    $url = $this->createUrl($name, $model, $key, $index);
-                }
-                return call_user_func($this->buttons[$name], $url, $model, $key);
-            }
+                            $url = $model->getFullViewUrl();
+                        } else {
+                            $url = $this->createUrl($name, $model, $key, $index);
+                        }
 
-            return '';
-        }, $this->template);
+                        return call_user_func($this->buttons[$name], $url, $model, $key);
+                    }
+
+                    return '';
+                }, $this->template);
 
         if (!is_null($this->afterRenderParent) && ($this->afterRenderParent instanceof \Closure)) {
             call_user_func($this->afterRenderParent, $model, $key, $index);
         }
-        
+        $newLink = '';
+        if ($newActionColumn) {
+            $html = mb_convert_encoding($renderDataCellContent, 'HTML-ENTITIES', 'UTF-8');
+            if (!empty(trim($html))) {
+                $doc = \DOMDocument::loadHTML($html);
+                $xpath = new \DOMXPath($doc);
+                $query = "//a";
+                $entries = $xpath->query($query);
+                $titleNode = '';
+                foreach ($entries as $k => $entry) {
+                    $newLink .= '<li><a ';
+                    foreach ($entry->attributes as $attr) {
+                        // $newLink[$k][] = [$attr->nodeName => $attr->nodeValue];
+                        if ($attr->nodeName != 'class') {
+                            $newLink .= '' . $attr->nodeName . '="' . $attr->nodeValue . '" ';
+                        }
+                        if ($attr->nodeName == 'title') {
+                            $titleNode = $attr->nodeValue;
+                        }
+                    }
+                    $newLink .= '>' . $titleNode . '</a></li>';
+                }
+                if (empty($this->labelD)) {
+                    $this->labelD = 1;
+                } else {
+                    $this->labelD = $this->labelD + 1;
+                }
+                $newLabelD = 'dLabel' . $this->labelD;
+
+                return '<div class="dropdown bk-elementActions container-action">
+                        <button id="' . $newLabelD . '" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-default">
+                            <span class="mdi mdi-dots-vertical"></span>
+                        </button>
+                        <ul class="dropdown-menu pull-right" aria-labelledby="' . $newLabelD . '">
+                         ' . (!empty($newLink) ? $newLink : $renderDataCellContent) . '
+                        </ul>
+                    </div>';
+            }
+        }
         return Html::tag('div', $renderDataCellContent, ['class' => 'bk-elementActions container-action']) . Html::tag('div', '', ['class' => 'clearfix']);
     }
 
     /**
      * @inheritdoc
      */
-    protected function initDefaultButtons()
-    {
+    protected function initDefaultButtons() {
         $buttonOptions = [
             'class' => $this->buttonClass,
             'template' => $this->template,
@@ -158,4 +197,5 @@ class ActionColumn extends YiiActionColumn
         $button->initDefaultButtons();
         $this->buttons = $button->buttons;
     }
+
 }

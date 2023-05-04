@@ -29,7 +29,7 @@ class AmosGridView extends GridView
     private $class_thead = '';
     public $title;
     public $name = 'grid';
-    
+
     /* INIZIO ATTRIBUTI per usare una colonna di tipo  'class' => 'kartik\grid\DataColumn' */
     public $bootstrap;
     public $showPageSummary = true;
@@ -38,47 +38,51 @@ class AmosGridView extends GridView
     public $autoXlFormat;
     public $pjax;
     /* FINE ATTRIBUTI */
-    
+
     public $panelTemplate = <<< HTML
             {summary}
             {items}
             {pager}
         
 HTML;
-    
+
     public $layout = "<div class=\"table_switch table-responsive\"> {items} \n {summary} <br> {pager} </div>";
     public $summary = "Risultati visualizzati {count} - Risultati da {begin} a {end} su un totale di {totalCount} - Pagina {page} di {pageCount}";
     public $tableOptions = ['class' => 'table table-hover'];
-    
+
     /**
      * @var string the default data column class if the class name is not explicitly specified when configuring a data column.
      * Defaults to 'open20\amos\core\views\grid\DataColumn'.
      */
     public $dataColumnClass = 'open20\amos\core\views\grid\DataColumn';
-    
+
     /**
      * @var bool $enableExport Enable export of the data present in the grid view without other columns.
      */
     public $enableExport = false;
-    
+
     /**
      * @inheritdoc
      */
     public function init()
     {
-        $listViewLayout = $this->render('@vendor/open20/amos-layout/src/views/layouts/fullsize/parts/yii2/views/listViewLayout');
+
+        $this->layout = $this->render(
+            '@vendor/open20/amos-layout/src/views/layouts/fullsize/parts/yii2/views/listViewLayout',
+            [
+                'showPageSummary' => $this->showPageSummary
+            ]
+        );
+
         parent::init();
 
-        $this->layout = $listViewLayout;
-        if($this->showPageSummary) {
-//            $this->summary = BaseAmosModule::t('amoscore', 'Risultati visualizzati {count} - Risultati da {begin} a {end} su un totale di {totalCount} - Pagina {page} di {pageCount}');
-            $this->summary =
-                "<p>". BaseAmosModule::t('amoscore', 'Visualizzati {count} elementi di {totalCount} totali')."</p>"
-                ."<p>" . BaseAmosModule::t('amoscore','Pagina {page} di {pageCount}')."</p>";
-        }
-        else {
-            $this->summary = '';
-        }
+        // if ($this->showPageSummary) {
+        //     $this->summary =
+        //         "<p>" . BaseAmosModule::t('amoscore', 'Visualizzati {count} elementi di {totalCount} totali') . "</p>"
+        //         . "<p>" . BaseAmosModule::t('amoscore', 'Pagina {page} di {pageCount}') . "</p>";
+        // } else {
+        //     $this->summary = '';
+        // }
 
         if ($this->enableExport) {
             $queryParams = Yii::$app->request->getQueryParams();
@@ -86,11 +90,11 @@ HTML;
             Yii::$app->request->setQueryParams($queryParams);
         }
     }
-    
+
     /* public function getLabel($column){
       return html_entity_decode(strip_tags($column->renderHeaderCell()));
       } */
-    
+
     /**
      * Sovrascriviamo la funzione nativa per assegnare al tag TD l'attributo 'title' con valore prelevato dalla label dell'HeaderTable
      * Renders the filter.
@@ -110,7 +114,7 @@ HTML;
             return '';
         }
     }
-    
+
     /**
      * Sovrascriviamo la funzione nativa per assegnare al tag TR la classe filters
      * e a TD la classe input_element
@@ -125,7 +129,7 @@ HTML;
         foreach ($this->columns as $column) {
             /* @var $column Column */
             $column->headerOptions['title'] = html_entity_decode(strip_tags($column->renderHeaderCell()));
-            
+
             //if there is a input add class filters to TR and input_element to TD
             if (strpos(strtolower($column->renderHeaderCell()), "<input") !== false) {
                 $this->headerRowOptions['class'] = 'filters';
@@ -142,7 +146,7 @@ HTML;
         }
         return "<thead class='" . $this->class_thead . "'>\n" . $content . "\n</thead>";
     }
-    
+
     /**
      * Sovrascriviamo la funzione nativa per assegnare al tag TD l'attributo 'title' con valore prelevato dalla label dell'HeaderTable
      * Renders a table row with the given data model and key.
@@ -165,12 +169,12 @@ HTML;
         } else {
             $options = $this->rowOptions;
         }
-        
+
         $options['data-key'] = is_array($key) ? json_encode($key) : (string)$key;
-        
+
         return Html::tag('tr', implode('', $cells), $options);
     }
-    
+
     /**
      * Renders the table body.
      * @return string the rendering result.
@@ -188,9 +192,9 @@ HTML;
                     $rows[] = $row;
                 }
             }
-            
+
             $rows[] = $this->renderTableRow($model, $key, $index);
-            
+
             if ($this->afterRow !== null) {
                 $row = call_user_func($this->afterRow, $model, $key, $index, $this);
                 if (!empty($row)) {
@@ -198,7 +202,7 @@ HTML;
                 }
             }
         }
-        
+
         if (empty($rows)) {
             /*$emptyRow = "<tbody>\n<tr>";
             $i = 0;
@@ -225,16 +229,16 @@ HTML;
             $emptyRow .= "</tr>\n</tbody>";*/
 
             $emptyRow = "<tbody>\n<tr><td>";
-            $emptyMessage = ((isset($this->emptyText)) && is_string($this->emptyText)) ? $this->emptyText : BaseAmosModule::t('amoscore','Non sono presenti contenuti');
-            $emptyRow .= Html::tag('p',BaseAmosModule::t('amoscore',$emptyMessage),['class' => 'grid-view-empty']);
+            $emptyMessage = ((isset($this->emptyText)) && is_string($this->emptyText)) ? $this->emptyText : BaseAmosModule::t('amoscore', 'Non sono presenti contenuti');
+            $emptyRow .= Html::tag('p', BaseAmosModule::t('amoscore', $emptyMessage), ['class' => 'grid-view-empty']);
             $emptyRow .= "</td>\n</tr>\n</tbody>";
-            
+
             return $emptyRow;
         } else {
             return "<tbody>\n" . implode("\n", $rows) . "\n</tbody>";
         }
     }
-    
+
     /**
      * inherit
      */

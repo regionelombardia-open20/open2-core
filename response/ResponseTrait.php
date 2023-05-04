@@ -99,6 +99,18 @@ trait ResponseTrait {
     public $hpkpReportUri = '';
 
     /**
+     * @var string.
+     * https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy.
+     */
+    public $refererPolicy = '';
+    
+    /**
+     * @var string.
+     * https://developer.chrome.com/docs/privacy-sandbox/permissions-policy/
+     */
+    public $permissionPolicy = '';
+    
+    /**
      * @inheritdoc
      */
     public function send() {
@@ -125,6 +137,8 @@ trait ResponseTrait {
         $this->addXssProtection($headers);
         $this->addFrameOptions($headers);
         $this->addPublicKeyPins($headers);
+        $this->addRefererPolicy($headers); 
+        $this->addPermissionsPolicy($headers); 
     }
 
     public function addSearchEngineFilterHeader() {
@@ -138,7 +152,11 @@ trait ResponseTrait {
     private function checkCurrentUrlForSearchEngineFiltering() {
         $url = \Yii::$app->request->url;
 
-        $filters = \Yii::$app->params['searchEngineFilters'];
+        $filters = !is_null(\Yii::$app->params) && isset(\Yii::$app->params['searchEngineFilters']) ? \Yii::$app->params['searchEngineFilters'] : "*";
+
+        if($filters == '*' || (is_array($filters) && in_array('*', $filters))){
+            return true;
+        }
 
         if ($filters) {
             if (!is_array($filters)) $filters = [$filters];
@@ -263,6 +281,18 @@ trait ResponseTrait {
                 $values[] = "includeSubDomains";
             }
             $headers->set('Public-Key-Pins', implode("; ", $values));
+        }
+    }
+    
+    public function addPermissionsPolicy(HeaderCollection $headers) {        
+        if ($this->refererPolicy) {           
+            $headers->set('Referrer-Policy', $this->refererPolicy);  
+        }
+    }
+    
+    public function addRefererPolicy(HeaderCollection $headers) {        
+        if ($this->permissionPolicy) {           
+            $headers->set('Permissions-Policy', $this->permissionPolicy);  
         }
     }
 

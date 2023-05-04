@@ -482,36 +482,38 @@ class PositionalBreadcrumbHelper extends Component
         if (\Yii::$app->params['befe']) {
             $actionJoinCommunity = 'join/open-join';
         }
-        $communityParent = $community;
+        $communityParent   = $community;
         $parentCommunities = [];
         while (!empty($communityParent->parent_id)) {
-            $communityParent = \open20\amos\community\models\Community::findOne($communityParent->parent_id);
+            $communityParent     = \open20\amos\community\models\Community::findOne($communityParent->parent_id);
             $parentCommunities[] = $communityParent;
         }
         $parentsCrumb = [];
         foreach ($parentCommunities as $parentCom) {
+            if (!empty($parentCom)) {
 
-            // crumb - index subcommunity
-            $url_param = [
-                'label' => \Yii::t('amoscore', 'Subcommunity'),
-                'module' => 'community',
-                'controller' => 'community',
-                'url' => '/community/subcommunities/my-communities?id=' . $parentCom->id,
-                'route' => '/community/subcommunities/my-communities?id=' . $parentCom->id,
-            ];
+                // crumb - index subcommunity
+                $url_param = [
+                    'label' => \Yii::t('amoscore', 'Subcommunity'),
+                    'module' => 'community',
+                    'controller' => 'community',
+                    'url' => '/community/subcommunities/my-communities?id='.$parentCom->id,
+                    'route' => '/community/subcommunities/my-communities?id='.$parentCom->id,
+                ];
 
-            $parentsCrumb [] = self::createCrumb($url_param, self::TYPE_BREAD_COMMUNITY);
+                $parentsCrumb [] = self::createCrumb($url_param, self::TYPE_BREAD_COMMUNITY);
 
-            //crumb  - community name
-            $url_param = [
-                'label' => StringHelper::truncate($parentCom->getTitle(), 20, '...'),
-                'title' => $parentCom->getTitle(),
-                'module' => 'community',
-                'controller' => 'community',
-                'url' => "/community/$actionJoinCommunity?id=" . $parentCom->id,
-                'route' => "/community/$actionJoinCommunity?id=" . $parentCom->id,
-            ];
-            $parentsCrumb [] = self::createCrumb($url_param, self::TYPE_BREAD_COMMUNITY);
+                //crumb  - community name
+                $url_param       = [
+                    'label' => StringHelper::truncate($parentCom->getTitle(), 20, '...'),
+                    'title' => $parentCom->getTitle(),
+                    'module' => 'community',
+                    'controller' => 'community',
+                    'url' => "/community/$actionJoinCommunity?id=".$parentCom->id,
+                    'route' => "/community/$actionJoinCommunity?id=".$parentCom->id,
+                ];
+                $parentsCrumb [] = self::createCrumb($url_param, self::TYPE_BREAD_COMMUNITY);
+            }
         }
         return $parentsCrumb;
     }

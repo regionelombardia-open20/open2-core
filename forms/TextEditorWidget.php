@@ -54,7 +54,7 @@ class TextEditorWidget extends TinyMce
         'theme' => 'modern',
         'images_upload_url' => self::upload_url,
         'convert_urls' => false,
-        'allow_unsafe_link_target' => true,       
+        'allow_unsafe_link_target' => true,
         'plugins' => [
             "advlist autolink lists link charmap print preview anchor",
             "searchreplace visualblocks code fullscreen code",
@@ -262,20 +262,89 @@ JS;
             $config['clientOptions']['plugins'][] = "mention";
         }
 
+        // MAXLENGTH
+        if (!empty($config['options']['maxlength'])) {
+                $maxLength = $config['options']['maxlength'];
+        }
+
+        $triggerTextareaInput = $config['options']['triggerTextareaInput'] ? 'true' : 'false';
+
         // SCATENO evento di change per texteditor
         $tinyMCECallback = <<< JS
-    function (editor) {
-        editor.on('change', function () {
-                $('.mce-tinymce + textarea').trigger('textEditorChange');
-        });
-    }
+        function (editor) {
+            editor.on('change', function () {
+                    $('.mce-tinymce + textarea').trigger('textEditorChange');
+                    if ({$triggerTextareaInput}) {
+                        $('.mce-tinymce + textarea').val(editor.getBody().innerHTML);
+                        $('.mce-tinymce + textarea').get(0).dispatchEvent(new Event('input', {bubbles: true}));
+                    }
+            });
+            editor.on('input', function () {
+                    $('.mce-tinymce + textarea').trigger('textEditorInput');
+            });
+
+            // Prevent typing when max length is reached
+            var maxLength = "{$maxLength}";
+            if (maxLength) {
+                var allowedKeys = [8, 37, 38, 39, 40, 46];
+                editor.on('keydown', function (e) {
+                    // var currentLength = editor.plugins.charactercount.getCount();
+                    var currentLength = editor.getContent({format:"html"}).replace(/(<([^>]+)>)/gi,"").replace(/&nbsp;/g, " ").replace(/&egrave;/g, "è").replace(/&eacute;/g, "é").replace(/&ograve;/g, "ò").replace(/&ugrave;/g, "ù").replace(/&agrave;/g, "à").replace(/&igrave;/g, "ì").length;
+                    // Allow delete
+                    if (allowedKeys.indexOf(e.keyCode) != -1) {
+                        return true;
+                    }
+                    if (currentLength >= maxLength) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        return false;
+                    }
+                    return true;
+                });
+            }
+        }
 JS;
+
         if (empty($config['clientOptions']['setup'])) {
             $config['clientOptions']['setup'] = new \yii\web\JsExpression($tinyMCECallback);
         }
 
+        $tinyMCEMaxLengthPasteValidation = <<<JS
+                function (plugin, args){
+                    var maxLength = "{$maxLength}";
+                    if (maxLength) {
+                        var editor = args.target;
+                        var pasteLen = args.node.innerText.length;
+                        // If there is a whitespace at the end of the string to paste, count it in current length
+                        if (/\s+$/.test(args.node.innerText)){
+                            var currentLength = editor.plugins.charactercount.getCount() + 1;
+                        } else {
+                            var currentLength = editor.plugins.charactercount.getCount();
+                            // var currentLength = pasteLen + editor.contentDocument.body.innerText.length;
+                        }
+                        if (currentLength + pasteLen > maxLength) {
+                            var parsed = jQuery.parseHTML(args.node.innerText);
+                            var subPaste = jQuery(parsed).text().substring(0, maxLength-currentLength);
+                            args.node.innerText = subPaste;
+                        }
+                        // After paste, if length > max length, slice last pasted text
+                        setTimeout(function() {
+                            var postCurrentLength = editor.plugins.charactercount.getCount();
+                            if (postCurrentLength > maxLength) {
+                                var exceedChar = postCurrentLength-maxLength;
+                                editor.iframeElement.contentDocument.activeElement.lastChild.innerText = editor.iframeElement.contentDocument.activeElement.lastChild.innerText.slice(0, -exceedChar);
+                                // editor.iframeElement.contentDocument.activeElement.lastChild.lastChild.data = editor.iframeElement.contentDocument.activeElement.lastChild.lastChild.data.slice(0, -exceedChar);
+                            }
+                        }, 0);
+                    }
+                }
+JS;
 
-            return $config;
+        if (empty($config['clientOptions']['paste_postprocess'])) {
+            $config['clientOptions']['paste_postprocess'] = new \yii\web\JsExpression($tinyMCEMaxLengthPasteValidation);
+        }
+
+        return $config;
     }
 
 

@@ -24,6 +24,7 @@ use yii\web\User;
 class AmosUser extends User
 {
     public $identityClass = '\open20\amos\core\user\User';
+    public $authKeyParam = '__amosAuthKey';
 
     /**
      * @inheritdoc

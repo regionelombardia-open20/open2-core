@@ -22,6 +22,7 @@ use open20\amos\core\record\Record;
 use open20\amos\cwh\models\CwhNodi;
 use yii\base\Widget;
 use yii\helpers\ArrayHelper;
+use open20\amos\core\record\CachedActiveQuery;
 
 /**
  * Class ItemAndCardHeaderWidget
@@ -208,8 +209,15 @@ class ItemAndCardHeaderWidget extends Widget
      */
     protected function findNode($Target)
     {
-        $modelClass = \Yii::createObject($Target['classname']);
-        $model = $modelClass->findOne($Target['record_id']);
+        $modelClass = $Target['classname'];
+        $pk         = $modelClass::primaryKey();
+        if (!empty($pk[0])) {
+            $queryCache = CachedActiveQuery::instance($modelClass::find()->andWhere(['id' => $Target['record_id']]));
+            $queryCache->cache(60);
+            $model      = $queryCache->one();   
+        } else {
+            $model = null;
+        }
         return $model;
     }
 
@@ -220,9 +228,9 @@ class ItemAndCardHeaderWidget extends Widget
      */
     public function getNodesAsString($nodes)
     {
-        $targetsCollection = \open20\amos\cwh\models\CwhNodi::findAll([
-            'id' => $nodes
-        ]);
+        $queryCache = CachedActiveQuery::instance(\open20\amos\cwh\models\CwhNodi::find()->andWhere([           'id' => $nodes      ]));
+        $queryCache->cache(60);
+        $targetsCollection      = $queryCache->all();
 
         $targetArr = [];
         /** @var CwhNodi $target */
@@ -239,7 +247,6 @@ class ItemAndCardHeaderWidget extends Widget
                 $targetArr[] = $targetString . $fNode->toStringWithCharLimit(-1);
             }
         }
-
         return implode(', ', $targetArr);
     }
 

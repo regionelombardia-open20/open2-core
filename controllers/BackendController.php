@@ -69,7 +69,7 @@ abstract class BackendController extends AmosController
 
         return $behaviors;
     }
-    
+
 
     /**
      * @param null $layout

@@ -68,9 +68,10 @@ class UserValidatorContentRule extends DefaultOwnContentRule
      * @param string $permissionCwhValidate
      * @return bool
      */
-    private function userValidatorContentPermission($userId ,$permissionCwhValidate)
+    private function userValidatorContentPermission($userId, $permissionCwhValidate)
     {
-        $cwhContentValidatePerssions = \open20\amos\cwh\models\base\CwhAuthAssignment::find()->andWhere(['user_id' => $userId, 'item_name' => $permissionCwhValidate])->all();
+        $cwhContentValidatePerssions = \open20\amos\cwh\models\base\CwhAuthAssignment::find()->andWhere(['user_id' => $userId,
+                'item_name' => $permissionCwhValidate])->count();
         return (!empty($cwhContentValidatePerssions));
     }
 }

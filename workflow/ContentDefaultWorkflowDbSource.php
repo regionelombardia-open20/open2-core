@@ -50,7 +50,7 @@ class ContentDefaultWorkflowDbSource extends WorkflowDbSource
         if (isset($model) && $model instanceof Record) {
             $gotModel = true;
         } else {
-            $get = (method_exists(\Yii::$app->request, 'get'))? \Yii::$app->request->get(): [];
+            $get = (method_exists(\Yii::$app->request, 'get')) ? \Yii::$app->request->get() : [];
             if (!empty($get['modelObj']) && !empty($get['id'])) {
                 $model = $get['modelObj']::findOne($get['id']);
                 if (!empty($model)) {
@@ -82,6 +82,46 @@ class ContentDefaultWorkflowDbSource extends WorkflowDbSource
                     }
                 }
             }
+        }
+        return $transitionsAllowed;
+    }
+
+    /**
+     * Get all transitions
+     *
+     * @param mixed $statusId
+     * @param null $model
+     * @return array
+     */
+    public function getAllTransitions($statusId, $model = null)
+    {
+        $transitions        = parent::getTransitions($statusId, $model);
+        $transitionsAllowed = [];
+        $gotModel           = false;
+
+        if (isset($model) && $model instanceof Record) {
+            $gotModel = true;
+        } else {
+            $get = (method_exists(\Yii::$app->request, 'get')) ? \Yii::$app->request->get() : [];
+            if (!empty($get['modelObj']) && !empty($get['id'])) {
+                $model = $get['modelObj']::findOne($get['id']);
+                if (!empty($model)) {
+                    $gotModel = true;
+                }
+            } else {
+
+                $controller = Yii::$app->controller;
+                if (isset($controller) && $controller instanceof BaseController) {
+                    $model = $controller->model;
+                    if (isset($model) && $model instanceof Record) {
+                        $gotModel = true;
+                    }
+                }
+            }
+        }
+        /** @var Transition $transition */
+        foreach ($transitions as $transition) {
+            $transitionsAllowed[] = $transition;
         }
         return $transitionsAllowed;
     }

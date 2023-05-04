@@ -115,6 +115,8 @@ class MessageSource extends DbMessageSource
      */
     public function translate($category, $message, $language)
     {
+        $category = self::cleanCategory($category);
+
         if(!empty(\Yii::$app->params['use_only_translation_lang'])){
             $language = \Yii::$app->params['use_only_translation_lang'];
         }
@@ -173,6 +175,7 @@ class MessageSource extends DbMessageSource
      */
     protected function addTranslationByPath($category, $message, $language, $pathLanguage)
     {
+        $category = self::cleanCategory($category);
         $language = self::getMappedLanguage($language);
         /**
          * Get general translation configs
@@ -198,6 +201,7 @@ class MessageSource extends DbMessageSource
      */
     protected function alignDbAndTranslate($category, $message, $language, $messageSource)
     {
+        $category = self::cleanCategory($category);
         $language = self::getMappedLanguage($language);
         /**
          * Active languages
@@ -322,6 +326,7 @@ class MessageSource extends DbMessageSource
      */
     protected function loadMessages($category, $language)
     {
+        $category = self::cleanCategory($category);
         $language = self::getMappedLanguage($language);
         $messages = [];
 
@@ -411,6 +416,7 @@ class MessageSource extends DbMessageSource
     public function addUrlToSourceBySource($category, $message)
     {
         try {
+            $category = self::cleanCategory($category);
             if (\Yii::$app instanceof \yii\web\Application) {
                 if (!empty(\Yii::$app->params['forceUpdateUrlTranslations']) && \Yii::$app->params['forceUpdateUrlTranslations']
                     == true) {
@@ -452,11 +458,30 @@ class MessageSource extends DbMessageSource
         }
     }
 
+    /**
+     * For CMS(frontend)
+     * @param string $language
+     * @return string
+     */
     public static function getMappedLanguage($language)
     {
         if (strlen($language) == 2 && isset(self::MAP_LANGUAGE[$language])) {
             $language = self::MAP_LANGUAGE[$language];
         }
         return $language;
+    }
+
+    /**
+     *
+     * @param string $category
+     * @return string
+     */
+    public static function cleanCategory($category)
+    {
+
+        if (strpos($category, 'amosamos') === 0) {
+            $category = str_replace('amosamos', 'amos', $category);
+        }
+        return $category;
     }
 }

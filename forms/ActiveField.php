@@ -36,8 +36,7 @@ class ActiveField extends YiiActiveField
      * @var bool if "for" field label attribute should be skipped.
      */
     private $_skipLabelFor = false;
-
-    public $errorOptions = [
+    public $errorOptions   = [
         'class' => 'help-block help-block-error',
         'tag' => 'span',
     ];
@@ -47,7 +46,6 @@ class ActiveField extends YiiActiveField
      */
     private $labelTranslationField;
 
-    
     /**
      * @inheritdoc
      */
@@ -56,18 +54,18 @@ class ActiveField extends YiiActiveField
         parent::init();
 
         $this->hintOptions = ArrayHelper::merge($this->hintOptions, [
-            'tag' => 'span'
+                'tag' => 'span'
         ]);
 
         $hint = $this->model->getAttributeHint($this->attribute);
         if (!empty($hint)) {
             $this->parts['{hint}'] = Html::tag('span', AmosIcons::show('help'),
-                [
-                    //'class' => 'text-right',
-                    'data-toggle' => "tooltip",
-                    'data-placement' => "top",
-                    'title' => html_entity_decode($hint)
-                ]);
+                    [
+                        //'class' => 'text-right',
+                        'data-toggle' => "tooltip",
+                        'data-placement' => "top",
+                        'title' => html_entity_decode($hint)
+            ]);
         }
 //        $error = $this->model->getErrors($this->attribute);
 //        if (count($error)) {
@@ -89,10 +87,8 @@ class ActiveField extends YiiActiveField
         if (!empty($options['labelOptions'])) {
             $this->labelOptions = $options['labelOptions'];
         }
-        if(empty($this->labelOptions) || empty($this->labelOptions['for']))
-        {
-            if(empty($this->labelOptions))
-            {
+        if (empty($this->labelOptions) || empty($this->labelOptions['for'])) {
+            if (empty($this->labelOptions)) {
                 $this->labelOptions = [];
             }
             $this->labelOptions = ArrayHelper::merge($this->labelOptions, ['for' => null]);
@@ -114,7 +110,7 @@ class ActiveField extends YiiActiveField
             $options['item'] = function ($index, $label, $name, $checked, $value) use ($itemOptions) {
                 $options = array_merge(['value' => $value, 'id' => $name.$value, 'name' => $name], $itemOptions);
                 return '<div class="checkbox"><label class="no-asterisk" for="'.$name.$value.'">'.Html::checkbox($name,
-                        $checked, $options).$label.'</label></div>';
+                    $checked, $options).$label.'</label></div>';
             };
         }
         $this->checkboxListAccessible($items, $options);
@@ -141,10 +137,10 @@ class ActiveField extends YiiActiveField
      */
     public function radioList($items, $options = [])
     {
-       if ($this->inline) {
+        if ($this->inline) {
             if (!isset($options['template'])) {
-                $this->template = '{label} <fieldset> {beginWrapper} {input} {error} {endWrapper} {hint} </fieldset>';
-		$options['template'] = $this->template;
+                $this->template      = '{label} <fieldset> {beginWrapper} {input} {error} {endWrapper} {hint} </fieldset>';
+                $options['template'] = $this->template;
             } else {
                 $this->template = $options['template'];
                 unset($options['template']);
@@ -157,8 +153,8 @@ class ActiveField extends YiiActiveField
         } elseif (!isset($options['item'])) {
             $itemOptions     = isset($options['itemOptions']) ? $options['itemOptions'] : [];
             $options['item'] = function ($index, $label, $name, $checked, $value) use ($itemOptions) {
-            $options = array_merge(['value' => $value, 'id' => $name.$value, 'name' => $name], $itemOptions);
-            return '<div class="radio"><label for="'.$name.$value.'">'.Html::radio($name, $checked, $options).$label.'</label></div>';
+                $options = array_merge(['value' => $value, 'id' => $name.$value, 'name' => $name], $itemOptions);
+                return '<div class="radio"><label for="'.$name.$value.'">'.Html::radio($name, $checked, $options).$label.'</label></div>';
             };
         }
         parent::radioList($items, $options);
@@ -182,12 +178,11 @@ class ActiveField extends YiiActiveField
 //                $options['class'] = 'sr-only';
 //                parent::label($label, $options);
             } else {
-                if($label === false)
-                {
+                if ($label === false) {
                     $this->enableLabel = false;
                     $label             = false;
                     parent::label($label, $options);
-                }else{
+                } else {
                     $this->enableLabel = true;
                     $label             = ucfirst($this->attribute);
                     $this->renderLabelParts($label, $options);
@@ -231,11 +226,25 @@ class ActiveField extends YiiActiveField
             $size = $options['maxlength'];
         }
 
+        $showCount = true;
+        if (isset($options['showCount'])) {
+            if (!$options['showCount']) {
+                $showCount = false;
+            }
+        }
+
+        $defaultColorCount = 'red';
+        $colorCount        = $defaultColorCount;
+        if (!empty($options['colorCount'])) {
+            $colorCount = $options['colorCount'];
+        }
+
         $script = <<<JS
                 
 	var init_{$this->attribute} = function() {
             var maxlength = 0;
             var schemaSize = "{$size}";
+            var showCount = "{$showCount}";
             
             if(schemaSize === "") {
                 schemaSize = 0
@@ -273,7 +282,9 @@ class ActiveField extends YiiActiveField
             var countChars = $("#{$textareaId}").parent().parent().children()[0];
             var numChars = geNumChars();
             
-            $(countChars).append('<div class="count-char-{$textareaId} pull-right"><span class="chars">0</span>/'+maxlength+'</div>');
+            if(showCount == true) {
+                $(countChars).append('<div class="count-char-{$textareaId} pull-right"><span class="chars">0</span>/'+maxlength+'</div>');
+            }
             
             
             $(".count-char-{$textareaId} .chars").text(numChars);
@@ -301,9 +312,121 @@ JS;
         $this->form->view->registerJs($script);
 
         // Inject of a basic css that turns red the number of chars inserted in the textarea
-        $this->form->view->registerCss(".count-char-".$textareaId." .chars { color:red; }");
+        $this->form->view->registerCss(".count-char-".$textareaId." .chars { color:".$colorCount."; }");
 
         return $this->textarea($options);
+    }
+
+    /**
+     * Default Yii2 Text Input with char counter.
+     * @param $options
+     * @return ActiveField
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function limitedCharsTextInput($options = [])
+    {
+        $textInputId = Html::getInputId($this->model, $this->attribute);
+
+        // Max length
+        $size = 255;
+        if (empty($options['maxlength'])) {
+            if ($this->model instanceof ActiveRecord) {
+                $size = $this->model->getTableSchema()->columns[$this->attribute]->size;
+            }
+        } else {
+            $size = $options['maxlength'];
+        }
+
+        // Show char counter or not
+        $showCount = true;
+        if (isset($options['showCount'])) {
+            if (!$options['showCount']) {
+                $showCount = false;
+            }
+        }
+
+        // Char counter color
+        $defaultColorCount = 'black';
+        $colorCount        = $defaultColorCount;
+        if (!empty($options['colorCount'])) {
+            $colorCount = $options['colorCount'];
+        }
+
+        $jsTextInput = <<<JS
+                
+            var init_{$this->attribute} = function() {
+                var maxlength = 0;
+                var schemaSize = "{$size}";
+                var showCount = "{$showCount}";
+                    
+                if(schemaSize === "") {
+                    schemaSize = 0
+                }
+        
+                if($("#{$textInputId}").attr("maxlength")===undefined){
+                    maxlength = schemaSize;
+                    $("#{$textInputId}").attr("maxlength", maxlength);
+                } else {
+                    if($("#{$textInputId}").attr("maxlength") < schemaSize) {
+                        maxlength = $("#{$textInputId}").attr("maxlength");
+                    } else {
+                        maxlength = schemaSize;
+                        $("#{$textInputId}").attr("maxlength", maxlength);
+                    }
+                }
+                    
+                function getValue() {
+                    return $("#{$textInputId}").val();
+                }
+                    
+                function getHttpValue() {
+                    return getValue().replace(/\\n/g, "\\r\\n").trim();
+                }
+                    
+                function geNumChars() {
+                    return getHttpValue().length;
+                }
+                    
+                function setValueByHttp(valueHttp) {
+                    $("#{$textInputId}").val(valueHttp.replace(/\\r\\n/g, "\\n").trim());
+                }
+                    
+                var countChars = $("#{$textInputId}").parent().parent().children()[0];
+                var numChars = geNumChars();
+                    
+                if(showCount == true) {
+                    $(countChars).append('<div class="count-char-{$textInputId} pull-right"><span class="chars">0</span>/'+maxlength+'</div>');
+                }
+                    
+                    
+                $(".count-char-{$textInputId} .chars").text(numChars);
+        
+                $("#{$textInputId}").bind('input keydown', function(e) {
+                    numChars = geNumChars();
+                        
+                    if(numChars >= maxlength && maxlength != 0) {
+                        var content = getHttpValue();
+                        var truncatedContent = content.substring(0,maxlength);
+                        
+                        setValueByHttp(truncatedContent);
+                    }
+                        
+                    //Reset count
+                    numChars = geNumChars();
+                        
+                    $(".count-char-{$textInputId} .chars").text(numChars);
+                });
+            };
+                
+            init_{$this->attribute}();
+JS;
+
+        $this->form->view->registerJs($jsTextInput);
+
+        // Set char counter color
+        $this->form->view->registerCss(".count-char-".$textInputId." .chars { color:".$colorCount."; }");
+
+        return $this->textInput($options);
     }
 
     /**
@@ -343,24 +466,31 @@ JS;
                                             if (!empty($module->labelTranslationField)) {
                                                 eval("\$translationLabelAltField = {$module->translationLabelAltField}");
                                                 eval("\$translationLabelField = {$module->translationLabelField}");
-                                                $templateTranslationField = $module->templateTranslationField;
+                                                $templateTranslationField    = $module->templateTranslationField;
                                                 $templateTranslationAltField = $module->templateTranslationAltField;
                                                 $this->labelTranslationField = str_replace($templateTranslationAltField,
                                                     $translationLabelAltField, $module->labelTranslationField);
                                                 $this->labelTranslationField = str_replace($templateTranslationField,
                                                     $translationLabelField, $this->labelTranslationField);
                                             } else {
-                                                $this->labelTranslationField = ' (<span class="label_translation am am-translate" title="' . BaseAmosModule::t("amostranslation",
-                                                        "Testo traducibile direttamente scrivendo in questo campo, tradurrai nella lingua selezionata, la visualizzazione attuale è in") . ' ' . strtoupper(substr(\Yii::$app->language,
-                                                        0, 2)) . '"> - ' . strtoupper(substr(\Yii::$app->language, 0, 2)) . '</span>)';
+                                                $this->labelTranslationField = ' (<span class="label_translation am am-translate" title="'.BaseAmosModule::t("amostranslation",
+                                                        "Testo traducibile direttamente scrivendo in questo campo, tradurrai nella lingua selezionata, la visualizzazione attuale è in").' '.strtoupper(substr(\Yii::$app->language,
+                                                            0, 2)).'"> - '.strtoupper(substr(\Yii::$app->language, 0, 2)).'</span>)';
                                             }
                                             if (!empty($this->labelTranslationField)) {
-                                                $textSource = $this->translationSource($this->model->id, $module, $model['namespace']);
+                                                $appLanguage = \open20\amos\core\i18n\MessageSource::getMappedLanguage(\Yii::$app->language);
+
+                                                if (!empty($module->defaultLanguage) && ($appLanguage == $module->defaultLanguage)) {
+                                                    $textSource = '';
+                                                } else {
+                                                    $textSource = $this->translationSource($this->model->id, $module,
+                                                        $model['namespace']);
+                                                }
                                                 $posLabel = strpos($this->template, '{label}');
                                                 if ($posLabel !== false && strpos($this->template,
                                                         $this->labelTranslationField) === false) {
-                                                    $pos = $posLabel + 7;
-                                                    $this->template = $textSource . substr($this->template, 0, $pos) . $this->labelTranslationField . substr($this->template,
+                                                    $pos            = $posLabel + 7;
+                                                    $this->template = $textSource.substr($this->template, 0, $pos).$this->labelTranslationField.substr($this->template,
                                                             $pos);
                                                 }
                                             }
@@ -384,13 +514,13 @@ JS;
     {
         $okMultilanguage = true;
 
-        if ( method_exists($this->model, 'canShowTranslationInLine')) {
+        if (method_exists($this->model, 'canShowTranslationInLine')) {
             return $this->model->canShowTranslationInLine();
         }
 
         if (!empty(\Yii::$app->params['showTranslationInlinePersonalized'])) {
-            $class = \Yii::$app->params['showTranslationInlinePersonalized']['class'];
-            $method = \Yii::$app->params['showTranslationInlinePersonalized']['method'];
+            $class           = \Yii::$app->params['showTranslationInlinePersonalized']['class'];
+            $method          = \Yii::$app->params['showTranslationInlinePersonalized']['method'];
             $okMultilanguage = $class::$method();
             return $okMultilanguage;
         }
@@ -400,13 +530,13 @@ JS;
 
     public function isMultilanguageEnabled()
     {
-        $moduleCwh = \Yii::$app->getModule('cwh');
+        $moduleCwh    = \Yii::$app->getModule('cwh');
         $moduleEvents = \Yii::$app->getModule('events');
         if (!empty($moduleCwh) && !empty($moduleEvents)) {
             $scope = $moduleCwh->getCwhScope();
             if (!empty($scope) && isset($scope['community'])) {
                 $communityId = $scope['community'];
-                $event = \open20\amos\events\models\Event::find()->andWhere(['community_id'])->one();
+                $event       = \open20\amos\events\models\Event::find()->andWhere(['community_id'])->one();
                 if ($event->multilanguage) {
                     return true;
                 }
@@ -415,28 +545,35 @@ JS;
         return false;
     }
 
-    public function translationSource($id, $module, $namespace)
+    /**
+     *
+     * @param type $id
+     * @param type $module
+     * @param type $namespace
+     * @param type $default_language
+     * @return string
+     */
+    public function translationSource($id, $module, $namespace, $default_language = 'it-IT')
     {
         $str = '';
         if (!$this->model->isNewRecord) {
-            $lang = \Yii::$app->language;
-            if ($lang != 'it-IT') {
-                $classNameTrans = $module->modelNs . '\\' . StringHelper::basename($namespace) . "Translation";
-                $language_source = null;
+            $lang = \open20\amos\core\i18n\MessageSource::getMappedLanguage(\Yii::$app->language);
+            if ($lang != $default_language) {
+                $classNameTrans  = $module->modelNs.'\\'.StringHelper::basename($namespace)."Translation";
                 $language_source = \Yii::$app->request->getQueryParam(StringHelper::basename($classNameTrans))['language_source'];
-                list($language_source_res, $source) = \open20\amos\translation\models\TranslationConf::getSource($language_source, $id, $lang, $namespace);
+                list($language_source_res, $source) = \open20\amos\translation\models\TranslationConf::getSource($language_source,
+                        $id, $lang, $namespace);
 
                 $modelSource = $source->one();
                 if ($modelSource && !empty($modelSource[$this->attribute])) {
                     $str = "
                     <div class='box-language text-secondary'>
                     <div class='text-language'>
-                        <small><strong>" . \Yii::t('app', 'Testo sorgente') . "</strong></small><br>
-                        " . $modelSource[$this->attribute] . " 
+                        <small><strong>".\Yii::t('app', 'Testo sorgente')."</strong></small><br>
+                        ".$modelSource[$this->attribute]." 
                         </div>
                     </div>
         ";
-
                 }
             }
         }
