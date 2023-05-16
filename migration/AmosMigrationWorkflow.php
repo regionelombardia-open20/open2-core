@@ -209,7 +209,7 @@ class AmosMigrationWorkflow extends Migration
     {
         $ok = true;
 
-        while (list($index, $workflowConf) = each($this->_workflowConf)) {
+        foreach ($this->_workflowConf as $index => $workflowConf) {
             // Check if the single workflow conf array is an array
             if (!is_array($workflowConf)) {
                 $this->_errors .= "\n" . BaseAmosModule::t('amoscore', 'Workflow conf element') . " '" . $index . "' " . BaseAmosModule::t('amoscore', 'is not an array');

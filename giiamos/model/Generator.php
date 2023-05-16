@@ -22,6 +22,7 @@ use yii\db\Schema;
 use yii\db\TableSchema;
 use yii\base\NotSupportedException;
 use open20\amos\core\module\BaseAmosModule;
+use yii\base\InvalidConfigException;
 
 class Generator extends \open20\amos\core\giiamos\Generator
 //\yii\gii\generators\model\Generator
@@ -919,10 +920,10 @@ class Generator extends \open20\amos\core\giiamos\Generator
     protected function generateMethodsForWrapper($baseClass)
     {
 
-        $clsabstract = new ReflectionClass($baseclssel);
+        $clsabstract = new ReflectionClass($baseClass);
         foreach ($clsabstract->getMethods() as $m) {
             try {
-                if ($m->class !== $baseclssel) {
+                if ($m->class !== $baseClass) {
                     if (strpos($m->class, 'interface') !== false) {
                         $methodtoimplement[$m->name] = $m->class;
                     }
@@ -977,7 +978,7 @@ class Generator extends \open20\amos\core\giiamos\Generator
             if ($baseClassReflector->isAbstract()) {
                 //Extra check for security to validate that $baseClass is indeed a class since this variable is used in eval
                 if (!class_exists($baseClass)) {
-                    throw new InvalidConfigException("Class '$class' does not exist or has syntax error.");
+                    throw new InvalidConfigException("Class '$baseClass' does not exist or has syntax error.");
                 }
 
                 $baseClassWrapper = 'namespace '.__NAMESPACE__.';'.

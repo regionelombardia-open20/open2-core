@@ -221,20 +221,23 @@ class RecordDynamicModel extends DynamicModel
      *
      * @return boolean
      */
-    public function save()
-    {
+    public function save() {
         if (!$this->beforeSave($this->isNewRecord)) {
             return false;
         }
-        $driver   = new $this->driver;
+        $driver = new $this->driver;
         $driver->setDb($this->db);
         $driver->setColumns(array_keys($this->unsafeAttributes));
         $driver->setData($this->unsafeAttributes);
         $driver->setTable($this->tableName);
-        $result   = $driver->save();
-        $this->setIsNewRecord(false);
-        $this->id = $result['id'];
-        $this->afterSave($this->isNewRecord, $this->unsafeAttributes);
+        $result = $driver->save();
+        if ($result) {
+            $this->setIsNewRecord(false);
+            $this->id = $result['id'];
+            $this->afterSave($this->isNewRecord, $this->unsafeAttributes);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -248,7 +251,7 @@ class RecordDynamicModel extends DynamicModel
             $attributes = array_flip($this->attributes());
             foreach ($values as $name => $value) {
                 if (isset($attributes[$name])) {
-                    $this->$name = $value;
+                    $this->$name = $value;             
                 }
             }
         }

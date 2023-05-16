@@ -21,4 +21,3 @@ if(!isset($email)){
 <?= $nameUser . ' '. BaseAmosModule::t('amoscore', '#request_information_mail') ?>
 <?= $message ?>
 <?= BaseAmosModule::t('amoscore', '#request_information_mail_footer') . ' '. $email ?>
-

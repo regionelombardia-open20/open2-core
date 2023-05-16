@@ -67,7 +67,7 @@ class Email extends BaseObject
 
                 return (($errCnt) ? false : true);
             }
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             \Yii::getLogger()->log($ex->getTraceAsString(), Logger::LEVEL_ERROR);
             return false;
         }

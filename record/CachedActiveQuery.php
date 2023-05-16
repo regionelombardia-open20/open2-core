@@ -11,6 +11,7 @@
 namespace open20\amos\core\record;
 
 use yii\db\ActiveQuery;
+use Yii;
 
 class CachedActiveQuery extends ActiveQuery
 {
@@ -165,7 +166,7 @@ class CachedActiveQuery extends ActiveQuery
             if (!empty($cache)) {
                 $cache->flush();
             }
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             Yii::getLogger()->log($ex->getMessage(), \yii\log\Logger::LEVEL_ERROR);
         }
     }

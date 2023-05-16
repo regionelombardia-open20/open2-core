@@ -94,7 +94,7 @@ $js = <<<JS
     });
 JS;
 $this->registerJs($js);
-?>
+
 
 
 

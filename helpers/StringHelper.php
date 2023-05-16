@@ -22,7 +22,7 @@ class StringHelper extends BaseStringHelper
         if (is_numeric($string)) {
             return static::typeCastNumeric($string);
         } elseif (is_array($string)) {
-            return ArrayHelper::typeCast($string);
+            return \luya\helpers\ArrayHelper::typeCast($string);
         }
 
         return $string;

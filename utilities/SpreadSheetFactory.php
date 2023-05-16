@@ -349,7 +349,7 @@ class SpreadSheetFactory
                         $dateattr = 'data_';
                         $pos      = strpos($key, $dateattr);
                         if ($pos !== false) {
-                            $worksheet->getStyle($cell->getColumn().$row)
+                            $worksheet->getStyle($cell->getColumn().$startRow)
                                 ->getNumberFormat()
                                 ->setFormatCode(NumberFormat::FORMAT_DATE_DATETIME);
                         }

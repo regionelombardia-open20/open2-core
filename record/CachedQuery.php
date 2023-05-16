@@ -11,6 +11,7 @@
 namespace open20\amos\core\record;
 
 use yii\db\Query;
+use Yii; 
 
 class CachedQuery extends \yii\db\Query
 {
@@ -233,7 +234,7 @@ class CachedQuery extends \yii\db\Query
             if (!empty($cache)) {
                 $cache->flush();
             }
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             Yii::getLogger()->log($ex->getMessage(), \yii\log\Logger::LEVEL_ERROR);
         }
     }

@@ -17,6 +17,7 @@ use yii\httpclient\Request as HttpClientRequest;
 use yii\httpclient\Client as HttpClient;
 use Yii;
 use open20\amos\core\module\BaseAmosModule;
+use yii\base\Model;
 
 class RecaptchaV3Validator extends Validator
 {
@@ -164,7 +165,7 @@ class RecaptchaV3Validator extends Validator
             ->setData(['secret' => $this->secKey, 'response' => $responseToken, 'remoteip' => Yii::$app->request->userIP])
             ->send();
         if (!$response->isOk) {
-            throw new Exception('Unable connection to the captcha server. Status code ' . $response->statusCode);
+            throw new \Exception('Unable connection to the captcha server. Status code ' . $response->statusCode);
         }
         return $response;
     }

@@ -10,7 +10,6 @@
 namespace open20\amos\core\models;
 
 use open20\amos\core\user\User;
-use UserHelper;
 use yii\db\Expression;
 
 class AccessTokens extends \open20\amos\core\models\base\AccessTokens
@@ -26,7 +25,7 @@ class AccessTokens extends \open20\amos\core\models\base\AccessTokens
     public function logout()
     {
         $this->logout_at = new Expression('NOW()');
-        $this->logout_by = UserHelper::get()->getId();
+        $this->logout_by = \Yii::$app->user->id;
         $this->save(false);
     }
 

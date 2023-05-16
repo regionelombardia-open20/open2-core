@@ -365,8 +365,8 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
         if ($this->orderAttributes && in_array($field, $this->orderAttributes)) {
             $tableName            = $this->tableName();
             $table                = \Yii::$app->db->schema->getTableSchema($tableName);
-            $exist                = (strpos($v, $this->tableName().'.') !== false || strpos($v, $this->tableName().'`.')
-                !== false || !isset($table->columns[$v]));
+            $exist                = (strpos($field, $this->tableName().'.') !== false || strpos($field, $this->tableName().'`.')
+                !== false || !isset($table->columns[$field]));
             $this->orderAttribute = ($exist === false ? $this->tableName().'.' : '').$field;
         } else {
             $this->orderAttribute = $this->tableName().'.id';
@@ -776,19 +776,20 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
      * @param bool $enabled_only_by_community
      * @return int
      */
-    public static function getStaticBullet($type = 1, $reset = false, $tableName, $general = false,
-                                           $enabled_only_by_community = false)
-    {
+    public static function getStaticBullet($type = 1, $reset = false, $tableName = null, $general = false,
+            $enabled_only_by_community = false) {
+        if (empty($tableName)) {
+            throw new yii\base\ErrorException('$tableName is required to calculate bulletCount');
+        }
         $enabled = true;
         if ($enabled_only_by_community == true) {
             $enabled = (self::checkScope() == 0 ? false : true);
         }
         if (!\Yii::$app->user->isGuest && $enabled == true) {
-
             $result = self::getBulletType($type, $tableName, $reset, $general, $enabled_only_by_community);
-
             return $result['bullet'];
-        } else return 0;
+        }
+        return 0;
     }
 
     /**
@@ -1986,7 +1987,7 @@ class Record extends ActiveRecord implements StatsToolbarInterface, CrudModelInt
                     [
                         'model' => $model ?? $this,
                         'contextModel' => $modelContext ?? $this,
-                        'model_field' => $v,
+                        'model_field' => 'id',
                         'user' => $user_profile->user
                 ]);
 

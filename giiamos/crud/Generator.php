@@ -24,6 +24,7 @@ use yii\helpers\Json;
 use schmunk42\giiant\helpers\SaveForm;
 use schmunk42\giiant\generators\model\Generator as ModelGenerator;
 use open20\amos\core\module\BaseAmosModule;
+use yii\db\ActiveQuery;
 
 class Generator extends \open20\amos\core\giiamos\Generator
 {
@@ -653,7 +654,7 @@ class Generator extends \open20\amos\core\giiamos\Generator
 //pr($this->arrayForeignKeys);
 //            die;
             return $generator;
-        } catch (Exception $ex) {
+        } catch (\Exception $ex) {
             return FALSE;
         }
     }
