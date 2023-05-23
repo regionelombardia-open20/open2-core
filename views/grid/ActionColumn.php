@@ -141,7 +141,8 @@ class ActionColumn extends YiiActionColumn {
         if ($newActionColumn) {
             $html = mb_convert_encoding($renderDataCellContent, 'HTML-ENTITIES', 'UTF-8');
             if (!empty(trim($html))) {
-                $doc = \DOMDocument::loadHTML($html);
+                $doc = new \DOMDocument();
+                $doc->loadHTML($html);
                 $xpath = new \DOMXPath($doc);
                 $query = "//a";
                 $entries = $xpath->query($query);
