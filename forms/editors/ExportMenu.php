@@ -33,6 +33,7 @@ use yii\web\View;
  */
 class ExportMenu extends KartikExportMenu
 {  
+    
     /**
      * @var string the view file for rendering the export form
      */
@@ -55,14 +56,11 @@ class ExportMenu extends KartikExportMenu
     public function __construct($config = array())
     {
         parent::__construct($config);
-        $reflector = new ReflectionClass('\kartik\export\ExportMenu');
-        $fn = dirname($reflector->getFileName());
-        $vendor = Yii::getAlias('@vendor');
-        $fn = '@vendor' . StringUtils::replace(StringUtils::replace($fn, '\\', '/'), StringUtils::replace($vendor, '\\', '/'), '');
+        
 
-        $this->exportFormView = $fn . '/views/_form';
-        $this->exportColumnsView = $fn . '/views/_columns';
-        $this->afterSaveView = $fn . '/views/_view';
+        $this->exportFormView = $fn . '_form';
+        $this->exportColumnsView = $fn . '_columns';
+        $this->afterSaveView = $fn . '_view';
     }
 
     /**

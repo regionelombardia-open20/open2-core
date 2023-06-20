@@ -110,7 +110,7 @@ class ActiveField extends YiiActiveField
             $options['item'] = function ($index, $label, $name, $checked, $value) use ($itemOptions) {
                 $options = array_merge(['value' => $value, 'id' => $name.$value, 'name' => $name], $itemOptions);
                 return '<div class="checkbox"><label class="no-asterisk" for="'.$name.$value.'">'.Html::checkbox($name,
-                    $checked, $options).$label.'</label></div>';
+                    $checked, $options).$label.'<span class="amos-check"></span></label></div>';
             };
         }
         $this->checkboxListAccessible($items, $options);
@@ -154,7 +154,7 @@ class ActiveField extends YiiActiveField
             $itemOptions     = isset($options['itemOptions']) ? $options['itemOptions'] : [];
             $options['item'] = function ($index, $label, $name, $checked, $value) use ($itemOptions) {
                 $options = array_merge(['value' => $value, 'id' => $name.$value, 'name' => $name], $itemOptions);
-                return '<div class="radio"><label for="'.$name.$value.'">'.Html::radio($name, $checked, $options).$label.'</label></div>';
+                return '<div class="radio"><label for="'.$name.$value.'">'.Html::radio($name, $checked, $options).$label.'<span class="amos-radio"></span></label></div>';
             };
         }
         parent::radioList($items, $options);

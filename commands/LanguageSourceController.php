@@ -234,8 +234,7 @@ class LanguageSourceController extends Controller
      * @return AmosModule|null
      * @throws \ReflectionException
      */
-    private function isAmosModule($key, $module)
-    {
+    private function isAmosModule($key, $module) {
         $amodModule = null;
         try {
             if (is_object($module)) {
@@ -243,9 +242,11 @@ class LanguageSourceController extends Controller
                     $amodModule = $module;
                 }
             } else {
-                $reflectionClass = new \ReflectionClass($module['class']);
-                if ($reflectionClass->isSubclassOf(AmosModule::className())) {
-                    $amodModule = \Yii::createObject($reflectionClass->getName(), [$key]);
+                if (is_array($module)) {
+                    $reflectionClass = new \ReflectionClass($module['class']);
+                    if ($reflectionClass->isSubclassOf(AmosModule::className())) {
+                        $amodModule = \Yii::createObject($reflectionClass->getName(), [$key]);
+                    }
                 }
             }
         } catch (\Exception $ex) {

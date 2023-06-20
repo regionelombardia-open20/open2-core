@@ -168,7 +168,7 @@ class ActionColumn extends YiiActionColumn {
                 $newLabelD = 'dLabel' . $this->labelD;
 
                 return '<div class="dropdown bk-elementActions container-action">
-                        <button id="' . $newLabelD . '" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-default">
+                        <button id="' . $newLabelD . '" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn btn-default" title="'.\Yii::t("amosapp", "Menu").'">
                             <span class="mdi mdi-dots-vertical"></span>
                         </button>
                         <ul class="dropdown-menu pull-right" aria-labelledby="' . $newLabelD . '">

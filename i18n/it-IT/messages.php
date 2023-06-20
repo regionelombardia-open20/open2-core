@@ -87,7 +87,7 @@ return [
     'Condividi con gli utenti della tua rete' => 'Condividi con gli utenti della tua rete',
     'Configurazione widget non corretta, {campo} mancante' => 'Configurazione widget non corretta, {campo} mancante',
     '#confirm' => 'Conferma',
-    '#confirm_exit_without_saving' => 'Cliccando su questo link le tue modifiche potrebbero esserere perse, controllare di aver salvato tutti i dati.',
+    '#confirm_exit_without_saving' => 'Cliccando su questo link le tue modifiche potrebbero essere perse, controllare di aver salvato tutti i dati.',
     'Contatta l\'utente' => 'Contatta l\'utente',
     '#content_settings_menu_label' => 'Impostazioni contenuti',
     'contenuti' => 'contenuti',

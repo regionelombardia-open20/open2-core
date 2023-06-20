@@ -24,10 +24,13 @@ class Response extends WebResponse
 
     /**
      *
-     * @param string $url
+     * @param string|array $url
      */
     protected function authorizedReferrer($url)
     {
+        if (is_array($url)) {
+            $url = \yii\helpers\Url::to($url);
+        }
         $authorized = true;
         $urlinfo = parse_url(str_replace([
             'www.',
