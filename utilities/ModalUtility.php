@@ -122,7 +122,7 @@ class ModalUtility extends BaseObject
             ['class' => 'pull-right m-15-0']);
         $containerOptions = (isset($modalConfiguration['containerOptions']) ?
             $modalConfigurations['containerOptions'] = $modalConfiguration['containerOptions'] :
-            '');
+            []);
 
         // Buttons
         $buttons = Html::a($cancelLabel, $cancelLink, $cancelOptions) . Html::a($confirmLabel, $confirmLink, $confirmOptions);
