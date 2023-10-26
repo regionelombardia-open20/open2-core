@@ -65,6 +65,7 @@ class AmosIcons extends Icon
     public static function show($name, $options = [], $framework = null, $space = true, $tag = 'span', $value = '')
     {
         $key = self::getFramework($framework);
+        $options = (array) $options;
         if (in_array($key, array_keys(self::$_custom_frameworks))) {
             $class = self::$_custom_frameworks[$key]['prefix'] . $name;
             Html::addCssClass($options, $class);
