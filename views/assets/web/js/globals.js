@@ -184,10 +184,10 @@ var smoothScrollTo = function (anchor) {
 }
 
 $(document).ready(function () {
-    //==for smoothScroll
-    var hashURL = location.hash;
+    var hashURL = location.hash.replace(/[^\#\w\d\-\_]*/gm, "");
     var tab_element = $('.tab-content');
 
+    //==for smoothScroll
     if ((hashURL != "" && hashURL.length > 1) || (tab_element.length > 1)) {
         $(window).scrollTop(0);
         $('html').css({display: 'block'});
@@ -195,11 +195,7 @@ $(document).ready(function () {
     } else {
         $('html').css({display: 'block'});
     }
-    //== ==//
 
-    if (self == top && top.location != location) {
-        top.location.href = document.location.href;
-    }
     $(function () {
         window.prettyPrint && prettyPrint();
         $('.nav-tabs:first').tabdrop();
@@ -260,7 +256,8 @@ $(document).ready(function () {
 
     // go to the latest tab, if it exists:
     if ($('.nav.nav-tabs').length) {
-        var lastTab = localStorage.getItem('lastTab');
+        var lastTab = localStorage.getItem('lastTab').replace(/[^\#\w\d\-\_]*/gm, "");
+
         if (lastTab) {
             var currentUrl = window.location.href;
             var prevUrl = document.referrer;

@@ -80,7 +80,8 @@ $(document).ready(function () {
                 jQuery.each(select, function(){
                     var myId = jQuery(this).attr('id');
                     var elName = response[jQuery(this).data('field')];
-                    var option = jQuery('<option />').text(elName).val(response.id);
+                    var identiffier = response.id.replace(/[^\d]*/gm, "");
+                    var option = jQuery('<option />').text(elName).val(identiffier);
 
                     //If started option set as selected
                     if(myId == form.data('field')) {
