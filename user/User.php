@@ -310,8 +310,10 @@ class User extends Record implements IdentityInterface
     /**
      * @inheritdoc
      */
-    public function validateAuthKey($authKey)
-    {
+    public function validateAuthKey($authKey) {
+        if (empty($this->getAuthKey())) {
+            return false;
+        }
         return $this->getAuthKey() === $authKey;
     }
 

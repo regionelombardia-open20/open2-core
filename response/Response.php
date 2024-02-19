@@ -15,6 +15,7 @@ class Response extends WebResponse
      */
     public function redirect($url, $statusCode = 302, $checkAjax = true)
     {
+        $url = $this->checkUrlFormat($url);
         if ($this->authorizedReferrer($url)) {
             return parent::redirect($url, $statusCode, $checkAjax);
         }
@@ -32,28 +33,52 @@ class Response extends WebResponse
             $url = \yii\helpers\Url::to($url);
         }
         $authorized = true;
-        $urlinfo = parse_url(str_replace([
-            'www.',
-            'www2.'
-        ], '', $url));
+        $urlinfo = parse_url(str_replace(['www.', 'www2.'], '', $url));
         if (isset($urlinfo['host'])) {
             $authorizedUrls = [];
-            foreach (ArrayHelper::merge([
-                parse_url(str_replace([
-                    'www.',
-                    'www2.'
-                ], '',\Yii::$app->params['platform']['frontendUrl']))['host']
-            ], (isset(\Yii::$app->params['platform']['authorizedReferrer']) ? \Yii::$app->params['platform']['authorizedReferrer'] : [])) as $checkUrl) {
-                $authorizedUrls[] = parse_url(str_replace([
-                    'www.',
-                    'www2.'
-                ], '', $checkUrl))['path'];
+            // Frontend host
+            $frontendHost = parse_url(str_replace(['www.', 'www2.'], '', \Yii::$app->params['platform']['frontendUrl']))['host'];
+            // Backend host
+            $backendHost = parse_url(str_replace(['www.', 'www2.'], '', \Yii::$app->params['platform']['backendUrl']))['host'];
+            // Authorized referrers
+            $authorizedReferrers = isset(\Yii::$app->params['platform']['authorizedReferrer']) ? \Yii::$app->params['platform']['authorizedReferrer'] : [];
+            // Oauth2 clients
+            /** @var \open20\amos\socialauth\Module $moduleSocialAuth */
+            $moduleSocialAuth = \Yii::$app->getModule('socialauth');
+            if ($moduleSocialAuth && isset($moduleSocialAuth->authorizeReferrersFromOauth2Client) && $moduleSocialAuth->authorizeReferrersFromOauth2Client) {
+                $oauth2ClientsRedirectUri = \open20\amos\socialauth\models\Oauth2Client::find()->select('redirect_uri')->column();
+                foreach ($oauth2ClientsRedirectUri as $oauth2ClientRedirectUri) {
+                    $authorizedReferrers[] = parse_url(str_replace(['www.', 'www2.'], '', $oauth2ClientRedirectUri))['host'];
+                }
             }
 
-            if (! in_array($urlinfo['host'], $authorizedUrls)) {
+            $urlsToCheck = array_unique(ArrayHelper::merge([$frontendHost, $backendHost], $authorizedReferrers));
+
+            foreach ($urlsToCheck as $checkUrl) {
+                $authorizedUrls[] = parse_url(str_replace(['www.', 'www2.'], '', $checkUrl))['path'];
+            }
+
+            if (!in_array($urlinfo['host'], $authorizedUrls)) {
                 $authorized = false;
             }
         }
         return $authorized;
+    }
+
+    /**
+     * @param $url
+     * @return array|string|string[]
+     */
+    protected function checkUrlFormat($url)
+    {
+        // replace '\\' with '//'
+        if(is_array($url)){
+            $url = \Yii::$app->urlManager->createAbsoluteUrl($url);
+        }
+        if (strpos($url, '\\\\') !== false) {
+            $url = str_replace('\\\\', '//', $url);
+        }
+
+        return $url;
     }
 }

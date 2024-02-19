@@ -97,4 +97,36 @@ class AmosUser extends User
         }
         return $can = parent::can($permissionName, $params, $allowCaching);
     }
+    
+    /**
+     * 
+     * @param User $identity
+     * @return bool
+     */
+    protected function beforeLogout($identity) {
+        $result = parent::beforeLogout($identity);
+
+        if (!empty(\Yii::$app->params['enableRenewAuthKey']) && \Yii::$app->params['enableRenewAuthKey'] == true) {
+            $identity->generateAuthKey();
+            $identity->save(false);
+        }
+        return $result;
+    }
+
+    /**
+     * 
+     * @param User $identity
+     * @param bool $cookieBased
+     * @param int $duration
+     * @return bool
+     */
+    protected function beforeLogin($identity, $cookieBased, $duration) {
+        $originalResult = parent::beforeLogin($identity, $cookieBased, $duration);
+
+        if (empty($identity->auth_key) || strlen($identity->auth_key) < 32) {
+            $identity->generateAuthKey();
+            $identity->save(false);
+        }
+        return $originalResult;
+    }
 }
