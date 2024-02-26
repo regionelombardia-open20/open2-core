@@ -37,6 +37,10 @@ class Response extends WebResponse {
             $authorized = false;
         } else if (!empty($urlinfo['scheme']) && empty($urlinfo['host'])) {
             $authorized = false;
+        } else if (empty($urlinfo['scheme']) && empty($urlinfo['host']) && !empty($urlinfo['path'])) {
+            if (!preg_match('/^[0-9a-zA-Z\/]/', $url)) {
+                $authorized = false;
+            }
         } else {
             if (!isset($urlinfo['host'])) {
                 $url = \Yii::$app->params['platform']['frontendUrl'] . '/' . $url;
