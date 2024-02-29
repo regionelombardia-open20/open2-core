@@ -90,8 +90,14 @@ class Response extends WebResponse {
             } else {
                 $url = \Yii::$app->params['platform']['frontendUrl'] . '/' . $urlinfo['path'];
             }
-        }
 
+            if (!empty($urlinfo['query'])) {
+                $url.='?'.$urlinfo['query'];
+            }
+            if (!empty($urlinfo['fragment'])) {
+                $url.='#'.$urlinfo['fragment'];
+            }
+        }
         return $url;
     }
 }
